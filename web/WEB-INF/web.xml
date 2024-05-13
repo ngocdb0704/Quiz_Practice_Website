@@ -4,8 +4,16 @@
         <servlet-name>CounterController</servlet-name>
         <servlet-class>app.controller.CounterController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>UserProfile</servlet-name>
+        <servlet-class>app.controller.UserProfile</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>CounterController</servlet-name>
         <url-pattern>/home</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UserProfile</servlet-name>
+        <url-pattern>/UserProfile</url-pattern>
     </servlet-mapping>
 </web-app>

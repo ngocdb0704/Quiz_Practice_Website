@@ -7,5 +7,5 @@ dist/
 nbdist/
 .nb-gradle/
 
-#By: Quan, For: files that only serve the build on my local machine (which uses mysql intsead of mssql)
+#By: QuanNM, For: files that only serve the build on my local machine (which uses mysql intsead of mssql)
 **/__local__*
