@@ -4,25 +4,62 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Counter View</title>
-        <link href="<%= getServletContext().getContextPath() %>/css/bootstrap.min.css" rel="stylesheet">
-        <link href="<%= getServletContext().getContextPath() %>/css/bootstrap-utilities.min.css" rel="stylesheet">
+        <title>Reset Password</title>
+        <%@include file="/common/ImportLibs.jsp" %>
+        <link href="<%= getServletContext().getContextPath() %>/css/ResetPassword.css" rel="stylesheet">
     </head>
     <body>
-        <main class="container p-2">
-            <form method="POST" class="card p-3">
-                <h2 class="text-center">Password Reset</h2>
-                <div
-                    <label class="form-label">Email</label>
-                    <input type="email" class="form-control" placeholder="Enter your email">
-                </div>
-                <button type="submit" class="btn btn-primary mt-4">Send Email</button>
-                <c:if test="${not empty message}">
-                    <h2>${message}</h2>
-                </c:if>
-            </form>
-        </main>
+        <main class="d-flex justify-content-center align-items-center p-2">
+            <c:choose>
+                <c:when test="${status eq 'change'}">
+                    <form method="POST" class="card w-50 p-3">
+                        <input type="hidden" name="action" value="reset_password">
+                        
+                        <div class="text-center">
+                            <h2>Create New Password</h2>
+                            <p class="mb-3">Create a new password for your account</p>
+                        </div>
+                        <div
+                            <label class="form-label">New Password</label>
+                            <input type="password" class="form-control" name="newpw" placeholder="New password">
+                        </div>
+                        <div
+                            <label class="form-label">Confirm new password</label>
+                            <input type="password" class="form-control" name="confirmnewpw" placeholder="Confirm new password">
+                        </div>
+                        <button type="submit" class="btn btn-primary mt-4">Continue</button>
+                    </form>
+                </c:when>
+                <c:when test="${status eq 'sent'}">
+                    <div class="card w-50 p-3">
+                        <div class="text-center">
+                            <h2>Email has been sent</h2>
+                            <p class="mb-3">Please check your inbox for confirmation instructions</p>
+                            <p>Generated token: ${token}</p>
+                        </div>
+                    </div>
+                </c:when>
+                <c:otherwise>
+                    <form method="POST" class="card w-50 p-3">
+                        <input type="hidden" name="action" value="send_email">
 
-        <script src="<%= getServletContext().getContextPath() %>/js/bootstrap.min.js"></script>
+                        <div class="text-center">
+                            <h2>Forgot your password?</h2>
+                            <p class="mb-3">You can enter your email down below to send a reset password email</p>
+                        </div>
+                        <div
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" name="email" placeholder="Enter your email">
+                        </div>
+                        <button type="submit" class="btn btn-primary mt-4">Send Email</button>
+                        <c:if test="${not empty message}">
+                            <div class="alert alert-primary mt-4" role="alert">
+                                ${message}
+                            </div>
+                        </c:if>
+                    </form>
+                </c:otherwise>
+            </c:choose>
+        </main>
     </body>
 </html>
