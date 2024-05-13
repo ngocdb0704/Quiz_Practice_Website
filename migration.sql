@@ -2,15 +2,16 @@ use master;
 
 drop database if exists QuizPractice;
 create database QuizPractice;
+go
 
-use QuizPratice;
+use QuizPractice;
+go
 
-/* Create your tables, triggers, etc down here
 create table Users (
-	userId int identity(1, 1),
+	id int identity(1, 1),
 	email varchar(128),
-	pass varchar(255),
+	[password] varchar(99),
 	fullName nvarchar(255),
-	...
+	gender varchar(255),
+	mobile varchar(25)
 );
-*/
