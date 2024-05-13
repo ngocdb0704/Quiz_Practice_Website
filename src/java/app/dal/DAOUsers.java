@@ -12,13 +12,13 @@ import java.util.Vector;
 import java.sql.ResultSet;
 import app.entity.Users;
 
-import app.dal.__local__DBContext;
+import app.dal.DBContext;
 
 /**
  *
  * @author quatn
  */
-public class DAOUsers extends __local__DBContext{
+public class DAOUsers extends DBContext{
     public Vector<Users> getFull(String sql) {
         Vector<Users> Out = new Vector<Users>();
         try {
