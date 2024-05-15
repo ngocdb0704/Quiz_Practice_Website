@@ -1,9 +1,9 @@
 package app.dal;
 
 import java.sql.*;
-import app.model.User;
+import app.entity.User;
 
-public class UserDAO extends DBContext {
+public class DAOUser extends DBContext {
     public User getByEmail(String email) throws SQLException {
         User user = new User();
 

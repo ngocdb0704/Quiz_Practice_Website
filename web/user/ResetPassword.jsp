@@ -5,8 +5,15 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Reset Password</title>
-        <%@include file="/common/ImportLibs.jsp" %>
-        <link href="<%= getServletContext().getContextPath() %>/css/ResetPassword.css" rel="stylesheet">
+        
+        <!-- Common import -->
+        <%@include file="/common/ImportBootstrap.jsp" %>
+        <link href="../common/common.css" href="stylesheet">
+        <script src="../common/common.js"></script>
+        
+        <!-- Specific page import -->
+        <link href="ResetPassword.css" href="stylesheet">
+        <script src="ResetPassword.js"></script>
     </head>
     <body>
         <main class="d-flex justify-content-center align-items-center p-2">

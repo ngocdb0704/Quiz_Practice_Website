@@ -5,7 +5,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
-public class ResetTokensDAO extends DBContext {
+public class DAOResetTokens extends DBContext {
     public String createForUserId(int userId) throws SQLException {
         deleteToken(userId);
         

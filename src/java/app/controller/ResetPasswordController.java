@@ -1,9 +1,8 @@
 package app.controller;
 
-import app.dal.ResetTokensDAO;
-import app.dal.UserDAO;
-import app.model.User;
-import app.utils.BasicFieldExtractor;
+import app.dal.DAOResetTokens;
+import app.dal.DAOUser;
+import app.entity.User;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.io.PrintWriter;
@@ -14,19 +13,23 @@ import jakarta.servlet.http.HttpServletResponse;
 
 public class ResetPasswordController extends HttpServlet {
 
-    private UserDAO userDao;
-    private ResetTokensDAO resetTokensDao;
+    //in case the path changes, just change this line
+    private final String RESET_PAGE = "/user/ResetPassword.jsp";
 
+    private DAOUser daoUser;
+    private DAOResetTokens daoResetTokens;
+
+    //initialize your DAO here
     @Override
     public void init() {
-        userDao = new UserDAO();
-        resetTokensDao = new ResetTokensDAO();
+        daoUser = new DAOUser();
+        daoResetTokens = new DAOResetTokens();
     }
     
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        request.getRequestDispatcher("/ResetPassword.jsp").forward(request, response);
+        request.getRequestDispatcher(RESET_PAGE).forward(request, response);
     } 
 
     @Override
@@ -47,17 +50,17 @@ public class ResetPasswordController extends HttpServlet {
 
     private void handleChangePassword(HttpServletRequest request, HttpServletResponse response)
     throws SQLException, ServletException, IOException {
-        request.getRequestDispatcher("/ResetPassword.jsp").forward(request, response);
+        request.getRequestDispatcher(RESET_PAGE).forward(request, response);
     }
 
     private void handleSendEmail(HttpServletRequest request, HttpServletResponse response)
     throws SQLException, ServletException, IOException {
         String email = request.getParameter("email");
 
-        User user = userDao.getByEmail(email);
+        User user = daoUser.getByEmail(email);
 
         if (user != null) {
-            String token = resetTokensDao.createForUserId(user.getId());
+            String token = daoResetTokens.createForUserId(user.getId());
             request.setAttribute("status", "sent");
             request.setAttribute("token", token);
             request.setAttribute("message", "Email sent");
@@ -65,11 +68,11 @@ public class ResetPasswordController extends HttpServlet {
             request.setAttribute("message", "User does not exist");
         }
         
-        request.getRequestDispatcher("/ResetPassword.jsp").forward(request, response);
+        request.getRequestDispatcher(RESET_PAGE).forward(request, response);
     }
 
     @Override
     public String getServletInfo() {
-        return "CounterController Servlet";
+        return "ResetPassword Servlet";
     }
 }
