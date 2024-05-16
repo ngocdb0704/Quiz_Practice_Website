@@ -14,14 +14,22 @@ public class DBContext {
         try {
             //Change the username password and url to connect your own database
             String username = "sa";
-            String password = "123";
-            String url = "jdbc:sqlserver://localhost:1433;databaseName=QuizPractice";
+            String password = "123456";
+            String url = "jdbc:sqlserver://localhost:1433;databaseName=SWP_UserLogin_An";
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             connection = DriverManager.getConnection(url, username, password);
-            connection.setAutoCommit(false);
+            connection.setAutoCommit(true);
+            System.out.println("Connected");
+            
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(DBContext.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    
+    
+    public static void main(String[] args) {
+        new DBContext();
+    }
 }
+
+
