@@ -75,6 +75,38 @@ public class DAOUsers extends DBContext{
         }
     }
     
+    public byte[] profileImage(int id) {
+        String sql = "SELECT * FROM ProfilePicture where Id = '" + id + "';";
+        try {
+            Statement state = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = state.executeQuery(sql);
+            if (rs.next()) {
+                return rs.getBytes(1);
+            }
+        }
+        catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
+    
+    public int insertImage(int id, byte[] image) {
+        String sql = "INSERT INTO SWP.ProfilePicture (Id, Image)\n"
+                + "     VALUES (?,?)";
+        
+        try {
+            PreparedStatement preStat = connection.prepareStatement(sql);
+            preStat.setInt(1, id);
+            preStat.setBytes(2, image);
+            //preStat.executeUpdate();
+            return preStat.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+    
+    
     public static void main(String[] args) {
         DAOUsers test = new DAOUsers();
         System.out.println(test.getAll());
