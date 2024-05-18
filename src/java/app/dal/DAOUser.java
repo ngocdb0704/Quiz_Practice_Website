@@ -12,7 +12,7 @@ public class DAOUser extends DBContext {
         ResultSet rs = stmt.executeQuery();
 
         if (rs.next()) {
-            user.setId(rs.getInt("id"));
+            user.setUserId(rs.getInt("id"));
             user.setEmail(rs.getString("email"));
             user.setPassword(rs.getString("password"));
             user.setFullName(rs.getString("fullName"));

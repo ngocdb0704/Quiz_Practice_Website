@@ -60,7 +60,7 @@ public class ResetPasswordController extends HttpServlet {
         User user = daoUser.getByEmail(email);
 
         if (user != null) {
-            String token = daoResetTokens.createForUserId(user.getId());
+            String token = daoResetTokens.createForUserId(user.getUserId());
             request.setAttribute("status", "sent");
             request.setAttribute("token", token);
             request.setAttribute("message", "Email sent");
