@@ -1,4 +1,4 @@
-package utils;
+package app.utils;
 
 import jakarta.mail.Authenticator;
 import java.util.Objects;

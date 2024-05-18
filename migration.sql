@@ -7,7 +7,6 @@ GO
 
 /****** Object:  Database [Quiz_Practice]    Script Date: 18/05/2024 12:37:26 CH ******/
 CREATE DATABASE [Quiz_Practice]
-
 GO
 
 ALTER DATABASE [Quiz_Practice] SET ANSI_NULL_DEFAULT OFF 
@@ -151,4 +150,3 @@ CREATE TABLE [dbo].[Registration](
 	[ValidFrom] [date],
 	[ValidTo] [date]
 )
-
