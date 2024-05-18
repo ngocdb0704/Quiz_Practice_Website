@@ -10,7 +10,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import app.entity.Users;
 import java.util.Vector;
 import app.dal.DAOUser;
 import jakarta.servlet.ServletContext;
