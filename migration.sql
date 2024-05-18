@@ -127,9 +127,9 @@ CREATE TABLE [dbo].[User](
 
 GO
 CREATE TABLE [dbo].[ProfilePicture](
-	[PictureId] [int] NOT NULL primary key,
-	[UserId] [int] NOT NULL foreign key references [dbo].[User](UserId),
-	[Image] [varbinary] (MAX))
+	[UserId] [int] NOT NULL primary key,
+	[Image] [varbinary] (MAX),
+	constraint [UserId] foreign key ([UserId]) references [dbo].[User](UserId))
 
 GO
 CREATE TABLE [dbo].[ResetToken](
