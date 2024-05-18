@@ -22,5 +22,22 @@ public class DBContext {
             Logger.getLogger(DBContext.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    public void closeConnection() {
+        if (connection != null){
+            try {
+                connection.close();
+                System.out.println("Connection manually closed");
+            }
+            catch (Exception e) {}
+
+        }
+    }
+
+    public static void main(String[] args) {
+        DBContext test = new DBContext();
+        System.out.println("Connection is ok");
+        test.closeConnection();
+    }
 
 }
