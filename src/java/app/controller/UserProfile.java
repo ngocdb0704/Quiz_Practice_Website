@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import app.entity.Users;
 import java.util.Vector;
 import app.dal.DAOUsers;
+import jakarta.servlet.ServletContext;
 import jakarta.servlet.annotation.MultipartConfig;
 //import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpSession;
@@ -46,25 +47,18 @@ public class UserProfile extends HttpServlet {
         
         if (session.getAttribute("uId") != null) {
             uIdString = session.getAttribute("uId").toString();
-            System.out.println(uIdString);
         }
         
         if (uIdString == null || uIdString.length() < 1) {
             try (PrintWriter out = response.getWriter()) {
-                out.print("Provide a uId parameter to display a user");
+                out.print("You need to be logged in to display user profile");
             }
         }
         else {
-            /*
-            fetched.getEmail();
-            fetched.getFullName();
-            fetched.getGender();
-            fetched.getMobile();
-            */
             DAOUsers dao = new DAOUsers();
             Integer uId =  Integer.parseInt(uIdString);
             String service = request.getParameter("service");
-            System.out.println(service);
+
             if (service == null || service.length() < 1 || service.equals("view")) {
                 request.getRequestDispatcher("UserProfile.jsp").forward(request, response);
                 return;
@@ -72,37 +66,49 @@ public class UserProfile extends HttpServlet {
             
             if (service.equals("update")) {
                 Part filePart = request.getPart("upload");
-                System.out.println(filePart.getInputStream().available());
+                System.out.println(filePart.getInputStream().available()); //TODO: add file limit
                 
+                InputStream ins = filePart.getInputStream();
+                byte[] uploaded = new byte[ins.available()];
+                ins.read(uploaded);
+                dao.updateImage(uId, uploaded);
                 
-                OutputStream o = response.getOutputStream();
-                InputStream is = filePart.getInputStream();
-                byte[] uploaded = new byte[filePart.getInputStream().available()];
-                dao.insertImage(uId, uploaded);
-
+                /* Debug: display the image that was just uploaded instead of going back to UserProfile
+                try (OutputStream o = response.getOutputStream()) {
+                    o.write(uploaded);
+                    o.flush();
+                    o.close();
+                }
+                */
+                
+                request.getRequestDispatcher("UserProfile.jsp").forward(request, response);
             }
             
             if (service.equals("showPic")) {
                 byte[] fetched = dao.profileImage(uId);
-                System.out.println("PRODUCTION LINE");
                 if (fetched == null) {
-                    System.out.println("LIVING TO WORK");
-                    response.setContentType("base64");
-                    try (PrintWriter out = response.getWriter()) {
-                        out.print("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4"
-                                + "//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==");
-                    }
-                } else {
-                    System.out.println("WORKING TO LIVE");
-                    System.out.println(fetched);
-                    OutputStream o = response.getOutputStream();
                     response.setContentType("image/gif");
-                    o.write(fetched);
-                    o.flush();
-                    o.close();
+                    ServletContext cntxt = this.getServletContext();
+                    String fName = "image/anonymous-user.webp";
+                    InputStream ins = cntxt.getResourceAsStream(fName);
+                    
+                    try (OutputStream o = response.getOutputStream()) {
+                        byte[] fetchedDefault = new byte[ins.available()];
+                        ins.read(fetchedDefault);
+                        o.write(fetchedDefault);
+                        o.flush();
+                        o.close();
+                    }
+                    
+                } else {
+                    try (OutputStream o = response.getOutputStream()) {
+                        response.setContentType("image/gif");
+                        o.write(fetched);
+                        o.flush();
+                        o.close();
+                    }
                 }
             }
-            
         }
     }
 
