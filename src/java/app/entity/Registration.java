@@ -1,105 +1,101 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package app.entity;
 
-/**
- *
- * @author admin
- */
+import java.util.Date;
+
 public class Registration {
-    private int id;
-    private String subject;
-    private String registrationTime;
-    private int subjectPackage;
+    private int registrationId;
+    private int userId;
+    private String subjectId;
+    private Date registrationTime;
+    private int packageId;
     private float totalCost;
     private String status;
-    private String validFrom;
-    private String validTo;
+    private Date validFrom;
+    private Date validTo;
 
-    public Registration() {
-    }
+    public Registration() {}
 
-    public Registration(int id, String subject, String registrationTime, int subjectPackage, float totalCost, String status, String validFrom, String validTo) {
-        this.id = id;
-        this.subject = subject;
+    public Registration(int registrationId, int userId, String subjectId, Date registrationTime, int packageId, float totalCost, String status, Date validFrom, Date validTo) {
+        this.registrationId = registrationId;
+        this.userId = userId;
+        this.subjectId = subjectId;
         this.registrationTime = registrationTime;
-        this.subjectPackage = subjectPackage;
+        this.packageId = packageId;
         this.totalCost = totalCost;
         this.status = status;
         this.validFrom = validFrom;
         this.validTo = validTo;
     }
 
-    @Override
-    public String toString() {
-        return "Registration{" + "id=" + id + ", subject=" + subject + ", registrationTime=" + registrationTime + ", subjectPackage=" + subjectPackage + ", totalCost=" + totalCost + ", status=" + status + ", validFrom=" + validFrom + ", validTo=" + validTo + '}';
+    public int getRegistrationId() {
+        return registrationId;
     }
 
-    
-    public void setId(int id) {
-        this.id = id;
+    public void setRegistrationId(int registrationId) {
+        this.registrationId = registrationId;
     }
 
-    public void setSubject(String subject) {
-        this.subject = subject;
+    public int getUserId() {
+        return userId;
     }
 
-    public void setRegistrationTime(String registrationTime) {
-        this.registrationTime = registrationTime;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
-    public void setSubjectPackage(int subjectPackage) {
-        this.subjectPackage = subjectPackage;
+    public String getSubjectId() {
+        return subjectId;
     }
 
-    public void setTotalCost(float totalCost) {
-        this.totalCost = totalCost;
+    public void setSubjectId(String subjectId) {
+        this.subjectId = subjectId;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public void setValidFrom(String validFrom) {
-        this.validFrom = validFrom;
-    }
-
-    public void setValidTo(String validTo) {
-        this.validTo = validTo;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public String getSubject() {
-        return subject;
-    }
-
-    public String getRegistrationTime() {
+    public Date getRegistrationTime() {
         return registrationTime;
     }
 
-    public int getSubjectPackage() {
-        return subjectPackage;
+    public void setRegistrationTime(Date registrationTime) {
+        this.registrationTime = registrationTime;
+    }
+
+    public int getPackageId() {
+        return packageId;
+    }
+
+    public void setPackageId(int packageId) {
+        this.packageId = packageId;
     }
 
     public float getTotalCost() {
         return totalCost;
     }
 
+    public void setTotalCost(float totalCost) {
+        this.totalCost = totalCost;
+    }
+
     public String getStatus() {
         return status;
     }
 
-    public String getValidFrom() {
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Date getValidFrom() {
         return validFrom;
     }
 
-    public String getValidTo() {
+    public void setValidFrom(Date validFrom) {
+        this.validFrom = validFrom;
+    }
+
+    public Date getValidTo() {
         return validTo;
     }
-    
+
+    public void setValidTo(Date validTo) {
+        this.validTo = validTo;
+    }
 }
