@@ -3,16 +3,25 @@ package app.entity;
 import java.security.Timestamp;
 
 public class ResetRecord {
-    private User user;
+    private int userId;
     private String token;
     private Timestamp validTo;
 
-    public User getUser() {
-        return user;
+    public ResetRecord() {
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public ResetRecord(int userId, String token, Timestamp validTo) {
+        this.userId = userId;
+        this.token = token;
+        this.validTo = validTo;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public String getToken() {
