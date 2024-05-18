@@ -58,7 +58,8 @@ public class DAOUser extends DBContext {
                 String FullName = rs.getString(5);
                 String Gender = rs.getString(6);
                 String Mobile = rs.getString(7);
-                User cus = new User(Id, Email, Password, Role, FullName, Gender, Mobile);
+                Boolean isActive = rs.getBoolean("8");
+                User cus = new User(Id, Email, Password, Role, FullName, Gender, Mobile, isActive);
                 vector.add(cus);
 
             }

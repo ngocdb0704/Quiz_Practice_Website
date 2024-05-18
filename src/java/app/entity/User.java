@@ -8,6 +8,7 @@ package app.entity;
  *
  * @author OwO
  */
+
 public class User {
     private int userId;
     private String email;
@@ -17,10 +18,11 @@ public class User {
     private String gender;
     private String mobile;
 
-    public User() {
-    }
+    private boolean isActive;
 
-    public User(int userId, String email, String password, String role, String fullName, String gender, String mobile) {
+    public User() {}
+
+    public User(int userId, String email, String password, String role, String fullName, String gender, String mobile, boolean isActive) {
         this.userId = userId;
         this.email = email;
         this.password = password;
@@ -28,6 +30,7 @@ public class User {
         this.fullName = fullName;
         this.gender = gender;
         this.mobile = mobile;
+        this.isActive = isActive;
     }
 
     public int getUserId() {
@@ -86,7 +89,13 @@ public class User {
         this.mobile = mobile;
     }
 
-    
+    public boolean isIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(boolean isActive) {
+        this.isActive = isActive;
+    }
     
     
 }
