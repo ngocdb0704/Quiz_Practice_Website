@@ -9,6 +9,7 @@ import java.util.Vector;
 import app.dal.DBContext;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 /**
@@ -23,14 +24,15 @@ public class DAORegistration extends DBContext{
             ResultSet rs = state.executeQuery(sql);
             while(rs.next()){
                 int id = rs.getInt(1);
-                String subject = rs.getString(2);
-                String registrationTime = rs.getString(3);
-                int subjectPackage = rs.getInt(4);
-                float totalCost = rs.getFloat(5);
-                String status = rs.getString(6);
-                String validFrom = rs.getString(7);
-                String validTo = rs.getString(8);
-                Registration var = new Registration(id, subject, registrationTime, subjectPackage, totalCost, status, validFrom, validTo);
+                int userId = rs.getInt(2);
+                String subject = rs.getString(3);
+                Date registrationTime = rs.getDate(4);
+                int subjectPackage = rs.getInt(5);
+                float totalCost = rs.getFloat(6);
+                String status = rs.getString(7);
+                Date validFrom = rs.getDate(8);
+                Date validTo = rs.getDate(9);
+                Registration var = new Registration(id, userId, subject, registrationTime, subjectPackage, totalCost, status, validFrom, validTo);
                 vector.add(var);
             }
         } catch (SQLException ex) {
