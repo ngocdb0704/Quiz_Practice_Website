@@ -10,7 +10,7 @@ import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.util.Vector;
 import java.sql.ResultSet;
-import app.entity.Users;
+import app.entity.User;
 
 import app.dal.DBContext;
 
@@ -18,14 +18,14 @@ import app.dal.DBContext;
  *
  * @author quatn
  */
-public class DAOUsers extends DBContext{
-    public Vector<Users> getFull(String sql) {
-        Vector<Users> Out = new Vector<Users>();
+public class DAOUser extends DBContext{
+    private Vector<User> getFull(String sql) {
+        Vector<User> Out = new Vector<User>();
         try {
             Statement state = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
             ResultSet rs = state.executeQuery(sql);
             while(rs.next()) {
-                Out.add(new Users(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7)));
+                Out.add(new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getBoolean(8)));
             }
         }
         catch (SQLException e) {
@@ -35,17 +35,17 @@ public class DAOUsers extends DBContext{
         return Out;
     }
     
-    public Vector<Users> getAll() {
-        return getFull("select * from Users");
+    public Vector<User> getAll() {
+        return getFull("select * from [dbo].[User]");
     }
     
-    public Users getUserById(int id) {
-        String sql = "SELECT * FROM Users where Id = '" + id + "';";
+    public User getUserById(int id) {
+        String sql = "SELECT * FROM [dbo].[User] where UserId = '" + id + "';";
         try {
             Statement state = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
             ResultSet rs = state.executeQuery(sql);
             if (rs.next()) {
-                return new Users(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7));
+                return new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getBoolean(8));
             }
         }
         catch (SQLException ex) {
@@ -55,11 +55,11 @@ public class DAOUsers extends DBContext{
     }
     
     public int updateUser(int id, String fullName, String gender, String mobile) {
-        String sql = "UPDATE SWP.Users\n" +
+        String sql = "UPDATE [dbo].[User]\n" +
 "   SET FullName = ?\n" +
 "      ,Gender = ?\n" +
 "      ,Mobile = ?\n" +
-" WHERE Id = ?";
+" WHERE UserId = ?";
                 
         try {
             PreparedStatement preStat = connection.prepareStatement(sql);
@@ -75,7 +75,7 @@ public class DAOUsers extends DBContext{
     }
     
     public byte[] profileImage(int id) {
-        String sql = "SELECT * FROM ProfilePicture where Id = '" + id + "';";
+        String sql = "SELECT * FROM ProfilePicture where UserId = '" + id + "';";
         try {
             Statement state = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
             ResultSet rs = state.executeQuery(sql);
@@ -90,7 +90,7 @@ public class DAOUsers extends DBContext{
     }
     
     public int insertImage(int id, byte[] image) {
-        String sql = "INSERT INTO SWP.ProfilePicture (Id, Image)\n"
+        String sql = "INSERT INTO ProfilePicture (UserId, Image)\n"
                 + "     VALUES (?,?)";
         
         try {
@@ -107,9 +107,9 @@ public class DAOUsers extends DBContext{
     public int updateImage(int id, byte[] image) {
         if (profileImage(id) == null) return insertImage(id, image);
         else {
-            String sql = "UPDATE SWP.ProfilePicture\n"
-                    + " SET image = ?"
-                    + " WHERE id = ?;";
+            String sql = "UPDATE ProfilePicture\n"
+                    + " SET Image = ?"
+                    + " WHERE UserId = ?;";
 
             try {
                 PreparedStatement preStat = connection.prepareStatement(sql);
@@ -125,7 +125,7 @@ public class DAOUsers extends DBContext{
     
     
     public static void main(String[] args) {
-        DAOUsers test = new DAOUsers();
+        DAOUser test = new DAOUser();
         System.out.println(test.getAll());
     }
 }

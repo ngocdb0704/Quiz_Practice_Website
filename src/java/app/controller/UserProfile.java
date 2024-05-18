@@ -12,7 +12,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import app.entity.Users;
 import java.util.Vector;
-import app.dal.DAOUsers;
+import app.dal.DAOUser;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.annotation.MultipartConfig;
 //import jakarta.servlet.annotation.WebServlet;
@@ -55,7 +55,7 @@ public class UserProfile extends HttpServlet {
             }
         }
         else {
-            DAOUsers dao = new DAOUsers();
+            DAOUser dao = new DAOUser();
             Integer uId =  Integer.parseInt(uIdString);
             String service = request.getParameter("service");
 
@@ -65,6 +65,15 @@ public class UserProfile extends HttpServlet {
             }
             
             if (service.equals("update")) {
+                String fullName = request.getParameter("fullName");
+                String gender = request.getParameter("gender");
+                String mobile = request.getParameter("mobile");
+                //TODO: Add parameter conditions
+                dao.updateUser(uId, fullName, gender, mobile);
+                request.getRequestDispatcher("UserProfile.jsp").forward(request, response);
+            }
+            
+            if (service.equals("updateProfilePicture")) {
                 Part filePart = request.getPart("upload");
                 System.out.println(filePart.getInputStream().available()); //TODO: add file limit
                 
