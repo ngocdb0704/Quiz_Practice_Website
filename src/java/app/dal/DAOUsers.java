@@ -67,7 +67,6 @@ public class DAOUsers extends DBContext{
              preStat.setString(1, fullName);
              preStat.setString(2, gender);
              preStat.setString(3, mobile);
-            //preStat.executeUpdate();
             return preStat.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -81,7 +80,7 @@ public class DAOUsers extends DBContext{
             Statement state = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
             ResultSet rs = state.executeQuery(sql);
             if (rs.next()) {
-                return rs.getBytes(1);
+                return rs.getBytes(2);
             }
         }
         catch (SQLException ex) {
@@ -98,11 +97,29 @@ public class DAOUsers extends DBContext{
             PreparedStatement preStat = connection.prepareStatement(sql);
             preStat.setInt(1, id);
             preStat.setBytes(2, image);
-            //preStat.executeUpdate();
             return preStat.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
             return 0;
+        }
+    }
+    
+    public int updateImage(int id, byte[] image) {
+        if (profileImage(id) == null) return insertImage(id, image);
+        else {
+            String sql = "UPDATE SWP.ProfilePicture\n"
+                    + " SET image = ?"
+                    + " WHERE id = ?;";
+
+            try {
+                PreparedStatement preStat = connection.prepareStatement(sql);
+                preStat.setInt(2, id);
+                preStat.setBytes(1, image);
+                return preStat.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return 0;
+            }
         }
     }
     
