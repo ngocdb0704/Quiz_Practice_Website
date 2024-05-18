@@ -25,7 +25,7 @@ public class GmailService {
         session = Session.getInstance(prop, new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(username, password);
+                return new PasswordAuthentication("abc", "abc");
             }
         });
     }
@@ -46,12 +46,5 @@ public class GmailService {
             addresses[i] = new InternetAddress(emails[i]);
             addresses[i].validate();
         }
-
-        Session session = Session.g
-
-        MimeMessage emailMessage = new MimeMessage();
-        emailMessage.
-        emailMessage.setSubject(subject);
-        emailMessage
     }
 }
