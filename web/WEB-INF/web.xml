@@ -8,6 +8,10 @@
         <servlet-name>LoginControllerTempOfAnForLoginView</servlet-name>
         <servlet-class>app.controller.LoginControllerTempOfAnForLoginView</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>RegistrationController</servlet-name>
+        <servlet-class>app.controller.RegistrationController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginControllerTempOfAnForLoginView</servlet-name>
         <url-pattern>/loginviewofAn</url-pattern>
@@ -21,3 +25,5 @@
         <url-pattern>/RegistrationController</url-pattern>
     </servlet-mapping>
 </web-app>
+
+
