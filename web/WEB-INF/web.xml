@@ -4,16 +4,8 @@
         <servlet-name>CounterController</servlet-name>
         <servlet-class>app.controller.CounterController</servlet-class>
     </servlet>
-    <servlet>
-        <servlet-name>RegistrationController</servlet-name>
-        <servlet-class>app.controller.RegistrationController</servlet-class>
-    </servlet>
     <servlet-mapping>
         <servlet-name>CounterController</servlet-name>
         <url-pattern>/home</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>RegistrationController</servlet-name>
-        <url-pattern>/RegistrationController</url-pattern>
     </servlet-mapping>
 </web-app>
