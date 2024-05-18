@@ -9,8 +9,8 @@
         <servlet-class>app.controller.LoginControllerTempOfAnForLoginView</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>CounterController</servlet-name>
-        <url-pattern>/home</url-pattern>
+        <servlet-name>default</servlet-name>
+        <url-pattern>/public/*</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>LoginControllerTempOfAnForLoginView</servlet-name>

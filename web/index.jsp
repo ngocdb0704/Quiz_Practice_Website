@@ -26,17 +26,15 @@
             }
         </style>
         <script>
-            // Function to show the notification
             function showNotification(message) {
                 var notification = document.getElementById("notification");
                 notification.innerHTML = message;
                 notification.classList.add("show");
                 setTimeout(function () {
                     notification.classList.remove("show");
-                }, 3000); // Hide the notification after 3 seconds
+                }, 3000); 
             }
 
-            // Check if there is a success message and show the notification
             window.onload = function () {
                 var successMessage = '<%= session.getAttribute("successMessage") %>';
                  if (successMessage && successMessage !== null) {

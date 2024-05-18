@@ -9,82 +9,84 @@ package app.entity;
  * @author OwO
  */
 public class User {
-    private int Id;
-    private String Email;
-    private String Password;
-    private String Role;
-    private String FullName;
-    private String Gender;
-    private String Mobile;
+    private int userId;
+    private String email;
+    private String password;
+    private String role;
+    private String fullName;
+    private String gender;
+    private String mobile;
 
     public User() {
     }
 
-    public User(int Id, String Email, String Password, String Role, String FullName, String Gender, String Mobile) {
-        this.Id = Id;
-        this.Email = Email;
-        this.Password = Password;
-        this.Role = Role;
-        this.FullName = FullName;
-        this.Gender = Gender;
-        this.Mobile = Mobile;
+    public User(int userId, String email, String password, String role, String fullName, String gender, String mobile) {
+        this.userId = userId;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+        this.fullName = fullName;
+        this.gender = gender;
+        this.mobile = mobile;
     }
 
-    public int getId() {
-        return Id;
+    public int getUserId() {
+        return userId;
     }
 
-    public void setId(int Id) {
-        this.Id = Id;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public String getEmail() {
-        return Email;
+        return email;
     }
 
-    public void setEmail(String Email) {
-        this.Email = Email;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getPassword() {
-        return Password;
+        return password;
     }
 
-    public void setPassword(String Password) {
-        this.Password = Password;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getRole() {
-        return Role;
+        return role;
     }
 
-    public void setRole(String Role) {
-        this.Role = Role;
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public String getFullName() {
-        return FullName;
+        return fullName;
     }
 
-    public void setFullName(String FullName) {
-        this.FullName = FullName;
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
     public String getGender() {
-        return Gender;
+        return gender;
     }
 
-    public void setGender(String Gender) {
-        this.Gender = Gender;
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 
     public String getMobile() {
-        return Mobile;
+        return mobile;
     }
 
-    public void setMobile(String Mobile) {
-        this.Mobile = Mobile;
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
     }
+
+    
     
     
 }

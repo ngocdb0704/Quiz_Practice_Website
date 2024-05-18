@@ -29,7 +29,7 @@ public class DAOUser extends DBContext {
                 + "     VALUES (?,?,?,?,?,?,?)";
         try {
             PreparedStatement pre = connection.prepareStatement(sql);
-            pre.setInt(1, user.getId());
+            pre.setInt(1, user.getUserId());
             pre.setString(2, user.getEmail());
             pre.setString(3, user.getPassword());
             pre.setString(4, user.getRole());
