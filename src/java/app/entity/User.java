@@ -10,6 +10,8 @@ public class User {
     private String mobile;
     private boolean isActive;
 
+    public User() {}
+
     public User(int userId, String email, String password, String role, String fullName, String gender, String mobile, boolean isActive) {
         this.userId = userId;
         this.email = email;
