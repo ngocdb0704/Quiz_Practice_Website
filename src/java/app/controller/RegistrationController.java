@@ -36,31 +36,17 @@ public class RegistrationController extends HttpServlet {
         DAORegistration daoRegistration = new DAORegistration();
         String service = request.getParameter("service");
         Vector<Registration> registrationVector;
-        String page="";
-        String cancel;
+        String page;
         if (service == null) {
             service = "listAll";
         }
         if (service.equals("listAll")) {
-            registrationVector = daoRegistration.getAll("Select * from Registration");
+            registrationVector = daoRegistration.getAll(1);
             request.setAttribute("data", registrationVector);
             page = "/MyRegistration.jsp";
             dispath(request, response, page);
         }
         if (service.equals("cancel")) {
-            cancel = request.getParameter("cancel");
-            if (cancel == null) { 
-                int id = Integer.parseInt(request.getParameter("id"));
-                Vector<Registration> vec = daoRegistration.getAll("select * from Registration where Id like '%"+id+"%'");
-                Registration regist = vec.get(0);
-                request.setAttribute("regist", regist);
-                page = "/deleteRegistration.jsp";
-                dispath(request, response, page);
-            } else {
-                int registration_id = Integer.parseInt(request.getParameter("rid"));
-                int n = daoRegistration.removeRegistration(registration_id);
-                response.sendRedirect("RegistrationController");
-            }
         }
         
 //        try (PrintWriter out = response.getWriter()) {
