@@ -4,6 +4,9 @@ import app.dal.DAOResetTokens;
 import app.dal.DAOUser;
 import app.entity.ResetRecord;
 import app.entity.User;
+import app.utils.Config;
+import app.utils.GmailService;
+import app.utils.URLUtils;
 import java.io.IOException;
 import java.sql.SQLException;
 import jakarta.servlet.ServletException;
@@ -70,7 +73,7 @@ public class ResetPasswordController extends HttpServlet {
             e.printStackTrace();
         }
     }
-
+    
     private void handleChangePassword(HttpServletRequest request, HttpServletResponse response)
     throws SQLException, ServletException, IOException {
         String token = request.getParameter("token");
@@ -90,10 +93,10 @@ public class ResetPasswordController extends HttpServlet {
             if (!record.isValid()) {
                 request.setAttribute("screen", "expired");
             } else if (same) {
-                response.sendRedirect("../home");
+                request.setAttribute("screen", "success");
+                response.setHeader("Refresh", "3; url=" + URLUtils.getBaseURL(request) + "/home");
                 daoUser.updatePassword(record.getUserId(), newPassword);
                 daoResetTokens.deleteToken(record.getUserId());
-                return;
             } else {
                 request.setAttribute("user", daoUser.getById(record.getUserId()));
                 request.setAttribute("screen", "change_pw");
@@ -102,6 +105,16 @@ public class ResetPasswordController extends HttpServlet {
         }
 
         request.getRequestDispatcher(RESET_PAGE).forward(request, response);
+    }
+    
+    private String generateResetUrl(HttpServletRequest req, String token) {
+        return String.format(
+                "%s://%s:%s%s/user/reset?token=" + token,
+                req.getScheme(),
+                req.getServerName(),
+                req.getServerPort(),
+                req.getContextPath()
+        );
     }
 
     private void handleSendEmail(HttpServletRequest request, HttpServletResponse response)
@@ -112,6 +125,18 @@ public class ResetPasswordController extends HttpServlet {
 
         if (user != null) {
             String token = daoResetTokens.createForUserId(user.getUserId());
+            
+            GmailService service = new GmailService(getServletContext());
+            
+            String content = "Dear user! Someone sent a password request to your account\n"
+                    + "I hope this email finds you well, here's the link to reset your password:\n"
+                    + generateResetUrl(request, token);
+            
+            try {
+                service.sendMailTo("Reset Password", content, new String[] { email });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         request.setAttribute("screen", "sent");

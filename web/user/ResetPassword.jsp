@@ -18,6 +18,14 @@
     <body>
         <main class="d-flex justify-content-center align-items-center p-2">
             <c:choose>
+                <c:when test="${screen eq 'success'}">
+                    <div class="card w-50 p-3">
+                        <div class="text-center">
+                            <h2>Success!</h2>
+                            <p class="mb-3">You are being redirected back to the home page</p>
+                        </div>
+                    </div>
+                </c:when>
                 <c:when test="${screen eq 'change_pw'}">
                     <form method="POST" class="card w-50 p-3">
                         <input type="hidden" name="action" value="reset_password">
