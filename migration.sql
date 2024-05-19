@@ -133,18 +133,30 @@ CREATE TABLE [dbo].[ProfilePicture](
 
 GO
 CREATE TABLE [dbo].[ResetToken](
-	[TokenId] [int] NOT NULL primary key,
-	[UserId] [int] NOT NULL foreign key references [dbo].[User](UserId),
+	[UserId] [int] primary key foreign key references [dbo].[User](UserId),
 	[Token] [varchar] (255),
 	[ValidTo] [datetime])
 
 GO
+CREATE TABLE [dbo].[Subject](
+	[SubjectId] [int] NOT NULL primary key,
+	[SubjectName] [varchar] (25)NOT NULL,
+	[SubjectCategory] [varchar] (25) NOT NULL
+)
+
+GO
+CREATE TABLE [dbo].[Package](
+	[PackageId] [int] NOT NULL primary key,
+	[PackageName] [varchar] (25)NOT NULL,
+	[PackagePrice] [float] NOT NULL
+)
+GO
 CREATE TABLE [dbo].[Registration](
 	[RegistrationId] [int] NOT NULL primary key,
 	[UserId] [int] NOT NULL foreign key references [dbo].[User](UserId),
-	[SubjectId] [varchar] (255) NOT NULL,
+	[SubjectId] [int] NOT NULL foreign key references [dbo].[Subject](SubjectId),
 	[RegistrationTime] [date] NOT NULL,
-	[PackageId] [int] NOT NULL,
+	[PackageId] [int] NOT NULL foreign key references [dbo].[Package](PackageId),
 	[TotalCost] [float] NOT NULL,
 	[Status] [varchar](25),
 	[ValidFrom] [date],
