@@ -4,8 +4,11 @@
  */
 
 function sendRedirect(subjectCat, subject) {
-    window.location.href = "RegistrationController?search="+subject+"&subjectCategory=" + subjectCat.value;
+    window.location.href = "RegistrationController?search=" + subject + "&subjectCategory=" + subjectCat.value;
 }
-function myFunction() {
-    confirm("Confirm!!!!");
+function myFunction(subject) {
+    if (confirm("Confirm cancellation?") === true) {
+        window.location.href = "RegistrationController?cancelId=" + subject + "&service=cancel";
+    } else {
+    }
 }

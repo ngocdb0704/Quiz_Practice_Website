@@ -10,11 +10,13 @@
 <%@page import="app.entity.Subject"%>
 
 
+
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>My Registration</title>
+         <%@include file="/common/ImportBootstrap.jsp" %>
         <link rel="stylesheet" href="public/css/bootstrap/bootstrap.min.css"/> 
         <link rel="stylesheet" href="public/css/bootstrap/bootstrap-utilities.min.css"/>
         <link rel="stylesheet" href="public/css/MyRegistration.css"/>
@@ -58,8 +60,8 @@
                                 <td><%=regist.getStatus()%></td>
                                 <td><%=regist.getValidFrom()%></td>
                                 <td><%=regist.getValidTo()%></td>
-                                <td><a href="RegistrationController?service=edit">edit</a></td>
-                                <td><button onclick="myFunction()">Try it</button></td>
+                                <td><a href="RegistrationController?service=edit"><i class="bi bi-pencil"></i></a></td>
+                                <td><button onclick="myFunction('<%=regist.getRegistrationId()%>')"><i class="bi bi-trash3"></i></button></td>
                             </tr>
                             <%}%>
                         </tbody>
@@ -70,7 +72,7 @@
                         <div class="row container justify-content-center" id="inputContainer">
                             <input class="col-8" type="text" placeholder="<%=placeHolder%>" value="<%=value%>" name="search">
                             <button class="col-3" type="submit" name="submit" value="submit">
-                                submit
+                                <i class="bi bi-search"></i>
                             </button>
                         </div>
                         <div class="row container justify-content-center">

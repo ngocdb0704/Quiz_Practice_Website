@@ -57,6 +57,7 @@
             <input type="hidden" name="service" value="logout"/>
         </form>
         <a href="ChangePassAn.jsp">Change Password</a>
-        <a href="RegistrationController">My Registration</a>
+        <p><a href="RegistrationController">My Registration</a></p>
+        
 </body>
 </html>
