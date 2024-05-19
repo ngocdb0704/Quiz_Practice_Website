@@ -16,7 +16,7 @@
     </head>
     <body>
         <%
-        String uIdString = null;
+        String uIdString = null, role = "";
         User fetched = null;
         
         if (session.getAttribute("uId") != null) {
@@ -31,9 +31,17 @@
             Integer uId =  Integer.parseInt(uIdString);
             DAOUser dao = new DAOUser();
             fetched = dao.getUserById(uId);
-            System.out.println(fetched);
         }
         
+        if(fetched == null) {
+        %>
+        <main>
+            <h1>Please login to view you profile</h1>
+        </main>
+        <%
+        } else {
+            role = fetched.getRole();
+            if (role.equals("Customer")) {
         %>
         <main>
             <div class="row" style="width: 100%; margin: 0;">
@@ -63,9 +71,20 @@
                         <input type="hidden" name="service" value="update">
                     </form>
                 </div>
-                
-             </div>
+
+            </div>
         </main>
-                    <script src="public/js/UserProfile.js"></script>
+        <%
+            }
+            if (role.equals("Admin")) {
+        %>
+        <main>
+            <p style="position: absolute; top: -100px">AAAAAAAA</p>
+        </main>
+        <%
+            }
+        }
+        %>
+        <script src="public/js/UserProfile.js"></script>
     </body>
 </html>

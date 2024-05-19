@@ -18,7 +18,7 @@ import app.dal.DBContext;
  *
  * @author quatn
  */
-public class DAOUser extends DBContext{
+public class DAOUser extends __local__DBContext{
     private Vector<User> getFull(String sql) {
         Vector<User> Out = new Vector<User>();
         try {
@@ -36,11 +36,11 @@ public class DAOUser extends DBContext{
     }
     
     public Vector<User> getAll() {
-        return getFull("select * from [dbo].[User]");
+        return getFull("select * from User");
     }
     
     public User getUserById(int id) {
-        String sql = "SELECT * FROM [dbo].[User] where UserId = '" + id + "';";
+        String sql = "SELECT * FROM User where UserId = '" + id + "';";
         try {
             Statement state = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
             ResultSet rs = state.executeQuery(sql);
@@ -55,7 +55,7 @@ public class DAOUser extends DBContext{
     }
     
     public int updateUser(int id, String fullName, String gender, String mobile) {
-        String sql = "UPDATE [dbo].[User]\n" +
+        String sql = "UPDATE User\n" +
 "   SET FullName = ?\n" +
 "      ,Gender = ?\n" +
 "      ,Mobile = ?\n" +
