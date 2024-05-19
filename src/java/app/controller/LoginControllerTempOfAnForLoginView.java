@@ -5,7 +5,7 @@
 package app.controller;
 
 import app.entity.User;
-import app.model.DAOUser;
+import app.dal.DAOUser;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
