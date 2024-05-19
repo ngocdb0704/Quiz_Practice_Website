@@ -129,12 +129,12 @@ GO
 CREATE TABLE [dbo].[ProfilePicture](
 	[UserId] [int] NOT NULL primary key,
 	[Image] [varbinary] (MAX),
-	constraint [UserId] foreign key ([UserId]) references [dbo].[User](UserId))
+	constraint [UserId] foreign key ([UserId]) references [dbo].[Users](UserId))
 
 GO
 CREATE TABLE [dbo].[ResetToken](
 	[TokenId] [int] NOT NULL primary key,
-	[UserId] [int] NOT NULL foreign key references [dbo].[User](UserId),
+	[UserId] [int] NOT NULL foreign key references [dbo].[Users](UserId),
 	[Token] [varchar] (255),
 	[ValidTo] [datetime])
 
@@ -154,7 +154,7 @@ CREATE TABLE [dbo].[Package](
 GO
 CREATE TABLE [dbo].[Registration](
 	[RegistrationId] [int] NOT NULL primary key,
-	[UserId] [int] NOT NULL foreign key references [dbo].[User](UserId),
+	[UserId] [int] NOT NULL foreign key references [dbo].[Users](UserId),
 	[SubjectId] [int] NOT NULL foreign key references [dbo].[Subject](SubjectId),
 	[RegistrationTime] [date] NOT NULL,
 	[PackageId] [int] NOT NULL foreign key references [dbo].[Package](PackageId),
