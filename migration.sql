@@ -115,7 +115,7 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [dbo].[User](
+CREATE TABLE [dbo].[Users](
 	[UserId] [int] NOT NULL primary key,
 	[Email] [varchar](255) NOT NULL,
 	[Password] [varchar](99) NOT NULL,
