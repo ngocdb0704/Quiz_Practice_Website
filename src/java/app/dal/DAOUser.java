@@ -2,45 +2,48 @@ package app.dal;
 
 import java.sql.*;
 import app.entity.User;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DAOUser extends DBContext {
-    public User getByEmail(String email) throws SQLException {
-        User user = new User();
+    public List<User> extractResults(ResultSet rs) throws SQLException {
+        List<User> result = new ArrayList<>();
 
-        PreparedStatement stmt = connection.prepareStatement("select * from Users where email = ?");
-        stmt.setString(1, email);
-        ResultSet rs = stmt.executeQuery();
+        while (rs.next()) {
+            User user = new User();
+            user.setUserId(rs.getInt("UserId"));
+            user.setEmail(rs.getString("Email"));
+            user.setPassword(rs.getString("Password"));
+            user.setFullName(rs.getString("FullName"));
+            user.setGender(rs.getString("Gender"));
+            user.setMobile(rs.getString("Mobile"));
+            user.setRole(rs.getString("Role"));
+            user.setIsActive(rs.getBoolean("IsActive"));
 
-        if (rs.next()) {
-            user.setUserId(rs.getInt("id"));
-            user.setEmail(rs.getString("email"));
-            user.setPassword(rs.getString("password"));
-            user.setFullName(rs.getString("fullName"));
-            user.setGender(rs.getString("gender"));
-            user.setMobile(rs.getString("mobile"));
-
-            return user;
+            result.add(user);
         }
 
-        return null;
+        return result;
     }
 
-    public void updateUser(User user) throws SQLException {
-        String sql = "update Users "
-                + "email = ?, "
-                + "password = ?, "
-                + "fullName = ?, "
-                + "gender = ?, "
-                + "mobile = ? "
-                + "where email = ?";
+    public User getByEmail(String email) throws SQLException {
+        PreparedStatement stmt = connection.prepareStatement("select * from [User] where [Email] = ?");
+        stmt.setString(1, email);
+        List<User> result = extractResults(stmt.executeQuery());
+        return result.isEmpty() ? null : result.get(0);
+    }
 
-        PreparedStatement stmt = connection.prepareStatement("select * from Users where email = ?");
-        stmt.setString(1, user.getEmail());
-        stmt.setString(2, user.getPassword());
-        stmt.setString(3, user.getFullName());
-        stmt.setString(4, user.getGender());
-        stmt.setString(5, user.getMobile());
+    public User getById(int id) throws SQLException {
+        PreparedStatement stmt = connection.prepareStatement("select * from [User] where [UserId] = ?");
+        stmt.setInt(1, id);
+        List<User> result = extractResults(stmt.executeQuery());
+        return result.isEmpty() ? null : result.get(0);
+    }
 
+    public void updatePassword(int id, String password) throws SQLException {
+        PreparedStatement stmt = connection.prepareStatement("update [User] set [Password] = ? where [UserId] = ?");
+        stmt.setString(1, password);
+        stmt.setInt(2, id);
         stmt.executeUpdate();
     }
 }

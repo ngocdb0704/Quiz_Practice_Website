@@ -18,26 +18,42 @@
     <body>
         <main class="d-flex justify-content-center align-items-center p-2">
             <c:choose>
-                <c:when test="${status eq 'change'}">
+                <c:when test="${screen eq 'change_pw'}">
                     <form method="POST" class="card w-50 p-3">
                         <input type="hidden" name="action" value="reset_password">
                         
                         <div class="text-center">
-                            <h2>Create New Password</h2>
+                            <h2>Welcome back, ${user.getFullName()}!</h2>
                             <p class="mb-3">Create a new password for your account</p>
                         </div>
                         <div
                             <label class="form-label">New Password</label>
-                            <input type="password" class="form-control" name="newpw" placeholder="New password">
+                            <input type="password" class="form-control" name="newpw" placeholder="New password" required>
                         </div>
                         <div
                             <label class="form-label">Confirm new password</label>
-                            <input type="password" class="form-control" name="confirmnewpw" placeholder="Confirm new password">
+                            <input type="password" class="form-control" name="confirmnewpw" placeholder="Confirm new password" required>
                         </div>
+                        <c:if test="${error eq 'error_pw_not_same'}">
+                            <div class="alert alert-primary mt-4" role="alert">
+                                Please make sure two passwords are the same
+                            </div>
+                        </c:if>
                         <button type="submit" class="btn btn-primary mt-4">Continue</button>
                     </form>
                 </c:when>
-                <c:when test="${status eq 'sent'}">
+                <c:when test="${screen eq 'expired'}">
+                    <div class="card w-50 p-3">
+                        <div class="text-center">
+                            <h2>Token has expired</h2>
+                            <p class="mb-3">Please restart the process</p>
+                            <a href="reset">
+                                <button class="btn btn-primary mt-4">Restart</button>
+                            </a>
+                        </div>
+                    </div>
+                </c:when>
+                <c:when test="${screen eq 'sent'}">
                     <div class="card w-50 p-3">
                         <div class="text-center">
                             <h2>Email has been sent</h2>
@@ -59,9 +75,14 @@
                             <input type="email" class="form-control" name="email" placeholder="Enter your email">
                         </div>
                         <button type="submit" class="btn btn-primary mt-4">Send Email</button>
-                        <c:if test="${not empty message}">
+                        <c:if test="${error eq 'error_not_exist'}">
                             <div class="alert alert-primary mt-4" role="alert">
-                                ${message}
+                                User does not exist
+                            </div>
+                        </c:if>
+                        <c:if test="${error eq 'error_invalid_token'}">
+                            <div class="alert alert-primary mt-4" role="alert">
+                                Invalid token
                             </div>
                         </c:if>
                     </form>

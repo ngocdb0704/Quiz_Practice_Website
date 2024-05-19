@@ -133,8 +133,7 @@ CREATE TABLE [dbo].[ProfilePicture](
 
 GO
 CREATE TABLE [dbo].[ResetToken](
-	[TokenId] [int] NOT NULL primary key,
-	[UserId] [int] NOT NULL foreign key references [dbo].[User](UserId),
+	[UserId] [int] primary key foreign key references [dbo].[User](UserId),
 	[Token] [varchar] (255),
 	[ValidTo] [datetime])
 
