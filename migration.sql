@@ -115,7 +115,7 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [dbo].[Users](
+CREATE TABLE [dbo].[User](
 	[UserId] [int] NOT NULL primary key,
 	[Email] [varchar](255) NOT NULL,
 	[Password] [varchar](99) NOT NULL,
@@ -129,12 +129,12 @@ GO
 CREATE TABLE [dbo].[ProfilePicture](
 	[UserId] [int] NOT NULL primary key,
 	[Image] [varbinary] (MAX),
-	constraint [UserId] foreign key ([UserId]) references [dbo].[Users](UserId))
+	constraint [UserId] foreign key ([UserId]) references [dbo].[User](UserId))
 
 GO
 CREATE TABLE [dbo].[ResetToken](
 	[TokenId] [int] NOT NULL primary key,
-	[UserId] [int] NOT NULL foreign key references [dbo].[Users](UserId),
+	[UserId] [int] NOT NULL foreign key references [dbo].[User](UserId),
 	[Token] [varchar] (255),
 	[ValidTo] [datetime])
 
@@ -154,7 +154,7 @@ CREATE TABLE [dbo].[Package](
 GO
 CREATE TABLE [dbo].[Registration](
 	[RegistrationId] [int] NOT NULL primary key,
-	[UserId] [int] NOT NULL foreign key references [dbo].[Users](UserId),
+	[UserId] [int] NOT NULL foreign key references [dbo].[User](UserId),
 	[SubjectId] [int] NOT NULL foreign key references [dbo].[Subject](SubjectId),
 	[RegistrationTime] [date] NOT NULL,
 	[PackageId] [int] NOT NULL foreign key references [dbo].[Package](PackageId),
