@@ -32,20 +32,20 @@ if(vector == null ){%>
 <div class="row">
     <div class="col-sm-3">
         <ul> 
-            <li><a href="CustomerControllerURL?service=sortbyID">Sort by ID</a></li>
-            <li><a href="CustomerControllerURL?service=sortbyName">Sort by FullName</a></li>
-            <li><a href="CustomerControllerURL?service=sortbyGen">Sort by Gender</a></li>
-            <li><a href="CustomerControllerURL?service=sortbyMail">Sort by Email</a></li>
-            <li><a href="CustomerControllerURL?service=sortbyPhone">Sort by Mobile</a></li>
+            <li><a href="CustomerController?service=sortbyID">Sort by ID</a></li>
+            <li><a href="CustomerController?service=sortbyName">Sort by FullName</a></li>
+            <li><a href="CustomerController?service=sortbyGen">Sort by Gender</a></li>
+            <li><a href="CustomerController?service=sortbyMail">Sort by Email</a></li>
+            <li><a href="CustomerController?service=sortbyPhone">Sort by Mobile</a></li>
         </ul>
     </div>
     <div class="col-sm-3">
         <ul> 
-            <li><a href="CustomerControllerURL?service=activefilter">Filtered by Status - Active</a></li>
-            <li><a href="CustomerControllerURL?service=notactivefilter">Filtered by Status - NotActive</a></li>
-            <li><a href="CustomerControllerURL?service=malefilter">Filtered by Gender - Male</a></li>
-            <li><a href="CustomerControllerURL?service=femalefilter">Filtered by Gender - Female</a></li>
-            <li><a href="CustomerControllerURL?service=userfilter">Filtered by Role - User</a></li>
+            <li><a href="CustomerController?service=activefilter">Filtered by Status - Active</a></li>
+            <li><a href="CustomerController?service=notactivefilter">Filtered by Status - NotActive</a></li>
+            <li><a href="CustomerController?service=malefilter">Filtered by Gender - Male</a></li>
+            <li><a href="CustomerController?service=femalefilter">Filtered by Gender - Female</a></li>
+            <li><a href="CustomerController?service=userfilter">Filtered by Role - User</a></li>
         </ul>
     </div>
    
@@ -103,8 +103,8 @@ if(vector == null ){%>
             <td><%=cus.getGender()%></td>
             <td><%=cus.getMobile()%></td>
             <td><%=cus.isIsActive()%></td>
-            <td><a href="CustomerControllerURL?service=update&id=<%=cus.getUserId()%>">Edit</a></td>
-            <td><a href="CustomerControllerURL?service=view&id=<%=cus.getUserId()%>">View</a></td>
+            <td><a href="CustomerController?service=update&id=<%=cus.getUserId()%>">Edit</a></td>
+            <td><a href="CustomerController?service=view&id=<%=cus.getUserId()%>">View</a></td>
         </tr>
         <%}%>
     </table>

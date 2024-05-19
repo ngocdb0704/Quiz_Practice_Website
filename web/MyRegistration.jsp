@@ -43,6 +43,7 @@
                         </thead>
                         <%
                             String placeHolder ="";
+                            int i=1;
                             String value= (String) request.getAttribute("value");
                             if(value == null) value = "";
                             if(value.equals("")) placeHolder = "Search Subject";
@@ -52,7 +53,7 @@
                         %>
                         <tbody>
                             <tr>
-                                <th scope="row"><%=regist.getRegistrationId()%></th>
+                                <th scope="row"><%=i%></th>
                                 <td><%=regist.getSubjectName()%></td>
                                 <td><%=regist.getRegistrationTime()%></td>
                                 <td><%=regist.getPackageName()%></td>
@@ -63,7 +64,10 @@
                                 <td><a href="RegistrationController?service=edit"><i class="bi bi-pencil"></i></a></td>
                                 <td><button onclick="myFunction('<%=regist.getRegistrationId()%>')"><i class="bi bi-trash3"></i></button></td>
                             </tr>
-                            <%}%>
+                            <%
+                                i++;
+                                }
+                            %>
                         </tbody>
                     </table>
                 </div>

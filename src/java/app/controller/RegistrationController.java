@@ -80,7 +80,12 @@ public class RegistrationController extends HttpServlet {
             page = "/MyRegistration.jsp";
             dispath(request, response, page);
         }
-
+        if(service.equals("cancel")){
+            int cancelId = Integer.parseInt(request.getParameter("cancelId"));
+            int n = daoRegistration.removeRegistration(cancelId);
+            service = "listAll";
+            response.sendRedirect("RegistrationController");
+        }
 //        try (PrintWriter out = response.getWriter()) {
 //            /* TODO output your page here. You may use following sample code. */
 //            out.println("<!DOCTYPE html>");

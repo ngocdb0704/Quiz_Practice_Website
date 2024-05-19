@@ -21,22 +21,20 @@ import java.util.logging.Logger;
 public class DAORegistration extends DBContext {
     public Vector<Registration> multiPurposeVector(ResultSet rs){
         Vector<Registration> vector = new Vector<>();
-        int i = 1;
         try {
             while (rs.next()) {
-                int id = i;
-                String subjectName = rs.getString(1);
-                Date registrationTime = rs.getDate(2);
-                String packageName = rs.getString(3);
-                float totalCost = rs.getFloat(4);
-                String status = rs.getString(5);
-                Date validFrom = rs.getDate(6);
-                Date validTo = rs.getDate(7);
+                int id = rs.getInt(1);
+                String subjectName = rs.getString(2);
+                Date registrationTime = rs.getDate(3);
+                String packageName = rs.getString(4);
+                float totalCost = rs.getFloat(5);
+                String status = rs.getString(6);
+                Date validFrom = rs.getDate(7);
+                Date validTo = rs.getDate(8);
                 Registration var = new Registration(id,
                         subjectName, registrationTime, packageName,
                         totalCost, status, validFrom, validTo);
                 vector.add(var);
-                i++;
             }
         } catch (SQLException ex) {
             Logger.getLogger(DAORegistration.class.getName()).log(Level.SEVERE, null, ex);
@@ -50,7 +48,7 @@ public class DAORegistration extends DBContext {
     .replace("_", "!_")
     .replace("[", "![");
         Vector<Registration> vector = new Vector<>();
-        String sql = "select s.SubjectName, r.RegistrationTime, p.PackageName," +
+        String sql = "select r.RegistrationId, s.SubjectName, r.RegistrationTime, p.PackageName," +
 "                     r.TotalCost, r.Status, r.ValidFrom, r.ValidTo " +
 "                        from Registration r, [User] u, [Subject] s, [Package] p " +
 "                        where r.UserId = ? and r.SubjectId = s.SubjectId " +
@@ -74,7 +72,7 @@ public class DAORegistration extends DBContext {
     .replace("%", "!%")
     .replace("_", "!_")
     .replace("[", "![");
-        String sql = "select s.SubjectName, r.RegistrationTime, p.PackageName," +
+        String sql = "select r.RegistrationId, s.SubjectName, r.RegistrationTime, p.PackageName," +
 "                     r.TotalCost, r.Status, r.ValidFrom, r.ValidTo " +
 "                        from Registration r, [User] u, [Subject] s, [Package] p " +
 "                        where r.UserId = ? and r.SubjectId = s.SubjectId " +
@@ -93,7 +91,7 @@ public class DAORegistration extends DBContext {
     }
     public Vector<Registration> filterBySubjectCategory(int userid, String category){
         String sql = """
-                     select s.SubjectName, r.RegistrationTime, p.PackageName, r.TotalCost, r.Status, r.ValidFrom, r.ValidTo 
+                     select r.RegistrationId, s.SubjectName, r.RegistrationTime, p.PackageName, r.TotalCost, r.Status, r.ValidFrom, r.ValidTo 
                      from Registration r, [User] u, [Subject] s, [Package] p 
                      where r.UserId = ? and r.SubjectId = s.SubjectId and r.PackageId = p.PackageId and s.SubjectCategory = ?""";
         Vector<Registration> vector = new Vector<>();
@@ -109,7 +107,7 @@ public class DAORegistration extends DBContext {
         return vector;
     }
     public Vector<Registration> getAll(int userid) {
-        String sql = "select s.SubjectName, r.RegistrationTime, p.PackageName,"
+        String sql = "select r.RegistrationId, s.SubjectName, r.RegistrationTime, p.PackageName,"
                 + " r.TotalCost, r.Status, r.ValidFrom, r.ValidTo from Registration r,"
                 + " [Subject] s, [Package] p where r.UserId = ? "
                 + "and r.SubjectId = s.SubjectId and r.PackageId = p.PackageId";
@@ -124,10 +122,23 @@ public class DAORegistration extends DBContext {
         }
         return vector;
     }
-
+    public int removeRegistration(int registrationId){
+        int n=0;
+        String sqlRemove = "DELETE FROM [dbo].[Registration]\n" +
+"      WHERE RegistrationId =?";
+        
+        try {
+            PreparedStatement pre = connection.prepareStatement(sqlRemove);
+            pre.setInt(1, registrationId);
+            n = pre.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAORegistration.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return n;
+    }
     public static void main(String[] args) {
         DAORegistration dao = new DAORegistration();
-        Vector<Registration> vec = dao.searchNameFilter(1, "ma", "Natural Science");
-        System.out.println(vec.size());
+        int n = dao.removeRegistration(1);
+        System.out.println(n);
     }
 }
