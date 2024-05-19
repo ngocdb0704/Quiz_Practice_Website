@@ -3,24 +3,24 @@ package app.entity;
 import java.util.Date;
 
 public class Registration {
+
     private int registrationId;
-    private int userId;
-    private String subjectId;
+    private String subjectName;
     private Date registrationTime;
-    private int packageId;
+    private String packageName;
     private float totalCost;
     private String status;
     private Date validFrom;
     private Date validTo;
 
-    public Registration() {}
+    public Registration() {
+    }
 
-    public Registration(int registrationId, int userId, String subjectId, Date registrationTime, int packageId, float totalCost, String status, Date validFrom, Date validTo) {
+    public Registration(int registrationId, String subjectName, Date registrationTime, String packageName, float totalCost, String status, Date validFrom, Date validTo) {
         this.registrationId = registrationId;
-        this.userId = userId;
-        this.subjectId = subjectId;
+        this.subjectName = subjectName;
         this.registrationTime = registrationTime;
-        this.packageId = packageId;
+        this.packageName = packageName;
         this.totalCost = totalCost;
         this.status = status;
         this.validFrom = validFrom;
@@ -31,71 +31,64 @@ public class Registration {
         return registrationId;
     }
 
-    public void setRegistrationId(int registrationId) {
-        this.registrationId = registrationId;
-    }
-
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
-
-    public String getSubjectId() {
-        return subjectId;
-    }
-
-    public void setSubjectId(String subjectId) {
-        this.subjectId = subjectId;
+    public String getSubjectName() {
+        return subjectName;
     }
 
     public Date getRegistrationTime() {
         return registrationTime;
     }
 
-    public void setRegistrationTime(Date registrationTime) {
-        this.registrationTime = registrationTime;
-    }
-
-    public int getPackageId() {
-        return packageId;
-    }
-
-    public void setPackageId(int packageId) {
-        this.packageId = packageId;
+    public String getPackageName() {
+        return packageName;
     }
 
     public float getTotalCost() {
         return totalCost;
     }
 
-    public void setTotalCost(float totalCost) {
-        this.totalCost = totalCost;
-    }
-
     public String getStatus() {
         return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
     }
 
     public Date getValidFrom() {
         return validFrom;
     }
 
-    public void setValidFrom(Date validFrom) {
-        this.validFrom = validFrom;
-    }
-
     public Date getValidTo() {
         return validTo;
+    }
+
+    public void setRegistrationId(int registrationId) {
+        this.registrationId = registrationId;
+    }
+
+    public void setSubjectName(String subjectName) {
+        this.subjectName = subjectName;
+    }
+
+    public void setRegistrationTime(Date registrationTime) {
+        this.registrationTime = registrationTime;
+    }
+
+    public void setPackageName(String packageName) {
+        this.packageName = packageName;
+    }
+
+    public void setTotalCost(float totalCost) {
+        this.totalCost = totalCost;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public void setValidFrom(Date validFrom) {
+        this.validFrom = validFrom;
     }
 
     public void setValidTo(Date validTo) {
         this.validTo = validTo;
     }
+
 }

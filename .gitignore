@@ -9,3 +9,6 @@ nbdist/
 
 #By: QuanNM, For: files that only serve the build on my local machine (which uses mysql intsead of mssql)
 **/__local__*
+
+node_modules/
+web/WEB-INF/config.properties

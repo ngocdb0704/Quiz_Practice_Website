@@ -6,10 +6,10 @@ package app.entity;
 
 /**
  *
- * @author OwO
+ * @author Administrator
  */
+public class Customer {
 
-public class User {
     private int userId;
     private String email;
     private String password;
@@ -17,12 +17,13 @@ public class User {
     private String fullName;
     private String gender;
     private String mobile;
-
     private boolean isActive;
 
-    public User() {}
 
-    public User(int userId, String email, String password, String role, String fullName, String gender, String mobile, boolean isActive) {
+    public Customer() {
+    }
+    
+    public Customer(int userId, String email, String password, String role, String fullName, String gender, String mobile, boolean isActive) {
         this.userId = userId;
         this.email = email;
         this.password = password;
@@ -96,6 +97,13 @@ public class User {
     public void setIsActive(boolean isActive) {
         this.isActive = isActive;
     }
-    
+
+    @Override
+    public String toString() {
+        return "Customer{" + "userId=" + userId + ", email=" + email + ", password=" + password + ", role=" + role + ", fullName=" + fullName + ", gender=" + gender + ", mobile=" + mobile + ", isActive=" + isActive + '}';
+    }
+
+   
+
     
 }
