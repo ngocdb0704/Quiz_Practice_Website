@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
-public class DAOUser extends __local__DBContext {
+public class DAOUser extends DBContext {
 	public List<User> extractResults(ResultSet rs) throws SQLException {
 		List<User> result = new ArrayList<>();
 
