@@ -8,12 +8,12 @@
         
         <!-- Common import -->
         <%@include file="/common/ImportBootstrap.jsp" %>
-        <link href="../common/common.css" href="stylesheet">
-        <script src="../common/common.js"></script>
+        <link href="common/common.css" href="stylesheet">
+        <script src="common/common.js"></script>
         
         <!-- Specific page import -->
-        <link href="ResetPassword.css" href="stylesheet">
-        <script src="ResetPassword.js"></script>
+        <link href="user/ResetPassword.css" href="stylesheet">
+        <script src="user/ResetPassword.js"></script>
     </head>
     <body>
         <main class="d-flex justify-content-center align-items-center p-2">
@@ -57,12 +57,12 @@
                     <div class="card w-50 p-3">
                         <div class="text-center">
                             <h2 class="mb-3">Check your inbox</h2>
-                            <img src="../public/images/email-svgrepo-com.svg" width="120">
+                            <img src="public/images/email-svgrepo-com.svg" width="120">
                             <p class="my-3">
                                 If your email exists in our database, a message with instruction
                                 will be sent to it.
                             </p>
-                            <a href="../home">
+                            <a href="home">
                                 <button class="btn btn-primary">Go home</button>
                             </a>
                         </div>
