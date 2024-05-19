@@ -7,13 +7,21 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="java.util.Vector"%>
 <%@page import="app.entity.Registration"%>
+<%@page import="app.entity.Subject"%>
+
 
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>My Registration</title>
-        <link rel="stylesheet" href="public/css/bootstrap/bootstrap.min.css"/>
+        <link rel="stylesheet" href="public/css/bootstrap/bootstrap.min.css"/> 
+        <link rel="stylesheet" href="public/css/bootstrap/bootstrap-utilities.min.css"/>
+        <script>
+            function sendRedirect(subject) {
+                window.location.href = "?subjectCategory=" + subjectCategory.value;
+            }
+        </script>
     </head>
     <body>
         <div class="row">
@@ -63,13 +71,14 @@
                     </form>
                 </div>
                 <div class="row justify-content-center">
-                    <label for="subject">Filter Subject:</label>
-                    <select class="col-10" name="subject" id="subject">
-                        <option value="0">All Category</option>
-                        <option value="1">Volvo</option>
-                        <option value="2">Saab</option>
-                        <option value="3">Mercedes</option>
-                        <option value="4">Audi</option>
+                    <label for="subjectCategory">Filter Subject:</label>
+                    <select class="col-10" name="subjectCategory" id="subjectCategory" onchange="sendRedirect(this)">
+                        <%
+                                Vector<Subject> vecSub = (Vector<Subject>) request.getAttribute("select");
+                                for(Subject sub:vecSub){
+                            %>
+                            <option value="<%=sub.getSubjectId()%>"><%=sub.getSubjectCategory()%></option>
+                            <%}%>
                     </select>
                 </div>
                 <a class="row justify-content-center" href="">Contact us</a>

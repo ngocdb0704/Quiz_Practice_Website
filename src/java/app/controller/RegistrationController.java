@@ -5,7 +5,9 @@
 package app.controller;
 
 import app.entity.DAORegistration;
+import app.entity.DAOSubject;
 import app.entity.Registration;
+import app.entity.Subject;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -34,20 +36,35 @@ public class RegistrationController extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         DAORegistration daoRegistration = new DAORegistration();
+        DAOSubject daoSubject = new DAOSubject();
         String service = request.getParameter("service");
-        Vector<Registration> registrationVector;
+        Vector<Registration> registrationVector = null;
+        Vector<Subject> subjectVector = daoSubject.getFilterList();
         String page;
+        String subjectCategory = request.getParameter("subjectCategory");
         if (service == null) {
             service = "listAll";
         }
         if (service.equals("listAll")) {
-            registrationVector = daoRegistration.getAll(1);
+            if(subjectCategory == null){
+                subjectCategory = "0";
+            }
+            if(subjectCategory.equals("0")){
+                registrationVector = daoRegistration.getAll(1);
+                subjectVector.add(0, new Subject(0, "All Subject", "All Category"));
+            } else{
+                int pos = Integer.parseInt(subjectCategory) -1;
+                Subject sub = subjectVector.get(pos);
+                subjectVector.set(pos, new Subject(0, "All", "All Category"));
+                subjectVector.add(0, sub);
+                registrationVector = daoRegistration.filterBySubjectCategory(1, sub.getSubjectCategory());
+            }
+            request.setAttribute("select", subjectVector);
             request.setAttribute("data", registrationVector);
             page = "/MyRegistration.jsp";
             dispath(request, response, page);
         }
-        if (service.equals("cancel")) {
-        }
+
         
 //        try (PrintWriter out = response.getWriter()) {
 //            /* TODO output your page here. You may use following sample code. */
