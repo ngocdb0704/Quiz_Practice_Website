@@ -41,31 +41,46 @@ public class RegistrationController extends HttpServlet {
         Vector<Registration> registrationVector = null;
         Vector<Subject> subjectVector = daoSubject.getFilterList();
         String page;
+        String submit = request.getParameter("submit");
+        int permitToListAll = 0;
+        String inputSearch = request.getParameter("search");
+        if(inputSearch == null) inputSearch ="";
+        int pos;
         String subjectCategory = request.getParameter("subjectCategory");
         if (service == null) {
             service = "listAll";
         }
         if (service.equals("listAll")) {
-            if(subjectCategory == null){
+            if (subjectCategory == null) {
                 subjectCategory = "0";
             }
-            if(subjectCategory.equals("0")){
+            if (subjectCategory.equals("0") && inputSearch.equals("")) {
                 registrationVector = daoRegistration.getAll(1);
                 subjectVector.add(0, new Subject(0, "All Subject", "All Category"));
-            } else{
-                int pos = Integer.parseInt(subjectCategory) -1;
+            } else if (!subjectCategory.equals("0") && inputSearch.equals("")) {
+                pos = Integer.parseInt(subjectCategory) - 1;
                 Subject sub = subjectVector.get(pos);
                 subjectVector.set(pos, new Subject(0, "All", "All Category"));
                 subjectVector.add(0, sub);
                 registrationVector = daoRegistration.filterBySubjectCategory(1, sub.getSubjectCategory());
+            } else if (subjectCategory.equals("0") && !inputSearch.equals("")) {
+                subjectVector.add(0, new Subject(0, "All Subject", "All Category"));
+                registrationVector = daoRegistration.searchBySubjectName(1, inputSearch);
+            } else{
+                pos = Integer.parseInt(subjectCategory) - 1;
+                Subject sub = subjectVector.get(pos);
+                subjectVector.set(pos, new Subject(0, "All", "All Category"));
+                subjectVector.add(0, sub);
+                registrationVector = daoRegistration.searchNameFilter(1, inputSearch, sub.getSubjectCategory());
             }
+
+            request.setAttribute("value", inputSearch);
             request.setAttribute("select", subjectVector);
             request.setAttribute("data", registrationVector);
             page = "/MyRegistration.jsp";
             dispath(request, response, page);
         }
 
-        
 //        try (PrintWriter out = response.getWriter()) {
 //            /* TODO output your page here. You may use following sample code. */
 //            out.println("<!DOCTYPE html>");
