@@ -1,0 +1,56 @@
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <form action="CustomerControllerURL" method="post">
+            <table>
+                <tr>
+                    <td>UserID</td>
+                    <td><input type="text" name="UserID" id=""></td>
+                </tr>
+                <tr>
+                    <td>Email</td>
+                    <td><input type="text" name="Email" id=""></td>
+                </tr>
+                <tr>
+                    <td>Password</td>
+                    <td><input type="text" name="Password" id=""></td>
+                </tr>
+                <tr>
+                    <td>Role</td>
+                    <td><input type="text" name="Role" id=""></td>
+                </tr>
+                <tr>
+                    <td>FullName</td>
+                    <td><input type="text" name="FullName" id=""></td>
+                </tr>
+                <tr>
+                    <td>Gender</td>
+                    <td><input type="text" name="Gender" id=""></td>
+                </tr>
+                <tr>
+                    <td>Mobile</td>
+                    <td><input type="text" name="Mobile" id=""></td>
+                </tr>
+                <tr>
+                    <td>isActive</td>
+                    <td><input type="radio" name="isActive" value="1"
+                               <%=(cus.isIsActive()==true?"checked":"")%>Active
+                        <input type="radio" name="isActive" value="0"
+                               <%=(cus.isIsActive()==false?"checked":"")%>Not Active
+                    </td>
+
+                </tr>
+                <tr>
+                    <td><input type="submit" value="addUser" name="submit"></td>
+                    <td><input type="reset" value="Clear"></td>
+                </tr>
+                
+                <input type="hidden" name="service" value="addUser">
+            </table>
+        </form>
+    </body>
+</html>
