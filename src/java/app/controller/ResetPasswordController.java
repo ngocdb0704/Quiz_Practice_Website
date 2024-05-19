@@ -31,19 +31,26 @@ public class ResetPasswordController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         String token = request.getParameter("token");
-        if (token != null) {
-            try {
+
+        try {
+            if (token != null) {
                 ResetRecord record = daoResetTokens.getByToken(token);
+
+                if (record == null) {
+                    request.setAttribute("error", "error_invalid_token");
+                    request.getRequestDispatcher(RESET_PAGE).forward(request, response);
+                    return;
+                }
+
                 if (!record.isValid()) {
                     request.setAttribute("screen", "expired");
                 } else {
                     request.setAttribute("screen", "change_pw");
                     request.setAttribute("user", daoUser.getById(record.getUserId()));
                 }
-            } catch (Exception e) {
-                request.setAttribute("error", "error_invalid_token");
-                e.printStackTrace();
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
 
         request.getRequestDispatcher(RESET_PAGE).forward(request, response);
@@ -72,24 +79,25 @@ public class ResetPasswordController extends HttpServlet {
         boolean same = newPassword.equals(confirmNewPassword);
 
         if (token != null) {
-            try {
-                ResetRecord record = daoResetTokens.getByToken(token);
+            ResetRecord record = daoResetTokens.getByToken(token);
 
-                if (!record.isValid()) {
-                    request.setAttribute("screen", "expired");
-                } else if (same) {
-                    response.sendRedirect("../home");
-                    daoUser.updatePassword(record.getUserId(), newPassword);
-                    daoResetTokens.deleteToken(record.getUserId());
-                    return;
-                } else {
-                    request.setAttribute("user", daoUser.getById(record.getUserId()));
-                    request.setAttribute("screen", "change_pw");
-                    request.setAttribute("error", "error_pw_not_same");
-                }
-            } catch (Exception e) {
+            if (record == null) {
                 request.setAttribute("error", "error_invalid_token");
-                e.printStackTrace();
+                request.getRequestDispatcher(RESET_PAGE).forward(request, response);
+                return;
+            }
+
+            if (!record.isValid()) {
+                request.setAttribute("screen", "expired");
+            } else if (same) {
+                response.sendRedirect("../home");
+                daoUser.updatePassword(record.getUserId(), newPassword);
+                daoResetTokens.deleteToken(record.getUserId());
+                return;
+            } else {
+                request.setAttribute("user", daoUser.getById(record.getUserId()));
+                request.setAttribute("screen", "change_pw");
+                request.setAttribute("error", "error_pw_not_same");
             }
         }
 
@@ -104,12 +112,9 @@ public class ResetPasswordController extends HttpServlet {
 
         if (user != null) {
             String token = daoResetTokens.createForUserId(user.getUserId());
-            request.setAttribute("screen", "sent");
-            request.setAttribute("token", token);
-        } else {
-            request.setAttribute("error", "error_not_exist");
         }
-        
+
+        request.setAttribute("screen", "sent");
         request.getRequestDispatcher(RESET_PAGE).forward(request, response);
     }
 

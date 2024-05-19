@@ -56,9 +56,15 @@
                 <c:when test="${screen eq 'sent'}">
                     <div class="card w-50 p-3">
                         <div class="text-center">
-                            <h2>Email has been sent</h2>
-                            <p class="mb-3">Please check your inbox for confirmation instructions</p>
-                            <p>Generated token: ${token}</p>
+                            <h2 class="mb-3">Check your inbox</h2>
+                            <img src="../public/images/email-svgrepo-com.svg" width="120">
+                            <p class="my-3">
+                                If your email exists in our database, a message with instruction
+                                will be sent to it.
+                            </p>
+                            <a href="../home">
+                                <button class="btn btn-primary">Go home</button>
+                            </a>
                         </div>
                     </div>
                 </c:when>
@@ -75,11 +81,6 @@
                             <input type="email" class="form-control" name="email" placeholder="Enter your email">
                         </div>
                         <button type="submit" class="btn btn-primary mt-4">Send Email</button>
-                        <c:if test="${error eq 'error_not_exist'}">
-                            <div class="alert alert-primary mt-4" role="alert">
-                                User does not exist
-                            </div>
-                        </c:if>
                         <c:if test="${error eq 'error_invalid_token'}">
                             <div class="alert alert-primary mt-4" role="alert">
                                 Invalid token
