@@ -4,8 +4,8 @@
  */
 package app.controller;
 
-import app.entity.DAORegistration;
-import app.entity.DAOSubject;
+import app.dal.DAORegistration;
+import app.dal.DAOSubject;
 import app.entity.Registration;
 import app.entity.Subject;
 import jakarta.servlet.RequestDispatcher;
