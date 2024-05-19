@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package app.model;
+package app.dal;
 
 import app.dal.DBContext;
 import app.entity.User;
@@ -26,7 +26,8 @@ public class DAOUser extends DBContext {
                 + "           ,[FullName]\n"
                 + "           ,[Gender]\n"
                 + "           ,[Mobile]\n"
-                + "     VALUES (?,?,?,?,?,?,?)";
+                + "           ,[isActive]\n"
+                + "     VALUES (?,?,?,?,?,?,?.?)";
         try {
             PreparedStatement pre = connection.prepareStatement(sql);
             pre.setInt(1, user.getUserId());
@@ -36,6 +37,7 @@ public class DAOUser extends DBContext {
             pre.setString(5, user.getFullName());
             pre.setString(6, user.getGender());
             pre.setString(7, user.getMobile());
+            pre.setBoolean(8, user.isIsActive());
             n = pre.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
@@ -49,7 +51,6 @@ public class DAOUser extends DBContext {
             Statement state = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
             ResultSet rs = state.executeQuery(sql);
-
             while (rs.next()) {
                 int Id = rs.getInt(1);
                 String Email = rs.getString(2);
@@ -58,7 +59,7 @@ public class DAOUser extends DBContext {
                 String FullName = rs.getString(5);
                 String Gender = rs.getString(6);
                 String Mobile = rs.getString(7);
-                Boolean isActive = rs.getBoolean("8");
+                Boolean isActive = rs.getBoolean(8);
                 User cus = new User(Id, Email, Password, Role, FullName, Gender, Mobile, isActive);
                 vector.add(cus);
 
@@ -72,14 +73,14 @@ public class DAOUser extends DBContext {
     }
 
     public Vector<User> searchEmail(String search) throws SQLException {
-        String sql = "select * from [User] where Email like ?";
+        String sql = "select * from [User] where [Email] like ?";
         PreparedStatement pre = connection.prepareStatement(sql);
         pre.setString(1, search);
         return getAll(sql);
     }
 
     public Vector<User> searchPassword(String search) throws SQLException {
-        String sql = "select * from [User] where Password like ?";
+        String sql = "select * from [User] where [Password] like ?";
         PreparedStatement pre = connection.prepareStatement(sql);
         pre.setString(1, search);
         return getAll(sql);
