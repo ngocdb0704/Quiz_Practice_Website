@@ -60,7 +60,7 @@
                     </form>
                 </div>
 
-                <div class="col-sm-6 col-12"">
+                <div class="col-sm-6 col-12">
                     <div class="row"> Email: <input style="background-color: #cecece; border: 1px solid black" type="text" name="email" value="<%=(fetched != null)? fetched.getEmail(): ""%>" readonly/> </div>
                     <form action="UserProfile" method="POST">
                         <div class="row"> Full name: <input type="text" name="fullName" value="<%=(fetched != null)? fetched.getFullName(): ""%>" /> </div>
