@@ -7,7 +7,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link" href="home">Home</a>
+                    <a class="nav-link" href="index.jsp">Home</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="">Courses</a>
@@ -15,9 +15,12 @@
                 <li class="nav-item">
                     <a class="nav-link" href="blogs/list">Blogs</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="RegistrationController">My Registration</a>
+                </li>
             </ul>
             <div class="d-flex gap-2">
-                <a href="user/login">
+                <a href="LoginInterface.jsp">
                     <button class="btn btn-primary" type="submit">Login</button>
                 </a>
                 <a href="user/signup">

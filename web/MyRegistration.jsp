@@ -21,22 +21,50 @@
         <link rel="stylesheet" href="public/css/bootstrap/MyRegistration.css"/>
     </head>
     <body>
+        <%@include file="/common/header.jsp" %>
         <div class="container">
+            <h1>My Registration</h1>
+            <%
+                String placeHolder ="";
+                int i=1;
+                String value= (String) request.getAttribute("value");
+                if(value == null) value = "";
+                if(value.equals("")) placeHolder = "Search Subject";
+            %>
             <div class="row">
+                <aside class="col-3">
+                    <form class="siderbar"  action="RegistrationController" method="post">
+                        <div class="mb-3">
+                            <div class="row card-body container justify-content-center" id="inputContainer">
+                                <input class="col-8" type="text" placeholder="<%=placeHolder%>" value="<%=value%>" name="search">
+                                <button class="col-3" type="submit" name="submit" value="submit">
+                                    <i class="bi bi-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="subjectCategory">Filter Subject:</label>
+                            <%
+                                Vector<Subject> vecSub = (Vector<Subject>) request.getAttribute("select"); 
+                            %>
+                            <select class="col-10" name="subjectCategory" id="subjectCategory" onchange="sendRedirect(this, '<%=value%>')">
+                                <%
+                                        for(Subject sub:vecSub){
+                                %>
+                                <option value="<%=sub.getSubjectId()%>"><%=sub.getSubjectCategory()%></option>
+                                <%}%>
+                            </select>
+                        </div>
+                    </form>
+                </aside>
                 <div class="col-9">
                     <%
-                        String placeHolder ="";
-                        int i=1;
-                        String value= (String) request.getAttribute("value");
-                        if(value == null) value = "";
-                        if(value.equals("")) placeHolder = "Search Subject";
                         Vector<Registration> registrationVector = (Vector<Registration>) request.getAttribute("data");
                         for(Registration regist:registrationVector){
-            
                     %>
                     <div class="card col-3 regist">
                         <img src="<%=regist.getSubjectImg()%>" width="100" height="200"
-                            class="card-img-top" alt="alt"/>
+                             class="card-img-top" alt="alt"/>
                         <div class="card-body">
                             <h5><%=regist.getSubjectName()%></h5>
                             <ul class="list-group list-group-flush">
@@ -75,38 +103,14 @@
 
                         </div>
                     </div>
-
                     <%
                         i++;
                         }
                     %>
                 </div>
-                <div class="card sider col-3">
-                    <form  action="RegistrationController" method="post">
-                        <div class="row container justify-content-center" id="inputContainer">
-                            <input class="col-8" type="text" placeholder="<%=placeHolder%>" value="<%=value%>" name="search">
-                            <button class="col-3" type="submit" name="submit" value="submit">
-                                <i class="bi bi-search"></i>
-                            </button>
-                        </div>
-                        <div class="row container justify-content-center">
-                            <label for="subjectCategory">Filter Subject:</label>
-                            <%
-                                Vector<Subject> vecSub = (Vector<Subject>) request.getAttribute("select"); 
 
-                            %>
-                            <select class="col-10" name="subjectCategory" id="subjectCategory" onchange="sendRedirect(this, '<%=value%>')">
-                                <%
-                                        for(Subject sub:vecSub){
-                                %>
-                                <option value="<%=sub.getSubjectId()%>"><%=sub.getSubjectCategory()%></option>
-                                <%}%>
-                            </select>
-                        </div>
-                    </form>
-                    <a class="row justify-content-center" href="">Contact us</a>
-                </div>
             </div>
         </div>
+        <%@include file="/common/footer.jsp" %>
     </body>
 </html>
