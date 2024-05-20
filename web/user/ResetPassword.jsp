@@ -57,7 +57,7 @@
                         <div class="text-center">
                             <h2>Token has expired</h2>
                             <p class="mb-3">Please restart the process</p>
-                            <a href="reset">
+                            <a href="user/reset">
                                 <button class="btn btn-primary mt-4">Restart</button>
                             </a>
                         </div>
@@ -72,6 +72,7 @@
                                 If your email exists in our database, a message with instruction
                                 will be sent to it.
                             </p>
+                            <p class="text-secondary">This email expires after ${timeout} minutes</p>
                             <a href="home">
                                 <button class="btn btn-primary">Go home</button>
                             </a>

@@ -5,3 +5,4 @@ mail.smtp.port=587
 mail.smtp.ssl.trust=xxx
 mail.account=xxx
 mail.password=xxx
+pw.reset.timeout=2

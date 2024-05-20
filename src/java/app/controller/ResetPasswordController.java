@@ -129,8 +129,21 @@ public class ResetPasswordController extends HttpServlet {
 
             User user = daoUser.getByEmail(email);
 
+            int timeout = 1;
+            try {
+                String val = Config.getConfig(getServletContext()).getOrDefault(
+                        "pw.reset.timeout",
+                        "1"
+                ).toString();
+
+                timeout = Integer.parseInt(val);
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
+
             if (user != null) {
-                String token = daoResetTokens.createForUserId(user.getUserId());
+
+                String token = daoResetTokens.createForUserId(user.getUserId(), timeout);
                 
                 GmailService service = new GmailService(getServletContext());
                 
@@ -146,6 +159,7 @@ public class ResetPasswordController extends HttpServlet {
             }
 
             request.setAttribute("screen", "sent");
+            request.setAttribute("timeout", timeout);
             request.getRequestDispatcher(RESET_PAGE).forward(request, response);
         }
     }
