@@ -44,6 +44,7 @@
             if (role.equals("Customer")) {
         %>
         <main>
+            <button style="position: absolute; top: 10px; right: 10px; color: red" onclick="closePopUp()">X</button>
             <div class="row" style="width: 100%; margin: 0;">
                 <div class="col-sm-6 col-12">
                     <form method="post" action="UserProfile" enctype="multipart/form-data">
@@ -79,7 +80,36 @@
             if (role.equals("Admin")) {
         %>
         <main>
-            <p style="position: absolute; top: -100px">AAAAAAAA</p>
+            <button style="position: absolute; top: 10px; right: 10px; color: red" onclick="closePopUp()">X</button>
+            <div class="row" style="width: 100%; margin: 0;">
+                <div class="col-sm-6 col-12">
+                    <form method="post" action="UserProfile" enctype="multipart/form-data">
+                        <div id="img-div">
+                            <img style="width: 240px" src="UserProfile?service=showPic" alt="Profile picture" />
+                            <input id="upload" type="file" name="upload" onchange="noticeFileUpload(this.value)"/>
+                            <label id="upload-label" for="upload">Select image</label>
+                        </div>
+                        <input type="hidden" name="service" value="updateProfilePicture">
+                        <div id="upload-submission">
+                            <p id="upload-name">Selected file: none</p>
+                            <input type="submit" value="Save as new profile picture" />
+                        </div>
+                    </form>
+                </div>
+
+                <div class="col-sm-6 col-12">
+                    <div class="row"> Email: <input style="background-color: #cecece; border: 1px solid black" type="text" name="email" value="<%=(fetched != null)? fetched.getEmail(): ""%>" readonly/> </div>
+                    <form action="UserProfile" method="POST">
+                        <div class="row"> Full name: <input type="text" name="fullName" value="<%=(fetched != null)? fetched.getFullName(): ""%>" /> </div>
+                        <div class="row"> Gender: <input type="text" name="gender" value="<%=(fetched != null)? fetched.getGender(): ""%>" /> </div>
+                        <div class="row"> Mobile: <input type="text" name="mobile" value="<%=(fetched != null)? fetched.getMobile(): ""%>" /> </div>
+                        <br>
+                        <div class="row"> <input type="submit" value="Save"> </div>
+                        <input type="hidden" name="service" value="update">
+                    </form>
+                </div>
+
+            </div>
         </main>
         <%
             }

@@ -10,9 +10,12 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel="stylesheet" href="public/css/bootstrap/bootstrap.css">
+        <link rel="stylesheet" href="public/css/UserProfile.css">
+        
         <title>UserProfile</title>
     </head>
     <body style="flex-grow: 1; background-image: linear-gradient(buttonface, #ccccff)">
+        
         <%
         if (request.getParameter("setUID") != null && request.getParameter("setUID").length() > 0)
             session.setAttribute("uId", Integer.parseInt(request.getParameter("setUID")));
@@ -23,9 +26,8 @@
         <input type="submit" value="Set" />
         </form>
         <p>Current user id: <%=session.getAttribute("uId")%></p>
-        <a href="UserProfile" target="tempPopup">View profile</a>
-        <div class="container-sm border" style="height: 500px; padding: 0; position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%)">
-            <iframe name="tempPopup" allowtransparency = "true" style="width: 100%; height: 100%">Profile</iframe>
-        </div>
+        
+        <button onclick="displayPopUp('UserProfile')" target="">View profile</button>
+        <script src="public/js/UserProfile.js"></script>
     </body>
 </html>
