@@ -35,12 +35,10 @@ public class LoginControllerTempOfAnForLoginView extends HttpServlet {
         if (service.equals("login")) {
             String username = request.getParameter("username");
             String password = request.getParameter("password");
-            System.out.println("ngocgayvcl");
             boolean flag = validateUser(username, password);
             if (flag) {
                 String message = "Hello " + username + ". You logged in successfully";
-                session.setAttribute("successMessage", message);
-                
+                session.setAttribute("successMessage", message);                
                 response.sendRedirect("index.jsp");
             } else {
                 response.sendRedirect("LoginInterface.jsp");
