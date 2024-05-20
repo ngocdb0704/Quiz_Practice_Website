@@ -133,7 +133,8 @@ CREATE TABLE [dbo].[ProfilePicture](
 
 GO
 CREATE TABLE [dbo].[ResetToken](
-	[UserId] [int] primary key foreign key references [dbo].[User](UserId),
+	[TokenId] [int] NOT NULL primary key,
+	[UserId] [int] NOT NULL foreign key references [dbo].[User](UserId),
 	[Token] [varchar] (255),
 	[ValidTo] [datetime])
 
@@ -141,7 +142,8 @@ GO
 CREATE TABLE [dbo].[Subject](
 	[SubjectId] [int] NOT NULL primary key,
 	[SubjectName] [varchar] (25)NOT NULL,
-	[SubjectCategory] [varchar] (25) NOT NULL
+	[SubjectCategory] [varchar] (25) NOT NULL,
+	[SubjectImage] [varchar] (255)
 )
 
 GO

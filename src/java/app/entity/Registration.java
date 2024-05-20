@@ -12,11 +12,12 @@ public class Registration {
     private String status;
     private Date validFrom;
     private Date validTo;
+    private String subjectImg;
 
     public Registration() {
     }
 
-    public Registration(int registrationId, String subjectName, Date registrationTime, String packageName, float totalCost, String status, Date validFrom, Date validTo) {
+    public Registration(int registrationId, String subjectName, Date registrationTime, String packageName, float totalCost, String status, Date validFrom, Date validTo, String subjectImg) {
         this.registrationId = registrationId;
         this.subjectName = subjectName;
         this.registrationTime = registrationTime;
@@ -25,6 +26,7 @@ public class Registration {
         this.status = status;
         this.validFrom = validFrom;
         this.validTo = validTo;
+        this.subjectImg = subjectImg;
     }
 
     public int getRegistrationId() {
@@ -59,6 +61,10 @@ public class Registration {
         return validTo;
     }
 
+    public String getSubjectImg() {
+        return subjectImg;
+    }
+
     public void setRegistrationId(int registrationId) {
         this.registrationId = registrationId;
     }
@@ -91,4 +97,8 @@ public class Registration {
         this.validTo = validTo;
     }
 
+    public void setSubjectImg(String subjectImg) {
+        this.subjectImg = subjectImg;
+    }
+    
 }

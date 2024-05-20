@@ -31,9 +31,10 @@ public class DAORegistration extends DBContext {
                 String status = rs.getString(6);
                 Date validFrom = rs.getDate(7);
                 Date validTo = rs.getDate(8);
+                String img = rs.getString(9);
                 Registration var = new Registration(id,
                         subjectName, registrationTime, packageName,
-                        totalCost, status, validFrom, validTo);
+                        totalCost, status, validFrom, validTo, img);
                 vector.add(var);
             }
         } catch (SQLException ex) {
@@ -48,12 +49,14 @@ public class DAORegistration extends DBContext {
     .replace("_", "!_")
     .replace("[", "![");
         Vector<Registration> vector = new Vector<>();
-        String sql = "select r.RegistrationId, s.SubjectName, r.RegistrationTime, p.PackageName," +
-"                     r.TotalCost, r.Status, r.ValidFrom, r.ValidTo " +
-"                        from Registration r, [User] u, [Subject] s, [Package] p " +
-"                        where r.UserId = ? and r.SubjectId = s.SubjectId " +
-"                        and r.PackageId = p.PackageId and s.SubjectCategory = ?"
-                + " and s.SubjectName like ? ESCAPE '!'";
+        String sql = """
+                     select r.RegistrationId, s.SubjectName,
+                     r.RegistrationTime, p.PackageName, r.TotalCost, r.Status,
+                     r.ValidFrom, r.ValidTo, s.SubjectImage
+                     from Registration r, [User] u, [Subject] s, [Package] p
+                     where r.UserId = ? and r.SubjectId = s.SubjectId
+                     and r.PackageId = p.PackageId and s.SubjectCategory = ? 
+                     and s.SubjectName like ? ESCAPE '!'""";
         try {
             PreparedStatement pre = connection.prepareStatement(sql);
             pre.setInt(1, userid);
@@ -72,11 +75,14 @@ public class DAORegistration extends DBContext {
     .replace("%", "!%")
     .replace("_", "!_")
     .replace("[", "![");
-        String sql = "select r.RegistrationId, s.SubjectName, r.RegistrationTime, p.PackageName," +
-"                     r.TotalCost, r.Status, r.ValidFrom, r.ValidTo " +
-"                        from Registration r, [User] u, [Subject] s, [Package] p " +
-"                        where r.UserId = ? and r.SubjectId = s.SubjectId " +
-"                        and r.PackageId = p.PackageId and s.SubjectName like ? ESCAPE '!'";
+        String sql = """
+                     select r.RegistrationId, s.SubjectName,
+                     r.RegistrationTime, p.PackageName, r.TotalCost, r.Status,
+                     r.ValidFrom, r.ValidTo, s.SubjectImage 
+                     from Registration r, [User] u, [Subject] s, [Package] p
+                     where r.UserId = ? and r.SubjectId = s.SubjectId
+                     and r.PackageId = p.PackageId and s.SubjectName 
+                     like ? ESCAPE '!'""";
         Vector<Registration> vector = new Vector<>();
         try {
             PreparedStatement pre = connection.prepareStatement(sql);
@@ -91,9 +97,12 @@ public class DAORegistration extends DBContext {
     }
     public Vector<Registration> filterBySubjectCategory(int userid, String category){
         String sql = """
-                     select r.RegistrationId, s.SubjectName, r.RegistrationTime, p.PackageName, r.TotalCost, r.Status, r.ValidFrom, r.ValidTo 
+                     select r.RegistrationId, s.SubjectName,
+                     r.RegistrationTime, p.PackageName, r.TotalCost, r.Status,
+                     r.ValidFrom, r.ValidTo, s.SubjectImage
                      from Registration r, [User] u, [Subject] s, [Package] p 
-                     where r.UserId = ? and r.SubjectId = s.SubjectId and r.PackageId = p.PackageId and s.SubjectCategory = ?""";
+                     where r.UserId = ? and r.SubjectId = s.SubjectId 
+                     and r.PackageId = p.PackageId and s.SubjectCategory = ?""";
         Vector<Registration> vector = new Vector<>();
         try {
             PreparedStatement pre = connection.prepareStatement(sql);
@@ -107,10 +116,12 @@ public class DAORegistration extends DBContext {
         return vector;
     }
     public Vector<Registration> getAll(int userid) {
-        String sql = "select r.RegistrationId, s.SubjectName, r.RegistrationTime, p.PackageName,"
-                + " r.TotalCost, r.Status, r.ValidFrom, r.ValidTo from Registration r,"
-                + " [Subject] s, [Package] p where r.UserId = ? "
-                + "and r.SubjectId = s.SubjectId and r.PackageId = p.PackageId";
+        String sql = """
+                    select r.RegistrationId, s.SubjectName,
+                    r.RegistrationTime, p.PackageName, r.TotalCost, r.Status,
+                    r.ValidFrom, r.ValidTo, s.SubjectImage from Registration r,
+                    [Subject] s, [Package] p where r.UserId = ? 
+                     and r.SubjectId = s.SubjectId and r.PackageId = p.PackageId""";
         Vector<Registration> vector = new Vector<>();
         try {
             PreparedStatement pre = connection.prepareStatement(sql);
@@ -126,7 +137,6 @@ public class DAORegistration extends DBContext {
         int n=0;
         String sqlRemove = "DELETE FROM [dbo].[Registration]\n" +
 "      WHERE RegistrationId =?";
-        
         try {
             PreparedStatement pre = connection.prepareStatement(sqlRemove);
             pre.setInt(1, registrationId);

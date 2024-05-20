@@ -35,7 +35,8 @@
             
                     %>
                     <div class="card col-3 regist">
-                        <img src="" class="card-img-top" alt="alt"/>
+                        <img src="<%=regist.getSubjectImg()%>" width="100" height="200"
+                            class="card-img-top" alt="alt"/>
                         <div class="card-body">
                             <h5><%=regist.getSubjectName()%></h5>
                             <ul class="list-group list-group-flush">
@@ -80,7 +81,7 @@
                         }
                     %>
                 </div>
-                <div class="card sider">
+                <div class="card sider col-3">
                     <form  action="RegistrationController" method="post">
                         <div class="row container justify-content-center" id="inputContainer">
                             <input class="col-8" type="text" placeholder="<%=placeHolder%>" value="<%=value%>" name="search">
