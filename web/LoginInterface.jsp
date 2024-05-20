@@ -10,8 +10,8 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Login</title>
-        <link href="css/bootstrap.min.css" rel="stylesheet">
-        <link href="css/bootstrap-utilities.min.css" rel="stylesheet">
+        <%@include file="/common/ImportBootstrap.jsp" %>
+        <link rel="stylesheet" href="styleFolderOfAn/loginStyleOfAn.css">
     </head>
     <body>
         <form method="post" action="loginviewofAn">

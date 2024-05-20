@@ -32,12 +32,12 @@
                 notification.classList.add("show");
                 setTimeout(function () {
                     notification.classList.remove("show");
-                }, 3000); 
+                }, 3000);
             }
 
             window.onload = function () {
                 var successMessage = '<%= session.getAttribute("successMessage") %>';
-                 if (successMessage && successMessage !== null) {
+                if (successMessage && successMessage !== null) {
                     showNotification(successMessage);
                     session.removeAttribute("successMessage");
                 }
@@ -55,6 +55,9 @@
             <input type="submit" name="LogOut" value="Log Out"/>
             <input type="hidden" name="service" value="logout"/>
         </form>
-        <a href="ChangePassAn.jsp">Change Password</a>
+        <form method="post" action="loginviewofAn">
+            <input type="hidden" name="service" value="changepass"/>
+            <input type="submit" value="Change Password"/>
+        </form>
     </body>
 </html>
