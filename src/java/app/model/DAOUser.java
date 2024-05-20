@@ -4,7 +4,7 @@
  */
 package app.model;
 
-import app.dal.DBContext;
+import app.dal.__local__DBContext;
 import app.entity.User;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -14,7 +14,7 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class DAOUser extends DBContext {
+public class DAOUser extends __local__DBContext {
 
     public int addCustomer(User user) {
         int n = 0;

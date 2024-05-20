@@ -18,7 +18,7 @@ import java.util.logging.Logger;
  *
  * @author admin
  */
-public class DAORegistration extends DBContext {
+public class DAORegistration extends __local__DBContext {
     public Vector<Registration> multiPurposeVector(ResultSet rs){
         Vector<Registration> vector = new Vector<>();
         try {

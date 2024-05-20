@@ -19,7 +19,7 @@ import java.util.logging.Logger;
  *
  * @author admin
  */
-public class DAOSubject extends DBContext {
+public class DAOSubject extends __local__DBContext {
 
     public Vector<Subject> getFilterList() {
         Vector<Subject> vec = new Vector<>();
