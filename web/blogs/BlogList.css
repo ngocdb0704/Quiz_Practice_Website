@@ -1,0 +1,29 @@
+.blog-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 10px;
+}
+
+.blog-item {
+    cursor: pointer;
+    transition: 200ms transform;
+}
+
+.blog-item:hover {
+    transform: scale(1.02);
+}
+
+.blog-item-img {
+    height: 200px;
+    object-fit: cover;
+    
+}
+
+.blog-read-more {
+    opacity: 0;
+    transition: opacity 300ms;
+}
+
+.blog-item:hover .card-title {
+    text-decoration: underline;
+}

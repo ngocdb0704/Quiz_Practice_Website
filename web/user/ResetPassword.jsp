@@ -8,14 +8,16 @@
         
         <!-- Common import -->
         <%@include file="/common/ImportBootstrap.jsp" %>
-        <link href="common/common.css" href="stylesheet">
+        <link href="common/common.css" rel="stylesheet">
         <script src="common/common.js"></script>
         
         <!-- Specific page import -->
         <link href="user/ResetPassword.css" href="stylesheet">
         <script src="user/ResetPassword.js"></script>
     </head>
-    <body>
+    <body class="body-layout">
+        <%@include file="/common/header.jsp" %>
+
         <main class="d-flex justify-content-center align-items-center p-2">
             <c:choose>
                 <c:when test="${screen eq 'success'}">
@@ -98,5 +100,7 @@
                 </c:otherwise>
             </c:choose>
         </main>
+
+        <%@include file="/common/footer.jsp" %>
     </body>
 </html>

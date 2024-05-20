@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class DBContext {
+public class DBContext implements AutoCloseable {
 
     public Connection connection;
 
@@ -18,9 +18,22 @@ public class DBContext {
             String url = "jdbc:sqlserver://localhost:1433;databaseName=Quiz_Practice";
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             connection = DriverManager.getConnection(url, username, password);
+
+            Logger.getLogger(DBContext.class.getName()).log(Level.INFO, "Creating connection");
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(DBContext.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
+    @Override
+    public void close() {
+        try {
+            if (connection != null) {
+                connection.close();
+                Logger.getLogger(DBContext.class.getName()).log(Level.INFO, "Closing connection");
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(DBContext.class.getName()).log(Level.SEVERE, "Failed to close connection", ex);
+        }
+    }
 }
