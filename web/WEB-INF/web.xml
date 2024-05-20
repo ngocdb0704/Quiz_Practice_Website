@@ -25,5 +25,3 @@
         <url-pattern>/RegistrationController</url-pattern>
     </servlet-mapping>
 </web-app>
-
-
