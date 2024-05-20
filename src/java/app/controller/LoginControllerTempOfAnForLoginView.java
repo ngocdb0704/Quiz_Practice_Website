@@ -5,7 +5,7 @@
 package app.controller;
 
 import app.entity.User;
-import app.model.DAOUser;
+import app.dal.DAOUser;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -35,11 +35,12 @@ public class LoginControllerTempOfAnForLoginView extends HttpServlet {
         if (service.equals("login")) {
             String username = request.getParameter("username");
             String password = request.getParameter("password");
+            session.setAttribute("username", username);
+            session.setAttribute("password", password);
             boolean flag = validateUser(username, password);
             if (flag) {
                 String message = "Hello " + username + ". You logged in successfully";
-                session.setAttribute("successMessage", message);
-                
+                session.setAttribute("successMessage", message);                
                 response.sendRedirect("index.jsp");
             } else {
                 response.sendRedirect("LoginInterface.jsp");
@@ -47,7 +48,7 @@ public class LoginControllerTempOfAnForLoginView extends HttpServlet {
         }
         
         if (service.equals("changepass")) {
-            String username = request.getParameter("username");
+            String username = (String)session.getAttribute("username");
             String prePassword = request.getParameter("prePass");
             String newPassword = request.getParameter("newPass");
             String confirmPassword = request.getParameter("confirmPass");
@@ -76,14 +77,12 @@ public class LoginControllerTempOfAnForLoginView extends HttpServlet {
             session.invalidate();
             response.sendRedirect("index.jsp");
         }
-
     }
 
     public boolean validateUser(String username, String password) {
         boolean flag = false;
         DAOUser dao = new DAOUser();
-        Vector<User> vec = dao.getAll("select * from [User]");
-
+        Vector<User> vec = dao.getAll();
         for (User user : vec) {
             if (user.getEmail().equals(username) && user.getPassword().equals(password)) {
                 flag = true;

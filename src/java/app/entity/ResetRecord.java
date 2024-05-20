@@ -1,6 +1,7 @@
 package app.entity;
 
-import java.security.Timestamp;
+import java.sql.Timestamp;
+import java.time.Instant;
 
 public class ResetRecord {
     private int userId;
@@ -38,5 +39,9 @@ public class ResetRecord {
 
     public void setValidTo(Timestamp validTo) {
         this.validTo = validTo;
+    }
+
+    public boolean isValid() {
+        return Instant.now().isBefore(this.validTo.toInstant());
     }
 }

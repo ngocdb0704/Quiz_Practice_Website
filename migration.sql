@@ -127,9 +127,9 @@ CREATE TABLE [dbo].[User](
 
 GO
 CREATE TABLE [dbo].[ProfilePicture](
-	[PictureId] [int] NOT NULL primary key,
-	[UserId] [int] NOT NULL foreign key references [dbo].[User](UserId),
-	[Image] [varbinary] (MAX))
+	[UserId] [int] NOT NULL primary key,
+	[Image] [varbinary] (MAX),
+	constraint [UserId] foreign key ([UserId]) references [dbo].[User](UserId))
 
 GO
 CREATE TABLE [dbo].[ResetToken](
@@ -139,12 +139,26 @@ CREATE TABLE [dbo].[ResetToken](
 	[ValidTo] [datetime])
 
 GO
+CREATE TABLE [dbo].[Subject](
+	[SubjectId] [int] NOT NULL primary key,
+	[SubjectName] [varchar] (25)NOT NULL,
+	[SubjectCategory] [varchar] (25) NOT NULL,
+	[SubjectImage] [varchar] (255)
+)
+
+GO
+CREATE TABLE [dbo].[Package](
+	[PackageId] [int] NOT NULL primary key,
+	[PackageName] [varchar] (25)NOT NULL,
+	[PackagePrice] [float] NOT NULL
+)
+GO
 CREATE TABLE [dbo].[Registration](
 	[RegistrationId] [int] NOT NULL primary key,
 	[UserId] [int] NOT NULL foreign key references [dbo].[User](UserId),
-	[SubjectId] [varchar] (255) NOT NULL,
+	[SubjectId] [int] NOT NULL foreign key references [dbo].[Subject](SubjectId),
 	[RegistrationTime] [date] NOT NULL,
-	[PackageId] [int] NOT NULL,
+	[PackageId] [int] NOT NULL foreign key references [dbo].[Package](PackageId),
 	[TotalCost] [float] NOT NULL,
 	[Status] [varchar](25),
 	[ValidFrom] [date],
