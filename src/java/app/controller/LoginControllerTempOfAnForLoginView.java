@@ -55,7 +55,7 @@ public class LoginControllerTempOfAnForLoginView extends HttpServlet {
             if (flag) {
                 if (!(newPassword.equals(prePassword) || newPassword.isEmpty())) {
                     if (confirmPassword.equals(newPassword)) {
-                        daoUser.updatePassByUser(username, confirmPassword);
+//                        daoUser.updatePassword(username, confirmPassword);
                         session.setAttribute("successMessage", "Change password successfully!");
                         response.sendRedirect("index.jsp");
                     } else {
@@ -82,7 +82,7 @@ public class LoginControllerTempOfAnForLoginView extends HttpServlet {
     public boolean validateUser(String username, String password) {
         boolean flag = false;
         DAOUser dao = new DAOUser();
-        Vector<User> vec = dao.getAll("select * from [User]");
+        Vector<User> vec = null;
 
         for (User user : vec) {
             if (user.getEmail().equals(username) && user.getPassword().equals(password)) {
