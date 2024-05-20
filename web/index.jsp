@@ -47,9 +47,7 @@
     <i class="bi bi-star-fill"></i>
     <i class="bi bi-square-fill"></i>
     <h1>Welcome to the Home Page</h1>
-
         <div id="notification" class="notification"></div>
-
         <a href="LoginInterface.jsp">Login</a>
         <a href="home">Home</a>
         <form method="post" action="loginviewofAn">
