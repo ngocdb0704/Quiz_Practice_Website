@@ -13,3 +13,14 @@ function noticeFileUpload(name) {
     
     uploadName.innerHTML = "Selected file: " + name.slice(name.lastIndexOf("\\") + 1);
 }
+
+let body = document.querySelector("body");
+
+function displayPopUp(url) {
+    if (body) body.innerHTML += "<iframe name=\"popup\" class=\"popup-iframe\" allowtransparency = \"true\" src=\"" + url + "\">Profile</iframe>";
+}
+
+function closePopUp() {
+    let popupIframe = parent.document.querySelector(".popup-iframe");
+    if (body && popupIframe) popupIframe.remove();
+}
