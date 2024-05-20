@@ -73,6 +73,9 @@
                                 will be sent to it.
                             </p>
                             <p class="text-secondary">This email expires after ${timeout} minutes</p>
+                            <a href="user/reset">
+                                <button class="btn btn-outline btn-secondary">Go back</button>
+                            </a>
                             <a href="home">
                                 <button class="btn btn-primary">Go home</button>
                             </a>
@@ -89,7 +92,7 @@
                         </div>
                         <div
                             <label class="form-label">Email</label>
-                            <input type="email" class="form-control" name="email" placeholder="Enter your email">
+                            <input type="email" class="form-control" name="email" placeholder="Enter your email" required>
                         </div>
                         <button type="submit" class="btn btn-primary mt-4">Send Email</button>
                         <c:if test="${error eq 'error_invalid_token'}">
