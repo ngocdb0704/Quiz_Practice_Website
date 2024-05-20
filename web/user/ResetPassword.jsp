@@ -8,14 +8,16 @@
         
         <!-- Common import -->
         <%@include file="/common/ImportBootstrap.jsp" %>
-        <link href="common/common.css" href="stylesheet">
+        <link href="common/common.css" rel="stylesheet">
         <script src="common/common.js"></script>
         
         <!-- Specific page import -->
         <link href="user/ResetPassword.css" href="stylesheet">
         <script src="user/ResetPassword.js"></script>
     </head>
-    <body>
+    <body class="body-layout">
+        <%@include file="/common/header.jsp" %>
+
         <main class="d-flex justify-content-center align-items-center p-2">
             <c:choose>
                 <c:when test="${screen eq 'success'}">
@@ -55,7 +57,7 @@
                         <div class="text-center">
                             <h2>Token has expired</h2>
                             <p class="mb-3">Please restart the process</p>
-                            <a href="reset">
+                            <a href="user/reset">
                                 <button class="btn btn-primary mt-4">Restart</button>
                             </a>
                         </div>
@@ -70,6 +72,10 @@
                                 If your email exists in our database, a message with instruction
                                 will be sent to it.
                             </p>
+                            <p class="text-secondary">This email expires after ${timeout} minutes</p>
+                            <a href="user/reset">
+                                <button class="btn btn-outline btn-secondary">Go back</button>
+                            </a>
                             <a href="home">
                                 <button class="btn btn-primary">Go home</button>
                             </a>
@@ -86,7 +92,7 @@
                         </div>
                         <div
                             <label class="form-label">Email</label>
-                            <input type="email" class="form-control" name="email" placeholder="Enter your email">
+                            <input type="email" class="form-control" name="email" placeholder="Enter your email" required>
                         </div>
                         <button type="submit" class="btn btn-primary mt-4">Send Email</button>
                         <c:if test="${error eq 'error_invalid_token'}">
@@ -98,5 +104,7 @@
                 </c:otherwise>
             </c:choose>
         </main>
+
+        <%@include file="/common/footer.jsp" %>
     </body>
 </html>
