@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class DAOResetTokens extends __local__DBContext {
+public class DAOResetTokens extends DBContext {
     public List<ResetRecord> extractResults(ResultSet rs) throws SQLException {
         List<ResetRecord> result = new ArrayList<>();
 
