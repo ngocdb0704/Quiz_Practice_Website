@@ -1,0 +1,28 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this template
+*/
+/* 
+    Created on : 20 thg 5, 2024, 17:34:52
+    Author     : admin
+*/
+
+.sider{
+    width: 18rem;
+    height: 18rem;
+    position: fixed;
+    z-index: 1; 
+    top: 0; 
+    left: 75%;
+    overflow-x: hidden; 
+    padding-top: 20px;
+}
+
+.regist{
+    width: 18rem;
+    display: inline-block;
+}
+
+.more{
+    display: none;
+}

@@ -16,62 +16,71 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>My Registration</title>
-         <%@include file="/common/ImportBootstrap.jsp" %>
-        <link rel="stylesheet" href="public/css/bootstrap/bootstrap.min.css"/> 
-        <link rel="stylesheet" href="public/css/bootstrap/bootstrap-utilities.min.css"/>
-        <link rel="stylesheet" href="public/css/MyRegistration.css"/>
+        <%@include file="/common/ImportBootstrap.jsp" %>
         <script src="public/js/MyRegistration.js"></script>
+        <link rel="stylesheet" href="public/css/bootstrap/MyRegistration.css"/>
     </head>
     <body>
         <div class="container">
             <div class="row">
                 <div class="col-9">
-                    <table class="table table-bordered table-hover">
-                        <thead class="table-info">
-                            <tr>
-                                <th scope="col">ID</th>
-                                <th scope="col">Subject</th>
-                                <th scope="col">Registration Time</th>
-                                <th scope="col">Package</th>
-                                <th scope="col">Total cost</th>
-                                <th scope="col">Status</th>
-                                <th scope="col">Valid From</th>
-                                <th scope="col">Valid To</th>
-                                <th scope="col"></th>
-                                <th scope="col"></th>
-                            </tr>
-                        </thead>
-                        <%
-                            String placeHolder ="";
-                            int i=1;
-                            String value= (String) request.getAttribute("value");
-                            if(value == null) value = "";
-                            if(value.equals("")) placeHolder = "Search Subject";
-                            Vector<Registration> registrationVector = (Vector<Registration>) request.getAttribute("data");
-                            for(Registration regist:registrationVector){
+                    <%
+                        String placeHolder ="";
+                        int i=1;
+                        String value= (String) request.getAttribute("value");
+                        if(value == null) value = "";
+                        if(value.equals("")) placeHolder = "Search Subject";
+                        Vector<Registration> registrationVector = (Vector<Registration>) request.getAttribute("data");
+                        for(Registration regist:registrationVector){
             
-                        %>
-                        <tbody>
-                            <tr>
-                                <th scope="row"><%=i%></th>
-                                <td><%=regist.getSubjectName()%></td>
-                                <td><%=regist.getRegistrationTime()%></td>
-                                <td><%=regist.getPackageName()%></td>
-                                <td><%=regist.getTotalCost()%></td>
-                                <td><%=regist.getStatus()%></td>
-                                <td><%=regist.getValidFrom()%></td>
-                                <td><%=regist.getValidTo()%></td>
-                                <td><a href="RegistrationController?service=edit"><i class="bi bi-pencil"></i></a></td>
-                                <td><button onclick="myFunction('<%=regist.getRegistrationId()%>')"><i class="bi bi-trash3"></i></button></td>
-                            </tr>
-                            <%
-                                i++;
-                                }
-                            %>
-                        </tbody>
-                    </table>
+                    %>
+                    <div class="card col-3 regist">
+                        <img src="" class="card-img-top" alt="alt"/>
+                        <div class="card-body">
+                            <h5><%=regist.getSubjectName()%></h5>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">Status: <%=regist.getStatus()%></li>
+                                <li class="list-group-item">Valid From: <%=regist.getValidFrom()%></li>
+                                <li class="list-group-item">Valid To: <%=regist.getValidTo()%></li>
+                                <li class="list-group-item more <%=i%>">Registration Time: <%=regist.getRegistrationTime()%></li>
+                                <li class="list-group-item more <%=i%>">Package: <%=regist.getPackageName()%></li>
+                                <li class="list-group-item more <%=i%>">Total Cost: <%=regist.getTotalCost()%></li>
+                                <li class="list-group-item">
+                                    <table class="table">
+                                        <tr>
+                                            <th>
+                                                <button onclick="showMore('<%=i%>', 'mySMB<%=i%>')" class="btn btn-primary mySMB<%=i%>">
+                                                    More
+                                                </button>
+                                            </th>
+                                            <th>
+                                                <button class="btn btn-warning"
+                                                        onclick="edit('<%=regist.getStatus()%>')">
+                                                    <i class="bi bi-pencil"></i>
+                                                </button>
+                                            </th>
+                                            <th></th>
+                                            <th></th>
+                                            <th>
+                                                <button class="btn btn-danger" 
+                                                        onclick="cancellation('<%=regist.getStatus()%>', '<%=regist.getRegistrationId()%>')">
+                                                    <i class="bi bi-trash3"></i>
+                                                </button>
+                                            </th>
+                                        </tr>
+                                    </table>                                    
+                                </li>
+                            </ul>
+
+                        </div>
+                    </div>
+
+                    <%
+                        i++;
+                        }
+                    %>
                 </div>
-                <div class="container col-3 sider">
+                <div class="card sider">
                     <form  action="RegistrationController" method="post">
                         <div class="row container justify-content-center" id="inputContainer">
                             <input class="col-8" type="text" placeholder="<%=placeHolder%>" value="<%=value%>" name="search">
