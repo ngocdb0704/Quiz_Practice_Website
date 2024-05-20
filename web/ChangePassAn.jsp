@@ -58,7 +58,6 @@
         <div id="notification" class="notification"></div>
         <form method="post" action="loginviewofAn">
             <h3>Change Password</h3>
-            <p> Username: <input type="text" name="username"/></p>
             <p> Previous Password: <input type="password" name="prePass"/></p>
             <p> New Password: <input type="password" name="newPass"/> </p>
             <p> Confirm Password: <input type="password" name="confirmPass"/></p>
