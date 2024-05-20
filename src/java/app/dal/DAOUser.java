@@ -50,7 +50,7 @@ public class DAOUser extends DBContext {
     }
 
     public User getUserById(int id) {
-        String sql = "SELECT * FROM User where UserId = '" + id + "';";
+        String sql = "SELECT * FROM [User] where UserId = '" + id + "';";
         try {
             Statement state = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
             ResultSet rs = state.executeQuery(sql);
@@ -64,7 +64,7 @@ public class DAOUser extends DBContext {
     }
 
     public int updateUser(int id, String fullName, String gender, String mobile) {
-        String sql = "UPDATE User\n"
+        String sql = "UPDATE [User]\n"
                 + "   SET FullName = ?\n"
                 + "      ,Gender = ?\n"
                 + "      ,Mobile = ?\n"
@@ -114,7 +114,7 @@ public class DAOUser extends DBContext {
         if (profileImage(id) == null) {
             return insertImage(id, image);
         } else {
-            String sql = "UPDATE SWP.ProfilePicture\n"
+            String sql = "UPDATE ProfilePicture\n"
                     + " SET image = ?"
                     + " WHERE id = ?;";
             try {
