@@ -19,10 +19,11 @@
         <%@include file="/common/ImportBootstrap.jsp" %>
         <script src="public/js/MyRegistration.js"></script>
         <link rel="stylesheet" href="public/css/bootstrap/MyRegistration.css"/>
+        <link rel="stylesheet" href="common/ExtendBody.css"/>
     </head>
     <body>
         <%@include file="/common/header.jsp" %>
-        <div class="container">
+        <main class="container">
             <h1>My Registration</h1>
             <%
                 String placeHolder ="";
@@ -108,9 +109,8 @@
                         }
                     %>
                 </div>
-
             </div>
-        </div>
+        </main>
         <%@include file="/common/footer.jsp" %>
     </body>
 </html>

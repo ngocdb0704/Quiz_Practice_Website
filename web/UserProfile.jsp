@@ -16,35 +16,27 @@
     </head>
     <body>
         <%
-        String uIdString = null, role = "";
+        Integer uId = null;
+        String role = "", service = "";
         User fetched = null;
+        DAOUser dao = new DAOUser();
         
-        if (session.getAttribute("uId") != null) {
-            uIdString = session.getAttribute("uId").toString();
-            System.out.println(uIdString);
-        }
-        
-        if (uIdString == null || uIdString.length() < 1) {
-            out.print("Provide a uId attribute to display a user");
-        }
-        else {
-            Integer uId =  Integer.parseInt(uIdString);
-            DAOUser dao = new DAOUser();
+        try {
+            uId = Integer.parseInt(request.getParameter("userId"));
             fetched = dao.getUserById(uId);
-        }
+        } catch (Exception e) {}
+        
+        %>
+        <main>
+            <button style="position: absolute; top: 10px; right: 10px; color: red" onclick="closePopUp()">X</button>
+        <%
         
         if(fetched == null) {
         %>
-        <main>
             <h1>Please login to view you profile</h1>
-        </main>
         <%
         } else {
-            role = fetched.getRole();
-            if (role.equals("Customer")) {
         %>
-        <main>
-            <button style="position: absolute; top: 10px; right: 10px; color: red" onclick="closePopUp()">X</button>
             <div class="row" style="width: 100%; margin: 0;">
                 <div class="col-sm-6 col-12">
                     <form method="post" action="UserProfile" enctype="multipart/form-data">
@@ -74,45 +66,16 @@
                 </div>
 
             </div>
-        </main>
         <%
-            }
+            role = fetched.getRole();
             if (role.equals("Admin")) {
         %>
-        <main>
-            <button style="position: absolute; top: 10px; right: 10px; color: red" onclick="closePopUp()">X</button>
-            <div class="row" style="width: 100%; margin: 0;">
-                <div class="col-sm-6 col-12">
-                    <form method="post" action="UserProfile" enctype="multipart/form-data">
-                        <div id="img-div">
-                            <img style="width: 240px" src="UserProfile?service=showPic" alt="Profile picture" />
-                            <input id="upload" type="file" name="upload" onchange="noticeFileUpload(this.value)"/>
-                            <label id="upload-label" for="upload">Select image</label>
-                        </div>
-                        <input type="hidden" name="service" value="updateProfilePicture">
-                        <div id="upload-submission">
-                            <p id="upload-name">Selected file: none</p>
-                            <input type="submit" value="Save as new profile picture" />
-                        </div>
-                    </form>
-                </div>
-
-                <div class="col-sm-6 col-12">
-                    <div class="row"> Email: <input style="background-color: #cecece; border: 1px solid black" type="text" name="email" value="<%=(fetched != null)? fetched.getEmail(): ""%>" readonly/> </div>
-                    <form action="UserProfile" method="POST">
-                        <div class="row"> Full name: <input type="text" name="fullName" value="<%=(fetched != null)? fetched.getFullName(): ""%>" /> </div>
-                        <div class="row"> Gender: <input type="text" name="gender" value="<%=(fetched != null)? fetched.getGender(): ""%>" /> </div>
-                        <div class="row"> Mobile: <input type="text" name="mobile" value="<%=(fetched != null)? fetched.getMobile(): ""%>" /> </div>
-                        <br>
-                        <div class="row"> <input type="submit" value="Save"> </div>
-                        <input type="hidden" name="service" value="update">
-                    </form>
-                </div>
-
-            </div>
-        </main>
+            <h1>You're an admin</h1>
         <%
             }
+        %>
+        </main>
+        <%
         }
         %>
         <script src="public/js/UserProfile.js"></script>
