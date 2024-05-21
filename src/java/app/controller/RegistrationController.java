@@ -6,8 +6,10 @@ package app.controller;
 
 import app.dal.DAORegistration;
 import app.dal.DAOSubject;
+import app.dal.DAOUser;
 import app.entity.Registration;
 import app.entity.Subject;
+import app.entity.User;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -15,7 +17,11 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import java.sql.SQLException;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -37,16 +43,35 @@ public class RegistrationController extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         DAORegistration daoRegistration = new DAORegistration();
         DAOSubject daoSubject = new DAOSubject();
+        DAOUser daoUser = new DAOUser();
+        HttpSession session = request.getSession();
+        String userEmailString = "";
         String service = request.getParameter("service");
         Vector<Registration> registrationVector = null;
         Vector<Subject> subjectVector = daoSubject.getFilterList();
         String page;
+        int userId;
+        User loggedInUser = null;
         String submit = request.getParameter("submit");
         int permitToListAll = 0;
         String inputSearch = request.getParameter("search");
-        if(inputSearch == null) inputSearch ="";
+        if (inputSearch == null) {
+            inputSearch = "";
+        }
         int pos;
         String subjectCategory = request.getParameter("subjectCategory");
+        if (session.getAttribute("username") != null) {
+            userEmailString = session.getAttribute("username").toString();
+        } else {
+            page = "/index.jsp";
+            dispath(request, response, page);
+        }
+        try {
+            loggedInUser = daoUser.getByEmail(userEmailString);
+        } catch (SQLException ex) {
+            Logger.getLogger(RegistrationController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        userId = loggedInUser.getUserId();
         if (service == null) {
             service = "listAll";
         }
@@ -55,23 +80,23 @@ public class RegistrationController extends HttpServlet {
                 subjectCategory = "0";
             }
             if (subjectCategory.equals("0") && inputSearch.equals("")) {
-                registrationVector = daoRegistration.getAll(1);
+                registrationVector = daoRegistration.getAll(userId);
                 subjectVector.add(0, new Subject(0, "All Subject", "All Category"));
             } else if (!subjectCategory.equals("0") && inputSearch.equals("")) {
                 pos = Integer.parseInt(subjectCategory) - 1;
                 Subject sub = subjectVector.get(pos);
                 subjectVector.set(pos, new Subject(0, "All", "All Category"));
                 subjectVector.add(0, sub);
-                registrationVector = daoRegistration.filterBySubjectCategory(1, sub.getSubjectCategory());
+                registrationVector = daoRegistration.filterBySubjectCategory(userId, sub.getSubjectCategory());
             } else if (subjectCategory.equals("0") && !inputSearch.equals("")) {
                 subjectVector.add(0, new Subject(0, "All Subject", "All Category"));
-                registrationVector = daoRegistration.searchBySubjectName(1, inputSearch);
-            } else{
+                registrationVector = daoRegistration.searchBySubjectName(userId, inputSearch);
+            } else {
                 pos = Integer.parseInt(subjectCategory) - 1;
                 Subject sub = subjectVector.get(pos);
                 subjectVector.set(pos, new Subject(0, "All", "All Category"));
                 subjectVector.add(0, sub);
-                registrationVector = daoRegistration.searchNameFilter(1, inputSearch, sub.getSubjectCategory());
+                registrationVector = daoRegistration.searchNameFilter(userId, inputSearch, sub.getSubjectCategory());
             }
 
             request.setAttribute("value", inputSearch);
@@ -80,7 +105,7 @@ public class RegistrationController extends HttpServlet {
             page = "/MyRegistration.jsp";
             dispath(request, response, page);
         }
-        if(service.equals("cancel")){
+        if (service.equals("cancel")) {
             int cancelId = Integer.parseInt(request.getParameter("cancelId"));
             int n = daoRegistration.removeRegistration(cancelId);
             service = "listAll";

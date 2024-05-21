@@ -43,21 +43,7 @@
 </script>
 </head>
 <body>
-    <button class="btn btn-primary">This is a bootstrap button</button>
-    <i class="bi bi-star-fill"></i>
-    <i class="bi bi-square-fill"></i>
-    <h1>Welcome to the Home Page</h1>
-
-        <div id="notification" class="notification"></div>
-
-        <a href="LoginInterface.jsp">Login</a>
-        <a href="home">Home</a>
-        <form method="post" action="loginviewofAn">
-            <input type="submit" name="LogOut" value="Log Out"/>
-            <input type="hidden" name="service" value="logout"/>
-        </form>
-        <a href="ChangePassAn.jsp">Change Password</a>
-        <p><a href="RegistrationController">My Registration</a></p>
-        
+    <%@include file="/common/header.jsp" %>
+    <%@include file="/common/footer.jsp" %>
 </body>
 </html>
