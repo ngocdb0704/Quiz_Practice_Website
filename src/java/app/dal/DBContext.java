@@ -18,6 +18,7 @@ public class DBContext implements AutoCloseable {
             String url = "jdbc:sqlserver://localhost:1433;databaseName=Quiz_Practice";
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             connection = DriverManager.getConnection(url, username, password);
+            connection.setAutoCommit(true);
 
             Logger.getLogger(DBContext.class.getName()).log(Level.INFO, "Creating connection");
         } catch (ClassNotFoundException | SQLException ex) {
@@ -37,3 +38,5 @@ public class DBContext implements AutoCloseable {
         }
     }
 }
+
+
