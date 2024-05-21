@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.Vector;
 import app.dal.DAOUser;
+import app.entity.User;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.annotation.MultipartConfig;
 //import jakarta.servlet.annotation.WebServlet;
@@ -40,29 +41,36 @@ public class UserProfile extends HttpServlet {
     
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         HttpSession session = request.getSession();
-        String uIdString = null;
-        
-        if (session.getAttribute("uId") != null) {
-            uIdString = session.getAttribute("uId").toString();
-        }
-        
-        if (uIdString == null || uIdString.length() < 1) {
-            try (PrintWriter out = response.getWriter()) {
-                out.print("You need to be logged in to display user profile");
+        Integer uId = null;
+        DAOUser dao = new DAOUser();
+
+        try {
+            uId = Integer.parseInt(request.getParameter("userId"));
+        } catch (Exception e) {
+            if (session.getAttribute("userEmail") != null) {
+                try {
+                    User fetched = dao.getByEmail(session.getAttribute("userEmail").toString());
+                    uId = fetched.getUserId();
+                    session.setAttribute("userId", uId);
+                }
+                catch (Exception e1) {}
             }
+        }
+
+        String service = request.getParameter("service");
+
+        if (service == null || service.length() < 1 || service.equals("view")) {
+            request.getRequestDispatcher("UserProfile.jsp").forward(request, response);
+            return;
+        }
+
+        if (uId == null) {
+            request.getRequestDispatcher("Unauthorized.jsp").forward(request, response);
+            return;
         }
         else {
-            DAOUser dao = new DAOUser();
-            Integer uId =  Integer.parseInt(uIdString);
-            String service = request.getParameter("service");
-
-            if (service == null || service.length() < 1 || service.equals("view")) {
-                request.getRequestDispatcher("UserProfile.jsp").forward(request, response);
-                return;
-            }
-            
             if (service.equals("update")) {
                 String fullName = request.getParameter("fullName");
                 String gender = request.getParameter("gender");
@@ -71,27 +79,26 @@ public class UserProfile extends HttpServlet {
                 dao.updateUser(uId, fullName, gender, mobile);
                 request.getRequestDispatcher("UserProfile.jsp").forward(request, response);
             }
-            
+
             if (service.equals("updateProfilePicture")) {
                 Part filePart = request.getPart("upload");
                 System.out.println(filePart.getInputStream().available()); //TODO: add file limit
-                
+
                 InputStream ins = filePart.getInputStream();
                 byte[] uploaded = new byte[ins.available()];
                 ins.read(uploaded);
                 dao.updateImage(uId, uploaded);
-                
+
                 /* Debug: display the image that was just uploaded instead of going back to UserProfile
                 try (OutputStream o = response.getOutputStream()) {
                     o.write(uploaded);
                     o.flush();
                     o.close();
                 }
-                */
-                
+                 */
                 request.getRequestDispatcher("UserProfile.jsp").forward(request, response);
             }
-            
+
             if (service.equals("showPic")) {
                 byte[] fetched = dao.profileImage(uId);
                 if (fetched == null) {
@@ -99,7 +106,7 @@ public class UserProfile extends HttpServlet {
                     ServletContext cntxt = this.getServletContext();
                     String fName = "image/anonymous-user.webp";
                     InputStream ins = cntxt.getResourceAsStream(fName);
-                    
+
                     try (OutputStream o = response.getOutputStream()) {
                         byte[] fetchedDefault = new byte[ins.available()];
                         ins.read(fetchedDefault);
@@ -107,7 +114,7 @@ public class UserProfile extends HttpServlet {
                         o.flush();
                         o.close();
                     }
-                    
+
                 } else {
                     try (OutputStream o = response.getOutputStream()) {
                         response.setContentType("image/gif");
