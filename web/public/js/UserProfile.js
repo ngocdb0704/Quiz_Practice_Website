@@ -17,7 +17,7 @@ function noticeFileUpload(name) {
 let body = document.querySelector("body");
 
 function displayPopUp(url) {
-    if (body) body.innerHTML += "<iframe name=\"popup\" class=\"popup-iframe\" allowtransparency = \"true\" src=\"" + url + "\">Profile</iframe>";
+    if (body) body.innerHTML += "<iframe style=\"position: fixed; width: 100%; height: 100%; top: 0;\" name=\"popup\" class=\"popup-iframe\" allowtransparency = \"true\" src=\"" + url + "\">Profile</iframe>";
 }
 
 function closePopUp() {
