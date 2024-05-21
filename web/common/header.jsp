@@ -20,12 +20,25 @@
                 </li>
             </ul>
             <div class="d-flex gap-2">
+                <%
+                    //Change made by QuanNM, change if you like lol I just need a place holder to see how my popup works.
+                    if (session.getAttribute("userEmail") != null) {
+                %>
+                <p style="margin: auto;"><%=(String)session.getAttribute("userEmail")%></p>
+                <img style="height: 50px" src="public/images/anonymous-user.webp" alt="View Profile" onclick="displayPopUp('UserProfile')"/>
+                <script src="public/js/UserProfile.js"></script>
+                <%
+                    } else {
+                %>
                 <a href="LoginInterface.jsp">
                     <button class="btn btn-primary" type="submit">Login</button>
                 </a>
                 <a href="user/signup">
                     <button class="btn btn-outline-success" type="submit">Sign Up</button>
                 </a>
+                <%
+                    }
+                %>
             </div>
         </div>
     </div>

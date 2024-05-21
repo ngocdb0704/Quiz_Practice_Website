@@ -104,7 +104,7 @@ public class UserProfile extends HttpServlet {
                 if (fetched == null) {
                     response.setContentType("image/gif");
                     ServletContext cntxt = this.getServletContext();
-                    String fName = "image/anonymous-user.webp";
+                    String fName = "public/images/anonymous-user.webp";
                     InputStream ins = cntxt.getResourceAsStream(fName);
 
                     try (OutputStream o = response.getOutputStream()) {
