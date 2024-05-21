@@ -60,8 +60,8 @@ public class RegistrationController extends HttpServlet {
         }
         int pos;
         String subjectCategory = request.getParameter("subjectCategory");
-        if (session.getAttribute("username") != null) {
-            userEmailString = session.getAttribute("username").toString();
+        if (session.getAttribute("userEmail") != null) {
+            userEmailString = session.getAttribute("userEmail").toString();
         } else {
             page = "/index.jsp";
             dispath(request, response, page);
