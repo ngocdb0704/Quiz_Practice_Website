@@ -18,11 +18,11 @@
             <h3>Login</h3>
             <p> Username: <input type="text" name="username"/> </p>
             <p> Password: <input type="password" name="password"/> </p>
-            <p> <input type="submit" name="submit" value="Login"/> </p>
+            <p> <input type="submit" name="submit" value="Login"/>
                 <input type="hidden" name = "service" value = "login"/>
             </p>
             <a href="">Register</a>
-            <a href="">Forgot password?</a>
+            <a href="user/reset">Forgot password?</a>
         </form>
     </body>
 </html>
