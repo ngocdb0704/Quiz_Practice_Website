@@ -51,7 +51,7 @@ public class LoginControllerTempOfAnForLoginView extends HttpServlet {
             
             String username = (String) session.getAttribute("userEmail");
             if (username == null || username.length() < 1) {
-                
+                session.setAttribute("successMessage", "Not authorized");
                 response.sendRedirect("index.jsp");
             } else {
                 String prePassword = request.getParameter("prePass");
