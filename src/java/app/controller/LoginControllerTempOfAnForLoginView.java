@@ -35,23 +35,24 @@ public class LoginControllerTempOfAnForLoginView extends HttpServlet {
         if (service.equals("login")) {
             String username = request.getParameter("username");
             String password = request.getParameter("password");
-            session.setAttribute("userEmail", username);
+            
             boolean flag = validateUser(username, password);
             if (flag) {
                 String message = "Hello " + username + ". You logged in successfully";
+                session.setAttribute("userEmail", username);
                 session.setAttribute("successMessage", message);
-
                 response.sendRedirect("index.jsp");
             } else {
-                response.sendRedirect("LoginInterface.jsp");
+                response.sendRedirect("index.jsp");
             }
         }
 
         if (service.equals("changepass")) {
+            
             String username = (String) session.getAttribute("userEmail");
             if (username == null || username.length() < 1) {
                 
-                response.sendRedirect("LoginInterface.jsp");
+                response.sendRedirect("index.jsp");
             } else {
                 String prePassword = request.getParameter("prePass");
                 String newPassword = request.getParameter("newPass");
