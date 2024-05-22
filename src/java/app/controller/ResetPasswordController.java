@@ -93,7 +93,7 @@ public class ResetPasswordController extends HttpServlet {
                 request.setAttribute("screen", "expired");
             } else if (same) {
                 request.setAttribute("screen", "success");
-                response.setHeader("Refresh", "3; url=" + URLUtils.getBaseURL(request) + "/home");
+                response.setHeader("Refresh", "3; url=" + URLUtils.getBaseURL(request) + "/");
                 daoUser.updatePassword(record.getUserId(), newPassword);
                 daoResetTokens.deleteToken(record.getUserId());
             } else {
@@ -130,7 +130,7 @@ public class ResetPasswordController extends HttpServlet {
         int timeout = 1;
         try {
             String val = Config.getConfig(getServletContext()).getOrDefault(
-                    "pw.reset.timeout",
+                    "pw.reset.timeout_secs",
                     "1"
             ).toString();
 
