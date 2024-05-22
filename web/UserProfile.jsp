@@ -5,7 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import="app.entity.User, app.dal.DAOUser" %>
+<%@page import="app.entity.User, app.dal.DAOUser, app.dal.__local__DAOUser" %> <!--[][]-->
 <!DOCTYPE html>
 <html>
     <head>
@@ -19,16 +19,16 @@
         Integer uId = null;
         String role = "", service = "";
         User fetched = null;
-        DAOUser dao = new DAOUser();
+        __local__DAOUser dao = new __local__DAOUser(); //[][]
         
         try {
-            uId = Integer.parseInt(request.getParameter("userId"));
+            uId = Integer.parseInt(session.getAttribute("userId").toString());
             fetched = dao.getUserById(uId);
         } catch (Exception e) {}
         
         %>
         <main>
-            <button style="position: absolute; top: 10px; right: 10px; color: red" onclick="closePopUp()">X</button>
+            <button style="position: absolute; top: -30px; right: -30px; color: red" onclick="closePopUp()">X</button>
         <%
         
         if(fetched == null) {
@@ -38,7 +38,7 @@
         } else {
         %>
             <div class="row" style="width: 100%; margin: 0;">
-                <div class="col-sm-6 col-12">
+                <div class="col-lg-6 col-md-12">
                     <form method="post" action="UserProfile" enctype="multipart/form-data">
                         <div id="img-div">
                             <img style="width: 240px" src="UserProfile?service=showPic" alt="Profile picture" />
@@ -53,7 +53,7 @@
                     </form>
                 </div>
 
-                <div class="col-sm-6 col-12">
+                <div class="col-lg-6 col-md-12">
                     <div class="row"> Email: <input style="background-color: #cecece; border: 1px solid black" type="text" name="email" value="<%=(fetched != null)? fetched.getEmail(): ""%>" readonly/> </div>
                     <form action="UserProfile" method="POST">
                         <div class="row"> Full name: <input type="text" name="fullName" value="<%=(fetched != null)? fetched.getFullName(): ""%>" /> </div>

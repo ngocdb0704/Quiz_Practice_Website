@@ -25,7 +25,7 @@
                     if (session.getAttribute("userEmail") != null) {
                 %>
                 <p style="margin: auto;"><%=(String)session.getAttribute("userEmail")%></p>
-                <img style="height: 50px" src="public/images/anonymous-user.webp" alt="View Profile" onclick="displayPopUp('UserProfile')"/>
+                <img style="height: 50px; cursor: pointer" src="public/images/anonymous-user.webp" alt="View Profile" onclick="displayPopUp('UserProfile')"/>
                 <script src="public/js/UserProfile.js"></script>
                 <%
                     } else {

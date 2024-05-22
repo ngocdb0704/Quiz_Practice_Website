@@ -14,7 +14,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.util.Vector;
-
+//Del b4 commit
+import app.dal.__local__DAOUser;
 /**
  *
  * @author OwO
@@ -31,7 +32,7 @@ public class LoginControllerTempOfAnForLoginView extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession(false);
         String service = request.getParameter("service");
-        DAOUser daoUser = new DAOUser();
+        __local__DAOUser daoUser = new __local__DAOUser();  //[][]
         if (service.equals("login")) {
             String username = request.getParameter("username");
             String password = request.getParameter("password");
@@ -85,7 +86,7 @@ public class LoginControllerTempOfAnForLoginView extends HttpServlet {
 
     public boolean validateUser(String username, String password) {
         boolean flag = false;
-        DAOUser dao = new DAOUser();
+        __local__DAOUser dao = new __local__DAOUser(); //[][]
         Vector<User> vec = dao.getAll();
         for (User user : vec) {
             if (user.getEmail().equals(username) && user.getPassword().equals(password)) {
