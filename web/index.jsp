@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
+        <meta charset=utf-8>
         <title>Home</title>
         <style>
             .notification {
@@ -46,45 +47,19 @@
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="common/ExtendBody.css"/>
     </head>
     <body>
-        <h1>Welcome to the Home Page</h1>
-
-        <div id="notification" class="notification"></div>
-
-        <!-- Button trigger modal -->
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#loginModal">
-            Login
-        </button>
-
-        <!-- Modal -->
-        <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <jsp:include page="LoginInterface.jsp" />
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        
-        <form method="post" action="loginviewofAn">
-            <input type="submit" name="LogOut" value="Log Out"/>
-            <input type="hidden" name="service" value="logout"/>
-        </form>
-        <form method="post" action="loginviewofAn">
-            <input type="hidden" name="service" value="changepass"/>
-            <input type="submit" value="Change Password"/>
-        </form>
-        
-        
-        
-        
+        <%@include file="/common/header.jsp" %>
+        <main class="container">
+            <!--DEBUG BY QUANNM, REMOVE SOON-->
+            Current user email: <%
+            try {
+                String userEmail = (String)session.getAttribute("userEmail");
+                out.print(userEmail);
+            } catch (Exception e) {}
+            %>
+        </main>
+        <%@include file="/common/footer.jsp" %>           
     </body>
 </html>
