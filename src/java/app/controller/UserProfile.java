@@ -20,8 +20,6 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 import java.io.InputStream;
 import java.io.OutputStream;
-//Del b4 commit
-import app.dal.__local__DAOUser;
 
 /**
  *
@@ -46,7 +44,7 @@ public class UserProfile extends HttpServlet {
 
         HttpSession session = request.getSession();
         Integer uId = null;
-        __local__DAOUser dao = new __local__DAOUser(); //[][]
+        DAOUser dao = new DAOUser();
 
         try {
             uId = Integer.parseInt(request.getParameter("userId"));

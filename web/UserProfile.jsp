@@ -5,7 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import="app.entity.User, app.dal.DAOUser, app.dal.__local__DAOUser" %> <!--[][]-->
+<%@page import="app.entity.User, app.dal.DAOUser" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -19,7 +19,7 @@
         Integer uId = null;
         String role = "", service = "";
         User fetched = null;
-        __local__DAOUser dao = new __local__DAOUser(); //[][]
+        DAOUser dao = new DAOUser();
         
         try {
             uId = Integer.parseInt(session.getAttribute("userId").toString());
