@@ -54,8 +54,9 @@ public class UserProfile extends HttpServlet {
                     User fetched = dao.getByEmail(session.getAttribute("userEmail").toString());
                     uId = fetched.getUserId();
                     session.setAttribute("userId", uId);
+                    System.out.println("Id: " + uId);
                 }
-                catch (Exception e1) {}
+                catch (Exception e1) {System.out.println("Yea here");}
             }
         }
 
@@ -104,7 +105,7 @@ public class UserProfile extends HttpServlet {
                 if (fetched == null) {
                     response.setContentType("image/gif");
                     ServletContext cntxt = this.getServletContext();
-                    String fName = "image/anonymous-user.webp";
+                    String fName = "public/images/anonymous-user.webp";
                     InputStream ins = cntxt.getResourceAsStream(fName);
 
                     try (OutputStream o = response.getOutputStream()) {

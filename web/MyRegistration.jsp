@@ -24,7 +24,7 @@
     <body>
         <%@include file="/common/header.jsp" %>
         <main class="container">
-            <h1>My Registration</h1>
+            <h1>List of Registration</h1>
             <%
                 String placeHolder ="";
                 int i=1;
