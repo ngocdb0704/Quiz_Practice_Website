@@ -30,9 +30,34 @@
                 <%
                     } else {
                 %>
-                <a href="LoginInterface.jsp">
-                    <button class="btn btn-primary" type="submit">Login</button>
-                </a>
+                <div id="notification" class="notification"></div>
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#loginModal">
+                    Login
+                </button>
+                <!-- Modal -->
+                <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <jsp:include page="LoginInterface.jsp" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <form method="post" action="loginviewofAn">
+                    <input type="submit" name="LogOut" value="Log Out"/>
+                    <input type="hidden" name="service" value="logout"/>
+                </form>
+                <form method="post" action="loginviewofAn">
+                    <input type="hidden" name="service" value="changepass"/>
+                    <input type="submit" value="Change Password"/>
+                </form>
                 <a href="user/signup">
                     <button class="btn btn-outline-success" type="submit">Sign Up</button>
                 </a>
