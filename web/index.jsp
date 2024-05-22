@@ -4,6 +4,7 @@
   <meta charset=utf-8>
   <title>Home</title>
   <%@include file="/common/ImportBootstrap.jsp" %>
+  <link rel="stylesheet" href="common/ExtendBody.css"/>
   <style>
     .notification {
         background-color: #4CAF50;
@@ -44,6 +45,15 @@
 </head>
 <body>
     <%@include file="/common/header.jsp" %>
+    <main class="container">
+        <!--DEBUG BY QUANNM, REMOVE SOON-->
+        Current user email: <%
+        try {
+            String userEmail = (String)session.getAttribute("userEmail");
+            out.print(userEmail);
+        } catch (Exception e) {}
+        %>
+    </main>
     <%@include file="/common/footer.jsp" %>
 </body>
 </html>
