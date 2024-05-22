@@ -32,13 +32,13 @@ public class DAOResetTokens extends DBContext {
         return result.isEmpty() ? null : result.get(0);
     }
     
-    public String createForUserId(int userId, int minutes) throws SQLException {
-        if (minutes < 1) throw new IllegalArgumentException("Time must be at least 1 minute");
+    public String createForUserId(int userId, int seconds) throws SQLException {
+        if (seconds < 1) throw new IllegalArgumentException("Time must be at least 1 second");
 
         deleteToken(userId);
         
         String token = UUID.randomUUID().toString();
-        Instant expireDate = Instant.now().plus(minutes, ChronoUnit.MINUTES);
+        Instant expireDate = Instant.now().plus(seconds, ChronoUnit.SECONDS);
         String sql = "insert into [ResetToken] ([UserId], [Token], [ValidTo]) values (?, ?, ?)";
 
         PreparedStatement stmt = connection.prepareStatement(sql);

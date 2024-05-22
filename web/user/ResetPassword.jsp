@@ -72,7 +72,7 @@
                                 If your email exists in our database, a message with instruction
                                 will be sent to it.
                             </p>
-                            <p class="text-secondary">This email expires after ${timeout} minutes</p>
+                            <p class="text-secondary">This email expires after ${timeout} seconds.</p>
                             <a href="user/reset">
                                 <button class="btn btn-outline btn-secondary">Go back</button>
                             </a>
