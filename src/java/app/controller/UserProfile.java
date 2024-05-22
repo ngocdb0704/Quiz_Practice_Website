@@ -54,8 +54,9 @@ public class UserProfile extends HttpServlet {
                     User fetched = dao.getByEmail(session.getAttribute("userEmail").toString());
                     uId = fetched.getUserId();
                     session.setAttribute("userId", uId);
+                    System.out.println("Id: " + uId);
                 }
-                catch (Exception e1) {}
+                catch (Exception e1) {System.out.println("Yea here");}
             }
         }
 

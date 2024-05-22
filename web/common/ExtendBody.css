@@ -7,7 +7,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     Author     : QuanNM
 
     This extends the body element and set it to flex display, then set the main element to flex-grow.
-    This will make it so that IF there's not enough content on the screen the footer will still stick to the bottom of the screen (if you use the body format of header main footer)
+    This will make it so that IF there's not enough content on the screen the footer will still stick to the bottom of the screen (if you place all of the body's content on 3 tags that is header main footer)
 */
 
 html {
