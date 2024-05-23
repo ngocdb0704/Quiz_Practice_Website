@@ -8,7 +8,7 @@ function sendRedirect(subjectCat, subject) {
 }
 function edit(subjectStatus) {
     if (subjectStatus === 'Submitted') {
-            window.location.href = "RegistrationController?service=edit";
+            
     } else {
         alert("You can only edit registration whose status is Submitted!");
     }
@@ -23,19 +23,4 @@ function cancellation(subjectStatus, subject) {
         alert("You can only cancel registration whose status is Submitted!");
     }
 
-}
-function showMore(subject, subjectbutton) {
-    var moreDetail = document.getElementsByClassName(subject);
-    var btnText = document.getElementsByClassName(subjectbutton);
-    if (btnText.innerHTML === "Less") {
-        btnText.innerHTML = "More";
-        for (var i = 0; i < moreDetail.length; i++) {
-            moreDetail[i].style.display = "none";
-        }
-    } else {
-        for (var i = 0; i < moreDetail.length; i++) {
-            moreDetail[i].style.display = "inline";
-        }
-        btnText.innerHTML = "Less";
-    }
 }
