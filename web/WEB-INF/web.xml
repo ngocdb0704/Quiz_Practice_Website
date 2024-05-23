@@ -1,28 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="6.0" xmlns="https://jakarta.ee/xml/ns/jakartaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd">
+
+    <servlet-mapping>
+        <servlet-name>default</servlet-name>
+        <url-pattern>/public/*</url-pattern>
+    </servlet-mapping>
+
     <servlet>
-        <servlet-name>CounterController</servlet-name>
-        <servlet-class>app.controller.CounterController</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>LoginControllerTempOfAnForLoginView</servlet-name>
-        <servlet-class>app.controller.LoginControllerTempOfAnForLoginView</servlet-class>
+        <servlet-name>CustomerController</servlet-name>
+        <servlet-class>app.controller.CustomerController</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>RegistrationController</servlet-name>
         <servlet-class>app.controller.RegistrationController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>LoginControllerTempOfAnForLoginView</servlet-name>
+        <servlet-class>app.controller.LoginControllerTempOfAnForLoginView</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>LoginControllerTempOfAnForLoginView</servlet-name>
         <url-pattern>/loginviewofAn</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>default</servlet-name>
-        <url-pattern>/public/*</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>RegistrationController</servlet-name>
-        <url-pattern>/RegistrationController</url-pattern>
+        <servlet-name>CustomerController</servlet-name>
+        <url-pattern>/CustomerController</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>default</servlet-name>
@@ -32,4 +34,27 @@
         <servlet-name>default</servlet-name>
         <url-pattern>*.css</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>ResetPasswordController</servlet-name>
+        <servlet-class>app.controller.ResetPasswordController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ResetPasswordController</servlet-name>
+        <url-pattern>/user/reset</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RegistrationController</servlet-name>
+        <url-pattern>/RegistrationController</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>UserProfile</servlet-name>
+        <servlet-class>app.controller.UserProfile</servlet-class>
+    </servlet>
+    
+    <servlet-mapping>
+        <servlet-name>UserProfile</servlet-name>
+        <url-pattern>/UserProfile</url-pattern>
+    </servlet-mapping>
+        
 </web-app>

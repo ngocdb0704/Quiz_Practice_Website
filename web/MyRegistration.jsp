@@ -10,79 +10,107 @@
 <%@page import="app.entity.Subject"%>
 
 
+
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>My Registration</title>
-        <link rel="stylesheet" href="public/css/bootstrap/bootstrap.min.css"/> 
-        <link rel="stylesheet" href="public/css/bootstrap/bootstrap-utilities.min.css"/>
-        <script>
-            function sendRedirect(subject) {
-                window.location.href = "?subjectCategory=" + subjectCategory.value;
-            }
-        </script>
+        <%@include file="/common/ImportBootstrap.jsp" %>
+        <script src="public/js/MyRegistration.js"></script>
+        <link rel="stylesheet" href="public/css/bootstrap/MyRegistration.css"/>
+        <link rel="stylesheet" href="common/ExtendBody.css"/>
     </head>
     <body>
-        <div class="row">
-            <div class="col-9">
-                <table class="table table-bordered table-hover">
-                    <thead class="table-info">
-                        <tr>
-                            <th scope="col">ID</th>
-                            <th scope="col">Subject</th>
-                            <th scope="col">Registration Time</th>
-                            <th scope="col">Package</th>
-                            <th scope="col">Total cost</th>
-                            <th scope="col">Status</th>
-                            <th scope="col">Valid From</th>
-                            <th scope="col">Valid To</th>
-                            <th scope="col"></th>
-                            <th scope="col"></th>
-                        </tr>
-                    </thead>
+        <%@include file="/common/header.jsp" %>
+        <main class="container">
+            <h1>List of Registration</h1>
+            <%
+                String placeHolder ="";
+                int i=1;
+                String value= (String) request.getAttribute("value");
+                if(value == null) value = "";
+                if(value.equals("")) placeHolder = "Search Subject";
+            %>
+            <div class="row">
+                <aside class="col-3">
+                    <form class="siderbar"  action="RegistrationController" method="post">
+                        <div class="mb-3">
+                            <div class="row card-body container justify-content-center" id="inputContainer">
+                                <input class="col-8" type="text" placeholder="<%=placeHolder%>" value="<%=value%>" name="search">
+                                <button class="col-3" type="submit" name="submit" value="submit">
+                                    <i class="bi bi-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="subjectCategory">Filter Subject:</label>
+                            <%
+                                Vector<Subject> vecSub = (Vector<Subject>) request.getAttribute("select"); 
+                            %>
+                            <select class="col-10" name="subjectCategory" id="subjectCategory" onchange="sendRedirect(this, '<%=value%>')">
+                                <%
+                                        for(Subject sub:vecSub){
+                                %>
+                                <option value="<%=sub.getSubjectId()%>"><%=sub.getSubjectCategory()%></option>
+                                <%}%>
+                            </select>
+                        </div>
+                    </form>
+                </aside>
+                <div class="col-9">
                     <%
                         Vector<Registration> registrationVector = (Vector<Registration>) request.getAttribute("data");
                         for(Registration regist:registrationVector){
-            
                     %>
-                    <tbody>
-                        <tr>
-                            <th scope="row"><%=regist.getRegistrationId()%></th>
-                            <td><%=regist.getSubjectName()%></td>
-                            <td><%=regist.getRegistrationTime()%></td>
-                            <td><%=regist.getPackageName()%></td>
-                            <td><%=regist.getTotalCost()%></td>
-                            <td><%=regist.getStatus()%></td>
-                            <td><%=regist.getValidFrom()%></td>
-                            <td><%=regist.getValidTo()%></td>
-                            <td><a href="RegistrationController?service=edit">edit</a></td>
-                            <td><a href="RegistrationController?service=cancel&id=<%=regist.getRegistrationId()%>">cancel</a></td>
-                        </tr>
-                        <%}%>
-                    </tbody>
-                </table>
-            </div>
-            <div class="container col-3">
-                <div class="row justify-content-center">
-                    <form  action="">
-                        <input type="text" placeholder="Search.." name="search">
-                        <button type="submit"><i class="" style="width: 1em; height: 1em;">submit</i></button>
-                    </form>
+                    <div class="card col-3 regist">
+                        <img src="<%=regist.getSubjectImg()%>" width="100" height="200"
+                             class="card-img-top" alt="alt"/>
+                        <div class="card-body">
+                            <h5><%=regist.getSubjectName()%></h5>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">Status: <%=regist.getStatus()%></li>
+                                <li class="list-group-item">Valid From: <%=regist.getValidFrom()%></li>
+                                <li class="list-group-item">Valid To: <%=regist.getValidTo()%></li>
+                                <li class="list-group-item more <%=i%>">Registration Time: <%=regist.getRegistrationTime()%></li>
+                                <li class="list-group-item more <%=i%>">Package: <%=regist.getPackageName()%></li>
+                                <li class="list-group-item more <%=i%>">Total Cost: <%=regist.getTotalCost()%></li>
+                                <li class="list-group-item">
+                                    <table class="table">
+                                        <tr>
+                                            <th>
+                                                <button onclick="showMore('<%=i%>', 'mySMB<%=i%>')" class="btn btn-primary mySMB<%=i%>">
+                                                    More
+                                                </button>
+                                            </th>
+                                            <th>
+                                                <button class="btn btn-warning"
+                                                        onclick="edit('<%=regist.getStatus()%>')">
+                                                    <i class="bi bi-pencil"></i>
+                                                </button>
+                                            </th>
+                                            <th></th>
+                                            <th></th>
+                                            <th>
+                                                <button class="btn btn-danger" 
+                                                        onclick="cancellation('<%=regist.getStatus()%>', '<%=regist.getRegistrationId()%>')">
+                                                    <i class="bi bi-trash3"></i>
+                                                </button>
+                                            </th>
+                                        </tr>
+                                    </table>                                    
+                                </li>
+                            </ul>
+
+                        </div>
+                    </div>
+                    <%
+                        i++;
+                        }
+                    %>
                 </div>
-                <div class="row justify-content-center">
-                    <label for="subjectCategory">Filter Subject:</label>
-                    <select class="col-10" name="subjectCategory" id="subjectCategory" onchange="sendRedirect(this)">
-                        <%
-                                Vector<Subject> vecSub = (Vector<Subject>) request.getAttribute("select");
-                                for(Subject sub:vecSub){
-                            %>
-                            <option value="<%=sub.getSubjectId()%>"><%=sub.getSubjectCategory()%></option>
-                            <%}%>
-                    </select>
-                </div>
-                <a class="row justify-content-center" href="">Contact us</a>
             </div>
-        </div>
+        </main>
+        <%@include file="/common/footer.jsp" %>
     </body>
 </html>

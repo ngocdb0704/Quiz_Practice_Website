@@ -142,7 +142,8 @@ GO
 CREATE TABLE [dbo].[Subject](
 	[SubjectId] [int] NOT NULL primary key,
 	[SubjectName] [varchar] (25)NOT NULL,
-	[SubjectCategory] [varchar] (25) NOT NULL
+	[SubjectCategory] [varchar] (25) NOT NULL,
+	[SubjectImage] [varchar] (255)
 )
 
 GO
