@@ -106,6 +106,7 @@ public class ResetPasswordController extends HttpServlet {
         daoUser.close();
         daoResetTokens.close();
         request.getRequestDispatcher(RESET_PAGE).forward(request, response);
+        
     }
     
     private String generateResetUrl(HttpServletRequest req, String token) {

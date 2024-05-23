@@ -27,6 +27,14 @@
                 <p style="margin: auto;"><%=(String)session.getAttribute("userEmail")%></p>
                 <img style="height: 50px; cursor: pointer" src="public/images/anonymous-user.webp" alt="View Profile" onclick="displayPopUp('UserProfile')"/>
                 <script src="public/js/UserProfile.js"></script>
+                <form method="post" action="loginviewofAn">
+                    <input type="submit" name="LogOut" value="Log Out"/>
+                    <input type="hidden" name="service" value="logout"/>
+                </form>
+                <form method="post" action="loginviewofAn">
+                    <input type="hidden" name="service" value="changepass"/>
+                    <input type="submit" value="Change Password"/>
+                </form>
                 <%
                     } else {
                 %>
@@ -50,14 +58,7 @@
                         </div>
                     </div>
                 </div>
-                <form method="post" action="loginviewofAn">
-                    <input type="submit" name="LogOut" value="Log Out"/>
-                    <input type="hidden" name="service" value="logout"/>
-                </form>
-                <form method="post" action="loginviewofAn">
-                    <input type="hidden" name="service" value="changepass"/>
-                    <input type="submit" value="Change Password"/>
-                </form>
+
                 <a href="user/signup">
                     <button class="btn btn-outline-success" type="submit">Sign Up</button>
                 </a>

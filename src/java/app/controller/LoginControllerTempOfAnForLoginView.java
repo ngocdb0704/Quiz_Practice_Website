@@ -43,6 +43,7 @@ public class LoginControllerTempOfAnForLoginView extends HttpServlet {
                 session.setAttribute("successMessage", message);
                 response.sendRedirect("index.jsp");
             } else {
+                session.setAttribute("successMessage", "Not authorized"); 
                 response.sendRedirect("index.jsp");
             }
         }

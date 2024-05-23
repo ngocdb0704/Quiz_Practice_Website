@@ -30,7 +30,7 @@
                         <input type="hidden" name = "service" value = "login"/>
                     </div>
                     <div class="form-group text-center">
-                        <a href="">Signup</a> | <a href="user/reset">Forgot password?</a>
+                        <a href="">Signup</a> | <a href="">Forgot password?</a>
                     </div>
                 </form>
             </div>

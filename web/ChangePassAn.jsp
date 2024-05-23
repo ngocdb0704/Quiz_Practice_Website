@@ -33,7 +33,20 @@
         </script>
     </head>
     <body>
+        
         <div id="notification" class="notification"></div>
+
+        <%
+                String username = (String) session.getAttribute("userEmail");
+                if (username == null || username.length() < 1) {
+                session.setAttribute("successMessage", "Not authorized");
+                response.sendRedirect("index.jsp");
+            } else {
+            
+        %>
+
+        
+
         <div class="changepass-container">
             <form method="post" action="loginviewofAn" class="form-changepass">
                 <h3 classs="text-center">Change Password</h3>
@@ -55,5 +68,6 @@
                 </div>
             </form>
         </div>
+        <%}%>
     </body>
 </html>
