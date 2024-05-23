@@ -27,6 +27,10 @@
         <url-pattern>/CustomerController</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
+        <servlet-name>RegistrationController</servlet-name>
+        <url-pattern>/RegistrationController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
         <servlet-name>default</servlet-name>
         <url-pattern>*.js</url-pattern>
     </servlet-mapping>
@@ -42,19 +46,12 @@
         <servlet-name>ResetPasswordController</servlet-name>
         <url-pattern>/user/reset</url-pattern>
     </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>RegistrationController</servlet-name>
-        <url-pattern>/RegistrationController</url-pattern>
-    </servlet-mapping>
-    
     <servlet>
         <servlet-name>UserProfile</servlet-name>
         <servlet-class>app.controller.UserProfile</servlet-class>
     </servlet>
-    
     <servlet-mapping>
         <servlet-name>UserProfile</servlet-name>
         <url-pattern>/UserProfile</url-pattern>
     </servlet-mapping>
-        
 </web-app>
