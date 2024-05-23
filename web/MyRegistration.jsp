@@ -50,6 +50,7 @@
                             %>
                             <select class="col-10" name="subjectCategory" id="subjectCategory" onchange="sendRedirect(this, '<%=value%>')">
                                 <%
+                                        //show all elements in vector
                                         for(Subject sub:vecSub){
                                 %>
                                 <option value="<%=sub.getSubjectId()%>"><%=sub.getSubjectCategory()%></option>
@@ -72,19 +73,18 @@
                                 <li class="list-group-item">Status: <%=regist.getStatus()%></li>
                                 <li class="list-group-item">Valid From: <%=regist.getValidFrom()%></li>
                                 <li class="list-group-item">Valid To: <%=regist.getValidTo()%></li>
-                                <li class="list-group-item more <%=i%>">Registration Time: <%=regist.getRegistrationTime()%></li>
-                                <li class="list-group-item more <%=i%>">Package: <%=regist.getPackageName()%></li>
-                                <li class="list-group-item more <%=i%>">Total Cost: <%=regist.getTotalCost()%></li>
+                                <li class="list-group-item">Registration Time: <%=regist.getRegistrationTime()%></li>
+                                <li class="list-group-item">Package: <%=regist.getPackageName()%></li>
+                                <li class="list-group-item">Total Cost: <%=regist.getTotalCost()%></li>
                                 <li class="list-group-item">
                                     <table class="table">
                                         <tr>
                                             <th>
-                                                <button onclick="showMore('<%=i%>', 'mySMB<%=i%>')" class="btn btn-primary mySMB<%=i%>">
-                                                    More
-                                                </button>
-                                            </th>
-                                            <th>
-                                                <button class="btn btn-warning"
+                                                <!-- add tooltip to edit button -->
+                                                <button type="button" class="btn btn-warning btn-secondary" 
+                                                        data-bs-toggle="tooltip" 
+                                                        data-bs-placement="top" 
+                                                        title="Edit"
                                                         onclick="edit('<%=regist.getStatus()%>')">
                                                     <i class="bi bi-pencil"></i>
                                                 </button>
@@ -92,7 +92,11 @@
                                             <th></th>
                                             <th></th>
                                             <th>
-                                                <button class="btn btn-danger" 
+                                                <!-- add tooltip to cancel button -->
+                                                <button class="btn btn-danger btn-secondary" 
+                                                        data-bs-toggle="tooltip" 
+                                                        data-bs-placement="top" 
+                                                        title="Cancel"
                                                         onclick="cancellation('<%=regist.getStatus()%>', '<%=regist.getRegistrationId()%>')">
                                                     <i class="bi bi-trash3"></i>
                                                 </button>
