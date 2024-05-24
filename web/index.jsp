@@ -1,8 +1,7 @@
-
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
+        <meta charset=utf-8>
         <title>Home</title>
         <style>
             .notification {
@@ -32,29 +31,31 @@
                 notification.classList.add("show");
                 setTimeout(function () {
                     notification.classList.remove("show");
-                }, 3000); 
+                }, 3000);
             }
 
             window.onload = function () {
                 var successMessage = '<%= session.getAttribute("successMessage") %>';
-                 if (successMessage && successMessage !== null) {
+                if (successMessage && successMessage !== null) {
                     showNotification(successMessage);
                     session.removeAttribute("successMessage");
                 }
             };
         </script>
+        <%@include file="/common/ImportBootstrap.jsp" %>
+        <link rel="stylesheet" href="common/ExtendBody.css"/>
     </head>
     <body>
-        <h1>Welcome to the Home Page</h1>
-
-        <div id="notification" class="notification"></div>
-
-        <a href="LoginInterface.jsp">Login</a>
-        <a href="home">Home</a>
-        <form method="post" action="loginviewofAn">
-            <input type="submit" name="LogOut" value="Log Out"/>
-            <input type="hidden" name="service" value="logout"/>
-        </form>
-        <a href="ChangePassAn.jsp">Change Password</a>
+        <%@include file="/common/header.jsp" %>
+        <main class="container">
+            <!--DEBUG BY QUANNM, REMOVE SOON-->
+            Current user email: <%
+            try {
+                String userEmail = (String)session.getAttribute("userEmail");
+                out.print(userEmail);
+            } catch (Exception e) {}
+            %>
+        </main>
+        <%@include file="/common/footer.jsp" %>           
     </body>
 </html>

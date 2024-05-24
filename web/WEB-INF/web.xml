@@ -7,20 +7,51 @@
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>UserProfile</servlet-name>
-        <servlet-class>app.controller.UserProfile</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>CustomerController</servlet-name>
         <servlet-class>app.controller.CustomerController</servlet-class>
     </servlet>
-
+    <servlet>
+        <servlet-name>RegistrationController</servlet-name>
+        <servlet-class>app.controller.RegistrationController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>LoginControllerTempOfAnForLoginView</servlet-name>
+        <servlet-class>app.controller.LoginControllerTempOfAnForLoginView</servlet-class>
+    </servlet>
     <servlet-mapping>
-        <servlet-name>UserProfile</servlet-name>
-        <url-pattern>/UserProfile</url-pattern>
+        <servlet-name>LoginControllerTempOfAnForLoginView</servlet-name>
+        <url-pattern>/loginviewofAn</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>CustomerController</servlet-name>
         <url-pattern>/CustomerController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RegistrationController</servlet-name>
+        <url-pattern>/RegistrationController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>default</servlet-name>
+        <url-pattern>*.js</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>default</servlet-name>
+        <url-pattern>*.css</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>ResetPasswordController</servlet-name>
+        <servlet-class>app.controller.ResetPasswordController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ResetPasswordController</servlet-name>
+        <url-pattern>/user/reset</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>UserProfile</servlet-name>
+        <servlet-class>app.controller.UserProfile</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UserProfile</servlet-name>
+        <url-pattern>/UserProfile</url-pattern>
     </servlet-mapping>
 </web-app>

@@ -143,8 +143,8 @@ if(vector == null ){%>
             <td><%=cus.getGender()%></td>
             <td><%=cus.getMobile()%></td>
             <td><%=cus.isIsActive()%></td>
-            <td><a href="CustomerControllerURL?service=update&id=<%=cus.getUserId()%>">Edit</a></td>
-            <td><a href="CustomerControllerURL?service=view&id=<%=cus.getUserId()%>">View</a></td>
+            <td><a href="CustomerController?service=update&id=<%=cus.getUserId()%>">Edit</a></td>
+            <td><a href="CustomerController?service=view&id=<%=cus.getUserId()%>">View</a></td>
         </tr>
         <%}%>
     </table>
