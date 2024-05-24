@@ -8,6 +8,7 @@
 <%@page import="java.util.Vector"%>
 <%@page import="app.entity.Registration"%>
 <%@page import="app.entity.Subject"%>
+<%@page import="app.utils.FormatData"%>
 
 
 
@@ -24,9 +25,11 @@
     <body>
         <%@include file="/common/header.jsp" %>
         <main class="container">
-            <h1>List of Registration</h1>
             <%
+                FormatData dataFormatter = new FormatData();
+                String registDate, validF, validT;
                 String placeHolder ="";
+                String disableButton = "";
                 int i=1;
                 String value= (String) request.getAttribute("value");
                 if(value == null) value = "";
@@ -35,10 +38,14 @@
             <div class="row">
                 <aside class="col-3">
                     <form class="siderbar"  action="RegistrationController" method="post">
-                        <div class="mb-3">
-                            <div class="row card-body container justify-content-center" id="inputContainer">
-                                <input class="col-8" type="text" placeholder="<%=placeHolder%>" value="<%=value%>" name="search">
-                                <button class="col-3" type="submit" name="submit" value="submit">
+                        <div class="mb-3 mt-5">
+                            <div class="row card-body container justify-content-center" 
+                                 id="inputContainer">
+                                <input class="col-8" type="text" 
+                                       placeholder="<%=placeHolder%>" 
+                                       value="<%=value%>" name="search">
+                                <button class="col-3" type="submit" 
+                                        name="submit" value="submit">
                                     <i class="bi bi-search"></i>
                                 </button>
                             </div>
@@ -48,64 +55,91 @@
                             <%
                                 Vector<Subject> vecSub = (Vector<Subject>) request.getAttribute("select"); 
                             %>
-                            <select class="col-10" name="subjectCategory" id="subjectCategory" onchange="sendRedirect(this, '<%=value%>')">
+                            <select class="col-10" name="subjectCategory" 
+                                    id="subjectCategory" 
+                                    onchange="sendRedirect(this, '<%=value%>')">
                                 <%
                                         //show all elements in vector
                                         for(Subject sub:vecSub){
                                 %>
-                                <option value="<%=sub.getSubjectId()%>"><%=sub.getSubjectCategory()%></option>
+                                <option value="<%=sub.getSubjectId()%>">
+                                    <%=sub.getSubjectCategory()%>
+                                </option>
                                 <%}%>
                             </select>
                         </div>
                     </form>
                 </aside>
                 <div class="col-9">
+                    <h1>List of Registration</h1>
                     <%
                         Vector<Registration> registrationVector = (Vector<Registration>) request.getAttribute("data");
                         for(Registration regist:registrationVector){
+                        registDate = dataFormatter.dateFormat(regist.getRegistrationTime());
+                        validF = dataFormatter.dateFormat(regist.getValidFrom());
+                        validT= dataFormatter.dateFormat(regist.getValidTo());
+                        if(regist.getStatus().equals("Submitted")) disableButton = "";
+                        else disableButton = "disabled";
                     %>
-                    <div class="card col-3 regist">
-                        <img src="<%=regist.getSubjectImg()%>" width="100" height="200"
-                             class="card-img-top" alt="alt"/>
-                        <div class="card-body">
-                            <h5><%=regist.getSubjectName()%></h5>
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item">Status: <%=regist.getStatus()%></li>
-                                <li class="list-group-item">Valid From: <%=regist.getValidFrom()%></li>
-                                <li class="list-group-item">Valid To: <%=regist.getValidTo()%></li>
-                                <li class="list-group-item">Registration Time: <%=regist.getRegistrationTime()%></li>
-                                <li class="list-group-item">Package: <%=regist.getPackageName()%></li>
-                                <li class="list-group-item">Total Cost: <%=regist.getTotalCost()%></li>
-                                <li class="list-group-item">
-                                    <table class="table">
-                                        <tr>
-                                            <th>
-                                                <!-- add tooltip to edit button -->
-                                                <button type="button" class="btn btn-warning btn-secondary" 
-                                                        data-bs-toggle="tooltip" 
-                                                        data-bs-placement="top" 
-                                                        title="Edit"
-                                                        onclick="edit('<%=regist.getStatus()%>')">
-                                                    <i class="bi bi-pencil"></i>
-                                                </button>
-                                            </th>
-                                            <th></th>
-                                            <th></th>
-                                            <th>
-                                                <!-- add tooltip to cancel button -->
-                                                <button class="btn btn-danger btn-secondary" 
-                                                        data-bs-toggle="tooltip" 
-                                                        data-bs-placement="top" 
-                                                        title="Cancel"
-                                                        onclick="cancellation('<%=regist.getStatus()%>', '<%=regist.getRegistrationId()%>')">
-                                                    <i class="bi bi-trash3"></i>
-                                                </button>
-                                            </th>
-                                        </tr>
-                                    </table>                                    
-                                </li>
-                            </ul>
-
+                    <!-- Change cards' appearance -->
+                    <div class="card mb-3">
+                        <div class="row g-0">
+                            <div class="col-md-4">
+                                <img src="<%=regist.getSubjectImg()%>"
+                                     class="img-fluid rounded-start" 
+                                     width="300" height="300">
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card-body">
+                                    <h5 class="card-title"><%=regist.getSubjectName()%></h5>
+                                    <h6>Status: <%=regist.getStatus()%></h6>
+                                    <ul class="list-group list-group-flush">
+                                        <li class="list-group-item">
+                                            <span>Registered: <%=regist.getPackageName()%></span>
+                                            <span>on <%=registDate%></span>
+                                        </li>
+                                        <li class="list-group-item">
+                                            <span>Valid from <%=validF%></span>
+                                            <span class="ml-2">to <%=validT%></span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-md-2 mt-md-5">
+                                <h5><%=regist.getTotalCost()%>$</h5>
+                                <!-- Button trigger modal -->
+                                <!-- Remove onclick, if status is not Submitted then disabled -->
+                                <button type="button" class="btn btn-warning"
+                                        data-bs-toggle="modal" 
+                                        data-bs-target=".modal<%=regist.getRegistrationId()%>"
+                                        <%=disableButton%>>
+                                    Edit
+                                </button>
+                                <!-- Modal -->
+                                <div class="modal fade modal<%=regist.getRegistrationId()%>" tabindex="-1" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                hi
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                <button type="button" class="btn btn-primary">Save changes</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div> 
+                                <!-- Remove onclick, if status is not Submitted then disabled -->
+                                <button class="btn btn-danger" 
+                                        onclick="cancellation('<%=regist.getStatus()%>', '<%=regist.getRegistrationId()%>')"
+                                        <%=disableButton%>>
+                                    Cancel
+                                </button>
+                            </div>
                         </div>
                     </div>
                     <%
