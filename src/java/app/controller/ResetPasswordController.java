@@ -94,7 +94,7 @@ public class ResetPasswordController extends HttpServlet {
             } else if (same) {
                 request.setAttribute("screen", "success");
                 response.setHeader("Refresh", "3; url=" + URLUtils.getBaseURL(request) + "/");
-                daoUser.updatePassword(record.getUserId(), newPassword);
+                daoUser.updatePasswordById(record.getUserId(), newPassword);
                 daoResetTokens.deleteToken(record.getUserId());
             } else {
                 request.setAttribute("user", daoUser.getById(record.getUserId()));
