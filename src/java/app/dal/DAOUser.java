@@ -21,9 +21,9 @@ public class DAOUser extends DBContext {
             user.setEmail(rs.getString("Email"));
             user.setPassword(rs.getString("Password"));
             user.setFullName(rs.getString("FullName"));
-            user.setGender(rs.getString("Gender"));
+            user.setGenderId(rs.getInt("GenderId"));
             user.setMobile(rs.getString("Mobile"));
-            user.setRole(rs.getString("Role"));
+            user.setRoleId(rs.getInt("RoleId"));
             user.setIsActive(rs.getBoolean("IsActive"));
             result.add(user);
         }
@@ -36,7 +36,7 @@ public class DAOUser extends DBContext {
             Statement state = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
             ResultSet rs = state.executeQuery(sql);
             while (rs.next()) {
-                Out.add(new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getBoolean(8)));
+                Out.add(new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs.getString(5), rs.getInt(6), rs.getString(7), rs.getBoolean(8)));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -55,7 +55,7 @@ public class DAOUser extends DBContext {
             Statement state = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
             ResultSet rs = state.executeQuery(sql);
             if (rs.next()) {
-                return new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getBoolean(8));
+                return new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs.getString(5), rs.getInt(6), rs.getString(7), rs.getBoolean(8));
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -130,21 +130,21 @@ public class DAOUser extends DBContext {
     }
 
     public User getByEmail(String email) throws SQLException {
-        PreparedStatement stmt = connection.prepareStatement("select * from [User] where [Email] = ?");
+        PreparedStatement stmt = connection.prepareStatement("select * from [User] where Email = ?");
         stmt.setString(1, email);
         List<User> result = extractResults(stmt.executeQuery());
         return result.isEmpty() ? null : result.get(0);
     }
 
     public User getById(int id) throws SQLException {
-        PreparedStatement stmt = connection.prepareStatement("select * from [User] where [UserId] = ?");
+        PreparedStatement stmt = connection.prepareStatement("select * from [User] where UserId = ?");
         stmt.setInt(1, id);
         List<User> result = extractResults(stmt.executeQuery());
         return result.isEmpty() ? null : result.get(0);
     }
 
     public void updatePassword(int id, String password) throws SQLException {
-        PreparedStatement stmt = connection.prepareStatement("update [User] set [Password] = ? where [UserId] = ?");
+        PreparedStatement stmt = connection.prepareStatement("update [User] set Password = ? where UserId = ?");
         stmt.setString(1, password);
         stmt.setInt(2, id);
         stmt.executeUpdate();
@@ -152,8 +152,8 @@ public class DAOUser extends DBContext {
 
     public void updatePassByUser(String user, String pass) {
         String sql = "UPDATE [User]\n"
-                + "   SET [Password] = ?\n"
-                + " WHERE [Email] = ?";
+                + "   SET Password = ?\n"
+                + " WHERE Email = ?";
         PreparedStatement pre;
         try {
             pre = connection.prepareStatement(sql);
