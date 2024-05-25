@@ -50,7 +50,7 @@ public class RegistrationController extends HttpServlet {
             inputSearch = "";
         }
         int pos;
-        String filterStatus = request.getParameter("subjectCategory");
+        String filterStatus = request.getParameter("subjectStatus");
         //check session's attribute for email
         if (session.getAttribute("userEmail") != null) {
             userEmail = session.getAttribute("userEmail").toString();
@@ -91,6 +91,7 @@ public class RegistrationController extends HttpServlet {
             }
 
             request.setAttribute("value", inputSearch);
+            request.setAttribute("prevStatus", filterStatus);
             request.setAttribute("select", statusVector);
             request.setAttribute("data", registrationVector);
             page = "/MyRegistration.jsp";

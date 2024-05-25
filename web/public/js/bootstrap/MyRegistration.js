@@ -4,7 +4,7 @@
  */
 
 function sendRedirect(subjectStatus, subject) {
-    window.location.href = "RegistrationController?search=" + subject + "&subjectCategory=" + subjectStatus;
+    window.location.href = "RegistrationController?search=" + subject + "&subjectStatus=" + subjectStatus.value;
 }
 function cancellation(subjectStatus, subject) {
     if (confirm("Confirm cancellation?") === true) {
@@ -14,3 +14,4 @@ function cancellation(subjectStatus, subject) {
 function updatePrice(sale, subjectClass) {
     document.getElementById(subjectClass).value = sale;
 }
+

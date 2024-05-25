@@ -20,7 +20,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>My Registration</title>
         <%@include file="/common/ImportBootstrap.jsp" %>
-        <script src="public/js/MyRegistration.js"></script>
+        <script src="public/js/bootstrap/MyRegistration.js"></script>
         <link rel="stylesheet" href="public/css/bootstrap/MyRegistration.css"/>
         <link rel="stylesheet" href="common/ExtendBody.css"/>
     </head>
@@ -36,48 +36,57 @@
                 String disableButton = "";
                 int i=0;
                 String value= (String) request.getAttribute("value");
+                String prevStatus = (String) request.getAttribute("prevStatus");
                 if(value == null) value = "";
-                if(value.equals("")) placeHolder = "Search Subject";
+                if(prevStatus == null) prevStatus = "";
+                if(value.equals("")) placeHolder = "All Subjects";
             %>
             <div class="row">
                 <aside class="col-3">
-                    <form class="siderbar"  action="RegistrationController" method="post">
+                    <!-- fix search bug: if user search without filter, 
+                    the index of filter will be 0 which results in array index = -1
+                    sol: move filter element out of form, form will get the previous filter
+                    if the select remains unchanged-->
+                    <form class="siderbar"  action="RegistrationController" method="get">
                         <div class="mb-3 mt-5">
                             <div class="row card-body container justify-content-center" 
                                  id="inputContainer">
-                                <input class="col-8" type="text" 
+                                <label for="searchText">Search Subject:</label>
+                                <input class="col-8" type="text" id="searchText"
                                        placeholder="<%=placeHolder%>" 
                                        value="<%=value%>" name="search">
+                                <input type="hidden" name="subjectStatus" value="<%=prevStatus%>">
                                 <button class="col-3" type="submit" 
                                         name="submit" value="submit">
                                     <i class="bi bi-search"></i>
                                 </button>
                             </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="subjectCategory">Subject Status:</label>
-                            <%
-                                Vector<String> vecStat = (Vector<String>) request.getAttribute("select"); 
-                            %>
-                            <select class="col-10 form-select" name="subjectCategory" 
-                                    id="subjectCategory" 
-                                    onchange="sendRedirect(this, '<%=value%>')">
-                                <%
-                                        //show all elements in vector
-                                        for(String status:vecStat){
-                                %>
-                                <option value="<%=i%><%=status%>">
-                                    <%=status%>
-                                </option>
-                                <%
-                                    i++;
-                                    }%>
-                            </select>
-                        </div>
                     </form>
-                    <a class="link-primary mt-3"
-                       href="" target="_blank"
-                       rel="noopener noreferrer">Contact Us</a>
+                    <div class="mb-3 siderbar">
+                        <label for="subjectCategory">Subject Status:</label>
+                        <%
+                            Vector<String> vecStat = (Vector<String>) request.getAttribute("select"); 
+                        %>
+                        <select class="col-10 form-select" name="subjectStatus" 
+                                id="subjectCategory" 
+                                onchange="sendRedirect(this, '<%=value%>')">
+                            <%
+                                    //show all elements in vector
+                                    for(String status:vecStat){
+                            %>
+                            <option value="<%=i%><%=status%>">
+                                <%=status%>
+                            </option>
+                            <%
+                                i++;
+                                }%>
+                        </select>
+                        <a class="link-primary mt-3"
+                           href="" target="_blank"
+                           rel="noopener noreferrer">Contact Us</a>
+                    </div>
+
                 </aside>
                 <div class="col-9 mt-3">
                     <h1>List of Registrations</h1>

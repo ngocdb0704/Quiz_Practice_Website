@@ -130,7 +130,8 @@ public class DAORegistration extends DBContext {
                     join [Subject] s on s.SubjectId = p.SubjectId
                     join [RegistrationStatus] rs on rs.RegistrationStatusId = r.RegistrationStatusId
                     where  u.Email = ?
-                    and s.SubjectTitle like ? ESCAPE '!'""";
+                    and s.SubjectTitle like ? ESCAPE '!'
+                    order by rs.RegistrationStatusId""";
         Vector<Registration> vector = new Vector<>();
         try {
             PreparedStatement pre = connection.prepareStatement(sql);
@@ -180,7 +181,8 @@ public class DAORegistration extends DBContext {
                     join [Package] p on p.PackageId = r.PackageId
                     join [Subject] s on s.SubjectId = p.SubjectId
                     join [RegistrationStatus] rs on rs.RegistrationStatusId = r.RegistrationStatusId
-                    where  u.Email = ?""";
+                    where  u.Email = ?
+                    order by rs.RegistrationStatusId""";
         Vector<Registration> vector = new Vector<>();
         try {
             PreparedStatement pre = connection.prepareStatement(sql);
