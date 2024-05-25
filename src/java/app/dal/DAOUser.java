@@ -21,9 +21,9 @@ public class DAOUser extends DBContext {
             user.setEmail(rs.getString("Email"));
             user.setPassword(rs.getString("Password"));
             user.setFullName(rs.getString("FullName"));
-            user.setGender(rs.getString("Gender"));
+            user.setGender(rs.getString("GenderName"));
             user.setMobile(rs.getString("Mobile"));
-            user.setRole(rs.getString("Role"));
+            user.setRole(rs.getString("RoleName"));
             user.setIsActive(rs.getBoolean("IsActive"));
             result.add(user);
         }
@@ -130,20 +130,30 @@ public class DAOUser extends DBContext {
     }
 
     public User getByEmail(String email) throws SQLException {
-        PreparedStatement stmt = connection.prepareStatement("select * from [User] where [Email] = ?");
+        String sql = "select * from [User] u\n"
+                + "inner join [Gender] g on u.[GenderId] = g.[GenderId]\n"
+                + "inner join [Role] r on u.[RoleId] = r.[RoleId]\n"
+                + "where [Email] = ?";
+
+        PreparedStatement stmt = connection.prepareStatement(sql);
         stmt.setString(1, email);
         List<User> result = extractResults(stmt.executeQuery());
         return result.isEmpty() ? null : result.get(0);
     }
 
     public User getById(int id) throws SQLException {
-        PreparedStatement stmt = connection.prepareStatement("select * from [User] where [UserId] = ?");
+        String sql = "select * from [User] u\n"
+                + "inner join [Gender] g on u.[GenderId] = g.[GenderId]\n"
+                + "inner join [Role] r on u.[RoleId] = r.[RoleId]\n"
+                + "where [UserId] = ?";
+
+        PreparedStatement stmt = connection.prepareStatement(sql);
         stmt.setInt(1, id);
         List<User> result = extractResults(stmt.executeQuery());
         return result.isEmpty() ? null : result.get(0);
     }
 
-    public void updatePassword(int id, String password) throws SQLException {
+    public void updatePasswordById(int id, String password) throws SQLException {
         PreparedStatement stmt = connection.prepareStatement("update [User] set [Password] = ? where [UserId] = ?");
         stmt.setString(1, password);
         stmt.setInt(2, id);
