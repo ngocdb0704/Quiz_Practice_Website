@@ -21,8 +21,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
         font-size: 18px;
     }
 }
-.regist{
-    width: 18rem;
-    display: inline-block;
+.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
