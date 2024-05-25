@@ -7,6 +7,7 @@ package app.dal;
 import java.util.Vector;
 import app.dal.DBContext;
 import app.entity.Registration;
+import app.utils.FormatData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -45,6 +46,31 @@ public class DAORegistration extends DBContext {
         return vector;
     }
 
+    public Registration getByRegistId(String email, int id) {
+        String sql = """
+                    select r.RegistrationId, s.SubjectTitle,
+                    r.RegistrationTime, p.PackageName, r.TotalCost, rs.RegistrationStatusName,
+                    r.ValidFrom, r.ValidTo, s.SubjectThumbnail 
+                    from Registration r
+                    join [User] u on u.UserId = r.UserId
+                    join [Package] p on p.PackageId = r.PackageId
+                    join [Subject] s on s.SubjectId = p.SubjectId
+                    join [RegistrationStatus] rs on rs.RegistrationStatusId = r.RegistrationStatusId
+                    join [SubjectCategory] sc on sc.SubjectCategoryId = s.SubjectCategoryId
+                    where  u.Email = ? and r.RegistrationId = ?""";
+        Vector<Registration> vector = new Vector<>();
+        try {
+            PreparedStatement pre = connection.prepareStatement(sql);
+            pre.setString(1, email);
+            pre.setInt(2, id);
+            ResultSet rs = pre.executeQuery();
+            vector = multiPurposeVector(rs);
+        } catch (SQLException ex) {
+            Logger.getLogger(DAORegistration.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return vector.get(0);
+    }
+
     public Vector<Registration> searchNameFilter(String email, String inputSearch, String category) {
         inputSearch = inputSearch
                 .replace("!", "!!")
@@ -56,11 +82,13 @@ public class DAORegistration extends DBContext {
                     select r.RegistrationId, s.SubjectTitle,
                     r.RegistrationTime, p.PackageName, r.TotalCost, rs.RegistrationStatusName,
                     r.ValidFrom, r.ValidTo, s.SubjectThumbnail 
-                    from Registration r, [User] u, [Subject] s, [Package] p , 
-                    [RegistrationStatus] rs, SubjectCategory sc where p.SubjectId = s.SubjectId
-                    and r.PackageId = p.PackageId and sc.SubjectCategoryId = s.SubjectCategoryId
-                    and r.RegistrationStatusId = rs.RegistrationStatusId 
-                    and  u.Email = ? and sc.SubjectCategoryName =  ?
+                    from Registration r
+                    join [User] u on u.UserId = r.UserId
+                    join [Package] p on p.PackageId = r.PackageId
+                    join [Subject] s on s.SubjectId = p.SubjectId
+                    join [RegistrationStatus] rs on rs.RegistrationStatusId = r.RegistrationStatusId
+                    join [SubjectCategory] sc on sc.SubjectCategoryId = s.SubjectCategoryId
+                    where  u.Email = ? and sc.SubjectCategoryName =  ?
                     and s.SubjectTitle like ? ESCAPE '!'""";
         try {
             PreparedStatement pre = connection.prepareStatement(sql);
@@ -76,20 +104,19 @@ public class DAORegistration extends DBContext {
     }
 
     public Vector<Registration> searchBySubjectName(String email, String inputSearch) {
-        inputSearch = inputSearch
-                .replace("!", "!!")
-                .replace("%", "!%")
-                .replace("_", "!_")
-                .replace("[", "![");
+        FormatData fd = new FormatData();
+        inputSearch = fd.stringSqlFormat(inputSearch);
         String sql = """
                     select r.RegistrationId, s.SubjectTitle,
                     r.RegistrationTime, p.PackageName, r.TotalCost, rs.RegistrationStatusName,
                     r.ValidFrom, r.ValidTo, s.SubjectThumbnail 
-                    from Registration r, [User] u, [Subject] s, [Package] p , 
-                    [RegistrationStatus] rs, SubjectCategory sc where p.SubjectId = s.SubjectId
-                    and r.PackageId = p.PackageId and sc.SubjectCategoryId = s.SubjectCategoryId
-                    and r.RegistrationStatusId = rs.RegistrationStatusId 
-                    and  u.Email = ?
+                    from Registration r
+                    join [User] u on u.UserId = r.UserId
+                    join [Package] p on p.PackageId = r.PackageId
+                    join [Subject] s on s.SubjectId = p.SubjectId
+                    join [RegistrationStatus] rs on rs.RegistrationStatusId = r.RegistrationStatusId
+                    join [SubjectCategory] sc on sc.SubjectCategoryId = s.SubjectCategoryId
+                    where  u.Email = ?
                     and s.SubjectTitle like ? ESCAPE '!'""";
         Vector<Registration> vector = new Vector<>();
         try {
@@ -105,15 +132,19 @@ public class DAORegistration extends DBContext {
     }
 
     public Vector<Registration> filterBySubjectCategory(String email, String category) {
+        FormatData fd = new FormatData();
+        category = fd.stringSqlFormat(category);
         String sql = """
                     select r.RegistrationId, s.SubjectTitle,
                     r.RegistrationTime, p.PackageName, r.TotalCost, rs.RegistrationStatusName,
                     r.ValidFrom, r.ValidTo, s.SubjectThumbnail 
-                    from Registration r, [User] u, [Subject] s, [Package] p , 
-                    [RegistrationStatus] rs, SubjectCategory sc where p.SubjectId = s.SubjectId
-                    and r.PackageId = p.PackageId and sc.SubjectCategoryId = s.SubjectCategoryId
-                    and r.RegistrationStatusId = rs.RegistrationStatusId 
-                    and  u.Email = ? and sc.SubjectCategoryName =  ?""";
+                    from Registration r
+                    join [User] u on u.UserId = r.UserId
+                    join [Package] p on p.PackageId = r.PackageId
+                    join [Subject] s on s.SubjectId = p.SubjectId
+                    join [RegistrationStatus] rs on rs.RegistrationStatusId = r.RegistrationStatusId
+                    join [SubjectCategory] sc on sc.SubjectCategoryId = s.SubjectCategoryId
+                    where  u.Email = ? and sc.SubjectCategoryName =  ?""";
         Vector<Registration> vector = new Vector<>();
         try {
             PreparedStatement pre = connection.prepareStatement(sql);
@@ -132,11 +163,13 @@ public class DAORegistration extends DBContext {
                     select r.RegistrationId, s.SubjectTitle,
                     r.RegistrationTime, p.PackageName, r.TotalCost, rs.RegistrationStatusName,
                     r.ValidFrom, r.ValidTo, s.SubjectThumbnail 
-                    from Registration r, [User] u, [Subject] s, [Package] p , 
-                    [RegistrationStatus] rs, SubjectCategory sc where p.SubjectId = s.SubjectId
-                    and r.PackageId = p.PackageId and sc.SubjectCategoryId = s.SubjectCategoryId
-                    and r.RegistrationStatusId = rs.RegistrationStatusId 
-                    and  u.Email = ?""";
+                    from Registration r
+                    join [User] u on u.UserId = r.UserId
+                    join [Package] p on p.PackageId = r.PackageId
+                    join [Subject] s on s.SubjectId = p.SubjectId
+                    join [RegistrationStatus] rs on rs.RegistrationStatusId = r.RegistrationStatusId
+                    join [SubjectCategory] sc on sc.SubjectCategoryId = s.SubjectCategoryId
+                    where  u.Email = ?""";
         Vector<Registration> vector = new Vector<>();
         try {
             PreparedStatement pre = connection.prepareStatement(sql);
@@ -161,7 +194,33 @@ public class DAORegistration extends DBContext {
         }
         return n;
     }
-
+    public int updateRegistration (Registration newRegist){
+        int n=0;
+        String sql = """
+                     UPDATE [dbo].[Registration]
+                        SET [UserId] = ?
+                           ,[RegistrationTime] = ?
+                           ,[PackageId] = ?
+                           ,[TotalCost] = ?
+                           ,[RegistrationStatusId] = ?
+                           ,[ValidFrom] = ?
+                           ,[ValidTo] = ?
+                      WHERE [RegistrationId] = ?""";
+        try{
+            PreparedStatement pre = connection.prepareStatement(sql);
+            //pre.setDataType(indexOf?, value);
+//            pre.setString(1, newRegist.get);
+//            pre.setInt(2,pro.getModel_year());
+//            pre.setDouble(3, pro.getList_price());
+//            pre.setString(4, pro.getBrand_name());
+//            pre.setString(5, pro.getCategory_name());
+//            pre.setInt(6, pro.getProduct_id());
+            n = pre.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAORegistration.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return n;
+    }
     public static void main(String[] args) {
         DAORegistration dao = new DAORegistration();
         Vector<Registration> vec = dao.getAll("ngocdbhe182383@fpt.edu.vn");

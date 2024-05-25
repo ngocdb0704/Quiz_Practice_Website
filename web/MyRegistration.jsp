@@ -9,6 +9,8 @@
 <%@page import="app.entity.Registration"%>
 <%@page import="app.entity.Subject"%>
 <%@page import="app.utils.FormatData"%>
+<%@page import="app.dal.DAOPackage"%>
+<%@page import="app.entity.Package"%>
 
 
 
@@ -26,6 +28,7 @@
         <%@include file="/common/header.jsp" %>
         <main class="container">
             <%
+                DAOPackage daoPackage = new DAOPackage();
                 FormatData dataFormatter = new FormatData();
                 String registDate, validF, validT;
                 String placeHolder ="";
@@ -55,7 +58,7 @@
                             <%
                                 Vector<Subject> vecSub = (Vector<Subject>) request.getAttribute("select"); 
                             %>
-                            <select class="col-10" name="subjectCategory" 
+                            <select class="col-10 form-select" name="subjectCategory" 
                                     id="subjectCategory" 
                                     onchange="sendRedirect(this, '<%=value%>')">
                                 <%
@@ -120,16 +123,44 @@
                                     <div class="modal-dialog">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                <h5 class="modal-title" id="exampleModalLabel">Subject Register</h5>
                                             </div>
-                                            <div class="modal-body">
-                                                hi
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                <button type="button" class="btn btn-primary">Save changes</button>
-                                            </div>
+                                            <form action="RegistrationController" method="post">
+                                                <div class="modal-body">
+                                                    <input type="hidden" name="service" value="update">
+                                                    <input type="hidden" name="registId" value="<%=regist.getRegistrationId()%>">
+                                                    <label for="SubjectTitle">Subject Title:</label><br>
+                                                    <input class="form-text" type="text" id="SubjectTitle" 
+                                                           name="sname" 
+                                                           value="<%=regist.getSubjectName()%>" readonly><br>
+                                                    <label for="packageList">Choose a package: </label> <br>
+                                                    <%
+                                                        Vector<Package> subjectPackage = daoPackage.getSubjectPackage(regist.getSubjectName());
+                                                        Package selectedPackage = daoPackage.getByPackageNameSubjectName(regist.getPackageName(),regist.getSubjectName());
+                                                    %>
+                                                    <select class="form-select" name="packName"
+                                                            id="packageList">
+                                                        <option value="<%=selectedPackage.getPackageId()%>">
+                                                            <%=selectedPackage.getPackageName()%> for only <%=selectedPackage.getSalePrice()%>$
+                                                        </option>
+                                                        <%
+                                                                //show all elements in vector
+                                                                for(Package pack:subjectPackage){
+                                                                    if(pack.getPackageId() != selectedPackage.getPackageId()){
+                                                        %>
+                                                        <option value="<%=pack.getPackageName()%>">
+                                                            <%=pack.getPackageName()%> for only <%=pack.getSalePrice()%>$
+                                                        </option>
+                                                        <%
+                                                            }
+                                                                }%>
+                                                    </select> <br>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                    <input type="submit" class="btn btn-primary" value="Save Changes">
+                                                </div>
+                                            </form>
                                         </div>
                                     </div>
                                 </div> 

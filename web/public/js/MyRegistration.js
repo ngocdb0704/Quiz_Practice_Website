@@ -11,3 +11,6 @@ function cancellation(subjectStatus, subject) {
         window.location.href = "RegistrationController?cancelId=" + subject + "&service=cancel";
     }
 }
+function updatePrice(sale, subjectClass) {
+    document.getElementById(subjectClass).value = sale;
+}

@@ -164,4 +164,5 @@ public class DAOUser extends DBContext {
             Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
 }

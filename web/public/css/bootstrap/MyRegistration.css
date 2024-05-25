@@ -21,8 +21,3 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
         font-size: 18px;
     }
 }
-.disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-

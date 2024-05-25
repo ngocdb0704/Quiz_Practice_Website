@@ -4,25 +4,20 @@
  */
 package app.controller;
 
+import app.dal.DAOPackage;
 import app.dal.DAORegistration;
 import app.dal.DAOSubject;
-import app.dal.DAOUser;
 import app.entity.Registration;
 import app.entity.Subject;
-import app.entity.User;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
-import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import java.sql.SQLException;
 import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
+import app.entity.Package;
 /**
  *
  * @author admin
@@ -43,6 +38,7 @@ public class RegistrationController extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         DAORegistration daoRegistration = new DAORegistration();
         DAOSubject daoSubject = new DAOSubject();
+        DAOPackage daoPack = new DAOPackage();
         HttpSession session = request.getSession();
         String service = request.getParameter("service");
         Vector<Registration> registrationVector = null;
@@ -105,6 +101,18 @@ public class RegistrationController extends HttpServlet {
         if (service.equals("cancel")) {
             int cancelId = Integer.parseInt(request.getParameter("cancelId"));
             int n = daoRegistration.removeRegistration(cancelId);
+            service = "listAll";
+            response.sendRedirect("RegistrationController");
+        }
+        if (service.equals("update")) {
+            int registId = Integer.parseInt(request.getParameter("registId"));
+            Registration newRegist = daoRegistration.getByRegistId(userEmail, registId);
+            String subjectName = request.getParameter("sname");
+            String packName = request.getParameter("packName");
+            Package newPack = daoPack.getByPackageNameSubjectName(packName, subjectName);
+            newRegist.setPackageName(newPack.getPackageName());
+            newRegist.setTotalCost(newPack.getSalePrice());
+            
             service = "listAll";
             response.sendRedirect("RegistrationController");
         }
