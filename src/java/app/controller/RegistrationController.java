@@ -8,7 +8,6 @@ import app.dal.DAOPackage;
 import app.dal.DAORegistration;
 import app.dal.DAOSubject;
 import app.entity.Registration;
-import app.entity.Subject;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
@@ -42,7 +41,7 @@ public class RegistrationController extends HttpServlet {
         HttpSession session = request.getSession();
         String service = request.getParameter("service");
         Vector<Registration> registrationVector = null;
-        Vector<Subject> subjectVector = daoSubject.getFilterList();
+        Vector<String> statusVector = daoRegistration.statusFilter();
         String page;
         String userEmail = "";
         String inputSearch = request.getParameter("search");
@@ -51,7 +50,7 @@ public class RegistrationController extends HttpServlet {
             inputSearch = "";
         }
         int pos;
-        String subjectCategory = request.getParameter("subjectCategory");
+        String filterStatus = request.getParameter("subjectCategory");
         //check session's attribute for email
         if (session.getAttribute("userEmail") != null) {
             userEmail = session.getAttribute("userEmail").toString();
@@ -67,32 +66,32 @@ public class RegistrationController extends HttpServlet {
         // check service's value
         if (service.equals("listAll")) {
             //check subject's category 
-            if (subjectCategory == null) {
-                subjectCategory = "0";
+            if (filterStatus == null) {
+                filterStatus = "0All Status";
             }
             //no filter; no search
-            if (subjectCategory.equals("0") && inputSearch.equals("")) {
+            if (filterStatus.contains("All Status") && inputSearch.equals("")) {
                 registrationVector = daoRegistration.getAll(userEmail);
-                subjectVector.add(0, new Subject(0, "All Subject", "All Category"));
-            } else if (!subjectCategory.equals("0") && inputSearch.equals("")) { //filter; no search
-                pos = Integer.parseInt(subjectCategory) - 1;
-                Subject sub = subjectVector.get(pos);
-                subjectVector.set(pos, new Subject(0, "All", "All Category"));
-                subjectVector.add(0, sub);
-                registrationVector = daoRegistration.filterBySubjectCategory(userEmail, sub.getSubjectCategory());
-            } else if (subjectCategory.equals("0") && !inputSearch.equals("")) { //search; no filter
-                subjectVector.add(0, new Subject(0, "All Subject", "All Category"));
+                statusVector.add(0, "All Status");
+            } else if (!filterStatus.contains("All Status") && inputSearch.equals("")) { //filter; no search
+                pos = Integer.parseInt(filterStatus.substring(0, 1)) - 1;
+                String posStatus = statusVector.get(pos);
+                statusVector.set(pos, "All Status");
+                statusVector.add(0, posStatus);
+                registrationVector = daoRegistration.filterBySubjectStatus(userEmail, posStatus);
+            } else if (filterStatus.contains("All Status") && !inputSearch.equals("")) { //search; no filter
+                statusVector.add(0, "All Status");
                 registrationVector = daoRegistration.searchBySubjectName(userEmail, inputSearch);
             } else { //filter and search at the same time
-                pos = Integer.parseInt(subjectCategory) - 1;
-                Subject sub = subjectVector.get(pos);
-                subjectVector.set(pos, new Subject(0, "All", "All Category"));
-                subjectVector.add(0, sub);
-                registrationVector = daoRegistration.searchNameFilter(userEmail, inputSearch, sub.getSubjectCategory());
+                pos = Integer.parseInt(filterStatus.substring(0, 1)) - 1;
+                String posStatus = statusVector.get(pos);
+                statusVector.set(pos, "All Status");
+                statusVector.add(0, posStatus);
+                registrationVector = daoRegistration.searchNameFilter(userEmail, inputSearch, posStatus);
             }
 
             request.setAttribute("value", inputSearch);
-            request.setAttribute("select", subjectVector);
+            request.setAttribute("select", statusVector);
             request.setAttribute("data", registrationVector);
             page = "/MyRegistration.jsp";
             dispath(request, response, page);
@@ -110,9 +109,7 @@ public class RegistrationController extends HttpServlet {
             String subjectName = request.getParameter("sname");
             String packName = request.getParameter("packName");
             Package newPack = daoPack.getByPackageNameSubjectName(packName, subjectName);
-            newRegist.setPackageName(newPack.getPackageName());
-            newRegist.setTotalCost(newPack.getSalePrice());
-            
+            int n = daoRegistration.updateRegistration(newPack, registId);
             service = "listAll";
             response.sendRedirect("RegistrationController");
         }

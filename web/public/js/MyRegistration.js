@@ -3,8 +3,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/JavaScript.js to edit this template
  */
 
-function sendRedirect(subjectCat, subject) {
-    window.location.href = "RegistrationController?search=" + subject + "&subjectCategory=" + subjectCat.value;
+function sendRedirect(subjectStatus, subject) {
+    window.location.href = "RegistrationController?search=" + subject + "&subjectCategory=" + subjectStatus;
 }
 function cancellation(subjectStatus, subject) {
     if (confirm("Confirm cancellation?") === true) {

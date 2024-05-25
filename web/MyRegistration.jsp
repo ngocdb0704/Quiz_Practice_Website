@@ -31,9 +31,10 @@
                 DAOPackage daoPackage = new DAOPackage();
                 FormatData dataFormatter = new FormatData();
                 String registDate, validF, validT;
+                String statusAppear="";
                 String placeHolder ="";
                 String disableButton = "";
-                int i=1;
+                int i=0;
                 String value= (String) request.getAttribute("value");
                 if(value == null) value = "";
                 if(value.equals("")) placeHolder = "Search Subject";
@@ -54,35 +55,49 @@
                             </div>
                         </div>
                         <div class="mb-3">
-                            <label for="subjectCategory">Filter Subject:</label>
+                            <label for="subjectCategory">Subject Status:</label>
                             <%
-                                Vector<Subject> vecSub = (Vector<Subject>) request.getAttribute("select"); 
+                                Vector<String> vecStat = (Vector<String>) request.getAttribute("select"); 
                             %>
                             <select class="col-10 form-select" name="subjectCategory" 
                                     id="subjectCategory" 
                                     onchange="sendRedirect(this, '<%=value%>')">
                                 <%
                                         //show all elements in vector
-                                        for(Subject sub:vecSub){
+                                        for(String status:vecStat){
                                 %>
-                                <option value="<%=sub.getSubjectId()%>">
-                                    <%=sub.getSubjectCategory()%>
+                                <option value="<%=i%><%=status%>">
+                                    <%=status%>
                                 </option>
-                                <%}%>
+                                <%
+                                    i++;
+                                    }%>
                             </select>
                         </div>
                     </form>
+                    <a class="link-primary mt-3"
+                       href="" target="_blank"
+                       rel="noopener noreferrer">Contact Us</a>
                 </aside>
-                <div class="col-9">
-                    <h1>List of Registration</h1>
+                <div class="col-9 mt-3">
+                    <h1>List of Registrations</h1>
                     <%
                         Vector<Registration> registrationVector = (Vector<Registration>) request.getAttribute("data");
                         for(Registration regist:registrationVector){
                         registDate = dataFormatter.dateFormat(regist.getRegistrationTime());
                         validF = dataFormatter.dateFormat(regist.getValidFrom());
                         validT= dataFormatter.dateFormat(regist.getValidTo());
-                        if(regist.getStatus().equals("Submitted")) disableButton = "";
-                        else disableButton = "disabled";
+                        if(regist.getStatus().equals("Submitted")){
+                            disableButton = "";
+                            statusAppear = "badge text-bg-primary";
+                        }
+                        else{
+                            disableButton = "disabled";
+                            if(regist.getStatus().equals("Active")) statusAppear = "badge text-bg-success";
+                            if(regist.getStatus().equals("Cancelled")) statusAppear = "badge text-bg-danger";
+                            if(regist.getStatus().equals("Pending Approval")) statusAppear = "badge text-bg-warning";
+                            if(regist.getStatus().equals("Withdrawn")) statusAppear = "badge text-bg-secondary";
+                        }
                     %>
                     <!-- Change cards' appearance -->
                     <div class="card mb-3">
@@ -95,7 +110,9 @@
                             <div class="col-md-6">
                                 <div class="card-body">
                                     <h5 class="card-title"><%=regist.getSubjectName()%></h5>
-                                    <h6>Status: <%=regist.getStatus()%></h6>
+                                    <h6>
+                                        <span>ID:<%=regist.getRegistrationId()%></span>  <span class="<%=statusAppear%>">Status: <%=regist.getStatus()%></span>
+                                    </h6>
                                     <ul class="list-group list-group-flush">
                                         <li class="list-group-item">
                                             <span>Registered: <%=regist.getPackageName()%></span>
@@ -130,7 +147,7 @@
                                                     <input type="hidden" name="service" value="update">
                                                     <input type="hidden" name="registId" value="<%=regist.getRegistrationId()%>">
                                                     <label for="SubjectTitle">Subject Title:</label><br>
-                                                    <input class="form-text" type="text" id="SubjectTitle" 
+                                                    <input type="text" id="SubjectTitle" 
                                                            name="sname" 
                                                            value="<%=regist.getSubjectName()%>" readonly><br>
                                                     <label for="packageList">Choose a package: </label> <br>
@@ -174,7 +191,6 @@
                         </div>
                     </div>
                     <%
-                        i++;
                         }
                     %>
                 </div>
