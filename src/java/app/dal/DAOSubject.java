@@ -25,11 +25,16 @@ public class DAOSubject extends DBContext {
         Vector<Subject> vec = new Vector<>();
         try {
             Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-            ResultSet rs = statement.executeQuery("select s.SubjectId, "
-                    + "s.SubjectName, s.SubjectCategory from Registration r, "
-                    + "Subject s where r.SubjectId = s.SubjectId");
+            //change query due to database script's change
+            ResultSet rs
+                    = statement.executeQuery("""
+                    select s.SubjectId, s.SubjectTitle, sc.SubjectCategoryName from Subject s 
+                    join SubjectCategory sc on sc.SubjectCategoryId = s.SubjectCategoryId
+                    join Package p on p.SubjectId = s.SubjectId
+                    join Registration r on r.PackageId = p.PackageId
+                    join [User] u on r.UserId = u.UserId""");
             String alreadyAddedCategory = "";
-            int i=1;
+            int i = 1;
             while (rs.next()) {
                 int id = i;
                 String name = rs.getString(2);
