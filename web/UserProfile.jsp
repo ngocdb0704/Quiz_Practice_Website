@@ -5,7 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import="app.entity.User, app.dal.DAOUser" %>
+<%@page import="app.entity.User, app.dal.DAOUser, app.dal.DAOGender, app.dal.DAORole, java.util.concurrent.ConcurrentHashMap" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -17,9 +17,11 @@
     <body>
         <%
         Integer uId = null;
-        String role = "", service = "";
+        String service = "";
         User fetched = null;
         DAOUser dao = new DAOUser();
+        
+        
         
         try {
             uId = Integer.parseInt(session.getAttribute("userId").toString());
@@ -36,6 +38,14 @@
             <h1>Please login to view you profile</h1>
         <%
         } else {
+            //ConcurrentHashMap roleMap = new DAORole().getMap(), genderMap = new DAOGender().getMap();
+            String role = "", gender = "";
+            try {
+                role = new DAORole().getMap().get(fetched.getRoleId());
+                gender = new DAOGender().getMap().get(fetched.getGenderId());
+            } catch (Exception e){}
+
+
         %>
             <div class="row" style="width: 100%; margin: 0;">
                 <div class="col-lg-6 col-md-12">
@@ -57,17 +67,15 @@
                     <div class="row"> Email: <input style="background-color: #cecece; border: 1px solid black" type="text" name="email" value="<%=(fetched != null)? fetched.getEmail(): ""%>" readonly/> </div>
                     <form action="UserProfile" method="POST">
                         <div class="row"> Full name: <input type="text" name="fullName" value="<%=(fetched != null)? fetched.getFullName(): ""%>" /> </div>
-                        <div class="row"> Gender: <input type="text" name="gender" value="<%=(fetched != null)? fetched.getGender(): ""%>" /> </div>
+                        <div class="row"> Gender: <input type="text" name="gender" value="<%=gender%>" /> </div>
                         <div class="row"> Mobile: <input type="text" name="mobile" value="<%=(fetched != null)? fetched.getMobile(): ""%>" /> </div>
                         <br>
                         <div class="row"> <input type="submit" value="Save"> </div>
                         <input type="hidden" name="service" value="update">
                     </form>
                 </div>
-
             </div>
         <%
-            role = fetched.getRole();
             if (role.equals("Admin")) {
         %>
             <h1>You're an admin</h1>

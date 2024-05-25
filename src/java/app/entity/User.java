@@ -7,28 +7,29 @@ package app.entity;
 /**
  *
  * @author OwO
+ * Modified by QuanNM @3pm May 25th: Change to new RoleId and GenderId to adhere to the database update, 
+ *      please use DAOGender and DAORole to get mapping from Id to Value from now on.
  */
 
 public class User {
     private int userId;
     private String email;
     private String password;
-    private String role;
+    private int roleId;
     private String fullName;
-    private String gender;
+    private int genderId;
     private String mobile;
-
     private boolean isActive;
 
     public User() {}
 
-    public User(int userId, String email, String password, String role, String fullName, String gender, String mobile, boolean isActive) {
+    public User(int userId, String email, String password, int roleId, String fullName, int genderId, String mobile, boolean isActive) {
         this.userId = userId;
         this.email = email;
         this.password = password;
-        this.role = role;
+        this.roleId = roleId;
         this.fullName = fullName;
-        this.gender = gender;
+        this.genderId = genderId;
         this.mobile = mobile;
         this.isActive = isActive;
     }
@@ -57,12 +58,12 @@ public class User {
         this.password = password;
     }
 
-    public String getRole() {
-        return role;
+    public int getRoleId() {
+        return roleId;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setRoleId(int roleId) {
+        this.roleId = roleId;
     }
 
     public String getFullName() {
@@ -73,12 +74,12 @@ public class User {
         this.fullName = fullName;
     }
 
-    public String getGender() {
-        return gender;
+    public int getGenderId() {
+        return genderId;
     }
 
-    public void setGender(String gender) {
-        this.gender = gender;
+    public void setGenderId(int genderId) {
+        this.genderId = genderId;
     }
 
     public String getMobile() {

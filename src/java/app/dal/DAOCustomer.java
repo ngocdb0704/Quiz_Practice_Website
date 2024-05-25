@@ -10,13 +10,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Vector;
-import app.dal.DBContext;
+import app.dal.__local__DBContext;
 
 /**
  *
  * @author Administrator
  */
-public class DAOCustomer extends DBContext {
+public class DAOCustomer extends __local__DBContext {
 
     public Vector<Customer> getAll(String sql) {
         Vector<Customer> vector = new Vector<Customer>();

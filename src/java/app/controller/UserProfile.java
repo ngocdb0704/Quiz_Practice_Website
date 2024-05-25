@@ -46,6 +46,7 @@ public class UserProfile extends HttpServlet {
         Integer uId = null;
         DAOUser dao = new DAOUser();
 
+        //get userId attribute from session, get and set it if the attribute does't exist. 
         try {
             uId = Integer.parseInt(request.getParameter("userId"));
         } catch (Exception e) {
@@ -56,22 +57,25 @@ public class UserProfile extends HttpServlet {
                     session.setAttribute("userId", uId);
                     System.out.println("Id: " + uId);
                 }
-                catch (Exception e1) {System.out.println("Yea here");}
+                catch (Exception e1) {System.out.println(e1);}
             }
         }
 
         String service = request.getParameter("service");
 
+        //Default/view service
         if (service == null || service.length() < 1 || service.equals("view")) {
             request.getRequestDispatcher("UserProfile.jsp").forward(request, response);
             return;
         }
 
+        //All of the serives that require users to be logged in (session has a valid userId) will be behind this point, so this check for userId and redirect user to Unauthorized.jsp or let user continue.
         if (uId == null) {
             request.getRequestDispatcher("Unauthorized.jsp").forward(request, response);
             return;
         }
         else {
+            //Update service
             if (service.equals("update")) {
                 String fullName = request.getParameter("fullName");
                 String gender = request.getParameter("gender");
@@ -81,9 +85,11 @@ public class UserProfile extends HttpServlet {
                 request.getRequestDispatcher("UserProfile.jsp").forward(request, response);
             }
 
+            //Update profile picture service
             if (service.equals("updateProfilePicture")) {
                 Part filePart = request.getPart("upload");
-                System.out.println(filePart.getInputStream().available()); //TODO: add file limit
+                //TODO: add file limit via notice popup
+                //System.out.println(filePart.getInputStream().available());
 
                 InputStream ins = filePart.getInputStream();
                 byte[] uploaded = new byte[ins.available()];
@@ -100,14 +106,18 @@ public class UserProfile extends HttpServlet {
                 request.getRequestDispatcher("UserProfile.jsp").forward(request, response);
             }
 
+            //Fetch and return user's profile picture through http
             if (service.equals("showPic")) {
                 byte[] fetched = dao.profileImage(uId);
+                
+                //Check if user has a profile picture
                 if (fetched == null) {
                     response.setContentType("image/gif");
                     ServletContext cntxt = this.getServletContext();
                     String fName = "public/images/anonymous-user.webp";
                     InputStream ins = cntxt.getResourceAsStream(fName);
 
+                    //Return anonymous-user.webp via an OutputStream
                     try (OutputStream o = response.getOutputStream()) {
                         byte[] fetchedDefault = new byte[ins.available()];
                         ins.read(fetchedDefault);
@@ -117,6 +127,7 @@ public class UserProfile extends HttpServlet {
                     }
 
                 } else {
+                    //Return fetched image via an OutputStream
                     try (OutputStream o = response.getOutputStream()) {
                         response.setContentType("image/gif");
                         o.write(fetched);
