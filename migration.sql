@@ -114,53 +114,98 @@ GO
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[User](
-	[UserId] [int] NOT NULL primary key,
-	[Email] [varchar](255) NOT NULL,
-	[Password] [varchar](99) NOT NULL,
-	[Role] [varchar](10) NOT NULL,
-	[FullName] [nvarchar](255) NOT NULL,
-	[Gender] [varchar](255),
-	[Mobile] [varchar](25) NOT NULL,
-	[IsActive] [bit] NOT NULL)
+
+Go
+CREATE TABLE [dbo].[Gender](
+	[GenderId] [int] IDENTITY(1,1) primary key ,
+	[GenderName] [varchar](50))
 
 GO
+
+CREATE TABLE [dbo].[Role](
+	[RoleId] [int] IDENTITY(1,1) primary key,
+	[RoleName] [varchar](50))
+
+GO
+
+CREATE TABLE [dbo].[User](
+	[UserId] [int] IDENTITY(1,1) primary key,
+	[Email] [varchar](50) UNIQUE,
+	[Password] [varchar](50),
+	[RoleId] [int]  foreign key references [dbo].[Role](RoleId),
+	[FullName] [nvarchar](50),
+	[GenderId] [int] foreign key references [dbo].[Gender](GenderId),
+	[Mobile] [varchar](50) UNIQUE,
+	[IsActive] [bit])
+
+GO
+
 CREATE TABLE [dbo].[ProfilePicture](
-	[UserId] [int] NOT NULL primary key,
-	[Image] [varbinary] (MAX),
-	constraint [UserId] foreign key ([UserId]) references [dbo].[User](UserId))
+	[UserId] [int] primary key foreign key references [dbo].[User](UserId),
+	[Image] [varbinary](max))
 
 GO
 CREATE TABLE [dbo].[ResetToken](
-	[TokenId] [int] NOT NULL primary key,
-	[UserId] [int] NOT NULL foreign key references [dbo].[User](UserId),
-	[Token] [varchar] (255),
+	[UserId] [int] primary key foreign key references [dbo].[User](UserId),
+	[Token] [varchar](255),
 	[ValidTo] [datetime])
 
 GO
-CREATE TABLE [dbo].[Subject](
-	[SubjectId] [int] NOT NULL primary key,
-	[SubjectName] [varchar] (25)NOT NULL,
-	[SubjectCategory] [varchar] (25) NOT NULL,
-	[SubjectImage] [varchar] (255)
-)
+
+CREATE TABLE [dbo].[SubjectCategory](
+	[SubjectCategoryId] [int] IDENTITY(1,1) primary key,
+	[SubjectCategoryName] [varchar](50))
 
 GO
+
+CREATE TABLE [dbo].[Subject](
+	[SubjectId] [int] IDENTITY(1,1) primary key,
+	[SubjectTitle] [varchar](50),
+	[SubjectCategoryId] [int] foreign key references [dbo].[SubjectCategory](SubjectCategoryId),
+	[SubjectStatus] [bit],
+	[IsFeaturedSubject] [bit],
+	[SubjectCreatedDate] [date],
+	[SubjectUpdatedDate] [date],
+	[SubjectTagLine] [varchar](50),
+	[SubjectThumbnail] [varchar](255))
+
+GO
+
 CREATE TABLE [dbo].[Package](
-	[PackageId] [int] NOT NULL primary key,
-	[PackageName] [varchar] (25)NOT NULL,
-	[PackagePrice] [float] NOT NULL
-)
+	[PackageId] [int] IDENTITY(1,1) primary key,
+	[SubjectId] [int] foreign key references [dbo].[Subject](SubjectId),
+	[PackageName] [nvarchar](50),
+	[PackageDuration] [int],
+	[ListPrice] [float],
+	[SalePrice] [float],
+	[Status] [bit])
+
+GO
+
+CREATE TABLE [dbo].[RegistrationStatus](
+	[RegistrationStatusId] [int] IDENTITY(1,1) primary key,
+	[RegistrationStatusName] [varchar](50))
+
 GO
 CREATE TABLE [dbo].[Registration](
-	[RegistrationId] [int] NOT NULL primary key,
-	[UserId] [int] NOT NULL foreign key references [dbo].[User](UserId),
-	[SubjectId] [int] NOT NULL foreign key references [dbo].[Subject](SubjectId),
-	[RegistrationTime] [date] NOT NULL,
-	[PackageId] [int] NOT NULL foreign key references [dbo].[Package](PackageId),
-	[TotalCost] [float] NOT NULL,
-	[Status] [varchar](25),
+	[RegistrationId] [int] IDENTITY(1,1) primary key,
+	[UserId] [int] foreign key references [dbo].[User](UserId),
+	[RegistrationTime] [date],
+	[PackageId] [int] foreign key references [dbo].[Package](PackageId),
+	[TotalCost] [float],
+	[RegistrationStatusId] [int] foreign key references [dbo].[RegistrationStatus](RegistrationStatusId),
 	[ValidFrom] [date],
-	[ValidTo] [date]
-)
+	[ValidTo] [date])
+Go
+CREATE TABLE [dbo].[BlogCategory](
+	[BlogCategoryId] [int] IDENTITY(1,1) primary key,
+	[BlogCategoryName] [varchar](50))
+
+Go
+CREATE TABLE [dbo].[Blog](
+	[BlogId] [int] IDENTITY(1,1) primary key,
+	[UserId] [int] foreign key references [dbo].[User](UserId),
+	[BlogCategoryId] [int] foreign key references [dbo].[BlogCategory](BlogCategoryId),
+	[BlogTitle] [nvarchar](512),
+	[UpdatedTime] [datetime],
+	[PostText] [ntext])
