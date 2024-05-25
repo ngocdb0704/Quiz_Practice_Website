@@ -105,7 +105,22 @@ public class ResetPasswordController extends HttpServlet {
                 }
             }
 
+<<<<<<< HEAD
             request.getRequestDispatcher(RESET_PAGE).forward(request, response);
+=======
+            if (!record.isValid()) {
+                request.setAttribute("screen", "expired");
+            } else if (same) {
+                request.setAttribute("screen", "success");
+                response.setHeader("Refresh", "3; url=" + URLUtils.getBaseURL(request) + "/");
+                daoUser.updatePasswordById(record.getUserId(), newPassword);
+                daoResetTokens.deleteToken(record.getUserId());
+            } else {
+                request.setAttribute("user", daoUser.getById(record.getUserId()));
+                request.setAttribute("screen", "change_pw");
+                request.setAttribute("error", "error_pw_not_same");
+            }
+>>>>>>> origin/ngocBranch
         }
     }
     

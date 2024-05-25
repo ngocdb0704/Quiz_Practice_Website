@@ -21,9 +21,15 @@ public class DAOUser extends __local__DBContext {
             user.setEmail(rs.getString("Email"));
             user.setPassword(rs.getString("Password"));
             user.setFullName(rs.getString("FullName"));
+<<<<<<< HEAD
             user.setGenderId(rs.getInt("GenderId"));
             user.setMobile(rs.getString("Mobile"));
             user.setRoleId(rs.getInt("RoleId"));
+=======
+            user.setGender(rs.getString("GenderName"));
+            user.setMobile(rs.getString("Mobile"));
+            user.setRole(rs.getString("RoleName"));
+>>>>>>> origin/ngocBranch
             user.setIsActive(rs.getBoolean("IsActive"));
             result.add(user);
         }
@@ -130,21 +136,44 @@ public class DAOUser extends __local__DBContext {
     }
 
     public User getByEmail(String email) throws SQLException {
+<<<<<<< HEAD
         PreparedStatement stmt = connection.prepareStatement("select * from User where Email = ?");
+=======
+        String sql = "select * from [User] u\n"
+                + "inner join [Gender] g on u.[GenderId] = g.[GenderId]\n"
+                + "inner join [Role] r on u.[RoleId] = r.[RoleId]\n"
+                + "where [Email] = ?";
+
+        PreparedStatement stmt = connection.prepareStatement(sql);
+>>>>>>> origin/ngocBranch
         stmt.setString(1, email);
         List<User> result = extractResults(stmt.executeQuery());
         return result.isEmpty() ? null : result.get(0);
     }
 
     public User getById(int id) throws SQLException {
+<<<<<<< HEAD
         PreparedStatement stmt = connection.prepareStatement("select * from User where UserId = ?");
+=======
+        String sql = "select * from [User] u\n"
+                + "inner join [Gender] g on u.[GenderId] = g.[GenderId]\n"
+                + "inner join [Role] r on u.[RoleId] = r.[RoleId]\n"
+                + "where [UserId] = ?";
+
+        PreparedStatement stmt = connection.prepareStatement(sql);
+>>>>>>> origin/ngocBranch
         stmt.setInt(1, id);
         List<User> result = extractResults(stmt.executeQuery());
         return result.isEmpty() ? null : result.get(0);
     }
 
+<<<<<<< HEAD
     public void updatePassword(int id, String password) throws SQLException {
         PreparedStatement stmt = connection.prepareStatement("update User set Password = ? where UserId = ?");
+=======
+    public void updatePasswordById(int id, String password) throws SQLException {
+        PreparedStatement stmt = connection.prepareStatement("update [User] set [Password] = ? where [UserId] = ?");
+>>>>>>> origin/ngocBranch
         stmt.setString(1, password);
         stmt.setInt(2, id);
         stmt.executeUpdate();
@@ -164,5 +193,9 @@ public class DAOUser extends __local__DBContext {
             Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> origin/ngocBranch
 }

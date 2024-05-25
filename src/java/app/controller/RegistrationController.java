@@ -4,25 +4,19 @@
  */
 package app.controller;
 
+import app.dal.DAOPackage;
 import app.dal.DAORegistration;
 import app.dal.DAOSubject;
-import app.dal.DAOUser;
 import app.entity.Registration;
-import app.entity.Subject;
-import app.entity.User;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
-import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import java.sql.SQLException;
 import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
+import app.entity.Package;
 /**
  *
  * @author admin
@@ -43,12 +37,16 @@ public class RegistrationController extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         DAORegistration daoRegistration = new DAORegistration();
         DAOSubject daoSubject = new DAOSubject();
+<<<<<<< HEAD
         DAOUser daoUser = new DAOUser();
+=======
+        DAOPackage daoPack = new DAOPackage();
+>>>>>>> origin/ngocBranch
         HttpSession session = request.getSession();
         String userEmailString = "";
         String service = request.getParameter("service");
         Vector<Registration> registrationVector = null;
-        Vector<Subject> subjectVector = daoSubject.getFilterList();
+        Vector<String> statusVector = daoRegistration.statusFilter();
         String page;
         int userId;
         User loggedInUser = null;
@@ -59,9 +57,16 @@ public class RegistrationController extends HttpServlet {
             inputSearch = "";
         }
         int pos;
+<<<<<<< HEAD
         String subjectCategory = request.getParameter("subjectCategory");
         if (session.getAttribute("username") != null) {
             userEmailString = session.getAttribute("username").toString();
+=======
+        String filterStatus = request.getParameter("subjectStatus");
+        //check session's attribute for email
+        if (session.getAttribute("userEmail") != null) {
+            userEmail = session.getAttribute("userEmail").toString();
+>>>>>>> origin/ngocBranch
         } else {
             page = "/index.jsp";
             dispath(request, response, page);
@@ -76,6 +81,7 @@ public class RegistrationController extends HttpServlet {
             service = "listAll";
         }
         if (service.equals("listAll")) {
+<<<<<<< HEAD
             if (subjectCategory == null) {
                 subjectCategory = "0";
             }
@@ -97,10 +103,36 @@ public class RegistrationController extends HttpServlet {
                 subjectVector.set(pos, new Subject(0, "All", "All Category"));
                 subjectVector.add(0, sub);
                 registrationVector = daoRegistration.searchNameFilter(userId, inputSearch, sub.getSubjectCategory());
+=======
+            //check subject's category 
+            if (filterStatus == null) {
+                filterStatus = "0All Status";
+            }
+            //no filter; no search
+            if (filterStatus.contains("All Status") && inputSearch.equals("")) {
+                registrationVector = daoRegistration.getAll(userEmail);
+                statusVector.add(0, "All Status");
+            } else if (!filterStatus.contains("All Status") && inputSearch.equals("")) { //filter; no search
+                pos = Integer.parseInt(filterStatus.substring(0, 1)) - 1;
+                String posStatus = statusVector.get(pos);
+                statusVector.set(pos, "All Status");
+                statusVector.add(0, posStatus);
+                registrationVector = daoRegistration.filterBySubjectStatus(userEmail, posStatus);
+            } else if (filterStatus.contains("All Status") && !inputSearch.equals("")) { //search; no filter
+                statusVector.add(0, "All Status");
+                registrationVector = daoRegistration.searchBySubjectName(userEmail, inputSearch);
+            } else { //filter and search at the same time
+                pos = Integer.parseInt(filterStatus.substring(0, 1)) - 1;
+                String posStatus = statusVector.get(pos);
+                statusVector.set(pos, "All Status");
+                statusVector.add(0, posStatus);
+                registrationVector = daoRegistration.searchNameFilter(userEmail, inputSearch, posStatus);
+>>>>>>> origin/ngocBranch
             }
 
             request.setAttribute("value", inputSearch);
-            request.setAttribute("select", subjectVector);
+            request.setAttribute("prevStatus", filterStatus);
+            request.setAttribute("select", statusVector);
             request.setAttribute("data", registrationVector);
             page = "/MyRegistration.jsp";
             dispath(request, response, page);
@@ -108,6 +140,16 @@ public class RegistrationController extends HttpServlet {
         if (service.equals("cancel")) {
             int cancelId = Integer.parseInt(request.getParameter("cancelId"));
             int n = daoRegistration.removeRegistration(cancelId);
+            service = "listAll";
+            response.sendRedirect("RegistrationController");
+        }
+        if (service.equals("update")) {
+            int registId = Integer.parseInt(request.getParameter("registId"));
+            Registration newRegist = daoRegistration.getByRegistId(userEmail, registId);
+            String subjectName = request.getParameter("sname");
+            String packName = request.getParameter("packName");
+            Package newPack = daoPack.getByPackageNameSubjectName(packName, subjectName);
+            int n = daoRegistration.updateRegistration(newPack, registId);
             service = "listAll";
             response.sendRedirect("RegistrationController");
         }
