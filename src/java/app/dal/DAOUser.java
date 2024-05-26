@@ -62,7 +62,7 @@ public class DAOUser extends DBContext {
     }
 
     public void updatePassByUser(String user, String pass) {
-        String sql = "UPDATE User\n"
+        String sql = "UPDATE [User]\n"
                 + "   SET Password = ?\n"
                 + " WHERE Email = ?";
         PreparedStatement pre;
@@ -112,7 +112,7 @@ public class DAOUser extends DBContext {
     }
 
     public User getUserByEmail(String email) {
-        String sql = "SELECT * FROM User where Email = ?";
+        String sql = "SELECT * FROM [User] where Email = ?";
         try {
             PreparedStatement preStat = connection.prepareStatement(sql);
             preStat.setString(1, email);
@@ -174,7 +174,7 @@ public class DAOUser extends DBContext {
     }
 
     public int updateUserProfile(int id, String fullName, int genderId, String mobile) {
-        String sql = "UPDATE User\n"
+        String sql = "UPDATE [User]\n"
                 + "   SET FullName = ?\n"
                 + "      ,GenderId = ?\n"
                 + "      ,Mobile = ?\n"
