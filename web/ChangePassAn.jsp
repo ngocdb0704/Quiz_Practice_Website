@@ -10,31 +10,9 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Change Password</title>
-        <link href="css/bootstrap.min.css" rel="stylesheet">
-        <link href="css/bootstrap-utilities.min.css" rel="stylesheet">
-        <style>
-            .notification {
-                background-color: #4CAF50;
-                color: white;
-                text-align: center;
-                padding: 16px;
-                position: fixed;
-                top: 0;
-                left: 50%;
-                transform: translateX(-50%);
-                z-index: 9999;
-                opacity: 0;
-                visibility: hidden;
-                transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
-            }
-
-            .show {
-                opacity: 1;
-                visibility: visible;
-            }
-        </style>
-        <script>
-            // Function to show the notification
+        <%@include file="/common/ImportBootstrap.jsp" %>
+        <!--<link rel="stylesheet" href="public/css/ChangePassAn.css">-->
+<!--        <script>
             function showNotification(message) {
                 var notification = document.getElementById("notification");
                 notification.innerHTML = message;
@@ -52,18 +30,46 @@
                     session.removeAttribute("changePassMessage");
                 }
             };
-        </script>
+        </script>-->
     </head>
     <body>
+
         <div id="notification" class="notification"></div>
-        <form method="post" action="loginviewofAn">
-            <h3>Change Password</h3>
-            <p> Previous Password: <input type="password" name="prePass"/></p>
-            <p> New Password: <input type="password" name="newPass"/> </p>
-            <p> Confirm Password: <input type="password" name="confirmPass"/></p>
-            <p> <input type="submit" name="submit" value="Change Password"/>
-                <input type="hidden" name = "service" value = "changepass"/>
-            </p>
-        </form>
+
+        <%
+                String username = (String) session.getAttribute("userEmail");
+                if (username == null || username.length() < 1) {
+                session.setAttribute("successMessage", "Not authorized");
+                response.sendRedirect("index.jsp");
+            } else {
+            
+        %>
+
+
+
+        <div class="changepass-container">
+            <div class="modal-body">
+                <form method="post" action="loginviewofAn" class="form-changepass">
+                    <h3 classs="text-center">Change Password</h3>
+                    <div class="form-group mb-3">
+                        <label for="prePass">Previous Password: </label>
+                        <input type="password" name="prePass" class="form-control"/>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="newPass">New Password: </label>
+                        <input type="password" name="newPass" class="form-control"/>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="confirmPass">Confirm Password: </label>
+                        <input type="password" name="confirmPass" class="form-control"/>
+                    </div>
+                    <div class="form-group text-center">
+                        <input type="submit" name="submit" value="Change Password" class="btn btn-primary"/>
+                        <input type="hidden" name = "service" value = "changepass"/>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <%}%>
     </body>
 </html>

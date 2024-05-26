@@ -118,6 +118,11 @@ public class ResetPasswordController extends HttpServlet {
                 request.setAttribute("error", "error_pw_not_same");
             }
         }
+
+        daoUser.close();
+        daoResetTokens.close();
+        request.getRequestDispatcher(RESET_PAGE).forward(request, response);
+        
     }
     
     private String generateResetUrl(HttpServletRequest req, String token) {
