@@ -52,7 +52,7 @@ public class UserProfile extends HttpServlet {
         } catch (Exception e) {
             if (session.getAttribute("userEmail") != null) {
                 try {
-                    User fetched = dao.getByEmail(session.getAttribute("userEmail").toString());
+                    User fetched = dao.getUserByEmail(session.getAttribute("userEmail").toString());
                     uId = fetched.getUserId();
                     session.setAttribute("userId", uId);
                     System.out.println("Id: " + uId);
@@ -77,12 +77,18 @@ public class UserProfile extends HttpServlet {
         else {
             //Update service
             if (service.equals("update")) {
-                String fullName = request.getParameter("fullName");
-                String gender = request.getParameter("gender");
-                String mobile = request.getParameter("mobile");
-                //TODO: Add parameter conditions
-                dao.updateUser(uId, fullName, gender, mobile);
-                request.getRequestDispatcher("UserProfile.jsp").forward(request, response);
+                try {
+                    String fullName = request.getParameter("fullName");
+                    int genderId = Integer.parseInt(request.getParameter("gender"));
+                    String mobile = request.getParameter("mobile");
+                    //TODO: Add parameter conditions
+                    dao.updateUserProfile(uId, fullName, genderId, mobile);
+                    request.getRequestDispatcher("UserProfile.jsp").forward(request, response);
+                } catch (Exception e) {
+                    //TODO: Redirect to an error page
+                    System.out.println(e);
+                }
+                
             }
 
             //Update profile picture service
@@ -94,7 +100,7 @@ public class UserProfile extends HttpServlet {
                 InputStream ins = filePart.getInputStream();
                 byte[] uploaded = new byte[ins.available()];
                 ins.read(uploaded);
-                dao.updateImage(uId, uploaded);
+                dao.updateProfileImage(uId, uploaded);
 
                 /* Debug: display the image that was just uploaded instead of going back to UserProfile
                 try (OutputStream o = response.getOutputStream()) {
@@ -108,7 +114,7 @@ public class UserProfile extends HttpServlet {
 
             //Fetch and return user's profile picture through http
             if (service.equals("showPic")) {
-                byte[] fetched = dao.profileImage(uId);
+                byte[] fetched = dao.getProfileImage(uId);
                 
                 //Check if user has a profile picture
                 if (fetched == null) {

@@ -22,6 +22,7 @@ public class DAORegistration extends DBContext {
     public Vector<Registration> multiPurposeVector(ResultSet rs){
         Vector<Registration> vector = new Vector<>();
         try {
+            //for each result in result set
             while (rs.next()) {
                 int id = rs.getInt(1);
                 String subjectName = rs.getString(2);
@@ -42,7 +43,7 @@ public class DAORegistration extends DBContext {
         }
         return vector;
     }
-    public Vector<Registration> searchNameFilter(int userid, String inputSearch, String category){
+    public Vector<Registration> searchNameFilter(String email, String inputSearch, String category){
         inputSearch = inputSearch
     .replace("!", "!!")
     .replace("%", "!%")
@@ -50,16 +51,18 @@ public class DAORegistration extends DBContext {
     .replace("[", "![");
         Vector<Registration> vector = new Vector<>();
         String sql = """
-                     select r.RegistrationId, s.SubjectName,
-                     r.RegistrationTime, p.PackageName, r.TotalCost, r.Status,
-                     r.ValidFrom, r.ValidTo, s.SubjectImage
-                     from Registration r, [User] u, [Subject] s, [Package] p
-                     where r.UserId = ? and r.SubjectId = s.SubjectId
-                     and r.PackageId = p.PackageId and s.SubjectCategory = ? 
-                     and s.SubjectName like ? ESCAPE '!'""";
+                    select r.RegistrationId, s.SubjectTitle,
+                    r.RegistrationTime, p.PackageName, r.TotalCost, rs.RegistrationStatusName,
+                    r.ValidFrom, r.ValidTo, s.SubjectThumbnail 
+                    from Registration r, [User] u, [Subject] s, [Package] p , 
+                    [RegistrationStatus] rs, SubjectCategory sc where p.SubjectId = s.SubjectId
+                    and r.PackageId = p.PackageId and sc.SubjectCategoryId = s.SubjectCategoryId
+                    and r.RegistrationStatusId = rs.RegistrationStatusId 
+                    and  u.Email = ? and sc.SubjectCategoryName =  ?
+                    and s.SubjectTitle like ? ESCAPE '!'""";
         try {
             PreparedStatement pre = connection.prepareStatement(sql);
-            pre.setInt(1, userid);
+            pre.setString(1, email);
             pre.setString(2, category);
             pre.setString(3, inputSearch + "%");
             ResultSet rs = pre.executeQuery();
@@ -69,24 +72,26 @@ public class DAORegistration extends DBContext {
         }
         return vector;
     }
-    public Vector<Registration> searchBySubjectName(int userid, String inputSearch){
+    public Vector<Registration> searchBySubjectName(String email, String inputSearch){
         inputSearch = inputSearch
     .replace("!", "!!")
     .replace("%", "!%")
     .replace("_", "!_")
     .replace("[", "![");
         String sql = """
-                     select r.RegistrationId, s.SubjectName,
-                     r.RegistrationTime, p.PackageName, r.TotalCost, r.Status,
-                     r.ValidFrom, r.ValidTo, s.SubjectImage 
-                     from Registration r, [User] u, [Subject] s, [Package] p
-                     where r.UserId = ? and r.SubjectId = s.SubjectId
-                     and r.PackageId = p.PackageId and s.SubjectName 
-                     like ? ESCAPE '!'""";
+                    select r.RegistrationId, s.SubjectTitle,
+                    r.RegistrationTime, p.PackageName, r.TotalCost, rs.RegistrationStatusName,
+                    r.ValidFrom, r.ValidTo, s.SubjectThumbnail 
+                    from Registration r, [User] u, [Subject] s, [Package] p , 
+                    [RegistrationStatus] rs, SubjectCategory sc where p.SubjectId = s.SubjectId
+                    and r.PackageId = p.PackageId and sc.SubjectCategoryId = s.SubjectCategoryId
+                    and r.RegistrationStatusId = rs.RegistrationStatusId 
+                    and  u.Email = ?
+                    and s.SubjectTitle like ? ESCAPE '!'""";
         Vector<Registration> vector = new Vector<>();
         try {
             PreparedStatement pre = connection.prepareStatement(sql);
-            pre.setInt(1, userid);
+            pre.setString(1, email);
             pre.setString(2, inputSearch + "%");
             ResultSet rs = pre.executeQuery();
             vector = multiPurposeVector(rs);
@@ -95,18 +100,20 @@ public class DAORegistration extends DBContext {
         }
         return vector;
     }
-    public Vector<Registration> filterBySubjectCategory(int userid, String category){
+    public Vector<Registration> filterBySubjectCategory(String email, String category){
         String sql = """
-                     select r.RegistrationId, s.SubjectName,
-                     r.RegistrationTime, p.PackageName, r.TotalCost, r.Status,
-                     r.ValidFrom, r.ValidTo, s.SubjectImage
-                     from Registration r, [User] u, [Subject] s, [Package] p 
-                     where r.UserId = ? and r.SubjectId = s.SubjectId 
-                     and r.PackageId = p.PackageId and s.SubjectCategory = ?""";
+                    select r.RegistrationId, s.SubjectTitle,
+                    r.RegistrationTime, p.PackageName, r.TotalCost, rs.RegistrationStatusName,
+                    r.ValidFrom, r.ValidTo, s.SubjectThumbnail 
+                    from Registration r, [User] u, [Subject] s, [Package] p , 
+                    [RegistrationStatus] rs, SubjectCategory sc where p.SubjectId = s.SubjectId
+                    and r.PackageId = p.PackageId and sc.SubjectCategoryId = s.SubjectCategoryId
+                    and r.RegistrationStatusId = rs.RegistrationStatusId 
+                    and  u.Email = ? and sc.SubjectCategoryName =  ?""";
         Vector<Registration> vector = new Vector<>();
         try {
             PreparedStatement pre = connection.prepareStatement(sql);
-            pre.setInt(1, userid);
+            pre.setString(1, email);
             pre.setString(2, category);
             ResultSet rs = pre.executeQuery();
             vector = multiPurposeVector(rs);
@@ -115,17 +122,20 @@ public class DAORegistration extends DBContext {
         }
         return vector;
     }
-    public Vector<Registration> getAll(int userid) {
+    public Vector<Registration> getAll(String email) {
         String sql = """
-                    select r.RegistrationId, s.SubjectName,
-                    r.RegistrationTime, p.PackageName, r.TotalCost, r.Status,
-                    r.ValidFrom, r.ValidTo, s.SubjectImage from Registration r,
-                    [Subject] s, [Package] p where r.UserId = ? 
-                     and r.SubjectId = s.SubjectId and r.PackageId = p.PackageId""";
+                    select r.RegistrationId, s.SubjectTitle,
+                    r.RegistrationTime, p.PackageName, r.TotalCost, rs.RegistrationStatusName,
+                    r.ValidFrom, r.ValidTo, s.SubjectThumbnail 
+                    from Registration r, [User] u, [Subject] s, [Package] p , 
+                    [RegistrationStatus] rs, SubjectCategory sc where p.SubjectId = s.SubjectId
+                    and r.PackageId = p.PackageId and sc.SubjectCategoryId = s.SubjectCategoryId
+                    and r.RegistrationStatusId = rs.RegistrationStatusId 
+                    and  u.Email = ?""";
         Vector<Registration> vector = new Vector<>();
         try {
             PreparedStatement pre = connection.prepareStatement(sql);
-            pre.setInt(1, userid);
+            pre.setString(1, email);
             ResultSet rs = pre.executeQuery();
             vector = multiPurposeVector(rs);
         } catch (SQLException ex) {
@@ -135,8 +145,7 @@ public class DAORegistration extends DBContext {
     }
     public int removeRegistration(int registrationId){
         int n=0;
-        String sqlRemove = "DELETE FROM [dbo].[Registration]\n" +
-"      WHERE RegistrationId =?";
+        String sqlRemove = "DELETE FROM [dbo].[Registration] WHERE RegistrationId =?";
         try {
             PreparedStatement pre = connection.prepareStatement(sqlRemove);
             pre.setInt(1, registrationId);
@@ -145,10 +154,5 @@ public class DAORegistration extends DBContext {
             Logger.getLogger(DAORegistration.class.getName()).log(Level.SEVERE, null, ex);
         }
         return n;
-    }
-    public static void main(String[] args) {
-        DAORegistration dao = new DAORegistration();
-        int n = dao.removeRegistration(1);
-        System.out.println(n);
     }
 }
