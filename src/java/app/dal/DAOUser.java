@@ -159,8 +159,8 @@ public class DAOUser extends __local__DBContext {
             return insertProfileImage(id, image);
         } else {
             String sql = "UPDATE ProfilePicture\n"
-                    + " SET image = ?"
-                    + " WHERE id = ?;";
+                    + " SET Image = ?"
+                    + " WHERE UserId = ?;";
             try {
                 PreparedStatement preStat = connection.prepareStatement(sql);
                 preStat.setInt(2, id);
