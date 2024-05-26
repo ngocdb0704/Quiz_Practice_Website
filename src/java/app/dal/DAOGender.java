@@ -45,7 +45,9 @@ public class DAOGender extends __local__DBContext {
     }
     
     public static void main(String[] args) {
-        System.out.println(new DAOGender().getMap());
-        System.out.println(new DAOGender().getMap().get(1));
+        ConcurrentHashMap<Integer, String> map = new DAOGender().getMap();
+        System.out.println(map);
+        map.forEach((k, v) -> {System.out.println(k + " " + v);});
+        System.out.println(map.reduce(0, (k, v) -> k + ": " + v, (k, v) -> k + "\n" + v).toString());
     }
 }

@@ -39,10 +39,12 @@
         <%
         } else {
             //ConcurrentHashMap roleMap = new DAORole().getMap(), genderMap = new DAOGender().getMap();
-            String role = "", gender = "";
+            String role = ""; 
+            final int genderId = fetched.getGenderId();
+            ConcurrentHashMap genderMap = new DAOGender().getMap();
             try {
                 role = new DAORole().getMap().get(fetched.getRoleId());
-                gender = new DAOGender().getMap().get(fetched.getGenderId());
+                genderMap = new DAOGender().getMap();
             } catch (Exception e){}
 
 
@@ -67,7 +69,15 @@
                     <div class="row"> Email: <input style="background-color: #cecece; border: 1px solid black" type="text" name="email" value="<%=(fetched != null)? fetched.getEmail(): ""%>" readonly/> </div>
                     <form action="UserProfile" method="POST">
                         <div class="row"> Full name: <input type="text" name="fullName" value="<%=(fetched != null)? fetched.getFullName(): ""%>" /> </div>
-                        <div class="row"> Gender: <input type="text" name="gender" value="<%=gender%>" /> </div>
+                        <div class="row"> Gender: 
+                            <select name="gender">
+                                <%= genderMap.reduce(0, (key, val) -> "<option value=\"" + key + "\" "
+                                        + (((int)key == genderId)? "selected": "")
+                                        + "  >" + val + "</option>"
+                                        , (option, option1) -> option + "\n" + option1).toString()%>
+                            </select>
+                        
+                        </div>
                         <div class="row"> Mobile: <input type="text" name="mobile" value="<%=(fetched != null)? fetched.getMobile(): ""%>" /> </div>
                         <br>
                         <div class="row"> <input type="submit" value="Save"> </div>
