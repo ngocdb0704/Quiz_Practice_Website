@@ -81,9 +81,15 @@ public class UserProfile extends HttpServlet {
                     String fullName = request.getParameter("fullName");
                     int genderId = Integer.parseInt(request.getParameter("gender"));
                     String mobile = request.getParameter("mobile");
+                    
+                    
                     //TODO: Add parameter conditions
+                    //String currentPage = request.getRequestURI().substring(request.getContextPath().length());
+                    
                     dao.updateUserProfile(uId, fullName, genderId, mobile);
-                    request.getRequestDispatcher("UserProfile.jsp").forward(request, response);
+                    String redirectTo = request.getParameter("redirect");
+                    response.sendRedirect(redirectTo);
+                    //request.getRequestDispatcher(redirectTo).forward(request, response);
                 } catch (Exception e) {
                     //TODO: Redirect to an error page
                     System.out.println(e);
@@ -109,7 +115,9 @@ public class UserProfile extends HttpServlet {
                     o.close();
                 }
                  */
-                request.getRequestDispatcher("UserProfile.jsp").forward(request, response);
+                String redirectTo = request.getParameter("redirect");
+                response.sendRedirect(redirectTo);
+                //request.getRequestDispatcher(redirectTo).forward(request, response);
             }
 
             //Fetch and return user's profile picture through http

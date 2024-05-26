@@ -191,4 +191,8 @@ public class DAOUser extends DBContext {
             return 0;
         }
     }
+    
+    public static void main(String[] args) {
+        System.out.println(new DAOUser().getAll());
+    }
 }
