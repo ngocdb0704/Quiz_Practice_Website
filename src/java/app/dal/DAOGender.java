@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class DAOGender extends DBContext {
+public class DAOGender extends __local__DBContext {
 
     //Using ConcurrentHashMap (similar to Hashtable) instead of Hashmap because it is safer for threaded operations.
     public ConcurrentHashMap<Integer, String> getMap() {

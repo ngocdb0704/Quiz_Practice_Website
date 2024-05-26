@@ -11,7 +11,7 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class DAOUser extends DBContext {
+public class DAOUser extends __local__DBContext {
 
     public List<User> extractResults(ResultSet rs) throws SQLException {
         List<User> result = new ArrayList<>();
@@ -94,11 +94,11 @@ public class DAOUser extends DBContext {
     }
 
     public Vector<User> getAll() {
-        return getFull("select * from [User]");
+        return getFull("select * from User");
     }
 
     public User getUserById(int id) {
-        String sql = "SELECT * FROM [User] where UserId = '" + id + "';";
+        String sql = "SELECT * FROM User where UserId = '" + id + "';";
         try {
             Statement state = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
             ResultSet rs = state.executeQuery(sql);
@@ -190,5 +190,9 @@ public class DAOUser extends DBContext {
             e.printStackTrace();
             return 0;
         }
+    }
+    
+    public static void main(String[] args) {
+        System.out.println(new DAOUser().getAll());
     }
 }
