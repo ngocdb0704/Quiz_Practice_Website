@@ -83,7 +83,7 @@
                                 }%>
                         </select>
                         <a class="link-primary mt-3"
-                           href="" target="_blank"
+                           href="ContactUs.jsp" target="_blank"
                            rel="noopener noreferrer">Contact Us</a>
                     </div>
 
