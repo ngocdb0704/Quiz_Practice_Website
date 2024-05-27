@@ -22,11 +22,15 @@
         <%@include file="/common/ImportBootstrap.jsp" %>
         <script src="public/js/bootstrap/MyRegistration.js"></script>
         <link rel="stylesheet" href="public/css/bootstrap/MyRegistration.css"/>
-        <link rel="stylesheet" href="common/ExtendBody.css"/>
     </head>
     <body>
         <%@include file="/common/header.jsp" %>
+<<<<<<< HEAD
+        <div class="container">
+            <h1>My Registration</h1>
+=======
         <main class="container">
+>>>>>>> origin/ngocBranch
             <%
                 DAOPackage daoPackage = new DAOPackage();
                 FormatData dataFormatter = new FormatData();
@@ -62,6 +66,22 @@
                                 </button>
                             </div>
                         </div>
+<<<<<<< HEAD
+                        <div class="mb-3">
+                            <label for="subjectCategory">Filter Subject:</label>
+                            <%
+                                Vector<Subject> vecSub = (Vector<Subject>) request.getAttribute("select"); 
+                            %>
+                            <select class="col-10" name="subjectCategory" id="subjectCategory" onchange="sendRedirect(this, '<%=value%>')">
+                                <%
+                                        for(Subject sub:vecSub){
+                                %>
+                                <option value="<%=sub.getSubjectId()%>"><%=sub.getSubjectCategory()%></option>
+                                <%}%>
+                            </select>
+                        </div>
+=======
+>>>>>>> origin/ngocBranch
                     </form>
                     <div class="row mb-3">
                         <label for="subjectCategory">Registration Status:</label>
@@ -206,8 +226,9 @@
                         %>
                     </ul>
                 </div>
+
             </div>
-        </main>
+        </div>
         <%@include file="/common/footer.jsp" %>
     </body>
 </html>

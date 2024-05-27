@@ -21,112 +21,13 @@ public class DAOUser extends DBContext {
             user.setEmail(rs.getString("Email"));
             user.setPassword(rs.getString("Password"));
             user.setFullName(rs.getString("FullName"));
-            user.setGender(rs.getString("GenderName"));
+            user.setGender(rs.getString("Gender"));
             user.setMobile(rs.getString("Mobile"));
-            user.setRole(rs.getString("RoleName"));
+            user.setRole(rs.getString("Role"));
             user.setIsActive(rs.getBoolean("IsActive"));
             result.add(user);
         }
         return result;
-    }
-
-    private Vector<User> getFull(String sql) {
-        Vector<User> Out = new Vector<User>();
-        try {
-            Statement state = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-            ResultSet rs = state.executeQuery(sql);
-            while (rs.next()) {
-                Out.add(new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getBoolean(8)));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
-        }
-        return Out;
-    }
-
-    public Vector<User> getAll() {
-        return getFull("select * from [User]");
-    }
-
-    public User getUserById(int id) {
-        String sql = "SELECT * FROM [User] where UserId = '" + id + "';";
-        try {
-            Statement state = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-            ResultSet rs = state.executeQuery(sql);
-            if (rs.next()) {
-                return new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getBoolean(8));
-            }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-        return null;
-    }
-
-    public int updateUser(int id, String fullName, String gender, String mobile) {
-        String sql = "UPDATE [User]\n"
-                + "   SET FullName = ?\n"
-                + "      ,Gender = ?\n"
-                + "      ,Mobile = ?\n"
-                + " WHERE UserId = ?";
-        try {
-            PreparedStatement preStat = connection.prepareStatement(sql);
-            preStat.setInt(4, id);
-            preStat.setString(1, fullName);
-            preStat.setString(2, gender);
-            preStat.setString(3, mobile);
-            return preStat.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return 0;
-        }
-    }
-
-    public byte[] profileImage(int id) {
-        String sql = "SELECT * FROM ProfilePicture where UserId = '" + id + "';";
-        try {
-            Statement state = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-            ResultSet rs = state.executeQuery(sql);
-            if (rs.next()) {
-                return rs.getBytes(2);
-            }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-        return null;
-    }
-
-    public int insertImage(int id, byte[] image) {
-        String sql = "INSERT INTO ProfilePicture (UserId, Image)\n"
-                + "     VALUES (?,?)";
-        try {
-            PreparedStatement preStat = connection.prepareStatement(sql);
-            preStat.setInt(1, id);
-            preStat.setBytes(2, image);
-            return preStat.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return 0;
-        }
-    }
-
-    public int updateImage(int id, byte[] image) {
-        if (profileImage(id) == null) {
-            return insertImage(id, image);
-        } else {
-            String sql = "UPDATE ProfilePicture\n"
-                    + " SET image = ?"
-                    + " WHERE id = ?;";
-            try {
-                PreparedStatement preStat = connection.prepareStatement(sql);
-                preStat.setInt(2, id);
-                preStat.setBytes(1, image);
-                return preStat.executeUpdate();
-            } catch (SQLException e) {
-                e.printStackTrace();
-                return 0;
-            }
-        }
     }
 
     public User getByEmail(String email) throws SQLException {
@@ -162,8 +63,8 @@ public class DAOUser extends DBContext {
 
     public void updatePassByUser(String user, String pass) {
         String sql = "UPDATE [User]\n"
-                + "   SET [Password] = ?\n"
-                + " WHERE [Email] = ?";
+                + "   SET Password = ?\n"
+                + " WHERE Email = ?";
         PreparedStatement pre;
         try {
             pre = connection.prepareStatement(sql);
@@ -174,5 +75,124 @@ public class DAOUser extends DBContext {
             Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+    //=============================
     
+    private Vector<User> getFull(String sql) {
+        Vector<User> Out = new Vector<User>();
+        try {
+            Statement state = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = state.executeQuery(sql);
+            while (rs.next()) {
+                Out.add(new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs.getString(5), rs.getInt(6), rs.getString(7), rs.getBoolean(8)));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return Out;
+    }
+
+    public Vector<User> getAll() {
+        return getFull("select * from [User]");
+    }
+
+    public User getUserById(int id) {
+        String sql = "SELECT * FROM [User] where UserId = '" + id + "';";
+        try {
+            Statement state = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = state.executeQuery(sql);
+            if (rs.next()) {
+                return new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs.getString(5), rs.getInt(6), rs.getString(7), rs.getBoolean(8));
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
+
+    public User getUserByEmail(String email) {
+        String sql = "SELECT * FROM [User] where Email = ?";
+        try {
+            PreparedStatement preStat = connection.prepareStatement(sql);
+            preStat.setString(1, email);
+            ResultSet rs = preStat.executeQuery();
+            if (rs.next()) {
+                return new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs.getString(5), rs.getInt(6), rs.getString(7), rs.getBoolean(8));
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
+
+    public byte[] getProfileImage(int id) {
+        String sql = "SELECT * FROM ProfilePicture where UserId = '" + id + "';";
+        try {
+            Statement state = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = state.executeQuery(sql);
+            if (rs.next()) {
+                return rs.getBytes(2);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
+
+    public int insertProfileImage(int id, byte[] image) {
+        String sql = "INSERT INTO ProfilePicture (UserId, Image)\n"
+                + "     VALUES (?,?)";
+        try {
+            PreparedStatement preStat = connection.prepareStatement(sql);
+            preStat.setInt(1, id);
+            preStat.setBytes(2, image);
+            return preStat.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    public int updateProfileImage(int id, byte[] image) {
+        if (getProfileImage(id) == null) {
+            return insertProfileImage(id, image);
+        } else {
+            String sql = "UPDATE ProfilePicture\n"
+                    + " SET Image = ?"
+                    + " WHERE UserId = ?;";
+            try {
+                PreparedStatement preStat = connection.prepareStatement(sql);
+                preStat.setInt(2, id);
+                preStat.setBytes(1, image);
+                return preStat.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return 0;
+            }
+        }
+    }
+
+    public int updateUserProfile(int id, String fullName, int genderId, String mobile) {
+        String sql = "UPDATE [User]\n"
+                + "   SET FullName = ?\n"
+                + "      ,GenderId = ?\n"
+                + "      ,Mobile = ?\n"
+                + " WHERE UserId = ?";
+        try {
+            PreparedStatement preStat = connection.prepareStatement(sql);
+            preStat.setInt(4, id);
+            preStat.setString(1, fullName);
+            preStat.setInt(2, genderId);
+            preStat.setString(3, mobile);
+            return preStat.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+    
+    public static void main(String[] args) {
+        System.out.println(new DAOUser().getAll());
+    }
 }
