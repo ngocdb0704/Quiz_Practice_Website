@@ -42,7 +42,7 @@
                 if(value.equals("")) placeHolder = "All Subjects";
             %>
             <div class="row">
-                <aside class="col-3 siderbar card">
+                <aside class="col-3 sbar">
                     <!-- fix search bug: if user search without filter, 
                     the index of filter will be 0 which results in array index = -1
                     sol: move filter element out of form, form will get the previous filter
@@ -86,7 +86,6 @@
                            href="ContactUs.jsp" target="_blank"
                            rel="noopener noreferrer">Contact Us</a>
                     </div>
-
                 </aside>
                 <div class="col-9 mt-3">
                     <h1>List of Registrations</h1>
