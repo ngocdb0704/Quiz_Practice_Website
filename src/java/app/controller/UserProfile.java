@@ -46,49 +46,67 @@ public class UserProfile extends HttpServlet {
         Integer uId = null;
         DAOUser dao = new DAOUser();
 
+        //get userId attribute from session, get and set it if the attribute does't exist. 
         try {
             uId = Integer.parseInt(request.getParameter("userId"));
         } catch (Exception e) {
             if (session.getAttribute("userEmail") != null) {
                 try {
-                    User fetched = dao.getByEmail(session.getAttribute("userEmail").toString());
+                    User fetched = dao.getUserByEmail(session.getAttribute("userEmail").toString());
                     uId = fetched.getUserId();
                     session.setAttribute("userId", uId);
                     System.out.println("Id: " + uId);
                 }
-                catch (Exception e1) {System.out.println("Yea here");}
+                catch (Exception e1) {System.out.println(e1);}
             }
         }
 
         String service = request.getParameter("service");
 
+        //Default/view service
         if (service == null || service.length() < 1 || service.equals("view")) {
             request.getRequestDispatcher("UserProfile.jsp").forward(request, response);
             return;
         }
 
+        //All of the serives that require users to be logged in (session has a valid userId) will be behind this point, so this check for userId and redirect user to Unauthorized.jsp or let user continue.
         if (uId == null) {
             request.getRequestDispatcher("Unauthorized.jsp").forward(request, response);
             return;
         }
         else {
+            //Update service
             if (service.equals("update")) {
-                String fullName = request.getParameter("fullName");
-                String gender = request.getParameter("gender");
-                String mobile = request.getParameter("mobile");
-                //TODO: Add parameter conditions
-                dao.updateUser(uId, fullName, gender, mobile);
-                request.getRequestDispatcher("UserProfile.jsp").forward(request, response);
+                try {
+                    String fullName = request.getParameter("fullName");
+                    int genderId = Integer.parseInt(request.getParameter("gender"));
+                    String mobile = request.getParameter("mobile");
+                    
+                    
+                    //TODO: Add parameter conditions
+                    //String currentPage = request.getRequestURI().substring(request.getContextPath().length());
+                    
+                    dao.updateUserProfile(uId, fullName, genderId, mobile);
+                    String redirectTo = request.getParameter("redirect");
+                    response.sendRedirect(redirectTo);
+                    //request.getRequestDispatcher(redirectTo).forward(request, response);
+                } catch (Exception e) {
+                    //TODO: Redirect to an error page
+                    System.out.println(e);
+                }
+                
             }
 
+            //Update profile picture service
             if (service.equals("updateProfilePicture")) {
                 Part filePart = request.getPart("upload");
-                System.out.println(filePart.getInputStream().available()); //TODO: add file limit
+                //TODO: add file limit via notice popup
+                //System.out.println(filePart.getInputStream().available());
 
                 InputStream ins = filePart.getInputStream();
                 byte[] uploaded = new byte[ins.available()];
                 ins.read(uploaded);
-                dao.updateImage(uId, uploaded);
+                dao.updateProfileImage(uId, uploaded);
 
                 /* Debug: display the image that was just uploaded instead of going back to UserProfile
                 try (OutputStream o = response.getOutputStream()) {
@@ -97,17 +115,23 @@ public class UserProfile extends HttpServlet {
                     o.close();
                 }
                  */
-                request.getRequestDispatcher("UserProfile.jsp").forward(request, response);
+                String redirectTo = request.getParameter("redirect");
+                response.sendRedirect(redirectTo);
+                //request.getRequestDispatcher(redirectTo).forward(request, response);
             }
 
+            //Fetch and return user's profile picture through http
             if (service.equals("showPic")) {
-                byte[] fetched = dao.profileImage(uId);
+                byte[] fetched = dao.getProfileImage(uId);
+                
+                //Check if user has a profile picture
                 if (fetched == null) {
                     response.setContentType("image/gif");
                     ServletContext cntxt = this.getServletContext();
                     String fName = "public/images/anonymous-user.webp";
                     InputStream ins = cntxt.getResourceAsStream(fName);
 
+                    //Return anonymous-user.webp via an OutputStream
                     try (OutputStream o = response.getOutputStream()) {
                         byte[] fetchedDefault = new byte[ins.available()];
                         ins.read(fetchedDefault);
@@ -117,6 +141,7 @@ public class UserProfile extends HttpServlet {
                     }
 
                 } else {
+                    //Return fetched image via an OutputStream
                     try (OutputStream o = response.getOutputStream()) {
                         response.setContentType("image/gif");
                         o.write(fetched);

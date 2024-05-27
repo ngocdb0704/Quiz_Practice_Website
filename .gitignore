@@ -11,3 +11,4 @@ nbdist/
 **/__local__*
 
 node_modules/
+web/WEB-INF/config.properties

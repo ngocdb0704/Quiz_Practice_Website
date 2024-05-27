@@ -22,22 +22,29 @@
             </ul>
             <div class="d-flex gap-2">
                 <div id="notification" class="notification"></div>
-                    
+
                 <c:if test="${not empty sessionScope.userEmail}">
                     <div class="btn-group">
-                        <button onclick="displayPopUp('UserProfile')" type="button" class="btn btn-primary">
+                        <!--button onclick="displayPopUp('UserProfile')" type="button" class="btn btn-primary">
+                            <i class="bi bi-person-circle"></i>
+                        ${sessionScope.userEmail}
+                    </button-->
+
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#userProfileModal">
                             <i class="bi bi-person-circle"></i>
                             ${sessionScope.userEmail}
                         </button>
+                        <!-- Modal -->
+
                         <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
                             <span class="visually-hidden">Toggle Dropdown</span>
                         </button>
-                            
+
                         <ul class="dropdown-menu">
                             <li>
                                 <form method="post" action="loginviewofAn">
-                                    <input type="hidden" name="service" value="changepass"/>
-                                    <button type="submit" class="btn">Change Password</button>
+                                    <button type="submit" class="btn">Logout</button>
+                                    <input type="hidden" name="service" value="logout"/>
                                 </form>
                             </li>
                             <li>
@@ -48,10 +55,10 @@
                             </li>
                         </ul>
                     </div>
-
+                    <jsp:include page="/testModalChangePass.jsp" />
                     <script src="public/js/UserProfile.js"></script>
                 </c:if>
-                    
+
                 <c:if test="${empty sessionScope.userEmail}">
                     <!-- Button trigger modal -->
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#loginModal">
@@ -76,3 +83,17 @@
         </div>
     </div>
 </nav>
+
+<div class="modal fade" id="userProfileModal" tabindex="-1" role="dialog" >
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                </button>
+            </div>
+            <div class="modal-body">
+                <jsp:include page="/UserProfile.jsp" />
+            </div>
+        </div>
+    </div>
+</div>
