@@ -96,7 +96,7 @@ public class ResetPasswordController extends HttpServlet {
                 } else if (same) {
                     request.setAttribute("screen", "success");
                     response.setHeader("Refresh", "3; url=" + URLUtils.getBaseURL(request) + "/home");
-                    daoUser.updatePassword(record.getUserId(), newPassword);
+                    daoUser.updatePasswordById(record.getUserId(), newPassword);
                     daoResetTokens.deleteToken(record.getUserId());
                 } else {
                     request.setAttribute("user", daoUser.getById(record.getUserId()));
@@ -105,24 +105,7 @@ public class ResetPasswordController extends HttpServlet {
                 }
             }
 
-            if (!record.isValid()) {
-                request.setAttribute("screen", "expired");
-            } else if (same) {
-                request.setAttribute("screen", "success");
-                response.setHeader("Refresh", "3; url=" + URLUtils.getBaseURL(request) + "/");
-                daoUser.updatePasswordById(record.getUserId(), newPassword);
-                daoResetTokens.deleteToken(record.getUserId());
-            } else {
-                request.setAttribute("user", daoUser.getById(record.getUserId()));
-                request.setAttribute("screen", "change_pw");
-                request.setAttribute("error", "error_pw_not_same");
-            }
-        }
-
-        daoUser.close();
-        daoResetTokens.close();
-        request.getRequestDispatcher(RESET_PAGE).forward(request, response);
-        
+        }        
     }
     
     private String generateResetUrl(HttpServletRequest req, String token) {
