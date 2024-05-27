@@ -121,17 +121,8 @@ public class ResetPasswordController extends HttpServlet {
 
             User user = daoUser.getUserByEmail(email);
 
-            int timeout = 1;
-            try {
-                String val = Config.getConfig(getServletContext()).getOrDefault(
-                        "pw.reset.timeout_secs",
-                        "1"
-                ).toString();
-
-                timeout = Integer.parseInt(val);
-            } catch (NumberFormatException e) {
-                e.printStackTrace();
-            }
+            Config config = new Config(getServletContext());
+            int timeout = config.getIntOrDefault("pw.reset.timeout_secs", 1);
 
             if (user != null) {
                 String token = daoResetTokens.createForUserId(user.getUserId(), timeout);

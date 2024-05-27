@@ -43,11 +43,17 @@
                                 <img src="public/images/blogimg.jpg" class="card-img-top blog-item-img" alt="...">
                                 <div class="card-body d-flex flex-column">
                                     <h4 class="card-title">${blog.getBlogTitle()}</h4>
+                                    <div>
+                                        <span class="badge bg-primary">${blog.getCategoryName()}</span>
+                                    </div>
+                                    <p class="card-text text-body-secondary mt-3">${blog.getPostBrief()}</p>
+                                </div>
+
+                                <div class="card-footer d-flex align-items-center justify-content-between">
                                     <h6 class="card-subtitle text-body-secondary">
                                         <i class="bi bi-person-circle"></i>
                                         <b>${blog.getAuthorFullName()}</b>
                                     </h6>
-                                    <p class="card-text text-body-secondary mt-3">${blog.getPostBrief()}</p>
                                     <a href="#" class="btn blog-read-more btn-primary align-self-end">Read More</a>
                                 </div>
                             </div>
@@ -56,11 +62,11 @@
 
                     <nav class="d-flex justify-content-center mt-3">
                         <ul class="pagination">
-                            <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                            <li class="page-item"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                            <c:forEach begin="1" end="${pagesCount}" var="page">
+                                <li class="page-item ${(empty param.page and page == 1) or (param.page eq page) ? "active" : ""}">
+                                    <a class="page-link" href="blogs/list?page=${page}">${page}</a>
+                                </li>
+                            </c:forEach>
                         </ul>
                     </nav>
                 </section>
