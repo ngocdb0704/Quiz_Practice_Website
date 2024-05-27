@@ -1,6 +1,6 @@
 <%-- 
-    Document   : viewUser
-    Created on : May 19, 2024, 11:30:36 AM
+    Document   : UserDetails
+    Created on : May 27, 2024, 11:10:13 PM
     Author     : Administrator
 --%>
 
@@ -10,15 +10,17 @@
 <%
     Vector<Customer> vector
                     =(Vector<Customer>)request.getAttribute("data");
-%>
-<html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
-    </head>
+if(vector == null ){%>
+<div></div>
+<%} else { %>
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+<link href="css/style.css" rel="stylesheet" type="text/css"/>
     <body>
-        <a href="CustomerControllerURL?service=listAll">Home</a>
-        <table border="1" >
+        <div>
+    <table border="1" class="table">
         <% String titleTable=(String)request.getAttribute("titleTable");%>
         <caption><%=titleTable%></caption>
         <tr>
@@ -30,6 +32,8 @@
             <th>Gender</th>
             <th>Mobile</th>
             <th>Active Status</th>
+            <th>Edit</th>
+            <th>View</th>
         </tr>
 
         <% 
@@ -44,8 +48,11 @@
             <td><%=cus.getGender()%></td>
             <td><%=cus.getMobile()%></td>
             <td><%=cus.isIsActive()%></td>
+            <td><a href="CustomerController?service=update&id=<%=cus.getUserId()%>">Edit</a></td>
+            <td><a href="CustomerController?service=view&id=<%=cus.getUserId()%>">View</a></td>
         </tr>
         <%}%>
     </table>
+</div>
     </body>
-</html>
+    <%}%>

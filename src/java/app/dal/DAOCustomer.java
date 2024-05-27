@@ -20,7 +20,6 @@ public class DAOCustomer extends DBContext {
 
     public Vector<Customer> getAll(String sql) {
         Vector<Customer> vector = new Vector<Customer>();
-
         try {
             Statement state = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
             ResultSet rs = state.executeQuery(sql);
@@ -143,9 +142,9 @@ public class DAOCustomer extends DBContext {
 "           ([UserId]\n" +
 "           ,[Email]\n" +
 "           ,[Password]\n" +
-"           ,[Role]\n" +
+"           ,[RoleId]\n" +
 "           ,[FullName]\n" +
-"           ,[Gender]\n" +
+"           ,[GenderId]\n" +
 "           ,[Mobile]\n" +
 "           ,[IsActive])\n" +
 "     VALUES\n" +
@@ -171,25 +170,24 @@ public class DAOCustomer extends DBContext {
     public int updateUser(Customer cus) {
         int n = 0;
         String sql = "UPDATE [dbo].[User]\n"
-                + "   SET [ID] = ?\n "
-                + "      ,[Email] = ?\n"
+                + "   SET [Email] = ?\n"
                 + "      ,[Password] = ?\n"
-                + "      ,[Role] = ?\n"
+                + "      ,[RoleId] = ?\n"
                 + "      ,[FullName] = ?\n"
-                + "      ,[Gender] = ?\n"
+                + "      ,[GenderId] = ?\n"
                 + "      ,[Mobile] = ?\n"
-                + "      ,[isActive])\n"
-                + " WHERE ID=?";
+                + "      ,[isActive]=?\n"
+                + " WHERE UserId = ?";
         try {
             PreparedStatement pre = connection.prepareStatement(sql);
-            pre.setInt(1, cus.getUserId());
-            pre.setString(2, cus.getEmail());
-            pre.setString(3, cus.getPassword());
-            pre.setString(4, cus.getRole());
-            pre.setString(5, cus.getFullName());
-            pre.setString(6, cus.getGender());
-            pre.setString(7, cus.getMobile());
-            pre.setBoolean(8, cus.isIsActive());
+            pre.setString(1, cus.getEmail());
+            pre.setString(2, cus.getPassword());
+            pre.setString(3, cus.getRole());
+            pre.setString(4, cus.getFullName());
+            pre.setString(5, cus.getGender());
+            pre.setString(6, cus.getMobile());
+            pre.setBoolean(7, cus.isIsActive());
+            pre.setInt(8, cus.getUserId());
             n = pre.executeUpdate();
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -199,9 +197,11 @@ public class DAOCustomer extends DBContext {
 
     public static void main(String[] args) {
         DAOCustomer dao = new DAOCustomer();
-        Vector<Customer> vector = dao.getAll("select * from [User] where FullName like 'lehungdung'");
-        for (Customer cus : vector) {
-            System.out.println(cus);
+                int n = dao.updateUser(
+                        new Customer(2, "dunglhhe181216@fpt.edu.vn", "12345", "3", "lehungdung", "1", "1232", true)
+                );
+        if (n > 0) {
+            System.out.println("UPDATED!!!");
         }
     }
 }

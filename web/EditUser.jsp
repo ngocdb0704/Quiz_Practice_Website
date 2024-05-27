@@ -23,7 +23,7 @@
      
       <tr>
           <td>ID</td>
-          <td><input type="text" name="ID" value="<%=cus.getUserID()%>"></td>
+          <td><input type="text" name="ID" value="<%=cus.getUserId()%>"></td>
       </tr>
       <tr>
           <td>Email</td>

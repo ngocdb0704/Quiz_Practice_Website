@@ -43,13 +43,29 @@ public class CustomerController extends HttpServlet {
                 service = ("listAll");
             }
             if (service.equals("listAll")) {
-                Vector<Customer> vector = dao.getAll("select * from [User]");
+                Vector<Customer> vector = dao.getAll("select u.UserId , u.Email, u.Password,r.RoleName as Role,u.FullName,g.GenderName as Gender,u.Mobile,u.IsActive from [User] u\n" +
+"join [Gender] g on u.GenderId = g.GenderId \n" +
+"join [Role] r on r.RoleId = u.RoleId");
                 request.setAttribute("data", vector);
                 request.setAttribute("titlePage", "UserManage");
                 request.setAttribute("titleTable", "List of Registered User");
                 //select view (jsp)
                 RequestDispatcher dispath
                         = request.getRequestDispatcher("UserManage.jsp");
+                //run
+                dispath.forward(request, response);
+            }
+            
+            if (service.equals("detailsList")) {
+                Vector<Customer> vector = dao.getAll("select u.UserId , u.Email, u.Password,r.RoleName as Role,u.FullName,g.GenderName as Gender,u.Mobile,u.IsActive from [User] u\n" +
+"join [Gender] g on u.GenderId = g.GenderId \n" +
+"join [Role] r on r.RoleId = u.RoleId");
+                request.setAttribute("data", vector);
+                request.setAttribute("titlePage", "UserDetails");
+                request.setAttribute("titleTable", "User Details");
+                //select view (jsp)
+                RequestDispatcher dispath
+                        = request.getRequestDispatcher("UserDetails.jsp");
                 //run
                 dispath.forward(request, response);
             }
@@ -236,16 +252,17 @@ public class CustomerController extends HttpServlet {
                     int id = Integer.parseInt(request.getParameter("UserID"));
                     String mail = request.getParameter("Email");
                     String pass = request.getParameter("Password");
-                    String role = request.getParameter("Role");
+                    String roleid = request.getParameter("RoleId");
                     String fname = request.getParameter("FullName");
-                    String gen = request.getParameter("Gender");
+                    String genid = request.getParameter("GenderId");
                     String mb = request.getParameter("Mobile");
                     boolean isactive
                             = ((Integer.parseInt(request.getParameter("isActive")) == 1) ? true : false);
-                    Customer cus = new Customer(id, mail, pass, role, fname, gen, role, isactive);
+                    Customer cus = new Customer(id, mail, pass, roleid, fname, genid, mb, isactive);
                     dao.updateUser(cus);
                     response.sendRedirect("CustomerControllerURL?service=listAll");
                 }
+                
             }
             if (service.equals("view")) {
                 int id = Integer.parseInt(request.getParameter("id"));
