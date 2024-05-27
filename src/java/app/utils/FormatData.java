@@ -12,9 +12,15 @@ import java.util.Date;
  * @author admin
  */
 public class FormatData {
-    //add dateFormat to show data in dd/MM/yyyy
+    //add dateFormat to show data in dd/MM/yyyyadd 
     public String dateFormat(Date d){
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         return sdf.format(d);
+    }
+    public String stringSqlFormat(String input){
+        return input.replace("!", "!!")
+                .replace("%", "!%")
+                .replace("_", "!_")
+                .replace("[", "![");
     }
 }

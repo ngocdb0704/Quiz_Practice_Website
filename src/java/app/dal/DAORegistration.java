@@ -19,8 +19,7 @@ import java.util.logging.Logger;
  * @author admin
  */
 public class DAORegistration extends DBContext {
-
-    public Vector<Registration> multiPurposeVector(ResultSet rs) {
+    public Vector<Registration> multiPurposeVector(ResultSet rs){
         Vector<Registration> vector = new Vector<>();
         try {
             //for each result in result set
@@ -44,13 +43,12 @@ public class DAORegistration extends DBContext {
         }
         return vector;
     }
-
-    public Vector<Registration> searchNameFilter(String email, String inputSearch, String category) {
+    public Vector<Registration> searchNameFilter(String email, String inputSearch, String category){
         inputSearch = inputSearch
-                .replace("!", "!!")
-                .replace("%", "!%")
-                .replace("_", "!_")
-                .replace("[", "![");
+    .replace("!", "!!")
+    .replace("%", "!%")
+    .replace("_", "!_")
+    .replace("[", "![");
         Vector<Registration> vector = new Vector<>();
         String sql = """
                     select r.RegistrationId, s.SubjectTitle,
@@ -74,13 +72,12 @@ public class DAORegistration extends DBContext {
         }
         return vector;
     }
-
-    public Vector<Registration> searchBySubjectName(String email, String inputSearch) {
+    public Vector<Registration> searchBySubjectName(String email, String inputSearch){
         inputSearch = inputSearch
-                .replace("!", "!!")
-                .replace("%", "!%")
-                .replace("_", "!_")
-                .replace("[", "![");
+    .replace("!", "!!")
+    .replace("%", "!%")
+    .replace("_", "!_")
+    .replace("[", "![");
         String sql = """
                     select r.RegistrationId, s.SubjectTitle,
                     r.RegistrationTime, p.PackageName, r.TotalCost, rs.RegistrationStatusName,
@@ -103,8 +100,7 @@ public class DAORegistration extends DBContext {
         }
         return vector;
     }
-
-    public Vector<Registration> filterBySubjectCategory(String email, String category) {
+    public Vector<Registration> filterBySubjectCategory(String email, String category){
         String sql = """
                     select r.RegistrationId, s.SubjectTitle,
                     r.RegistrationTime, p.PackageName, r.TotalCost, rs.RegistrationStatusName,
@@ -126,7 +122,6 @@ public class DAORegistration extends DBContext {
         }
         return vector;
     }
-
     public Vector<Registration> getAll(String email) {
         String sql = """
                     select r.RegistrationId, s.SubjectTitle,
@@ -148,9 +143,8 @@ public class DAORegistration extends DBContext {
         }
         return vector;
     }
-
-    public int removeRegistration(int registrationId) {
-        int n = 0;
+    public int removeRegistration(int registrationId){
+        int n=0;
         String sqlRemove = "DELETE FROM [dbo].[Registration] WHERE RegistrationId =?";
         try {
             PreparedStatement pre = connection.prepareStatement(sqlRemove);
@@ -160,11 +154,5 @@ public class DAORegistration extends DBContext {
             Logger.getLogger(DAORegistration.class.getName()).log(Level.SEVERE, null, ex);
         }
         return n;
-    }
-
-    public static void main(String[] args) {
-        DAORegistration dao = new DAORegistration();
-        Vector<Registration> vec = dao.getAll("ngocdbhe182383@fpt.edu.vn");
-        System.out.println(vec.get(0).getSubjectName());
     }
 }

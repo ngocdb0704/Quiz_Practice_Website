@@ -13,10 +13,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import java.sql.SQLException;
 import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 /**
  *
  * @author OwO
@@ -37,12 +34,11 @@ public class LoginControllerTempOfAnForLoginView extends HttpServlet {
         if (service.equals("login")) {
             String username = request.getParameter("username");
             String password = request.getParameter("password");
-           
             boolean flag = validateUser(username, password);
             if (flag) {
                 session.setAttribute("userEmail", username);
                 String message = "Hello " + username + ". You logged in successfully";
-                session.setAttribute("successMessage", message);
+                session.setAttribute("successMessage", message);                
                 response.sendRedirect("index.jsp");
             } else {
                 session.setAttribute("successMessage", "Not authorized"); 
@@ -51,11 +47,10 @@ public class LoginControllerTempOfAnForLoginView extends HttpServlet {
         }
 
         if (service.equals("changepass")) {
-            
             String username = (String) session.getAttribute("userEmail");
             if (username == null || username.length() < 1) {
-                session.setAttribute("successMessage", "Not authorized");
-                response.sendRedirect("index.jsp");
+                
+                response.sendRedirect("LoginInterface.jsp");
             } else {
                 String prePassword = request.getParameter("prePass");
                 String newPassword = request.getParameter("newPass");
