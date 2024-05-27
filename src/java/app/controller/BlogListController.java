@@ -1,52 +1,26 @@
 package app.controller;
 
+import app.dal.DAOBlog;
+import app.entity.BlogInformation;
 import java.io.IOException;
-import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
+import java.util.List;
 
 @WebServlet(name="BlogListController", urlPatterns={"/blogs/list"})
 public class BlogListController extends HttpServlet {
-    public class Blog {
-        private String title;
-        private String content;
-
-        public Blog(String title, String content) {
-            this.title = title;
-            this.content = content;
-        }
-
-        public String getTitle() {
-            return title;
-        }
-
-        public void setTitle(String title) {
-            this.title = title;
-        }
-
-        public String getContent() {
-            return content;
-        }
-
-        public void setContent(String content) {
-            this.content = content;
-        }
-    }
-    
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        ArrayList<Blog> blogs = new ArrayList<>();
-
-        for (int i = 0; i < 12; i++) {
-            blogs.add(new Blog("ijawdjioajdo", "aowdjaowid"));
+        try (DAOBlog daoBlog = new DAOBlog()) {
+            List<BlogInformation> blogs = daoBlog.getBlogListingsPaginated(1, 10);
+            request.setAttribute("blogs", blogs);
         }
-        
-        request.setAttribute("blogs", blogs);
+
         request.getRequestDispatcher("BlogList.jsp").forward(request, response);
     } 
 
