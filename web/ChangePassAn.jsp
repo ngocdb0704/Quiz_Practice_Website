@@ -22,10 +22,10 @@
                 }, 3000); // Hide the notification after 3 seconds
             }
 
-// Check if there is a success message and show the notification
+            // Check if there is a success message and show the notification
             window.onload = function () {
                 var changePassMessage = '<%= session.getAttribute("changePassMessage") %>';
-                if (changePassMessage && changePassMessage !== null) {
+                 if (changePassMessage && changePassMessage !== null) {
                     showNotification(changePassMessage);
                     session.removeAttribute("changePassMessage");
                 }

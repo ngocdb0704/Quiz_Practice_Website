@@ -25,10 +25,17 @@
 
                 <c:if test="${not empty sessionScope.userEmail}">
                     <div class="btn-group">
-                        <button onclick="displayPopUp('UserProfile')" type="button" class="btn btn-primary">
+                        <!--button onclick="displayPopUp('UserProfile')" type="button" class="btn btn-primary">
+                            <i class="bi bi-person-circle"></i>
+                        ${sessionScope.userEmail}
+                    </button-->
+
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#userProfileModal">
                             <i class="bi bi-person-circle"></i>
                             ${sessionScope.userEmail}
                         </button>
+                        <!-- Modal -->
+
                         <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
                             <span class="visually-hidden">Toggle Dropdown</span>
                         </button>
@@ -76,3 +83,17 @@
         </div>
     </div>
 </nav>
+
+<div class="modal fade" id="userProfileModal" tabindex="-1" role="dialog" >
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                </button>
+            </div>
+            <div class="modal-body">
+                <jsp:include page="/UserProfile.jsp" />
+            </div>
+        </div>
+    </div>
+</div>

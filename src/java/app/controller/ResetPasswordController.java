@@ -14,6 +14,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.Objects;
 
 @WebServlet(name="ResetPasswordController", urlPatterns={"/user/reset"})
 public class ResetPasswordController extends HttpServlet {
@@ -24,34 +25,34 @@ public class ResetPasswordController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        var daoUser = new DAOUser();
-        var daoResetTokens = new DAOResetTokens();
+        try (
+            var daoUser = new DAOUser();
+            var daoResetTokens = new DAOResetTokens()
+        ) {
+            String token = request.getParameter("token");
 
-        String token = request.getParameter("token");
+            try {
+                if (token != null) {
+                    ResetRecord record = daoResetTokens.getByToken(token);
 
-        try {
-            if (token != null) {
-                ResetRecord record = daoResetTokens.getByToken(token);
+                    if (record == null) {
+                        request.setAttribute("error", "error_invalid_token");
+                        request.getRequestDispatcher(RESET_PAGE).forward(request, response);
+                        return;
+                    }
 
-                if (record == null) {
-                    request.setAttribute("error", "error_invalid_token");
-                    request.getRequestDispatcher(RESET_PAGE).forward(request, response);
-                    return;
+                    if (!record.isValid()) {
+                        request.setAttribute("screen", "expired");
+                    } else {
+                        request.setAttribute("screen", "change_pw");
+                        request.setAttribute("user", daoUser.getById(record.getUserId()));
+                    }
                 }
-
-                if (!record.isValid()) {
-                    request.setAttribute("screen", "expired");
-                } else {
-                    request.setAttribute("screen", "change_pw");
-                    request.setAttribute("user", daoUser.getById(record.getUserId()));
-                }
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
 
-        daoUser.close();
-        daoResetTokens.close();
         request.getRequestDispatcher(RESET_PAGE).forward(request, response);
     } 
 
@@ -72,21 +73,36 @@ public class ResetPasswordController extends HttpServlet {
     
     private void handleChangePassword(HttpServletRequest request, HttpServletResponse response)
     throws SQLException, ServletException, IOException {
-        var daoUser = new DAOUser();
-        var daoResetTokens = new DAOResetTokens();
+        try (
+            var daoUser = new DAOUser();
+            var daoResetTokens = new DAOResetTokens()
+        ) {
+            String token = request.getParameter("token");
+            String newPassword = request.getParameter("newpw");
+            String confirmNewPassword = request.getParameter("confirmnewpw");
+            boolean same = newPassword.equals(confirmNewPassword);
 
-        String token = request.getParameter("token");
-        String newPassword = request.getParameter("newpw");
-        String confirmNewPassword = request.getParameter("confirmnewpw");
-        boolean same = newPassword.equals(confirmNewPassword);
+            if (token != null) {
+                ResetRecord record = daoResetTokens.getByToken(token);
 
-        if (token != null) {
-            ResetRecord record = daoResetTokens.getByToken(token);
+                if (record == null) {
+                    request.setAttribute("error", "error_invalid_token");
+                    request.getRequestDispatcher(RESET_PAGE).forward(request, response);
+                    return;
+                }
 
-            if (record == null) {
-                request.setAttribute("error", "error_invalid_token");
-                request.getRequestDispatcher(RESET_PAGE).forward(request, response);
-                return;
+                if (!record.isValid()) {
+                    request.setAttribute("screen", "expired");
+                } else if (same) {
+                    request.setAttribute("screen", "success");
+                    response.setHeader("Refresh", "3; url=" + URLUtils.getBaseURL(request) + "/home");
+                    daoUser.updatePassword(record.getUserId(), newPassword);
+                    daoResetTokens.deleteToken(record.getUserId());
+                } else {
+                    request.setAttribute("user", daoUser.getById(record.getUserId()));
+                    request.setAttribute("screen", "change_pw");
+                    request.setAttribute("error", "error_pw_not_same");
+                }
             }
 
             if (!record.isValid()) {
@@ -121,47 +137,47 @@ public class ResetPasswordController extends HttpServlet {
 
     private void handleSendEmail(HttpServletRequest request, HttpServletResponse response)
     throws SQLException, ServletException, IOException {
-        var daoUser = new DAOUser();
-        var daoResetTokens = new DAOResetTokens();
+        try (
+            var daoUser = new DAOUser();
+            var daoResetTokens = new DAOResetTokens()
+        ) {
+            String email = request.getParameter("email");
 
-        String email = request.getParameter("email");
+            User user = daoUser.getByEmail(email);
 
-        User user = daoUser.getByEmail(email);
-
-        int timeout = 1;
-        try {
-            String val = Config.getConfig(getServletContext()).getOrDefault(
-                    "pw.reset.timeout_secs",
-                    "1"
-            ).toString();
-
-            timeout = Integer.parseInt(val);
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-        }
-
-        if (user != null) {
-
-            String token = daoResetTokens.createForUserId(user.getUserId(), timeout);
-            
-            GmailService service = new GmailService(getServletContext());
-            
-            String content = "Dear user! Someone sent a password request to your account\n"
-                    + "I hope this email finds you well, here's the link to reset your password:\n"
-                    + generateResetUrl(request, token);
-            
+            int timeout = 1;
             try {
-                service.sendMailTo("Reset Password", content, new String[] { email });
-            } catch (Exception e) {
+                String val = Config.getConfig(getServletContext()).getOrDefault(
+                        "pw.reset.timeout",
+                        "1"
+                ).toString();
+
+                timeout = Integer.parseInt(val);
+            } catch (NumberFormatException e) {
                 e.printStackTrace();
             }
-        }
 
-        daoUser.close();
-        daoResetTokens.close();
-        request.setAttribute("screen", "sent");
-        request.setAttribute("timeout", timeout);
-        request.getRequestDispatcher(RESET_PAGE).forward(request, response);
+            if (user != null) {
+
+                String token = daoResetTokens.createForUserId(user.getUserId(), timeout);
+                
+                GmailService service = new GmailService(getServletContext());
+                
+                String content = "Dear user! Someone sent a password request to your account\n"
+                        + "I hope this email finds you well, here's the link to reset your password:\n"
+                        + generateResetUrl(request, token);
+                
+                try {
+                    service.sendMailTo("Reset Password", content, new String[] { email });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            request.setAttribute("screen", "sent");
+            request.setAttribute("timeout", timeout);
+            request.getRequestDispatcher(RESET_PAGE).forward(request, response);
+        }
     }
 
     @Override
