@@ -5,6 +5,7 @@
   <title>Home</title>
   <%@include file="/common/ImportBootstrap.jsp" %>
   <link rel="stylesheet" href="common/ExtendBody.css"/>
+  <link rel="stylesheet" href="public/css/HomePage.css"/>
   <style>
     .notification {
         background-color: #4CAF50;
@@ -44,38 +45,99 @@
 </script>
 </head>
 <body>
-    <%@include file="/common/header.jsp" %>
-    <main class="container">
-        <!--DEBUG BY QUANNM, REMOVE SOON-->
-        Current user email: <%
-        try {
-            String userEmail = (String)session.getAttribute("userEmail");
-            out.print(userEmail);
-        } catch (Exception e) {}
-        %>
 
-        <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+    <%@include file="/common/header.jsp" %>
+    <%@include file="/common/sidebar.jsp" %>
+    
+    <main class="container">
+
+        <div id="sliders" class="slider carousel slide mh-75" data-bs-ride="carousel">
             <div class="carousel-inner">
                 <div class="carousel-item active">
-                    <img class="d-block w-100" style="height: 500px" src="https://i.pinimg.com/originals/30/3f/4c/303f4c853caa0b51acb5dd94ca18f93f.webp" alt="First slide">
+                    <img class="d-block w-100" src="https://i.pinimg.com/originals/30/3f/4c/303f4c853caa0b51acb5dd94ca18f93f.webp" alt="First slide">
                 </div>
                 <div class="carousel-item">
-                    <img class="d-block w-100" style="height: 500px" src="./public/images/anonymous-user.webp" alt="Second slide">
+                    <img class="d-block w-100" src="./public/images/anonymous-user.webp" alt="Second slide">
                 </div>
                 <div class="carousel-item">
-                    <img class="d-block w-100" style="height: 500px" src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.pinimg.com%2Foriginals%2F30%2F3f%2F4c%2F303f4c853caa0b51acb5dd94ca18f93f.webp&f=1&nofb=1&ipt=ab1763aa8bd57b08728acb8f7848620e7a4df46cf106fae61ffecebed4f6706b&ipo=images" alt="Third slide">
+                    <img class="d-block w-100" src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.pinimg.com%2Foriginals%2F30%2F3f%2F4c%2F303f4c853caa0b51acb5dd94ca18f93f.webp&f=1&nofb=1&ipt=ab1763aa8bd57b08728acb8f7848620e7a4df46cf106fae61ffecebed4f6706b&ipo=images" alt="Third slide">
                 </div>
             </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+            <button class="carousel-control-prev" type="button" data-bs-target="#sliders" data-bs-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Previous</span>
             </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+            <button class="carousel-control-next" type="button" data-bs-target="#sliders" data-bs-slide="next">
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Next</span>
             </button>
         </div>
         
+        <div class="featured-subject">
+            <h2>Featured subjects</h2>
+            <div class="d-flex flex-row flex-nowrap overflow-auto">
+
+                <div class="card">
+                    <img class="card-img-top" src="./public/images/anonymous-user.webp" alt="Card image cap">
+                    <div class="card-body">
+                        <h5 class="card-title">Subject title</h5>
+                        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                        <a href="#" class="btn btn-primary">Go to subject</a>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <img class="card-img-top" src="./public/images/anonymous-user.webp" alt="Card image cap">
+                    <div class="card-body">
+                        <h5 class="card-title">Subject title</h5>
+                        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                        <a href="#" class="btn btn-primary">Go to subject</a>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <img class="card-img-top" src="./public/images/anonymous-user.webp" alt="Card image cap">
+                    <div class="card-body">
+                        <h5 class="card-title">Subject title</h5>
+                        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                        <a href="#" class="btn btn-primary">Go to subject</a>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <img class="card-img-top" src="./public/images/anonymous-user.webp" alt="Card image cap">
+                    <div class="card-body">
+                        <h5 class="card-title">Subject title</h5>
+                        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                        <a href="#" class="btn btn-primary">Go to subject</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="post-list">
+            Sort by <button class="btn btn-outline-primary active">Hot <i class="bi bi-fire"></i></button> <button class="btn btn-outline-primary">New <i class="bi bi-bar-chart-line"></i></button>
+            
+            <div class="card">
+                <div class="card-body">
+                    <img class="profilePic" src="./public/images/anonymous-user.webp">
+                    <h5 class="card-title">Post title</h5>
+                    <i>Date</i>
+                </div>
+                <p class="card-text container">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                <img class="card-img-bottom" src="./public/images/anonymous-user.webp" alt="Card image cap">
+            </div>
+            
+            <div class="card">
+                <div class="card-body">
+                    <img class="profilePic" src="./public/images/anonymous-user.webp">
+                    <h5 class="card-title">Post title</h5>
+                    <i>Date</i>
+                </div>
+                <p class="card-text container">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                <img class="card-img-bottom" src="./public/images/anonymous-user.webp" alt="Card image cap">
+            </div>
+        </div>
         
     </main>
     <%@include file="/common/footer.jsp" %>

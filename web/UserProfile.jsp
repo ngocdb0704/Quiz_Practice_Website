@@ -77,6 +77,7 @@
                                 <label id="upload-label" for="upload">Select image</label>
                             </div>
                             <input type="hidden" name="service" value="updateProfilePicture">
+                            <input type="hidden" name="redirect" value="<%=currentPage%>">
                             <div id="upload-submission">
                                 <p id="upload-name">Selected file: none</p>
                                 <input type="submit" value="Save as new profile picture" />
