@@ -58,7 +58,7 @@ if(vector == null ){%>
 }
 </style>
 <div>
-<a href="CustomerControllerURL?service=listAll">Home</a>
+<a href="CustomerController?service=listAll">Home</a>
 <div>
 <form method="get">
     <a href="insertCustomer.html">New User</a>
@@ -81,14 +81,20 @@ if(vector == null ){%>
     <div class="dropdown">
         <button class="dropbtn">Filtered By</button>
         <div class="dropdown-content">
-          <a href="CustomerControllerURL?service=activefilter">Filtered by Status - Active</a>
-            <a href="CustomerControllerURL?service=notactivefilter">Filtered by Status - NotActive</a>
-            <a href="CustomerControllerURL?service=malefilter">Filtered by Gender - Male</a>
-           <a href="CustomerControllerURL?service=userfilter">Filtered by Role - User</a>
+          <a href="CustomerController?service=activefilter">Status - Active</a>
+            <a href="CustomerController?service=notactivefilter">Status - NotActive</a>
+            <a href="CustomerController?service=malefilter">Gender - Male</a>
+            <a href="CustomerController?service=femalefilter">Gender - Female</a>
+           <a href="CustomerController?service=guestfilter">Role - Guest</a>
+           <a href="CustomerController?service=cusfilter">Role - Customer</a>
+           <a href="CustomerController?service=mktfilter">Role - Marketing</a>
+           <a href="CustomerController?service=salefilter">Role - Sale</a>
+           <a href="CustomerController?service=expertfilter">Role - Expert</a>
+           <a href="CustomerController?service=admfilter">Role - Admin</a>
     </div>
         </div>
 
-    <form action="CustomerControllerURL?service=searchByname" method="post">
+    <form action="CustomerController?service=searchByname" method="post">
         <div class="input-group input-group-sm">
             <input  name="input" type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm" placeholder="Search by fullname">
             <button type="submit" class="btn btn-secondary btn-number">
@@ -96,7 +102,7 @@ if(vector == null ){%>
             </button>
         </div>
     </form>
-    <form action="CustomerControllerURL?service=searchByemail" method="post">
+    <form action="CustomerController?service=searchByemail" method="post">
         <div class="input-group input-group-sm">
             <input  name="input2" type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm" placeholder="Search by mail">
             <button type="submit" class="btn btn-secondary btn-number">
@@ -104,7 +110,7 @@ if(vector == null ){%>
             </button>
         </div>
     </form>
-    <form action="CustomerControllerURL?service=searchByphone" method="post">
+    <form action="CustomerController?service=searchByphone" method="post">
         <div class="input-group input-group-sm">
             <input  name="input3" type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm" placeholder="Search by phone">
             <button type="submit" class="btn btn-secondary btn-number">

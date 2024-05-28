@@ -198,7 +198,7 @@ public class DAOCustomer extends DBContext {
     public static void main(String[] args) {
         DAOCustomer dao = new DAOCustomer();
                 int n = dao.updateUser(
-                        new Customer(2, "dunglhhe181216@fpt.edu.vn", "12345", "3", "lehungdung", "1", "1232", true)
+                        new Customer(2, "dunglhhe181216@fpt.edu.vn", "12345", "3", "lehungdung", "1", "1232", false)
                 );
         if (n > 0) {
             System.out.println("UPDATED!!!");

@@ -43,9 +43,9 @@ public class CustomerController extends HttpServlet {
                 service = ("listAll");
             }
             if (service.equals("listAll")) {
-                Vector<Customer> vector = dao.getAll("select u.UserId , u.Email, u.Password,r.RoleName as Role,u.FullName,g.GenderName as Gender,u.Mobile,u.IsActive from [User] u\n" +
-"join [Gender] g on u.GenderId = g.GenderId \n" +
-"join [Role] r on r.RoleId = u.RoleId");
+                Vector<Customer> vector = dao.getAll("select u.UserId , u.Email, u.Password,r.RoleName as Role,u.FullName,g.GenderName as Gender,u.Mobile,u.IsActive from [User] u\n"
+                        + "join [Gender] g on u.GenderId = g.GenderId \n"
+                        + "join [Role] r on r.RoleId = u.RoleId");
                 request.setAttribute("data", vector);
                 request.setAttribute("titlePage", "UserManage");
                 request.setAttribute("titleTable", "List of Registered User");
@@ -55,11 +55,11 @@ public class CustomerController extends HttpServlet {
                 //run
                 dispath.forward(request, response);
             }
-            
+
             if (service.equals("detailsList")) {
-                Vector<Customer> vector = dao.getAll("select u.UserId , u.Email, u.Password,r.RoleName as Role,u.FullName,g.GenderName as Gender,u.Mobile,u.IsActive from [User] u\n" +
-"join [Gender] g on u.GenderId = g.GenderId \n" +
-"join [Role] r on r.RoleId = u.RoleId");
+                Vector<Customer> vector = dao.getAll("select u.UserId , u.Email, u.Password,r.RoleName as Role,u.FullName,g.GenderName as Gender,u.Mobile,u.IsActive from [User] u\n"
+                        + "join [Gender] g on u.GenderId = g.GenderId \n"
+                        + "join [Role] r on r.RoleId = u.RoleId");
                 request.setAttribute("data", vector);
                 request.setAttribute("titlePage", "UserDetails");
                 request.setAttribute("titleTable", "User Details");
@@ -151,7 +151,7 @@ public class CustomerController extends HttpServlet {
                 dispath.forward(request, response);
             }
             if (service.equals("sortbyGen")) {
-                Vector<Customer> vector = dao.getAll("select * from [User] order by Gender");
+                Vector<Customer> vector = dao.getAll("select * from [User] order by GenderId");
                 request.setAttribute("data", vector);
                 request.setAttribute("titlePage", "UserManage");
                 request.setAttribute("titleTable", "List of Registered User sorted by Gender");
@@ -178,7 +178,11 @@ public class CustomerController extends HttpServlet {
                 response.sendRedirect("CustomerControllerURL?service=listAll");
             }
             if (service.equals("activefilter")) {
-                Vector<Customer> vector = dao.getAll("select * from [User] where isActive = 1");
+                Vector<Customer> vector = dao.getAll("SELECT u.UserId, u.Email, u.Password, r.RoleName as [Role], u.FullName, g.GenderName as Gender, u.Mobile, u.IsActive \n"
+                        + "FROM [User] u \n"
+                        + "JOIN [Role] r ON u.RoleId = r.RoleId\n"
+                        + "JOIN [Gender] g on u.GenderId = g.GenderId\n"
+                        + "WHERE IsActive = '1';");
                 request.setAttribute("data", vector);
                 request.setAttribute("titlePage", "UserManage");
                 request.setAttribute("titleTable", "List of Registered User that active");
@@ -190,7 +194,11 @@ public class CustomerController extends HttpServlet {
             }
 
             if (service.equals("notactivefilter")) {
-                Vector<Customer> vector = dao.getAll("select * from [User] where isActive = 0");
+                Vector<Customer> vector = dao.getAll("SELECT u.UserId, u.Email, u.Password, r.RoleName as [Role], u.FullName, g.GenderName as Gender, u.Mobile, u.IsActive \n"
+                        + "FROM [User] u \n"
+                        + "JOIN [Role] r ON u.RoleId = r.RoleId\n"
+                        + "JOIN [Gender] g on u.GenderId = g.GenderId\n"
+                        + "WHERE IsActive = '0';");
                 request.setAttribute("data", vector);
                 request.setAttribute("titlePage", "UserManage");
                 request.setAttribute("titleTable", "List of Registered User that not active");
@@ -201,7 +209,10 @@ public class CustomerController extends HttpServlet {
                 dispath.forward(request, response);
             }
             if (service.equals("malefilter")) {
-                Vector<Customer> vector = dao.getAll("select * from [User] where Gender = 'Male'");
+                Vector<Customer> vector = dao.getAll("SELECT u.UserId, u.Email, u.Password, u.RoleId, u.FullName, g.GenderName as Gender, u.Mobile, u.IsActive \n"
+                        + "FROM [User] u \n"
+                        + "JOIN Gender g ON u.GenderId = g.GenderId\n"
+                        + "WHERE u.GenderId = '1';");
                 request.setAttribute("data", vector);
                 request.setAttribute("titlePage", "UserManage");
                 request.setAttribute("titleTable", "List of Registered User that is Male");
@@ -212,7 +223,10 @@ public class CustomerController extends HttpServlet {
                 dispath.forward(request, response);
             }
             if (service.equals("femalefilter")) {
-                Vector<Customer> vector = dao.getAll("select * from [User] where Gender = 'Female'");
+                Vector<Customer> vector = dao.getAll("SELECT u.UserId, u.Email, u.Password, u.RoleId, u.FullName, g.GenderName as Gender, u.Mobile, u.IsActive \n"
+                        + "FROM [User] u \n"
+                        + "JOIN Gender g ON u.GenderId = g.GenderId\n"
+                        + "WHERE u.GenderId = '2';");
                 request.setAttribute("data", vector);
                 request.setAttribute("titlePage", "UserManage");
                 request.setAttribute("titleTable", "List of Registered User that is Female");
@@ -222,11 +236,15 @@ public class CustomerController extends HttpServlet {
                 //run
                 dispath.forward(request, response);
             }
-            if (service.equals("userfilter")) {
-                Vector<Customer> vector = dao.getAll("select * from [User] where Role = 'User'");
+            if (service.equals("guestfilter")) {
+                Vector<Customer> vector = dao.getAll("SELECT u.UserId, u.Email, u.Password, r.RoleName as [Role], u.FullName, g.GenderName as Gender, u.Mobile, u.IsActive \n"
+                        + "FROM [User] u \n"
+                        + "JOIN [Role] r ON u.RoleId = r.RoleId\n"
+                        + "JOIN [Gender] g on u.GenderId = g.GenderId\n"
+                        + "WHERE r.RoleId = '1';");
                 request.setAttribute("data", vector);
                 request.setAttribute("titlePage", "UserManage");
-                request.setAttribute("titleTable", "List of Registered User that is User");
+                request.setAttribute("titleTable", "List of Registered User that is Guest");
                 //select view (jsp)
                 RequestDispatcher dispath
                         = request.getRequestDispatcher("UserManage.jsp");
@@ -234,6 +252,82 @@ public class CustomerController extends HttpServlet {
                 dispath.forward(request, response);
             }
 
+            if (service.equals("cusfilter")) {
+                Vector<Customer> vector = dao.getAll("SELECT u.UserId, u.Email, u.Password, r.RoleName as [Role], u.FullName, g.GenderName as Gender, u.Mobile, u.IsActive \n"
+                        + "FROM [User] u \n"
+                        + "JOIN [Role] r ON u.RoleId = r.RoleId\n"
+                        + "JOIN [Gender] g on u.GenderId = g.GenderId\n"
+                        + "WHERE r.RoleId = '2';");
+                request.setAttribute("data", vector);
+                request.setAttribute("titlePage", "UserManage");
+                request.setAttribute("titleTable", "List of Registered User that is Customer");
+                //select view (jsp)
+                RequestDispatcher dispath
+                        = request.getRequestDispatcher("UserManage.jsp");
+                //run
+                dispath.forward(request, response);
+            }
+            if (service.equals("mktfilter")) {
+                Vector<Customer> vector = dao.getAll("SELECT u.UserId, u.Email, u.Password, r.RoleName as [Role], u.FullName, g.GenderName as Gender, u.Mobile, u.IsActive \n"
+                        + "FROM [User] u \n"
+                        + "JOIN [Role] r ON u.RoleId = r.RoleId\n"
+                        + "JOIN [Gender] g on u.GenderId = g.GenderId\n"
+                        + "WHERE r.RoleId = '3';");
+                request.setAttribute("data", vector);
+                request.setAttribute("titlePage", "UserManage");
+                request.setAttribute("titleTable", "List of Registered User that is Customer");
+                //select view (jsp)
+                RequestDispatcher dispath
+                        = request.getRequestDispatcher("UserManage.jsp");
+                //run
+                dispath.forward(request, response);
+            }
+            if (service.equals("mktfilter")) {
+                Vector<Customer> vector = dao.getAll("SELECT u.UserId, u.Email, u.Password, r.RoleName as [Role], u.FullName, g.GenderName as Gender, u.Mobile, u.IsActive \n"
+                        + "FROM [User] u \n"
+                        + "JOIN [Role] r ON u.RoleId = r.RoleId\n"
+                        + "JOIN [Gender] g on u.GenderId = g.GenderId\n"
+                        + "WHERE r.RoleId = '4';");
+                request.setAttribute("data", vector);
+                request.setAttribute("titlePage", "UserManage");
+                request.setAttribute("titleTable", "List of Registered User that is Customer");
+                //select view (jsp)
+                RequestDispatcher dispath
+                        = request.getRequestDispatcher("UserManage.jsp");
+                //run
+                dispath.forward(request, response);
+            }
+
+            if (service.equals("expertfilter")) {
+                Vector<Customer> vector = dao.getAll("SELECT u.UserId, u.Email, u.Password, r.RoleName as [Role], u.FullName, g.GenderName as Gender, u.Mobile, u.IsActive \n"
+                        + "FROM [User] u \n"
+                        + "JOIN [Role] r ON u.RoleId = r.RoleId\n"
+                        + "JOIN [Gender] g on u.GenderId = g.GenderId\n"
+                        + "WHERE r.RoleId = '5';");
+                request.setAttribute("data", vector);
+                request.setAttribute("titlePage", "UserManage");
+                request.setAttribute("titleTable", "List of Registered User that is Customer");
+                //select view (jsp)
+                RequestDispatcher dispath
+                        = request.getRequestDispatcher("UserManage.jsp");
+                //run
+                dispath.forward(request, response);
+            }
+            if (service.equals("admfilter")) {
+                Vector<Customer> vector = dao.getAll("SELECT u.UserId, u.Email, u.Password, r.RoleName as [Role], u.FullName, g.GenderName as Gender, u.Mobile, u.IsActive \n"
+                        + "FROM [User] u \n"
+                        + "JOIN [Role] r ON u.RoleId = r.RoleId\n"
+                        + "JOIN [Gender] g on u.GenderId = g.GenderId\n"
+                        + "WHERE r.RoleId = '6';");
+                request.setAttribute("data", vector);
+                request.setAttribute("titlePage", "UserManage");
+                request.setAttribute("titleTable", "List of Registered User that is Customer");
+                //select view (jsp)
+                RequestDispatcher dispath
+                        = request.getRequestDispatcher("UserManage.jsp");
+                //run
+                dispath.forward(request, response);
+            }
             if (service.equals("update")) {
                 //check submit
                 String submit = request.getParameter("submit");
@@ -249,7 +343,7 @@ public class CustomerController extends HttpServlet {
                     //run
                     dispath.forward(request, response);
                 } else { // update data
-                    int id = Integer.parseInt(request.getParameter("UserID"));
+                    int id = Integer.parseInt(request.getParameter("UserId"));
                     String mail = request.getParameter("Email");
                     String pass = request.getParameter("Password");
                     String roleid = request.getParameter("RoleId");
@@ -260,9 +354,9 @@ public class CustomerController extends HttpServlet {
                             = ((Integer.parseInt(request.getParameter("isActive")) == 1) ? true : false);
                     Customer cus = new Customer(id, mail, pass, roleid, fname, genid, mb, isactive);
                     dao.updateUser(cus);
-                    response.sendRedirect("CustomerControllerURL?service=listAll");
+                    response.sendRedirect("CustomerController?service=listAll");
                 }
-                
+
             }
             if (service.equals("view")) {
                 int id = Integer.parseInt(request.getParameter("id"));
