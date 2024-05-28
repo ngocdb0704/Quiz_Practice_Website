@@ -2,6 +2,7 @@ package app.controller;
 
 import app.dal.DAOBlog;
 import app.dal.DAOBlog.QueryResult;
+import app.dal.DAOBlogCategory;
 import app.utils.Config;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
@@ -19,19 +20,30 @@ public class BlogListController extends HttpServlet {
         int pageSize = cfg.getIntOrDefault("pagination.size", 5);
 
         int page = 1;
+        int categoryId = -1;
+        String query = request.getParameter("q");
+        
+        try {
+            categoryId = Integer.parseInt(request.getParameter("categoryId"));
+        } catch (NumberFormatException ex) {
+            ex.printStackTrace();
+        }
         
         try {
             page = Integer.parseInt(request.getParameter("page"));
         } catch (NumberFormatException ex) {
             ex.printStackTrace();
         }
-
+        
         try (DAOBlog daoBlog = new DAOBlog()) {
-            QueryResult queryResult = daoBlog.getBlogListingsPaginated(page, pageSize);
+            QueryResult queryResult = daoBlog.searchBlogListingsPaginated(query, categoryId, page, pageSize);
 
-            int pagesCount = (int)((double)(queryResult.getTotal()) / pageSize);
-            request.setAttribute("pagesCount", pagesCount);
+            request.setAttribute("pagesCount", queryResult.getTotalPages());
             request.setAttribute("blogs", queryResult.getResults());
+        }
+        
+        try (DAOBlogCategory daoBlogCategory = new DAOBlogCategory()) {
+            request.setAttribute("categories", daoBlogCategory.getAllCategories());
         }
 
         request.getRequestDispatcher("BlogList.jsp").forward(request, response);

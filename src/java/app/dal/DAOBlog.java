@@ -10,20 +10,26 @@ import java.util.List;
 public class DAOBlog extends DBContext {
 
     public class QueryResult {
-        private int total;
+        private int totalItems;
+        private int pageSize;
         private List<BlogInformation> results;
 
-        public QueryResult(int total, List<BlogInformation> results) {
-            this.total = total;
+        public QueryResult(int total, int pageSize, List<BlogInformation> results) {
+            this.totalItems = total;
+            this.pageSize = pageSize;
             this.results = results;
-        }
-
-        public int getTotal() {
-            return total;
         }
 
         public List<BlogInformation> getResults() {
             return results;
+        }
+
+        public int getTotalPages() {
+            if (pageSize > 0) {
+                return (int)(Math.ceil((double)totalItems / pageSize));
+            }
+
+            return 0;
         }
     }
 
@@ -43,11 +49,11 @@ public class DAOBlog extends DBContext {
     private static final String COUNT_LISTING_QUERY = "select count(b.BlogId)\n"
                 + "from [Blog] b\n"
                 + "inner join [BlogCategory] c on b.BlogCategoryId = c.BlogCategoryId\n"
-                + "where (? is null or b.[BlogTitle] = ?) and\n"
+                + "where (? is NULL or b.[BlogTitle] LIKE ?) and\n"
                 + "(? = -1 or c.[BlogCategoryId] = ?)";
 
     private static final String FILTERED_QUERY = LISTING_QUERY
-                + "where (? is null or b.[BlogTitle] = ?) and\n"
+                + "where (? is NULL or b.[BlogTitle] LIKE ?) and\n"
                 + "(? = -1 or c.[BlogCategoryId] = ?)\n"
                 + "order by b.[UpdatedTime] desc\n";
 
@@ -83,7 +89,8 @@ public class DAOBlog extends DBContext {
         try {
             PreparedStatement queryStmt = connection.prepareStatement(sql);
 
-            int offset = (page - 1) * pageSize; //because we define page to start at one however sql server expects 0 offset
+            //because we define page to start at one however sql server expects 0 offset
+            int offset = (page - 1) * pageSize;
             
             queryStmt.setString(1, likeStatement);
             queryStmt.setString(2, likeStatement);
@@ -110,11 +117,11 @@ public class DAOBlog extends DBContext {
                 count = countRs.getInt(1);
             }
 
-            return new QueryResult(count, blogs);
+            return new QueryResult(count, pageSize, blogs);
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
 
-        return new QueryResult(0, new ArrayList<>());
+        return new QueryResult(0, 0, new ArrayList<>());
     }
 }
