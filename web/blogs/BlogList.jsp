@@ -42,12 +42,12 @@
                             <div class="card blog-item">
                                 <img src="public/images/blogimg.jpg" class="card-img-top blog-item-img" alt="...">
                                 <div class="card-body d-flex flex-column">
-                                    <h4 class="card-title">${blog.getTitle()}</h4>
+                                    <h4 class="card-title">${blog.getBlogTitle()}</h4>
                                     <h6 class="card-subtitle text-body-secondary">
                                         <i class="bi bi-person-circle"></i>
-                                        <b>Adam Smith</b>
+                                        <b>${blog.getAuthorFullName()}</b>
                                     </h6>
-                                    <p class="card-text text-body-secondary mt-3">${blog.getContent()}</p>
+                                    <p class="card-text text-body-secondary mt-3">${blog.getPostBrief()}</p>
                                     <a href="#" class="btn blog-read-more btn-primary align-self-end">Read More</a>
                                 </div>
                             </div>

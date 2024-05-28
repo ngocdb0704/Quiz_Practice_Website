@@ -108,7 +108,7 @@ public class DAORegistration extends DBContext {
             PreparedStatement pre = connection.prepareStatement(sql);
             pre.setString(1, email);
             pre.setString(2, status);
-            pre.setString(3, inputSearch + "%");
+            pre.setString(3,"%" + inputSearch + "%");
             ResultSet rs = pre.executeQuery();
             vector = multiPurposeVector(rs);
         } catch (SQLException ex) {
@@ -136,7 +136,7 @@ public class DAORegistration extends DBContext {
         try {
             PreparedStatement pre = connection.prepareStatement(sql);
             pre.setString(1, email);
-            pre.setString(2, inputSearch + "%");
+            pre.setString(2, "%" + inputSearch + "%");
             ResultSet rs = pre.executeQuery();
             vector = multiPurposeVector(rs);
         } catch (SQLException ex) {

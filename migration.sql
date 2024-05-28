@@ -139,27 +139,18 @@ CREATE TABLE [dbo].[User](
 	[IsActive] [bit])
 
 GO
+
 CREATE TABLE [dbo].[ProfilePicture](
-	[UserId] [int] NOT NULL primary key,
-	[Image] [varbinary] (MAX),
-	constraint [UserId] foreign key ([UserId]) references [dbo].[User](UserId))
+	[UserId] [int] primary key foreign key references [dbo].[User](UserId),
+	[Image] [varbinary](max))
 
 GO
 CREATE TABLE [dbo].[ResetToken](
-	[TokenId] [int] NOT NULL primary key,
-	[UserId] [int] NOT NULL foreign key references [dbo].[User](UserId),
-	[Token] [varchar] (255),
+	[UserId] [int] primary key foreign key references [dbo].[User](UserId),
+	[Token] [varchar](255),
 	[ValidTo] [datetime])
 
 GO
-<<<<<<< HEAD
-CREATE TABLE [dbo].[Subject](
-	[SubjectId] [int] NOT NULL primary key,
-	[SubjectName] [varchar] (25)NOT NULL,
-	[SubjectCategory] [varchar] (25) NOT NULL,
-	[SubjectImage] [varchar] (255)
-)
-=======
 
 CREATE TABLE [dbo].[SubjectCategory](
 	[SubjectCategoryId] [int] IDENTITY(1,1) primary key,
@@ -177,28 +168,10 @@ CREATE TABLE [dbo].[Subject](
 	[SubjectUpdatedDate] [date],
 	[SubjectTagLine] [varchar](50),
 	[SubjectThumbnail] [varchar](255))
->>>>>>> origin/ngocBranch
 
 GO
+
 CREATE TABLE [dbo].[Package](
-<<<<<<< HEAD
-	[PackageId] [int] NOT NULL primary key,
-	[PackageName] [varchar] (25)NOT NULL,
-	[PackagePrice] [float] NOT NULL
-)
-GO
-CREATE TABLE [dbo].[Registration](
-	[RegistrationId] [int] NOT NULL primary key,
-	[UserId] [int] NOT NULL foreign key references [dbo].[User](UserId),
-	[SubjectId] [int] NOT NULL foreign key references [dbo].[Subject](SubjectId),
-	[RegistrationTime] [date] NOT NULL,
-	[PackageId] [int] NOT NULL foreign key references [dbo].[Package](PackageId),
-	[TotalCost] [float] NOT NULL,
-	[Status] [varchar](25),
-	[ValidFrom] [date],
-	[ValidTo] [date]
-)
-=======
 	[PackageId] [int] IDENTITY(1,1) primary key,
 	[SubjectId] [int] foreign key references [dbo].[Subject](SubjectId),
 	[PackageName] [nvarchar](50),
@@ -235,5 +208,6 @@ CREATE TABLE [dbo].[Blog](
 	[BlogCategoryId] [int] foreign key references [dbo].[BlogCategory](BlogCategoryId),
 	[BlogTitle] [nvarchar](512),
 	[UpdatedTime] [datetime],
-	[PostText] [ntext])
->>>>>>> origin/ngocBranch
+	[PostBrief] [nvarchar](2048),
+	[PostText] [ntext]
+)
