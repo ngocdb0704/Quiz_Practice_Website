@@ -7,12 +7,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="java.util.Vector"%>
 <%@page import="app.entity.Registration"%>
-<%@page import="app.entity.Subject"%>
-<%@page import="app.utils.FormatData"%>
-<%@page import="app.dal.DAOPackage"%>
-<%@page import="app.entity.Package"%>
-
-
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!DOCTYPE html>
 <html>
@@ -25,185 +20,116 @@
     </head>
     <body>
         <%@include file="/common/header.jsp" %>
-            <%
-                DAOPackage daoPackage = new DAOPackage();
-                FormatData dataFormatter = new FormatData();
-                String registDate, validF, validT;
-                String statusAppear="";
-                String placeHolder ="";
-                String disableButton = "";
-                int i=0;
-                String value= (String) request.getAttribute("value");
-                String prevStatus = (String) request.getAttribute("prevStatus");
-                if(value == null) value = "";
-                if(prevStatus == null) prevStatus = "";
-                if(value.equals("")) placeHolder = "All Subjects";
-            %>
-            <div class="row">
-                <aside class="col-3 sbar">
-                    <!-- fix search bug: if user search without filter, 
-                    the index of filter will be 0 which results in array index = -1
-                    sol: move filter element out of form, form will get the previous filter
-                    if the select remains unchanged-->
-                    <form class="row"  action="RegistrationController" method="get">
-                        <div class="mb-3 mt-2">
-                            <div class="row card-body container justify-content-center" 
-                                 id="inputContainer">
-                                <label for="searchText">Search Subject:</label>
-                                <input class="col-8" type="text" id="searchText"
-                                       placeholder="<%=placeHolder%>" 
-                                       value="<%=value%>" name="search">
-                                <input type="hidden" name="subjectStatus" value="<%=prevStatus%>">
-                                <button class="col-3" type="submit" 
-                                        name="submit" value="submit">
-                                    <i class="bi bi-search"></i>
-                                </button>
-                            </div>
-                        </div>
+        <div class="row">
+            <aside class="col-3 sbar">
+                <div class="row mb-3">
+                    <c:set var="cat" value="${requestScope.list}"/>
+                    <c:set var="check" value="${requestScope.check}"/>
+                    <form action="RegistrationController">
+                        <c:forEach begin="0" end="${cat.size()-1}" var="i">
+                            <ul class="list-group list-group-flush">
+                                <c:if test="${cat.get(i).getCateParentId()==0}">
+                                    <li class="list-group-item">
+                                        <input type="checkbox" name="idTier1" 
+                                               value="${cat.get(i).getCateId()}"
+                                               ${check[i]?"checked":""}
+                                               onclick="this.form.submit()"/>
+                                        ${cat.get(i).getCateName()}
+                                        <c:set var="parentTier1" value="${cat.get(i).getCateId()}"/>
+                                        <c:forEach begin="0" end="${cat.size()-1}" var="ii">
+                                            <ul class="list-group list-group-flush">
+                                                <c:if test="${cat.get(ii).getCateParentId()==parentTier1}">
+                                                    <li class="list-group-item">
+                                                        <input type="checkbox" name="idTier2" 
+                                                               value="${cat.get(ii).getCateId()}"
+                                                               ${check[ii]?"checked":""}
+                                                               onclick="this.form.submit()"/>
+                                                        ${cat.get(ii).getCateName()}
+                                                        <c:set var="parentTier2" value="${cat.get(ii).getCateId()}"/>
+                                                        <c:forEach begin="0" end="${cat.size()-1}" var="iii">
+                                                            <ul class="list-group list-group-flush">
+                                                                <c:if test="${cat.get(iii).getCateParentId()==parentTier2}">
+                                                                    <li class="list-group-item">
+                                                                        <input type="checkbox" name="idTier3" 
+                                                                               value="${cat.get(iii).getCateId()}"
+                                                                               ${check[iii]?"checked":""}
+                                                                               onclick="this.form.submit()"/>
+                                                                        ${cat.get(iii).getCateName()}
+                                                                    </li>
+                                                                </c:if>
+                                                            </ul>
+                                                        </c:forEach>
+                                                    </li>
+                                                </c:if>
+                                            </ul>
+                                        </c:forEach>
+                                    </li>
+                                </c:if>
+                            </ul>
+                        </c:forEach>
                     </form>
-                    <div class="row mb-3">
-                        <label for="subjectCategory">Registration Status:</label>
-                        <%
-                            Vector<String> vecStat = (Vector<String>) request.getAttribute("select"); 
-                        %>
-                        <select class="col-10 form-select" name="subjectStatus" 
-                                id="subjectCategory" 
-                                onchange="sendRedirect(this, '<%=value%>')">
-                            <%
-                                    //show all elements in vector
-                                    for(String status:vecStat){
-                            %>
-                            <option value="<%=i%><%=status%>">
-                                <%=status%>
-                            </option>
-                            <%
-                                i++;
-                                }%>
-                        </select>
-                        <a class="link-primary mt-3"
-                           href="ContactUs.jsp" target="_blank"
-                           rel="noopener noreferrer">Contact Us</a>
-                    </div>
-                </aside>
-                <div class="col-9 mt-3">
-                    <h1>List of Registrations</h1>
-                    <ul class="list-group">
-                        <%
-                            Vector<Registration> registrationVector = (Vector<Registration>) request.getAttribute("data");
-                            for(Registration regist:registrationVector){
-                            registDate = dataFormatter.dateFormat(regist.getRegistrationTime());
-                            validF = dataFormatter.dateFormat(regist.getValidFrom());
-                            validT= dataFormatter.dateFormat(regist.getValidTo());
-                            if(regist.getStatus().equals("Submitted")){
-                                disableButton = "";
-                                statusAppear = "badge text-bg-primary";
-                            }
-                            else{
-                                disableButton = "disabled";
-                                if(regist.getStatus().equals("Active")) statusAppear = "badge text-bg-success";
-                                if(regist.getStatus().equals("Cancelled")) statusAppear = "badge text-bg-danger";
-                                if(regist.getStatus().equals("Pending Approval")) statusAppear = "badge text-bg-warning";
-                                if(regist.getStatus().equals("Withdrawn")) statusAppear = "badge text-bg-secondary";
-                            }
-                        %>
+                </div>
+                <div class="row mb-3">
+                    <a class="link-primary mt-3"
+                       href="ContactUs.jsp" target="_blank"
+                       rel="noopener noreferrer">Contact Us</a>
+                </div>
+            </aside>
+            <div class="col-9 mt-3">
+                <h1>List of Registrations</h1>
+                <c:set var="page" value="${requestScope.page}"/>
+                <c:set var="filter" value="${requestScope.sendFilter}"/>
+                <nav>
+                    <ul class="pagination">
+                        <c:forEach begin="${1}" end="${requestScope.num}" var="i">
+                            <li class="page-item">
+                                <a class="page-link ${i==page?"active":""}" href="RegistrationController?${filter}page=${i}">${i}</a>
+                            </li>
+                        </c:forEach>
+                    </ul>
+                </nav>
+                <ul class="list-group">
+                    <c:forEach items="${requestScope.data}" var="p">
                         <!-- Change cards' appearance -->
                         <li class="list-group-item list-group-item-info">
                             <div class="card mb-3">
                                 <div class="row g-0">
                                     <div class="col-md-4">
-                                        <img src="<%=regist.getSubjectImg()%>"
+                                        <img src="${p.subjectImg}"
                                              class="img-fluid rounded-start" 
                                              width="300" height="180">
                                     </div>
                                     <div class="col-md-6">
                                         <div class="card-body">
-                                            <h5 class="card-title"><%=regist.getSubjectName()%></h5>
+                                            <h5 class="card-title">${p.subjectName}</h5>
                                             <h6>
-                                                <span>ID:<%=regist.getRegistrationId()%></span>  <span class="<%=statusAppear%>">Status: <%=regist.getStatus()%></span>
+                                                <span>ID:${p.registrationId}</span>  <span>Status: ${p.status}</span>
                                             </h6>
                                             <ul class="list-group list-group-flush">
                                                 <li class="list-group-item">
-                                                    <span>Registered: <%=regist.getPackageName()%></span>
-                                                    <span>on <%=registDate%></span>
+                                                    <span>Registered: ${p.packageName}</span>
+                                                    <span>on ${p.registrationTime}</span>
                                                 </li>
                                                 <li class="list-group-item">
-                                                    <span>Valid from <%=validF%></span>
-                                                    <span class="ml-2">to <%=validT%></span>
+                                                    <span>Valid from 
+                                                        ${p.validFrom==null? "N/A":p.validFrom}
+                                                    </span>
+                                                    <span class="ml-2">to ${p.validTo==null? "N/A":p.validTo}</span>
                                                 </li>
                                             </ul>
                                         </div>
                                     </div>
                                     <div class="col-md-2 mt-md-5">
-                                        <h5><%=regist.getTotalCost()%>$</h5>
+                                        <h5>${p.totalCost}$</h5>
                                         <!-- Button trigger modal -->
                                         <!-- Remove onclick, if status is not Submitted then disabled -->
-                                        <button type="button" class="btn btn-warning"
-                                                data-bs-toggle="modal" 
-                                                data-bs-target=".modal<%=regist.getRegistrationId()%>"
-                                                <%=disableButton%>>
-                                            Edit
-                                        </button>
-                                        <!-- Modal -->
-                                        <div class="modal fade modal<%=regist.getRegistrationId()%>" tabindex="-1" aria-hidden="true">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="exampleModalLabel">Subject Register</h5>
-                                                    </div>
-                                                    <form action="RegistrationController" method="post">
-                                                        <div class="modal-body">
-                                                            <input type="hidden" name="service" value="update">
-                                                            <input type="hidden" name="registId" value="<%=regist.getRegistrationId()%>">
-                                                            <label for="SubjectTitle">Subject Title:</label><br>
-                                                            <input type="text" id="SubjectTitle" 
-                                                                   name="sname" 
-                                                                   value="<%=regist.getSubjectName()%>" readonly><br>
-                                                            <label for="packageList">Choose a package: </label> <br>
-                                                            <%
-                                                                Vector<Package> subjectPackage = daoPackage.getSubjectPackage(regist.getSubjectName());
-                                                                Package selectedPackage = daoPackage.getByPackageNameSubjectName(regist.getPackageName(),regist.getSubjectName());
-                                                            %>
-                                                            <select class="form-select" name="packName"
-                                                                    id="packageList">
-                                                                <option value="<%=selectedPackage.getPackageId()%>">
-                                                                    <%=selectedPackage.getPackageName()%> for only <%=selectedPackage.getSalePrice()%>$
-                                                                </option>
-                                                                <%
-                                                                        //show all elements in vector
-                                                                        for(Package pack:subjectPackage){
-                                                                            if(pack.getPackageId() != selectedPackage.getPackageId()){
-                                                                %>
-                                                                <option value="<%=pack.getPackageName()%>">
-                                                                    <%=pack.getPackageName()%> for only <%=pack.getSalePrice()%>$
-                                                                </option>
-                                                                <%
-                                                                    }
-                                                                        }%>
-                                                            </select> <br>
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                            <input type="submit" class="btn btn-primary" value="Save Changes">
-                                                        </div>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div> 
-                                        <!-- Remove onclick, if status is not Submitted then disabled -->
-                                        <button class="btn btn-danger" 
-                                                onclick="cancellation('<%=regist.getStatus()%>', '<%=regist.getRegistrationId()%>')"
-                                                <%=disableButton%>>
-                                            Cancel
-                                        </button>
+                                        <!-- add button below -->
                                     </div>
                                 </div>
                             </div>
                         </li>
-                        <%
-                            }
-                        %>
-                    </ul>
-                </div>
+                    </c:forEach>
+                </ul>
             </div>
         </div>
         <%@include file="/common/footer.jsp" %>

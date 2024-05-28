@@ -154,7 +154,8 @@ GO
 
 CREATE TABLE [dbo].[SubjectCategory](
 	[SubjectCategoryId] [int] IDENTITY(1,1) primary key,
-	[SubjectCategoryName] [varchar](50))
+	[SubjectCategoryName] [varchar](50),
+	[SubjectParentCategory] int)
 
 GO
 
@@ -192,7 +193,6 @@ CREATE TABLE [dbo].[Registration](
 	[UserId] [int] foreign key references [dbo].[User](UserId),
 	[RegistrationTime] [date],
 	[PackageId] [int] foreign key references [dbo].[Package](PackageId),
-	[TotalCost] [float],
 	[RegistrationStatusId] [int] foreign key references [dbo].[RegistrationStatus](RegistrationStatusId),
 	[ValidFrom] [date],
 	[ValidTo] [date])
