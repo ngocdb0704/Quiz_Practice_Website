@@ -17,59 +17,24 @@ if(vector == null ){%>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 <link href="css/style.css" rel="stylesheet" type="text/css"/>
-<style>
-    table {
-    margin: 0 auto;  /* Centers the table horizontally */
-    width: 80%;      /* Adjust the width as needed */
-}
-.dropdown {
-    position: relative;
-    display: inline-block; /* or block if you want full width */
-}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+<html>
+<head>
+    <title>Customer Management</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> 
+    <link href="css/style.css" rel="stylesheet" type="text/css"/> 
+</head>
+<body>
 
-.dropbtn {
-    background-color: #f1f1f1; /* Match your current background */
-    color: blue; /* Match your link color */
-    padding: 10px;
-    font-size: 16px;
-    border: none;
-    cursor: pointer;
-}
+<div class="container"> 
+    <header>
+        <h1>Customer Management</h1>
+        <a href="CustomerController?service=listAll" class="btn btn-primary">Home</a>
+        <a href="insertCustomer.html" class="btn btn-success">New User</a>
+    </header>
 
-.dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: #f1f1f1;
-    min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1;
-}
-
-.dropdown-content a {
-    color: black;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-}
-
-/* Show the dropdown menu on hover */
-.dropdown:hover .dropdown-content {
-    display: block;
-}
-</style>
-<div>
-<a href="CustomerController?service=listAll">Home</a>
-<div>
-<form method="get">
-    <a href="insertCustomer.html">New User</a>
-</form>
-    </div>
-</div>
-
-
-
-<div>
-    <div class="dropdown">
+    <section class="filters">
+        <div class="dropdown">
     <button class="dropbtn">Sort By</button>
     <div class="dropdown-content">
         <a href="CustomerController?service=sortbyID">Sort by ID</a>
@@ -93,35 +58,42 @@ if(vector == null ){%>
            <a href="CustomerController?service=admfilter">Role - Admin</a>
     </div>
         </div>
-
-    <form action="CustomerController?service=searchByname" method="post">
+    </section>
+    
+    <section class="search-bar">
+       <form action="CustomerController?service=searchByname" method="post">
         <div class="input-group input-group-sm">
-            <input  name="input" type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm" placeholder="Search by fullname">
-            <button type="submit" class="btn btn-secondary btn-number">
-                Search
-            </button>
+        <div class="input-group-prepend"> 
+            <span class="input-group-text"><i class="bi bi-search"></i></span>
         </div>
+        <input name="input" type="text" class="form-control" placeholder="Search by fullname">
+        <button type="submit" class="btn btn-primary">Search</button>
+    </div>
+           
     </form>
     <form action="CustomerController?service=searchByemail" method="post">
         <div class="input-group input-group-sm">
-            <input  name="input2" type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm" placeholder="Search by mail">
-            <button type="submit" class="btn btn-secondary btn-number">
-                Search
-            </button>
+        <div class="input-group-prepend"> 
+            <span class="input-group-text"><i class="bi bi-search"></i></span>
         </div>
+        <input name="input2" type="text" class="form-control" placeholder="Search by mail">
+        <button type="submit" class="btn btn-primary">Search</button>
+    </div>
     </form>
     <form action="CustomerController?service=searchByphone" method="post">
         <div class="input-group input-group-sm">
-            <input  name="input3" type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm" placeholder="Search by phone">
-            <button type="submit" class="btn btn-secondary btn-number">
-                Search
-            </button>
+        <div class="input-group-prepend"> 
+            <span class="input-group-text"><i class="bi bi-search"></i></span>
         </div>
+        <input name="input3" type="text" class="form-control" placeholder="Search by phone">
+        <button type="submit" class="btn btn-primary">Search</button>
+    </div>
     </form>
-</div>
-<div>
-    <table border="1" class="table">
-        <% String titleTable=(String)request.getAttribute("titleTable");%>
+    </section>
+
+    <main>
+        <table class="table table-striped table-bordered">
+          <% String titleTable=(String)request.getAttribute("titleTable");%>
         <caption><%=titleTable%></caption>
         <tr>
             <th>UserID</th>
@@ -152,6 +124,12 @@ if(vector == null ){%>
             <td><a href="CustomerController?service=view&id=<%=cus.getUserId()%>">View</a></td>
         </tr>
         <%}%>
-    </table>
-</div>
+        </table>
+    </main>
+
+</div> 
+
+</body>
+</html>
+
 <%}%>
