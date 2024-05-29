@@ -1,4 +1,4 @@
-<%@page import="java.util.List, java.util.ArrayList, app.entity.Slide, app.dal.DAOSlide, app.entity.Subject, app.dal.DAOSubject, app.dal.DAOBlog, app.entity.BlogInformation" %>
+<%@page import="java.util.List, java.util.ArrayList, app.entity.Slide, app.dal.DAOSlide, app.entity.Subject, app.dal.DAOSubject, app.dal.DAOBlog, app.entity.Blog" %>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -99,7 +99,7 @@
         
         <div class="post-list">
             Sort by <button class="btn btn-outline-primary disabled">Hot <i class="bi bi-fire"></i></button> <button class="btn btn-outline-primary active">New <i class="bi bi-bar-chart-line"></i></button>
-            <%for (BlogInformation blog: daoBlog.getBlogListingsPaginated(1, 5)) {%>
+            <%for (Blog blog: daoBlog.getEnoughToDisplay(5)) {%>
             <div class="card">
                 <div class="card-body">
                     <img class="profilePic" src="./public/images/anonymous-user.webp">

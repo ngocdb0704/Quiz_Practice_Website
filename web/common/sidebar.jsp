@@ -6,37 +6,38 @@
     </div>
     <div class="offcanvas-body px-0">
         <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-start" id="menu">
-            <!--li class="nav-item">
-                <a href="#" class="nav-link text-truncate">
-                    <i class="fs-5 bi-house"></i><span class="ms-1 d-none d-sm-inline">Home</span>
-                </a>
-            </li-->
-            <li>
-                <a href="#" class="nav-link text-truncate">
-                    <i class="fs-5 bi-table"></i><span class="ms-1 d-none d-sm-inline">Orders</span></a>
-            </li>
-            <li class="dropdown">
-                <a href="#" class="nav-link dropdown-toggle  text-truncate" id="contacts" data-bs-toggle="contacts" aria-expanded="true">
-                    <i class="fs-5 bi-bootstrap"></i><span class="ms-1 d-none d-sm-inline">Bootstrap</span>
-                </a>
-                <ul class="dropdown-menu text-small shadow" aria-labelledby="contacts">
-                    <li><a class="dropdown-item" href="#">New project...</a></li>
-                    <li><a class="dropdown-item" href="#">Settings</a></li>
-                    <li><a class="dropdown-item" href="#">Profile</a></li>
-                    <li>
-                        <hr class="dropdown-divider">
-                    </li>
-                    <li><a class="dropdown-item" href="#">Sign out</a></li>
-                </ul>
-            </li>
-            <li>
-                <a href="#" class="nav-link text-truncate">
-                    <i class="fs-5 bi-grid"></i><span class="ms-1 d-none d-sm-inline">Products</span></a>
-            </li>
-            <li>
-                <a href="#" class="nav-link text-truncate">
-                    <i class="fs-5 bi-people"></i><span class="ms-1 d-none d-sm-inline">Customers</span> </a>
-            </li>
+            <div class="accordion w-100" id="accordionExample">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingOne">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            Top posts
+                        </button>
+                    </h2>
+                    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            <div>Top post #1</div>
+                            <div>Top post #2</div>
+                            <div>Top post #3</div>
+                            <div>Top post #4</div> 
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingTwo">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            Contacts
+                        </button>
+                    </h2>
+                    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            <div>Contact #1</div>
+                            <div>Contact #2</div>
+                            <div>Contact #3</div>
+                            <div>Contact #4</div>   
+                        </div>
+                    </div>
+                </div>
+            </div>
         </ul>
     </div>
 </div>

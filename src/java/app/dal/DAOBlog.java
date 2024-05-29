@@ -1,6 +1,7 @@
 package app.dal;
 
 import app.entity.BlogInformation;
+import app.entity.Blog;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -67,5 +68,25 @@ public class DAOBlog extends DBContext {
         }
 
         return 0;
+    }
+    
+    public List<Blog> getEnoughToDisplay(int ammoutOfBlogs) {
+        List<Blog> Out = new ArrayList<>();
+        String sql = "SELECT TOP (?) * FROM Blog";
+        PreparedStatement pre;
+        try {
+            pre = connection.prepareStatement(sql);
+            pre.setInt(1, ammoutOfBlogs);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                Blog a = new Blog(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getString(4), rs.getString(5), rs.getString(6));
+                Out.add(a);
+            }
+        } catch (SQLException ex) {System.out.println(ex);}
+        return Out;
+    }
+    
+    public static void main(String[] args) {
+        System.out.println(new DAOBlog().getEnoughToDisplay(3).size());
     }
 }
