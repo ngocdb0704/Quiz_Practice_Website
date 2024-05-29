@@ -48,23 +48,33 @@ public class RegistrationController extends HttpServlet {
         int numPerPage = 4;
         int start;
         int end;
+        int i;
         //list of checked categories from form on jsp
         String[] parentTier1Raw = request.getParameterValues("idTier1");
         String[] parentTier2Raw = request.getParameterValues("idTier2");
         String[] parentTier3Raw = request.getParameterValues("idTier3");
+        String[] statusRaw = request.getParameterValues("idStatus");
+        String inputKey = request.getParameter("key");
         int[] parentTier1 = null;
         int[] parentTier2 = null;
         int[] parentTier3 = null;
-        parentTier1 = cookRawParent(parentTier1Raw, parentTier1);
-        parentTier2 = cookRawParent(parentTier2Raw, parentTier2);
-        parentTier3 = cookRawParent(parentTier3Raw, parentTier3);
+        int[] status = null;
+        parentTier1 = cookRawIngredient(parentTier1Raw, parentTier1);
+        parentTier2 = cookRawIngredient(parentTier2Raw, parentTier2);
+        parentTier3 = cookRawIngredient(parentTier3Raw, parentTier3);
+        status = cookRawIngredient(statusRaw, status);
         Vector<SubjectCategory> listOfCategory = daoSubject.getFilterList();
+        Vector<Integer> listOfStatus = daoRegistration.getStatusId();
         boolean[] checkId = new boolean[listOfCategory.size()];
+        boolean[] checkStatusId = new boolean[listOfStatus.size()];
         //check which category check box is ticked 
-        for (int i = 0; i < checkId.length; i++) {
+        for (i = 0; i < checkId.length; i++) {
             checkId[i] = isCheck(listOfCategory.get(i).getCateId(), parentTier1)
                     || isCheck(listOfCategory.get(i).getCateId(), parentTier2)
                     || isCheck(listOfCategory.get(i).getCateId(), parentTier3);
+        }
+        for (i = 0; i < checkStatusId.length; i++) {
+            checkStatusId[i] = isCheck(listOfStatus.get(i), status);
         }
         //check session's attribute for email
         if (session.getAttribute("userEmail") != null) {
@@ -81,7 +91,8 @@ public class RegistrationController extends HttpServlet {
         // check service's value
         if (service.equals("listAll")) {
             Vector<Registration> registrationVector = daoRegistration.getById(
-                    userEmail, parentTier1, parentTier2, parentTier3);
+                    userEmail, parentTier1, parentTier2, parentTier3,
+                    status, inputKey);
             int size = registrationVector.size();
             //number of pages for pagination, each page has 4 cards of registration
             int num = (size % 4 == 0 ? (size / 4) : ((size / 4) + 1));
@@ -98,18 +109,25 @@ public class RegistrationController extends HttpServlet {
             end = Math.min(page * numPerPage, size);
             Vector<Registration> responseVector = daoRegistration.getVectorByPage(registrationVector, start, end);
             String sendFilter = sendFilter(parentTier1, parentTier2, parentTier3);
+            float totalCost = daoRegistration.getTotalCost(userEmail);
             request.setAttribute("data", responseVector);
             request.setAttribute("page", page);
             request.setAttribute("num", num);
+            request.setAttribute("total", totalCost);
+            request.setAttribute("key", inputKey);
             request.setAttribute("list", listOfCategory);
+            request.setAttribute("listOfStatus", listOfStatus);
             request.setAttribute("check", checkId);
+            request.setAttribute("checkStatus",checkStatusId);
             request.setAttribute("sendFilter", sendFilter);
             redirectTo = "/MyRegistration.jsp";
             dispath(request, response, redirectTo);
         }
         // check service's value
         if (service.equals("cancel")) {
-
+            String removeKey = request.getParameter("cancelId");
+            int removeId = Integer.parseInt(removeKey);
+            int n = daoRegistration.removeRegistration(removeId);
             service = listAll;
             response.sendRedirect("RegistrationController");
         }
@@ -160,7 +178,8 @@ public class RegistrationController extends HttpServlet {
         }
         return url;
     }
-    private int[] cookRawParent(String[] raw, int[] parent) {
+    //little joke, transform all valid string[] to int[] 
+    private int[] cookRawIngredient(String[] raw, int[] parent) {
         //check if any parent's checkbox is checked
         if (raw != null) {
             parent = new int[raw.length];

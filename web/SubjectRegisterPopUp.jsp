@@ -4,6 +4,7 @@
     Author     : admin
 --%>
 
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 <!DOCTYPE html>
@@ -12,8 +13,11 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     </head>
     <body>
-        <h1>
-            Hi
-        </h1>
+        <div class="row">
+            <c:set var="registEdit" value="${requestScope.registId}"/>
+            <form>
+                <h1>Register Subject Popup</h1>
+            </form>
+        </div>
     </body>
 </html>

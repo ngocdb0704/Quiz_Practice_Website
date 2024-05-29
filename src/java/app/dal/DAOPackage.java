@@ -70,6 +70,9 @@ public class DAOPackage extends DBContext{
     }
     public static void main(String[] args) {
         DAOPackage dao = new DAOPackage();
-        
+        Vector<Package> vec = dao.getSubjectPackage("Geometry Basics to Advanced");
+        for(int i=0; i<vec.size(); i++){
+            System.out.println(vec.get(i).getPackageName());
+        }
     }
 }

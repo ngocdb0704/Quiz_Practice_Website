@@ -21,6 +21,46 @@ import app.entity.Package;
  * @author admin
  */
 public class DAORegistration extends DBContext {
+    
+    public Registration getSingleRegistration(int id, String email){
+        Vector<Registration> vector = new Vector<>();
+        String sql = """
+                    select r.RegistrationId, s.SubjectTitle,
+                    r.RegistrationTime, p.PackageName, p.SalePrice,
+                    rs.RegistrationStatusName,
+                    r.ValidFrom, r.ValidTo, s.SubjectThumbnail 
+                    from Registration r
+                    join [User] u on u.UserId = r.UserId
+                    join [Package] p on p.PackageId = r.PackageId
+                    join [Subject] s on s.SubjectId = p.SubjectId
+                    join [RegistrationStatus] rs on rs.RegistrationStatusId = r.RegistrationStatusId
+                    where r.RegistrationId = ? and u.Email = ?""";
+        try {
+            PreparedStatement pre = connection.prepareStatement(sql);
+            pre.setInt(1, id);
+            pre.setString(2,email);
+            ResultSet rs = pre.executeQuery();
+            vector = multiPurposeVector(rs);
+        } catch (SQLException ex) {
+            Logger.getLogger(DAORegistration.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return vector.get(0);
+    }
+    public Vector<Integer> getStatusId() {
+        Vector<Integer> vector = new Vector<>();
+        String sql = "select * from RegistrationStatus";
+        try {
+            PreparedStatement pre = connection.prepareStatement(sql);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                int statusId = rs.getInt(1);
+                vector.add(statusId);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DAORegistration.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return vector;
+    }
 
     public Vector<Registration> multiPurposeVector(ResultSet rs) {
         Vector<Registration> vector = new Vector<>();
@@ -56,6 +96,19 @@ public class DAORegistration extends DBContext {
         return outputVec;
     }
 
+    public String addStatusToSQL(int[] status) {
+        String sql = "";
+        sql += " and r.RegistrationStatusId in (";
+        for (int i = 0; i < status.length; i++) {
+            sql += status[i] + ",";
+        }
+        if (sql.endsWith(",")) {
+            sql = sql.substring(0, sql.length() - 1);
+        }
+        sql += ")";
+        return sql;
+    }
+
     public String addTierToSQL(int[] parent, int tier, int flag) {
         String sql = "";
         if (flag == 0) {
@@ -89,7 +142,9 @@ public class DAORegistration extends DBContext {
     }
 
     public Vector<Registration> getById(String email,
-            int[] parentTier1, int[] parentTier2, int[] parentTier3) {
+            int[] parentTier1, int[] parentTier2,
+            int[] parentTier3, int[] statusList,
+            String inputKey) {
         int flagAND = 0;
         String sql = """
                     with CategoryHierarchy as 
@@ -118,6 +173,16 @@ public class DAORegistration extends DBContext {
                     left join CategoryHierarchy ch on ch.SubjectCategoryId = sc.SubjectParentCategory
                     where  u.Email = ? """;
         Vector<Registration> vector = new Vector<>();
+        if (statusList != null) {
+            sql += addStatusToSQL(statusList);
+        }
+        if (inputKey != null) {
+            inputKey = inputKey.replace("!", "!!")
+                    .replace("%", "!%")
+                    .replace("_", "!_")
+                    .replace("[", "![");
+            sql += " and s.SubjectTitle like ? ESCAPE '!' ";
+        }
         if (parentTier3 != null) {
             sql += addTierToSQL(parentTier3, 3, flagAND);
             if (sql.contains("and")) {
@@ -133,9 +198,11 @@ public class DAORegistration extends DBContext {
         if (parentTier1 != null) {
             sql += addTierToSQL(parentTier1, 1, flagAND);
         }
+        sql += " order by rs.RegistrationStatusId";
         try {
             PreparedStatement pre = connection.prepareStatement(sql);
             pre.setString(1, email);
+            if(inputKey != null) pre.setString(2, "%"+ inputKey +"%");
             ResultSet rs = pre.executeQuery();
             vector = multiPurposeVector(rs);
         } catch (SQLException ex) {
@@ -143,7 +210,28 @@ public class DAORegistration extends DBContext {
         }
         return vector;
     }
-
+    public float getTotalCost(String email){
+        float total = 0;
+        String sql = """
+                    select p.SalePrice from Registration r 
+                    join [User] u on u.UserId = r.UserId
+                    join [Package] p on p.PackageId = r.PackageId
+                    where  u.Email = ? 
+                    and r.RegistrationStatusId = 1
+                    """;
+        try {
+            PreparedStatement pre = connection.prepareStatement(sql);
+            pre.setString(1, email);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                float totalCost = rs.getFloat(1);
+                total += totalCost;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DAORegistration.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return total;
+    }
     public Vector<Registration> getAll(String email) {
         String sql = """
                     select r.RegistrationId, s.SubjectTitle,
@@ -205,7 +293,6 @@ public class DAORegistration extends DBContext {
         DAORegistration dao = new DAORegistration();
         int[] lmao = new int[1];
         lmao[0] = 2;
-        Vector<Registration> vec = dao.getById("ngocdbhe182383@fpt.edu.vn", lmao, null, null);
-        System.out.println(vec.get(0).getSubjectName());
+        System.out.println(dao.getTotalCost("ngocdbhe182383@fpt.edu.vn"));
     }
 }

@@ -15,8 +15,8 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>My Registration</title>
         <%@include file="/common/ImportBootstrap.jsp" %>
-        <script src="public/js/bootstrap/MyRegistration.js"></script>
         <link rel="stylesheet" href="public/css/bootstrap/MyRegistration.css"/>
+        <script src="public/js/MyRegistration.js"></script>
     </head>
     <body>
         <%@include file="/common/header.jsp" %>
@@ -25,48 +25,112 @@
                 <div class="row mb-3">
                     <c:set var="cat" value="${requestScope.list}"/>
                     <c:set var="check" value="${requestScope.check}"/>
+                    <c:set var="key" value="${requestScope.key}"/>
+                    <c:set var="status" value="${requestScope.listOfStatus}"/>
+                    <c:set var="checkStatus" value="${requestScope.checkStatus}"/>
                     <form action="RegistrationController">
-                        <c:forEach begin="0" end="${cat.size()-1}" var="i">
-                            <ul class="list-group list-group-flush">
-                                <c:if test="${cat.get(i).getCateParentId()==0}">
-                                    <li class="list-group-item">
-                                        <input type="checkbox" name="idTier1" 
-                                               value="${cat.get(i).getCateId()}"
-                                               ${check[i]?"checked":""}
-                                               onclick="this.form.submit()"/>
-                                        ${cat.get(i).getCateName()}
-                                        <c:set var="parentTier1" value="${cat.get(i).getCateId()}"/>
-                                        <c:forEach begin="0" end="${cat.size()-1}" var="ii">
-                                            <ul class="list-group list-group-flush">
-                                                <c:if test="${cat.get(ii).getCateParentId()==parentTier1}">
-                                                    <li class="list-group-item">
-                                                        <input type="checkbox" name="idTier2" 
-                                                               value="${cat.get(ii).getCateId()}"
-                                                               ${check[ii]?"checked":""}
-                                                               onclick="this.form.submit()"/>
-                                                        ${cat.get(ii).getCateName()}
-                                                        <c:set var="parentTier2" value="${cat.get(ii).getCateId()}"/>
-                                                        <c:forEach begin="0" end="${cat.size()-1}" var="iii">
-                                                            <ul class="list-group list-group-flush">
-                                                                <c:if test="${cat.get(iii).getCateParentId()==parentTier2}">
-                                                                    <li class="list-group-item">
-                                                                        <input type="checkbox" name="idTier3" 
-                                                                               value="${cat.get(iii).getCateId()}"
-                                                                               ${check[iii]?"checked":""}
-                                                                               onclick="this.form.submit()"/>
-                                                                        ${cat.get(iii).getCateName()}
-                                                                    </li>
-                                                                </c:if>
-                                                            </ul>
-                                                        </c:forEach>
-                                                    </li>
-                                                </c:if>
-                                            </ul>
-                                        </c:forEach>
-                                    </li>
-                                </c:if>
-                            </ul>
-                        </c:forEach>
+                        <div class="mb-3">
+                            <div class="row card-body container justify-content-center">
+                                <label for="searchKey">Search Subject By Name</label>
+                                <input class="col-8" id="searchKey" type="text" value="${key}" name="key">
+                                <button class="col-3" onclick="this.form.submit()">
+                                    <i class="bi bi-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">
+                                Status
+                                <!-- status category tree -->
+                                <ul class="list-group list-group-flush">
+                                    <c:forEach begin="0" end="${status.size()-1}" var="index">
+                                        <li class="list-group-item">
+                                            <input class="form-check-input" type="checkbox" name="idStatus"
+                                                   value="${status.get(index)}"
+                                                   ${checkStatus[index]?"checked":""}
+                                                   onclick="this.form.submit()"
+                                                   >
+                                            <!-- get all node -->
+                                            <!-- set name to node -->
+                                            <c:choose>
+                                                <c:when test="${status.get(index)==1}">
+                                                    Submitted
+                                                </c:when>
+                                                <c:when test="${status.get(index)==2}">
+                                                    Pending Approval
+                                                </c:when>
+                                                <c:when test="${status.get(index)==3}">
+                                                    Active
+                                                </c:when>
+                                                <c:when test="${status.get(index)==4}">
+                                                    Withdrawn
+                                                </c:when>
+                                                <c:when test="${status.get(index)==5}">
+                                                    Inactive
+                                                </c:when>
+                                            </c:choose>
+                                        </li>
+                                    </c:forEach>
+                                </ul>
+                            </li>
+                        </ul>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">
+                                Subject Categories
+                                <!-- subject category tree -->
+                                <!-- tree level 0 -->
+                                <!-- get all node -->
+                                <c:forEach begin="0" end="${cat.size()-1}" var="i">
+                                    <ul class="list-group list-group-flush">
+                                        <!-- tree level 1 or parent tier 1 -->
+                                        <c:if test="${cat.get(i).getCateParentId()==0}">
+                                            <li class="list-group-item">
+                                                <input class="form-check-input"
+                                                       type="checkbox" name="idTier1" 
+                                                       value="${cat.get(i).getCateId()}"
+                                                       ${check[i]?"checked":""}
+                                                       onclick="this.form.submit()"/>
+                                                ${cat.get(i).getCateName()}
+                                                <c:set var="parentTier1" value="${cat.get(i).getCateId()}"/>
+                                                <!-- get all node -->
+                                                <c:forEach begin="0" end="${cat.size()-1}" var="ii">
+                                                    <ul class="list-group list-group-flush">
+                                                        <!-- tree level 2 or parent tier 2 -->
+                                                        <c:if test="${cat.get(ii).getCateParentId()==parentTier1}">
+                                                            <li class="list-group-item">
+                                                                <input class="form-check-input" 
+                                                                       type="checkbox" name="idTier2" 
+                                                                       value="${cat.get(ii).getCateId()}"
+                                                                       ${check[ii]?"checked":""}
+                                                                       onclick="this.form.submit()"/>
+                                                                ${cat.get(ii).getCateName()}
+                                                                <c:set var="parentTier2" value="${cat.get(ii).getCateId()}"/>
+                                                                <!-- get all node -->
+                                                                <c:forEach begin="0" end="${cat.size()-1}" var="iii">
+                                                                    <ul class="list-group list-group-flush">
+                                                                        <!-- tree level 3 or parent tier 3 -->
+                                                                        <c:if test="${cat.get(iii).getCateParentId()==parentTier2}">
+                                                                            <li class="list-group-item">
+                                                                                <input class="form-check-input"
+                                                                                       type="checkbox" name="idTier3" 
+                                                                                       value="${cat.get(iii).getCateId()}"
+                                                                                       ${check[iii]?"checked":""}
+                                                                                       onclick="this.form.submit()"/>
+                                                                                ${cat.get(iii).getCateName()}
+                                                                            </li>
+                                                                        </c:if>
+                                                                    </ul>
+                                                                </c:forEach>
+                                                            </li>
+                                                        </c:if>
+                                                    </ul>
+                                                </c:forEach>
+                                            </li>
+                                        </c:if>
+                                    </ul>
+                                </c:forEach>
+                            </li>
+                        </ul>
                     </form>
                 </div>
                 <div class="row mb-3">
@@ -76,11 +140,14 @@
                 </div>
             </aside>
             <div class="col-9 mt-3">
-                <h1>List of Registrations</h1>
+                <c:set var="totalCost" value="${requestScope.total}"/>
+                <h1><span>List of Registrations</span> </h1>
+                <h3><span>Total Cost: ${totalCost}$</span></h3>
                 <c:set var="page" value="${requestScope.page}"/>
                 <c:set var="filter" value="${requestScope.sendFilter}"/>
                 <nav>
                     <ul class="pagination">
+                        <!-- get all pages -->
                         <c:forEach begin="${1}" end="${requestScope.num}" var="i">
                             <li class="page-item">
                                 <a class="page-link ${i==page?"active":""}" href="RegistrationController?${filter}page=${i}">${i}</a>
@@ -88,7 +155,11 @@
                         </c:forEach>
                     </ul>
                 </nav>
+                <c:if test="${requestScope.data.size()<1}">
+                    <h3>Empty</h3>
+                </c:if>
                 <ul class="list-group">
+                    <!-- get all registrations that meet previous conditions: input key, filter -->
                     <c:forEach items="${requestScope.data}" var="p">
                         <!-- Change cards' appearance -->
                         <li class="list-group-item list-group-item-info">
@@ -103,7 +174,32 @@
                                         <div class="card-body">
                                             <h5 class="card-title">${p.subjectName}</h5>
                                             <h6>
-                                                <span>ID:${p.registrationId}</span>  <span>Status: ${p.status}</span>
+                                                <span>ID:${p.registrationId}</span>  
+                                                <span class="">
+                                                    Status: 
+                                                    <!-- change status's appearance -->
+                                                    <span class="
+                                                          <c:choose>
+                                                              <c:when test="${p.status=='Active'}">
+                                                                  badge text-bg-success
+                                                              </c:when>
+                                                              <c:when test="${p.status=='Pending Approval'}">
+                                                                  badge text-bg-warning
+                                                              </c:when>
+                                                              <c:when test="${p.status=='Withdrawn'}">
+                                                                  badge text-bg-secondary
+                                                              </c:when>
+                                                              <c:when test="${p.status=='Inactive'}">
+                                                                  badge text-bg-dark
+                                                              </c:when>
+                                                              <c:when test="${p.status=='Submitted'}">
+                                                                  badge text-bg-primary
+                                                              </c:when>
+                                                          </c:choose>
+                                                          ">
+                                                        ${p.status}
+                                                    </span>
+                                                </span>
                                             </h6>
                                             <ul class="list-group list-group-flush">
                                                 <li class="list-group-item">
@@ -124,6 +220,42 @@
                                         <!-- Button trigger modal -->
                                         <!-- Remove onclick, if status is not Submitted then disabled -->
                                         <!-- add button below -->
+                                        <!-- Remove onclick, if status is not Submitted then disabled -->
+                                        <button class="btn btn-danger" 
+                                                ${p.status.equals("Submitted")?"":"disabled"}
+                                                onclick="cancellation(${p.registrationId})">
+                                            Cancel
+                                        </button>
+                                        <!-- Button trigger modal -->
+                                        <!-- currently do nothing -->
+                                        <button type="button" class="btn btn-warning" 
+                                                data-bs-toggle="modal" 
+                                                data-bs-target=".modal${p.registrationId}">
+                                            Edit
+                                        </button>
+                                        <!-- Modal -->
+                                        <div class="modal fade modal${p.registrationId}"
+                                             tabindex="-1"
+                                             role="dialog" >
+                                            <div class="modal-dialog modal-dialog-centered" 
+                                                 role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <button type="button" 
+                                                                class="btn-close" 
+                                                                data-bs-dismiss="modal" 
+                                                                aria-label="Close">
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <jsp:include page="/SubjectRegisterPopUp.jsp">
+                                                            <jsp:param name="registId" value="${p.registrationId}"/>
+                                                        </jsp:include>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
                                     </div>
                                 </div>
                             </div>
