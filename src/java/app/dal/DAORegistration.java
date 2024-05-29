@@ -21,8 +21,8 @@ import app.entity.Package;
  * @author admin
  */
 public class DAORegistration extends DBContext {
-    
-    public Registration getSingleRegistration(int id, String email){
+
+    public Registration getSingleRegistration(int id, String email) {
         Vector<Registration> vector = new Vector<>();
         String sql = """
                     select r.RegistrationId, s.SubjectTitle,
@@ -38,7 +38,7 @@ public class DAORegistration extends DBContext {
         try {
             PreparedStatement pre = connection.prepareStatement(sql);
             pre.setInt(1, id);
-            pre.setString(2,email);
+            pre.setString(2, email);
             ResultSet rs = pre.executeQuery();
             vector = multiPurposeVector(rs);
         } catch (SQLException ex) {
@@ -46,6 +46,7 @@ public class DAORegistration extends DBContext {
         }
         return vector.get(0);
     }
+
     public Vector<Integer> getStatusId() {
         Vector<Integer> vector = new Vector<>();
         String sql = "select * from RegistrationStatus";
@@ -202,7 +203,9 @@ public class DAORegistration extends DBContext {
         try {
             PreparedStatement pre = connection.prepareStatement(sql);
             pre.setString(1, email);
-            if(inputKey != null) pre.setString(2, "%"+ inputKey +"%");
+            if (inputKey != null) {
+                pre.setString(2, "%" + inputKey + "%");
+            }
             ResultSet rs = pre.executeQuery();
             vector = multiPurposeVector(rs);
         } catch (SQLException ex) {
@@ -210,7 +213,8 @@ public class DAORegistration extends DBContext {
         }
         return vector;
     }
-    public float getTotalCost(String email){
+
+    public float getTotalCost(String email) {
         float total = 0;
         String sql = """
                     select p.SalePrice from Registration r 
@@ -232,6 +236,7 @@ public class DAORegistration extends DBContext {
         }
         return total;
     }
+
     public Vector<Registration> getAll(String email) {
         String sql = """
                     select r.RegistrationId, s.SubjectTitle,
@@ -269,6 +274,56 @@ public class DAORegistration extends DBContext {
         }
         return n;
     }
+    
+    //get duration to calculate validTo date
+    public int getPackageDuration(int packageId) {
+        String sql = "select PackageDuration from Package where PackageId = ?";
+        int duration = 0;
+        try {
+            PreparedStatement pre = connection.prepareStatement(sql);
+            pre.setInt(1, packageId);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                duration = rs.getInt(1);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DAORegistration.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return duration;
+    }
+    //update registration after successful transaction
+    public int updateRegistrationStatus(int registId) {
+        int n = 0;
+        int duration = getPackageDuration(registId);
+        System.out.println(duration);
+        long epoch = System.currentTimeMillis() / 1000;
+        String registrationTime = new java.text.SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date(epoch * 1000));
+        System.out.println(registrationTime);
+        String validFrom = registrationTime;
+        long epochTo = epoch + duration * 30 * 24 * 60 * 60;
+        String validTo = new java.text.SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date(epochTo * 1000));
+        System.out.println(validTo);
+        int status = 3;
+        String sql = """
+                     UPDATE [dbo].[Registration]
+                    SET [RegistrationTime] = ?,
+                    [RegistrationStatusId] = ?,
+                    [ValidFrom] = ?,
+                    [ValidTo] = ?
+                    WHERE [RegistrationId] = ?""";
+        try {
+            PreparedStatement pre = connection.prepareStatement(sql);
+            pre.setString(1, registrationTime);
+            pre.setInt(2, status);
+            pre.setString(3, validFrom);
+            pre.setString(4, validTo);
+            pre.setInt(5, registId);
+            n = pre.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAORegistration.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return n;
+    }
 
     public int updateRegistration(Package pack, int registId) {
         int n = 0;
@@ -291,8 +346,7 @@ public class DAORegistration extends DBContext {
 
     public static void main(String[] args) {
         DAORegistration dao = new DAORegistration();
-        int[] lmao = new int[1];
-        lmao[0] = 2;
-        System.out.println(dao.getTotalCost("ngocdbhe182383@fpt.edu.vn"));
+        int n = dao.updateRegistrationStatus(3);
+        System.out.println(n);
     }
 }

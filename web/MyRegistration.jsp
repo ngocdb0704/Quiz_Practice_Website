@@ -28,6 +28,9 @@
                     <c:set var="key" value="${requestScope.key}"/>
                     <c:set var="status" value="${requestScope.listOfStatus}"/>
                     <c:set var="checkStatus" value="${requestScope.checkStatus}"/>
+                    <c:set var="userId" value="${requestScope.userId}"/>
+                    <c:set var="bankCode" value="mb"/>
+                    <c:set var="owner" value="0886799110"/>
                     <form action="RegistrationController">
                         <div class="mb-3">
                             <div class="row card-body container justify-content-center">
@@ -204,7 +207,7 @@
                                             <ul class="list-group list-group-flush">
                                                 <li class="list-group-item">
                                                     <span>Registered: ${p.packageName}</span>
-                                                    <span>on ${p.registrationTime}</span>
+                                                    <span>on ${p.registrationTime==null? "N/A":p.registrationTime}</span>
                                                 </li>
                                                 <li class="list-group-item">
                                                     <span>Valid from 
@@ -216,46 +219,106 @@
                                         </div>
                                     </div>
                                     <div class="col-md-2 mt-md-5">
-                                        <h5>${p.totalCost}$</h5>
-                                        <!-- Button trigger modal -->
-                                        <!-- Remove onclick, if status is not Submitted then disabled -->
-                                        <!-- add button below -->
-                                        <!-- Remove onclick, if status is not Submitted then disabled -->
-                                        <button class="btn btn-danger" 
-                                                ${p.status.equals("Submitted")?"":"disabled"}
-                                                onclick="cancellation(${p.registrationId})">
-                                            Cancel
-                                        </button>
-                                        <!-- Button trigger modal -->
-                                        <!-- currently do nothing -->
-                                        <button type="button" class="btn btn-warning" 
-                                                data-bs-toggle="modal" 
-                                                data-bs-target=".modal${p.registrationId}">
-                                            Edit
-                                        </button>
-                                        <!-- Modal -->
-                                        <div class="modal fade modal${p.registrationId}"
-                                             tabindex="-1"
-                                             role="dialog" >
-                                            <div class="modal-dialog modal-dialog-centered" 
-                                                 role="document">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <button type="button" 
-                                                                class="btn-close" 
-                                                                data-bs-dismiss="modal" 
-                                                                aria-label="Close">
-                                                        </button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <jsp:include page="/SubjectRegisterPopUp.jsp">
-                                                            <jsp:param name="registId" value="${p.registrationId}"/>
-                                                        </jsp:include>
+                                        <h5>${Integer.valueOf(p.totalCost*1000)} VND</h5>
+                                        <diV class="row">
+                                            <!-- Button buy trigger modal -->
+                                            <div class="col-4">
+                                                <button class="btn btn-success" 
+                                                        ${p.status.equals("Submitted")?"":"disabled"}
+                                                        data-bs-toggle="modal" 
+                                                        data-bs-target=".modalBuy${p.registrationId}"
+                                                        >
+                                                    Buy
+                                                </button>
+                                                <!-- Modal Buy -->
+                                                <!-- Check transaction when the modal is closed -->
+                                                <div class="modal fade modalBuy${p.registrationId}"
+                                                     tabindex="-1"
+                                                     role="dialog" 
+                                                     data-bs-backdrop="static"
+                                                     data-bs-keyboard="false">
+                                                    <div class="modal-dialog modal-dialog-centered" 
+                                                         role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <button type="button" 
+                                                                        class="btn-close" 
+                                                                        data-bs-dismiss="modal" 
+                                                                        aria-label="Close"
+                                                                        onclick="checkPaid(${Integer.valueOf(p.totalCost*1000)},
+                                                                                        'USER${userId}COURSE${p.registrationId}',
+                                                                        ${p.registrationId})">
+                                                                </button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <h4>Please Scan The QR Below UwU</h4>
+                                                                <h4>Close this popup when you finished</h4>
+                                                                <!--style = 1 add background to QR
+                                                                           = 0 no background
+                                                                    logo = 1 add bank's logo
+                                                                          = 0 no bank's logo
+                                                                    isMask = 1 hide part of account
+                                                                           = 0 show full account
+                                                                    bg = 69 background code (there're a lot of backgrounds, ngoc chose 69)
+                                                                -->
+
+                                                                <img src="https://vietqr.co/api/generate/${bankCode}/${owner}/VIETQR.CO/${Integer.valueOf(p.totalCost*1000)}/USER${userId}COURSE${p.registrationId}?style=1&logo=1&isMask=1&bg=22" 
+                                                                     class="img-thumbnail" 
+                                                                     alt="qrcode">
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div class="col-6">
+                                                <button class="btn btn-danger" 
+                                                        ${p.status.equals("Submitted")?"":"disabled"}
+                                                        onclick="cancellation(${p.registrationId})">
+                                                    Cancel
+                                                </button>
+                                            </div>
+                                        </diV>
+                                        <div class="row mt-3">
+                                            <div class="col-4">
+                                                <!-- Button trigger modal -->
+                                                <!-- currently do nothing -->
+                                                <button type="button" class="btn btn-warning" 
+                                                        data-bs-toggle="modal" 
+                                                        ${p.status.equals("Submitted")?"":"disabled"}
+                                                        data-bs-target=".modalEdit${p.registrationId}">
+                                                    Edit
+                                                </button>
+                                                <!-- Modal Edit -->
+                                                <div class="modal fade modalEdit${p.registrationId}"
+                                                     tabindex="-1"
+                                                     role="dialog" >
+                                                    <div class="modal-dialog modal-dialog-centered" 
+                                                         role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <button type="button" 
+                                                                        class="btn-close" 
+                                                                        data-bs-dismiss="modal" 
+                                                                        aria-label="Close">
+                                                                </button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <jsp:include page="/SubjectRegisterPopUp.jsp">
+                                                                    <jsp:param name="registId" value="${p.registrationId}"/>
+                                                                </jsp:include>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <!-- add report button, currently do nothing -->
+                                                <button class="btn btn-primary" 
+                                                        ${p.status.equals("Submitted")?"":"disabled"}>
+                                                    Report
+                                                </button>
+                                            </div>
                                         </div>
-
                                     </div>
                                 </div>
                             </div>

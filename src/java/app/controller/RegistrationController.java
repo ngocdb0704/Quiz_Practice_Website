@@ -7,6 +7,7 @@ package app.controller;
 import app.dal.DAOPackage;
 import app.dal.DAORegistration;
 import app.dal.DAOSubject;
+import app.entity.Customer;
 import app.entity.Registration;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
@@ -18,6 +19,7 @@ import jakarta.servlet.http.HttpSession;
 import java.util.Vector;
 import app.entity.Package;
 import app.entity.SubjectCategory;
+import app.model.DAOCustomer;
 
 /**
  *
@@ -39,6 +41,7 @@ public class RegistrationController extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         DAORegistration daoRegistration = new DAORegistration();
         DAOSubject daoSubject = new DAOSubject();
+        DAOCustomer daoCustomer = new DAOCustomer();
         HttpSession session = request.getSession();
         String service = request.getParameter("service");
         String redirectTo;
@@ -49,6 +52,7 @@ public class RegistrationController extends HttpServlet {
         int start;
         int end;
         int i;
+        String controller = "RegistrationController";
         //list of checked categories from form on jsp
         String[] parentTier1Raw = request.getParameterValues("idTier1");
         String[] parentTier2Raw = request.getParameterValues("idTier2");
@@ -93,6 +97,7 @@ public class RegistrationController extends HttpServlet {
             Vector<Registration> registrationVector = daoRegistration.getById(
                     userEmail, parentTier1, parentTier2, parentTier3,
                     status, inputKey);
+            Customer cus = daoCustomer.searchbyEmail(userEmail).get(0);
             int size = registrationVector.size();
             //number of pages for pagination, each page has 4 cards of registration
             int num = (size % 4 == 0 ? (size / 4) : ((size / 4) + 1));
@@ -118,22 +123,32 @@ public class RegistrationController extends HttpServlet {
             request.setAttribute("list", listOfCategory);
             request.setAttribute("listOfStatus", listOfStatus);
             request.setAttribute("check", checkId);
-            request.setAttribute("checkStatus",checkStatusId);
+            request.setAttribute("checkStatus", checkStatusId);
             request.setAttribute("sendFilter", sendFilter);
+            request.setAttribute("userId", cus.getUserId());
             redirectTo = "/MyRegistration.jsp";
             dispath(request, response, redirectTo);
         }
-        // check service's value
+        // check service's value, cancellation
         if (service.equals("cancel")) {
             String removeKey = request.getParameter("cancelId");
             int removeId = Integer.parseInt(removeKey);
             int n = daoRegistration.removeRegistration(removeId);
             service = listAll;
-            response.sendRedirect("RegistrationController");
+            response.sendRedirect(controller);
         }
+        // check service's value, update status
+        if (service.equals("paid")) {
+            String paidKey = request.getParameter("paidId");
+            int paidId = Integer.parseInt(paidKey);
+            int n = daoRegistration.updateRegistrationStatus(paidId);
+            service = listAll;
+            response.sendRedirect(controller);
+        }
+        // check service's value
         if (service.equals("update")) {
             service = listAll;
-            response.sendRedirect("RegistrationController");
+            response.sendRedirect(controller);
         }
     }
 
@@ -158,26 +173,28 @@ public class RegistrationController extends HttpServlet {
             return false;
         }
     }
-    private String sendFilter(int[] parentTier1, int[] parentTier2, int[] parentTier3){
-        String url ="";
+
+    private String sendFilter(int[] parentTier1, int[] parentTier2, int[] parentTier3) {
+        String url = "";
         int i;
-        if(parentTier1 != null){
-            for(i=0; i<parentTier1.length; i++){
-                url+= "idTier1=" + parentTier1[i]+"&";
+        if (parentTier1 != null) {
+            for (i = 0; i < parentTier1.length; i++) {
+                url += "idTier1=" + parentTier1[i] + "&";
             }
         }
-        if(parentTier2 != null){
-            for(i=0; i<parentTier2.length; i++){
-                url+= "idTier2=" + parentTier2[i]+"&";
+        if (parentTier2 != null) {
+            for (i = 0; i < parentTier2.length; i++) {
+                url += "idTier2=" + parentTier2[i] + "&";
             }
         }
-        if(parentTier3 != null){
-            for(i=0; i<parentTier3.length; i++){
-                url+= "idTier3=" + parentTier3[i]+"&";
+        if (parentTier3 != null) {
+            for (i = 0; i < parentTier3.length; i++) {
+                url += "idTier3=" + parentTier3[i] + "&";
             }
         }
         return url;
     }
+
     //little joke, transform all valid string[] to int[] 
     private int[] cookRawIngredient(String[] raw, int[] parent) {
         //check if any parent's checkbox is checked
