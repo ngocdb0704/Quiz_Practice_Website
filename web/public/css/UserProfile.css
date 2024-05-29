@@ -6,25 +6,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     Created on : May 18, 2024, 1:35:08 PM
     Author     : quatn
 */
-html-deprecated {
-    height: 100%;
-    position: fixed;
-    background-color: rgba(0, 0, 0, 0.3);
-}
-
-body-deprecated {
-    background-color: transparent;
-}
-
-main-deprecated {
-    background-color: white;
-    position: fixed; 
-    top: 50%; 
-    left: 50%; 
-    transform: translate(-50%,-50%);
-    padding: 30px;
-    border: 1px black solid;
-}
 
 #upload {
    opacity: 0;
@@ -35,9 +16,6 @@ main-deprecated {
 
 #upload-label {
    cursor: pointer;
-   /*position: absolute;
-   bottom: 0;
-   left: 0;*/
    opacity: 0.6;
    color: white;
    width: 100%;
@@ -46,21 +24,4 @@ main-deprecated {
 
 #upload-submission {
     display: none;
-}
-
-#img-div-deprecated {
-    margin: auto;
-    width: 240px;
-    border: 2px solid black;
-    max-height: 320px;
-    overflow: hidden;
-    position: relative;
-}
-
-.tab-button-deprecated {
-    border-bottom: 50px solid #555;
-    border-left: 25px solid transparent;
-    border-right: 25px solid transparent;
-    height: 0;
-    width: 125px;
 }

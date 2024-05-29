@@ -88,6 +88,7 @@ public class UserProfile extends HttpServlet {
                     
                     dao.updateUserProfile(uId, fullName, genderId, mobile);
                     String redirectTo = request.getParameter("redirect");
+                    System.out.println("Redirect to: " + redirectTo);
                     response.sendRedirect(redirectTo);
                     //request.getRequestDispatcher(redirectTo).forward(request, response);
                 } catch (Exception e) {
@@ -116,13 +117,23 @@ public class UserProfile extends HttpServlet {
                 }
                  */
                 String redirectTo = request.getParameter("redirect");
+                System.out.println("Redirect to: " + redirectTo);
                 response.sendRedirect(redirectTo);
                 //request.getRequestDispatcher(redirectTo).forward(request, response);
             }
 
             //Fetch and return user's profile picture through http
             if (service.equals("showPic")) {
-                byte[] fetched = dao.getProfileImage(uId);
+                byte[] fetched;
+                
+                try {
+                    //If an UID is provided as a paremeter, fetch profile image of the user with that UID instead
+                    fetched = dao.getProfileImage(Integer.parseInt(request.getParameter("uId")));
+                }
+                catch(Exception e) {
+                    fetched = dao.getProfileImage(uId);
+                }
+                
                 
                 //Check if user has a profile picture
                 if (fetched == null) {
