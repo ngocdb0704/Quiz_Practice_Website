@@ -25,29 +25,31 @@ public class ResetPasswordController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        try (
-            var daoUser = new DAOUser();
-            var daoResetTokens = new DAOResetTokens()
-        ) {
-            String token = request.getParameter("token");
+        DAOUser daoUser = new DAOUser();
+        DAOResetTokens daoResetTokens = new DAOResetTokens();
 
-            if (token != null) {
-                ResetRecord resetRecord = daoResetTokens.getByToken(token);
+        String token = request.getParameter("token");
 
-                if (resetRecord == null) {
-                    request.setAttribute("error", "error_invalid_token");
-                    request.getRequestDispatcher(RESET_PAGE).forward(request, response);
-                    return;
-                }
+        if (token != null) {
+            ResetRecord resetRecord = daoResetTokens.getByToken(token);
 
-                if (!resetRecord.isValid()) {
-                    request.setAttribute("screen", "expired");
-                } else {
-                    request.setAttribute("screen", "change_pw");
-                    request.setAttribute("user", daoUser.getUserById(resetRecord.getUserId()));
-                }
+            if (resetRecord == null) {
+                request.setAttribute("error", "error_invalid_token");
+                request.getRequestDispatcher(RESET_PAGE).forward(request, response);
+                return;
+            }
+
+            if (!resetRecord.isValid()) {
+                request.setAttribute("screen", "expired");
+            } else {
+                request.setAttribute("screen", "change_pw");
+                request.setAttribute("user", daoUser.getUserById(resetRecord.getUserId()));
             }
         }
+        
+        
+        daoUser.close();
+        daoResetTokens.close();
 
         request.getRequestDispatcher(RESET_PAGE).forward(request, response);
     } 
@@ -65,38 +67,39 @@ public class ResetPasswordController extends HttpServlet {
     
     private void handleChangePassword(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        try (
-            var daoUser = new DAOUser();
-            var daoResetTokens = new DAOResetTokens()
-        ) {
-            String token = request.getParameter("token");
-            String newPassword = request.getParameter("newpw");
-            String confirmNewPassword = request.getParameter("confirmnewpw");
-            boolean same = newPassword.equals(confirmNewPassword);
+        DAOUser daoUser = new DAOUser();
+        DAOResetTokens daoResetTokens = new DAOResetTokens();
 
-            if (token != null) {
-                ResetRecord resetRecord = daoResetTokens.getByToken(token);
+        String token = request.getParameter("token");
+        String newPassword = request.getParameter("newpw");
+        String confirmNewPassword = request.getParameter("confirmnewpw");
+        boolean same = newPassword.equals(confirmNewPassword);
 
-                if (resetRecord == null) {
-                    request.setAttribute("error", "error_invalid_token");
-                    request.getRequestDispatcher(RESET_PAGE).forward(request, response);
-                    return;
-                }
+        if (token != null) {
+            ResetRecord resetRecord = daoResetTokens.getByToken(token);
 
-                if (!resetRecord.isValid()) {
-                    request.setAttribute("screen", "expired");
-                } else if (same) {
-                    request.setAttribute("screen", "success");
-                    response.setHeader("Refresh", "3; url=" + URLUtils.getBaseURL(request) + "/");
-                    daoUser.updatePasswordById(resetRecord.getUserId(), newPassword);
-                    daoResetTokens.deleteToken(resetRecord.getUserId());
-                } else {
-                    request.setAttribute("user", daoUser.getUserById(resetRecord.getUserId()));
-                    request.setAttribute("screen", "change_pw");
-                    request.setAttribute("error", "error_pw_not_same");
-                }
+            if (resetRecord == null) {
+                request.setAttribute("error", "error_invalid_token");
+                request.getRequestDispatcher(RESET_PAGE).forward(request, response);
+                return;
+            }
+
+            if (!resetRecord.isValid()) {
+                request.setAttribute("screen", "expired");
+            } else if (same) {
+                request.setAttribute("screen", "success");
+                response.setHeader("Refresh", "3; url=" + URLUtils.getBaseURL(request) + "/");
+                daoUser.updatePasswordById(resetRecord.getUserId(), newPassword);
+                daoResetTokens.deleteToken(resetRecord.getUserId());
+            } else {
+                request.setAttribute("user", daoUser.getUserById(resetRecord.getUserId()));
+                request.setAttribute("screen", "change_pw");
+                request.setAttribute("error", "error_pw_not_same");
             }
         }
+        
+        daoUser.close();
+        daoResetTokens.close();
         
         request.getRequestDispatcher(RESET_PAGE).forward(request, response);
     }
@@ -113,37 +116,38 @@ public class ResetPasswordController extends HttpServlet {
 
     private void handleSendEmail(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        try (
-            var daoUser = new DAOUser();
-            var daoResetTokens = new DAOResetTokens()
-        ) {
-            String email = request.getParameter("email");
+        DAOUser daoUser = new DAOUser();
+        DAOResetTokens daoResetTokens = new DAOResetTokens();
+        
+        String email = request.getParameter("email");
 
-            User user = daoUser.getUserByEmail(email);
+        User user = daoUser.getUserByEmail(email);
 
-            Config config = new Config(getServletContext());
-            int timeout = config.getIntOrDefault("pw.reset.timeout_secs", 1);
+        Config config = new Config(getServletContext());
+        int timeout = config.getIntOrDefault("pw.reset.timeout_secs", 1);
 
-            if (user != null) {
-                String token = daoResetTokens.createForUserId(user.getUserId(), timeout);
-                
-                GmailService service = new GmailService(getServletContext());
-                
-                String content = "Dear user! Someone sent a password request to your account\n"
-                        + "I hope this email finds you well, here's the link to reset your password:\n"
-                        + generateResetUrl(request, token);
-                
-                try {
-                    service.sendMailTo("Reset Password", content, new String[] { email });
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        if (user != null) {
+            String token = daoResetTokens.createForUserId(user.getUserId(), timeout);
+
+            GmailService service = new GmailService(getServletContext());
+
+            String content = "Dear user! Someone sent a password request to your account\n"
+                    + "I hope this email finds you well, here's the link to reset your password:\n"
+                    + generateResetUrl(request, token);
+
+            try {
+                service.sendMailTo("Reset Password", content, new String[] { email });
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-
-            request.setAttribute("screen", "sent");
-            request.setAttribute("timeout", timeout);
-            request.getRequestDispatcher(RESET_PAGE).forward(request, response);
         }
+
+        request.setAttribute("screen", "sent");
+        request.setAttribute("timeout", timeout);
+        request.getRequestDispatcher(RESET_PAGE).forward(request, response);
+        
+        daoUser.close();
+        daoResetTokens.close();
     }
 
     @Override

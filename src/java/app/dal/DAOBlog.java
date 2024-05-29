@@ -4,6 +4,10 @@ import app.entity.BlogInformation;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,34 +54,31 @@ public class DAOBlog extends DBContext {
                 + "from [Blog] b\n"
                 + "inner join [BlogCategory] c on b.BlogCategoryId = c.BlogCategoryId\n"
                 + "where (? is NULL or b.[BlogTitle] LIKE ?) and\n"
-                + "(? = -1 or c.[BlogCategoryId] = ?)";
+                + "(? = -1 or c.[BlogCategoryId] = ?) and \n"
+                + "((? is NULL or ? is NULL) or (b.[UpdatedTime] between ? and ?))";
 
     private static final String FILTERED_QUERY = LISTING_QUERY
                 + "where (? is NULL or b.[BlogTitle] LIKE ?) and\n"
-                + "(? = -1 or c.[BlogCategoryId] = ?)\n"
+                + "(? = -1 or c.[BlogCategoryId] = ?) and \n"
+                + "((? is NULL or ? is NULL) or (b.[UpdatedTime] between ? and ?))\n"
                 + "order by b.[UpdatedTime] desc\n";
-
-    /**
-     * Download blog listings paginated
-     * Blog listing is metadata of a blog, without including the post text
-     * @param page - Page number starts at one
-     * @param pageSize - Page size at least one
-     * @return
-     */
-    public QueryResult getBlogListingsPaginated(int page, int pageSize) {
-        return searchBlogListingsPaginated(null, -1, page, pageSize);
-    }
 
     /**
      * Download blog listings paginated by category and title term
      * Blog listing is metadata of a blog, without including the post text
      * @param query - Blog title keyword to search
      * @param categoryId - Finds all blogs that is in this category, -1 for all categories
+     * @param startDate - Start of updated time range
+     * @param endDate - End of updated time range
      * @param page - Page number starts at one
      * @param pageSize - Page size at least one
      * @return
      */
-    public QueryResult searchBlogListingsPaginated(String query, int categoryId, int page, int pageSize) {
+    public QueryResult searchBlogListingsPaginated(
+            String query, int categoryId,
+            LocalDate startDate, LocalDate endDate,
+            int page, int pageSize
+    ) {
         if (page < 1) page = 1;
         if (pageSize < 1) pageSize = 1;
 
@@ -88,16 +89,30 @@ public class DAOBlog extends DBContext {
 
         try {
             PreparedStatement queryStmt = connection.prepareStatement(sql);
-
+           
             //because we define page to start at one however sql server expects 0 offset
             int offset = (page - 1) * pageSize;
+            
+            Timestamp startTimestamp = null;
+            Timestamp endTimestamp = null;
+            
+            if (startDate != null && endDate != null) {
+                LocalDateTime s = startDate.atTime(0, 0, 0);
+                LocalDateTime e = endDate.atTime(23, 59, 59);
+                startTimestamp = Timestamp.from(s.toInstant(ZoneOffset.UTC));
+                endTimestamp = Timestamp.from(e.toInstant(ZoneOffset.UTC));
+            }
             
             queryStmt.setString(1, likeStatement);
             queryStmt.setString(2, likeStatement);
             queryStmt.setInt(3, categoryId);
             queryStmt.setInt(4, categoryId);
-            queryStmt.setInt(5, offset);
-            queryStmt.setInt(6, pageSize);
+            queryStmt.setTimestamp(5, startTimestamp);
+            queryStmt.setTimestamp(6, endTimestamp);
+            queryStmt.setTimestamp(7, startTimestamp);
+            queryStmt.setTimestamp(8, endTimestamp);
+            queryStmt.setInt(9, offset);
+            queryStmt.setInt(10, pageSize);
             ResultSet rs = queryStmt.executeQuery();
 
             List<BlogInformation> blogs = new ArrayList<>();
@@ -110,6 +125,10 @@ public class DAOBlog extends DBContext {
             countStmt.setString(2, likeStatement);
             countStmt.setInt(3, categoryId);
             countStmt.setInt(4, categoryId);
+            countStmt.setTimestamp(5, startTimestamp);
+            countStmt.setTimestamp(6, endTimestamp);
+            countStmt.setTimestamp(7, startTimestamp);
+            countStmt.setTimestamp(8, endTimestamp);
             ResultSet countRs = countStmt.executeQuery();
 
             int count = 0;
