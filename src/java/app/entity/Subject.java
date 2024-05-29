@@ -12,6 +12,8 @@ public class Subject {
     private int subjectId;
     private String subjectName;
     private String subjectCategory;
+    private String tagLine;
+    private String thumbnail;
 
     public Subject() {
     }
@@ -45,5 +47,20 @@ public class Subject {
     public void setSubjectCategory(String subjectCategory) {
         this.subjectCategory = subjectCategory;
     }
-    
+
+    public String getTagLine() {
+        return tagLine;
+    }
+
+    public void setTagLine(String tagLine) {
+        this.tagLine = tagLine;
+    }
+
+    public String getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
+    }
 }

@@ -6,24 +6,20 @@
     </div>
     <div class="offcanvas-body px-0">
         <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-start" id="menu">
-            <li class="nav-item">
+            <!--li class="nav-item">
                 <a href="#" class="nav-link text-truncate">
                     <i class="fs-5 bi-house"></i><span class="ms-1 d-none d-sm-inline">Home</span>
                 </a>
-            </li>
-            <li>
-                <a href="#submenu1" data-bs-toggle="collapse" class="nav-link text-truncate">
-                    <i class="fs-5 bi-speedometer2"></i><span class="ms-1 d-none d-sm-inline">Dashboard</span> </a>
-            </li>
+            </li-->
             <li>
                 <a href="#" class="nav-link text-truncate">
                     <i class="fs-5 bi-table"></i><span class="ms-1 d-none d-sm-inline">Orders</span></a>
             </li>
             <li class="dropdown">
-                <a href="#" class="nav-link dropdown-toggle  text-truncate" id="dropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                <a href="#" class="nav-link dropdown-toggle  text-truncate" id="contacts" data-bs-toggle="contacts" aria-expanded="true">
                     <i class="fs-5 bi-bootstrap"></i><span class="ms-1 d-none d-sm-inline">Bootstrap</span>
                 </a>
-                <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdown">
+                <ul class="dropdown-menu text-small shadow" aria-labelledby="contacts">
                     <li><a class="dropdown-item" href="#">New project...</a></li>
                     <li><a class="dropdown-item" href="#">Settings</a></li>
                     <li><a class="dropdown-item" href="#">Profile</a></li>
@@ -44,9 +40,9 @@
         </ul>
     </div>
 </div>
-<div class="h-100" style="position: absolute; background-color: #dedde6; height: 100%; z-index: 0" data-bs-toggle="offcanvas" data-bs-target="#offcanvas" role="button">
+<div class="h-100" style="position: absolute; background-color: #dedde6; height: 100%; z-index: 0;" data-bs-toggle="offcanvas" data-bs-target="#offcanvas" role="button">
     <div style="height: 50vh"></div>   
-    <button class="btn" style="position: sticky; display: block; top: 0;" >
-        <i class="bi bi-arrow-right-square-fill fs-3" data-bs-toggle="offcanvas" data-bs-target="#offcanvas"></i>
+    <button class="btn" style="position: sticky; display: block; top: 0; transform: rotate(90deg);" >
+        <i class="bi bi-border-width" data-bs-toggle="offcanvas" data-bs-target="#offcanvas"></i>
     </button>
 </div>

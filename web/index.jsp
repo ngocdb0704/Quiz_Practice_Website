@@ -1,3 +1,5 @@
+<%@page import="java.util.List, java.util.ArrayList, app.entity.Slide, app.dal.DAOSlide, app.entity.Subject, app.dal.DAOSubject, app.dal.DAOBlog, app.entity.BlogInformation" %>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -45,23 +47,24 @@
 </script>
 </head>
 <body>
-
+    <% DAOSlide daoSlide = new DAOSlide(); 
+       DAOBlog daoBlog = new DAOBlog();
+       DAOSubject daoSubject = new DAOSubject();
+    %>
+    
+    
     <%@include file="/common/header.jsp" %>
     <%@include file="/common/sidebar.jsp" %>
     
     <main class="container">
-
         <div id="sliders" class="slider carousel slide mh-75" data-bs-ride="carousel">
             <div class="carousel-inner">
-                <div class="carousel-item active">
-                    <img class="d-block w-100" src="https://i.pinimg.com/originals/30/3f/4c/303f4c853caa0b51acb5dd94ca18f93f.webp" alt="First slide">
+                <% int count = 1; 
+                for (Slide sl : daoSlide.getSliderList()) { %>
+                <div class="carousel-item <%=(count == 1)? "active" : ""%>">
+                    <a href="<%=sl.getBacklink()%>"><img id="slide_<%=count++%>" class="d-block w-100" src="<%=sl.getImageRef()%>" alt="<%=sl.getTitle()%>" ></a>
                 </div>
-                <div class="carousel-item">
-                    <img class="d-block w-100" src="./public/images/anonymous-user.webp" alt="Second slide">
-                </div>
-                <div class="carousel-item">
-                    <img class="d-block w-100" src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.pinimg.com%2Foriginals%2F30%2F3f%2F4c%2F303f4c853caa0b51acb5dd94ca18f93f.webp&f=1&nofb=1&ipt=ab1763aa8bd57b08728acb8f7848620e7a4df46cf106fae61ffecebed4f6706b&ipo=images" alt="Third slide">
-                </div>
+                <%}%>
             </div>
             <button class="carousel-control-prev" type="button" data-bs-target="#sliders" data-bs-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -73,51 +76,30 @@
             </button>
         </div>
         
+        <% 
+        List<Subject> featuredSubjects = daoSubject.getEnoughToDisplay(5);
+        if (featuredSubjects.size() > 0) { %>
         <div class="featured-subject">
             <h2>Featured subjects</h2>
+            
             <div class="d-flex flex-row flex-nowrap overflow-auto">
-
+                <%for (Subject s: featuredSubjects) {%>
                 <div class="card">
-                    <img class="card-img-top" src="./public/images/anonymous-user.webp" alt="Card image cap">
+                    <img class="card-img-top" src="<%=s.getThumbnail()%>" alt="Card image cap">
                     <div class="card-body">
-                        <h5 class="card-title">Subject title</h5>
-                        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                        <a href="#" class="btn btn-primary">Go to subject</a>
+                        <h5 class="card-title"><%=s.getSubjectName()%></h5>
+                        <p class="card-text"><%=s.getTagLine()%></p>
+                        <a href="#" class="btn btn-primary">Explore</a>
                     </div>
                 </div>
-
-                <div class="card">
-                    <img class="card-img-top" src="./public/images/anonymous-user.webp" alt="Card image cap">
-                    <div class="card-body">
-                        <h5 class="card-title">Subject title</h5>
-                        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                        <a href="#" class="btn btn-primary">Go to subject</a>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <img class="card-img-top" src="./public/images/anonymous-user.webp" alt="Card image cap">
-                    <div class="card-body">
-                        <h5 class="card-title">Subject title</h5>
-                        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                        <a href="#" class="btn btn-primary">Go to subject</a>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <img class="card-img-top" src="./public/images/anonymous-user.webp" alt="Card image cap">
-                    <div class="card-body">
-                        <h5 class="card-title">Subject title</h5>
-                        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                        <a href="#" class="btn btn-primary">Go to subject</a>
-                    </div>
-                </div>
+                <%}%>
             </div>
         </div>
+        <%}%>
         
         <div class="post-list">
-            Sort by <button class="btn btn-outline-primary active">Hot <i class="bi bi-fire"></i></button> <button class="btn btn-outline-primary">New <i class="bi bi-bar-chart-line"></i></button>
-            
+            Sort by <button class="btn btn-outline-primary disabled">Hot <i class="bi bi-fire"></i></button> <button class="btn btn-outline-primary active">New <i class="bi bi-bar-chart-line"></i></button>
+            <%for (BlogInformation blog: daoBlog.getBlogListingsPaginated(1, 5)) {%>
             <div class="card">
                 <div class="card-body">
                     <img class="profilePic" src="./public/images/anonymous-user.webp">
@@ -127,16 +109,7 @@
                 <p class="card-text container">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
                 <img class="card-img-bottom" src="./public/images/anonymous-user.webp" alt="Card image cap">
             </div>
-            
-            <div class="card">
-                <div class="card-body">
-                    <img class="profilePic" src="./public/images/anonymous-user.webp">
-                    <h5 class="card-title">Post title</h5>
-                    <i>Date</i>
-                </div>
-                <p class="card-text container">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                <img class="card-img-bottom" src="./public/images/anonymous-user.webp" alt="Card image cap">
-            </div>
+            <%}%>
         </div>
         
     </main>

@@ -134,9 +134,12 @@ public class UserProfile extends HttpServlet {
                     fetched = dao.getProfileImage(uId);
                 }
                 
-                
+                System.out.println("up log" + uId);
                 //Check if user has a profile picture
                 if (fetched == null) {
+                    System.out.println("up log" + uId);
+                    
+                    /*
                     response.setContentType("image/gif");
                     ServletContext cntxt = this.getServletContext();
                     String fName = "public/images/anonymous-user.webp";
@@ -150,6 +153,9 @@ public class UserProfile extends HttpServlet {
                         o.flush();
                         o.close();
                     }
+                    */
+                    
+                    request.getRequestDispatcher("public/images/anonymous-user.webp").forward(request, response);
 
                 } else {
                     //Return fetched image via an OutputStream

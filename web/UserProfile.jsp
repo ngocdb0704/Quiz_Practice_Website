@@ -6,6 +6,8 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="app.entity.User, app.dal.DAOUser, app.dal.DAOGender, app.dal.DAORole, java.util.concurrent.ConcurrentHashMap" %>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!-- TODO: Format this away from scriptlet spam bc this is pretty unreadable -->
 <!DOCTYPE html>
 <html>
     <head>
@@ -28,8 +30,6 @@
         }
         catch (Exception e1) {}
         
-        System.out.println("aaa" + currentPage.length());
-        
         //get userId attribute from session, get and set it if the attribute does't exist. 
         try {
             uId = Integer.parseInt(request.getParameter("userId"));
@@ -40,7 +40,6 @@
                     fetched = dao.getUserByEmail(session.getAttribute("userEmail").toString());
                     uId = fetched.getUserId();
                     session.setAttribute("userId", uId);
-                    System.out.println("Id: " + uId);
                 }
                 catch (Exception e1) {System.out.println(e1);}
             }
@@ -56,13 +55,12 @@
             <h1>Please login to view you profile</h1>
             <%
             } else {
-                //ConcurrentHashMap roleMap = new DAORole().getMap(), genderMap = new DAOGender().getMap();
-                String role = ""; 
                 final int genderId = fetched.getGenderId();
                 ConcurrentHashMap genderMap = new DAOGender().getMap();
-                try {
+                
+                String role = "";
+                try {  //redundancy
                     role = new DAORole().getMap().get(fetched.getRoleId());
-                    genderMap = new DAOGender().getMap();
                 } catch (Exception e){}
 
 
@@ -107,13 +105,9 @@
                     </div>
                 </div>
 
-                <%
-                    if (role.equals("Admin")) {
-                %>
+                <%if (role.equals("Admin")) {%>
                 <p style="position: absolute; top: -55px; color: red">Admin</p>
-                <%
-                    }
-                %>
+                <%}%>
             </div>
         </main>
         <%
