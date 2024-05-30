@@ -3,39 +3,48 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/JavaScript.js to edit this template
  */
 
-function sendRedirect(subjectCat, subject) {
-    window.location.href = "RegistrationController?search=" + subject + "&subjectCategory=" + subjectCat.value;
-}
-function edit(subjectStatus) {
-    if (subjectStatus === 'Submitted') {
-            window.location.href = "RegistrationController?service=edit";
-    } else {
-        alert("You can only edit registration whose status is Submitted!");
+function cancellation(subject) {
+    if (confirm("Confirm cancellation registration id " + subject + " ?") === true) {
+        window.location.href = "RegistrationController?cancelId=" + subject + "&service=cancel";
     }
 }
-function cancellation(subjectStatus, subject) {
-    if (subjectStatus === 'Submitted') {
-        if (confirm("Confirm cancellation?") === true) {
-            window.location.href = "RegistrationController?cancelId=" + subject + "&service=cancel";
-        } else {
+//check payment after modal's closure
+async function checkPaid(price, content, id, responseCaptcha) {
+    //if not captcha then alert then return to list
+    if (responseCaptcha) {
+        try {
+            //this response always fetch the first 2 rows
+            const response = await fetch(
+                    "https://script.google.com/macros/s/AKfycbza8YMZDLO6pST-pdbjKTaXr_-mbhoX6eLGXwRa4YLqORqBZqBHXzmvNz4KH7kloN059g/exec"
+                    );
+            const sheet = await response.json();
+            let isPaid = 0; //flag
+            //get all payment
+            //this will be a fatal error if the number of transactions in a small amount of time is huge
+            let code, pay, acc;
+            for (let payment of sheet.data) {
+                //if price and content match, leave the loop
+                if (payment["Giá trị"] === price && payment["Mô tả"].includes(content)) {
+                    code = payment["Mô tả"];
+                    acc = payment["Số tài khoản"];
+                    isPaid = 1;
+                    break;
+                }
+            }
+            //check flag
+            if (isPaid === 1) {
+                alert("Subject's Successfully Registered!");
+                window.location.href = "RegistrationController?paidId=" + id
+                        + "&service=paid&code=" + code
+                        + "&acc=" +acc;
+            } else {
+                alert("Payment Not Found!");
+            }
+        } catch {
+            console.error("Error");
         }
-    } else {
-        alert("You can only cancel registration whose status is Submitted!");
+    }else{
+        alert("Check the captcha please!");
     }
 
-}
-function showMore(subject, subjectbutton) {
-    var moreDetail = document.getElementsByClassName(subject);
-    var btnText = document.getElementsByClassName(subjectbutton);
-    if (btnText.innerHTML === "Less") {
-        btnText.innerHTML = "More";
-        for (var i = 0; i < moreDetail.length; i++) {
-            moreDetail[i].style.display = "none";
-        }
-    } else {
-        for (var i = 0; i < moreDetail.length; i++) {
-            moreDetail[i].style.display = "inline";
-        }
-        btnText.innerHTML = "Less";
-    }
 }
