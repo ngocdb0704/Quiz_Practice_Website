@@ -23,6 +23,21 @@ public class DAOUser extends DBContext {
             return true;
         } catch (SQLException ex) {
             ex.printStackTrace();
+    }
+
+    public List<User> extractResults(ResultSet rs) throws SQLException {
+        List<User> result = new ArrayList<>();
+        while (rs.next()) {
+            User user = new User();
+            user.setUserId(rs.getInt("UserId"));
+            user.setEmail(rs.getString("Email"));
+            user.setPassword(rs.getString("Password"));
+            user.setFullName(rs.getString("FullName"));
+            user.setGenderId(rs.getInt("GenderId"));
+            user.setMobile(rs.getString("Mobile"));
+            user.setRoleId(rs.getInt("RoleId"));
+            user.setIsActive(rs.getBoolean("IsActive"));
+            result.add(user);
         }
 
         return false;
@@ -45,7 +60,7 @@ public class DAOUser extends DBContext {
 
     //=============================
     
-    private Vector<User> getFull(String sql) {
+	private Vector<User> getFull(String sql) {
         Vector<User> Out = new Vector<User>();
         try {
             Statement state = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
@@ -140,6 +155,27 @@ public class DAOUser extends DBContext {
         }
     }
 
+    public User getByEmail(String email) throws SQLException {
+        PreparedStatement stmt = connection.prepareStatement("select * from [User] where Email = ?");
+        stmt.setString(1, email);
+        List<User> result = extractResults(stmt.executeQuery());
+        return result.isEmpty() ? null : result.get(0);
+    }
+
+    public User getById(int id) throws SQLException {
+        PreparedStatement stmt = connection.prepareStatement("select * from [User] where UserId = ?");
+        stmt.setInt(1, id);
+        List<User> result = extractResults(stmt.executeQuery());
+        return result.isEmpty() ? null : result.get(0);
+    }
+
+    public void updatePassword(int id, String password) throws SQLException {
+        PreparedStatement stmt = connection.prepareStatement("update [User] set Password = ? where UserId = ?");
+        stmt.setString(1, password);
+        stmt.setInt(2, id);
+        stmt.executeUpdate();
+    }
+
     public int updateUserProfile(int id, String fullName, int genderId, String mobile) {
         String sql = "UPDATE [User]\n"
                 + "   SET FullName = ?\n"
@@ -159,7 +195,24 @@ public class DAOUser extends DBContext {
         }
     }
     
+    //to be replaced with better ways immediately after showcase
+    public String idToName(int id) {
+                String sql = "SELECT FullName FROM [User] where UserId = '" + id + "';";
+        try {
+            Statement state = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = state.executeQuery(sql);
+            if (rs.next()) {
+                return rs.getString(1);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
+    
     public static void main(String[] args) {
         System.out.println(new DAOUser().getAll());
+        System.out.println(new DAOUser().idToName(1));
     }
 }
+

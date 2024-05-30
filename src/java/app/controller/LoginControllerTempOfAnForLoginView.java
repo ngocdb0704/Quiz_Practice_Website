@@ -65,19 +65,19 @@ public class LoginControllerTempOfAnForLoginView extends HttpServlet {
                     if (!(newPassword.equals(prePassword) || newPassword.isEmpty())) {
                         if (confirmPassword.equals(newPassword)) {
                             daoUser.updatePassByUser(username, confirmPassword);
-                            session.setAttribute("successMessage", "Change password successfully!");
-                            response.sendRedirect("index.jsp");
+//                            session.setAttribute("successMessage", "Change password successfully!");
+                            response.sendRedirect("blankPageForDelayAfterChangePassword.jsp");
                         } else {
-                            session.setAttribute("changePassMessage", "The confirmation password is not identical with the new password. Try again!");
-                            response.sendRedirect("ChangePassAn.jsp");
+                            session.setAttribute("successMessage", "The confirmation password is not identical with the new password. Try again!");
+                            response.sendRedirect("index.jsp");
                         }
                     } else {
-                        session.setAttribute("changePassMessage", "New password should be different from previous one and should not be empty. Try again!");
-                        response.sendRedirect("ChangePassAn.jsp");
+                        session.setAttribute("successMessage", "New password should be different from previous one and should not be empty. Try again!");
+                        response.sendRedirect("index.jsp");
                     }
                 } else {
-                    session.setAttribute("changePassMessage", "Wrong username or password. Try again!");
-                    response.sendRedirect("ChangePassAn.jsp");
+                    session.setAttribute("successMessage", "Wrong username or password. Try again!");
+                    response.sendRedirect("index.jsp");
                 }
             }
         }
