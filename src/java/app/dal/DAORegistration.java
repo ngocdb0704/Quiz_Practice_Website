@@ -15,6 +15,12 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import app.entity.Package;
+import com.oracle.wls.shaded.java_cup.runtime.Symbol;
+import java.util.Random;
+
+import javax.script.ScriptEngine; 
+import javax.script.ScriptEngineManager; 
+import javax.script.ScriptException; 
 
 /**
  *
@@ -346,7 +352,6 @@ public class DAORegistration extends DBContext {
 
     public static void main(String[] args) {
         DAORegistration dao = new DAORegistration();
-        int n = dao.updateRegistrationStatus(3);
-        System.out.println(n);
+        
     }
 }

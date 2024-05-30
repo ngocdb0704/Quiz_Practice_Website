@@ -7,6 +7,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="java.util.Vector"%>
 <%@page import="app.entity.Registration"%>
+<%@page import="java.util.Random"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!DOCTYPE html>
@@ -17,6 +18,8 @@
         <%@include file="/common/ImportBootstrap.jsp" %>
         <link rel="stylesheet" href="public/css/bootstrap/MyRegistration.css"/>
         <script src="public/js/MyRegistration.js"></script>
+        <!-- Script google reCaptcha -->
+        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     </head>
     <body>
         <%@include file="/common/header.jsp" %>
@@ -241,18 +244,11 @@
                                                          role="document">
                                                         <div class="modal-content">
                                                             <div class="modal-header">
-                                                                <button type="button" 
-                                                                        class="btn-close" 
-                                                                        data-bs-dismiss="modal" 
-                                                                        aria-label="Close"
-                                                                        onclick="checkPaid(${Integer.valueOf(p.totalCost*1000)},
-                                                                                        'USER${userId}COURSE${p.registrationId}',
-                                                                        ${p.registrationId})">
+                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                                                                 </button>
                                                             </div>
                                                             <div class="modal-body">
                                                                 <h4>Please Scan The QR Below UwU</h4>
-                                                                <h4>Close this popup when you finished</h4>
                                                                 <!--style = 1 add background to QR
                                                                            = 0 no background
                                                                     logo = 1 add bank's logo
@@ -261,10 +257,34 @@
                                                                            = 0 show full account
                                                                     bg = 69 background code (there're a lot of backgrounds, ngoc chose 69)
                                                                 -->
-
                                                                 <img src="https://vietqr.co/api/generate/${bankCode}/${owner}/VIETQR.CO/${Integer.valueOf(p.totalCost*1000)}/USER${userId}COURSE${p.registrationId}?style=1&logo=1&isMask=1&bg=22" 
-                                                                     class="img-thumbnail" 
+                                                                     class="img-thumbnail qrimg" 
                                                                      alt="qrcode">
+                                                            </div>
+                                                            <div class="modal-footer row">
+                                                                <!-- add recaptcha to optimize pay method-->
+                                                                <div class="row">
+                                                                    <div class="g-recaptcha" 
+                                                                         data-sitekey="6LemYewpAAAAAI4V2BR_nIibN_L8sK23JPuU8MBo"
+                                                                         >
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-9">
+
+                                                                    </div>
+                                                                    <!-- payment call checkPaid, check if the captcha is valid-->
+                                                                    <div class="col-3 payButton">
+                                                                        <button type="button" 
+                                                                                class="btn btn-primary pay${p.registrationId}" 
+                                                                                data-bs-dismiss="modal"
+                                                                                onclick="checkPaid(${Integer.valueOf(p.totalCost*1000)},
+                                                                                                'USER${userId}COURSE${p.registrationId}',
+                                                                                ${p.registrationId}, grecaptcha.getResponse())">
+                                                                            Done
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
