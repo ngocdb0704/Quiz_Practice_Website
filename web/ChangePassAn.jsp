@@ -11,6 +11,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Change Password</title>
         <%@include file="/common/ImportBootstrap.jsp" %>
+<<<<<<< Updated upstream
         <!--<link rel="stylesheet" href="public/css/ChangePassAn.css">-->
 <!--        <script>
             function showNotification(message) {
@@ -31,6 +32,8 @@
                 }
             };
         </script>-->
+=======
+>>>>>>> Stashed changes
     </head>
     <body>
 
