@@ -1,0 +1,27 @@
+function doGet(request) {
+  //get 5 columns 
+  var parameters = 5;
+  var sheet = SpreadsheetApp.openById("1zj2gm2dmfWfBE5jKOQ0qzUpDZwb2wZcx8KCl4hQZgZs").getSheetByName("Sheet1");
+  // Lấy tên các cột
+  var headnames = sheet.getRange(1, 1, 1, parameters).getValues()[0];
+
+  // Lấy tất cả dữ liệu từ bảng tính
+  //Trả về dải ô có ô trên cùng bên trái tại toạ độ đã cho với số hàng và cột đã cho.
+  var range = sheet.getRange(2, 1, 2, parameters);
+  // Lấy 2 giao dịch đầu tiên
+  var values = range.getValues();
+
+  var rows = [];
+  values.forEach(function (row) {
+    var newRow = {};
+    //push data to rows
+    headnames.forEach(function (item, index) {
+      newRow[item] = row[index];
+    });
+    rows.push(newRow);
+  });
+  //return data to myregistration.js
+  return ContentService.createTextOutput(
+    JSON.stringify({ data: rows, error: false })
+  ).setMimeType(ContentService.MimeType.JSON);
+}
