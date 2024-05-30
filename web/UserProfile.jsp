@@ -66,11 +66,11 @@
 
             %>
             <div class="card mb-3"> 
-                <div class="row g-0" style="width: 100%; margin: 0;">
-                    <div class="col-lg-4">
+                <div class="row g-0 w-100 m-0">
+                    <div class="col-lg-4 container">
                         <form method="post" action="UserProfile" enctype="multipart/form-data">
-                            <div id="img-div" style="border: 1px solid black">
-                                <img style="width: 240px" src="UserProfile?service=showPic" alt="Profile picture" />
+                            <div style="position: relative" class="w-100 border border-dark" style="width: 100%;">
+                                <img style="width: 100%; max-height: 300px; object-fit: cover" src="UserProfile?service=showPic" alt="Profile picture" />
                                 <input id="upload" type="file" name="upload" onchange="noticeFileUpload(this.value)"/>
                                 <label id="upload-label" for="upload">Select image</label>
                             </div>
@@ -78,15 +78,15 @@
                             <input type="hidden" name="redirect" value="<%=currentPage%>">
                             <div id="upload-submission">
                                 <p id="upload-name">Selected file: none</p>
-                                <input type="submit" value="Save as new profile picture" />
+                                <input class="btn btn-primary" type="submit" value="Save as new profile picture" />
                             </div>
                         </form>
                     </div>
 
                     <div class="col-lg-8 container-lg">
                         <div class="form-group mb-3"> Email: <input class="form-control" style="background-color: #cecece; border: 1px solid black" type="text" name="email" value="<%=(fetched != null)? fetched.getEmail(): ""%>" readonly/> </div>
-                        <form action="UserProfile" method="POST">
-                            <div class="form-group mb-3"> Full name: <input class="form-control" type="text" name="fullName" value="<%=(fetched != null)? fetched.getFullName(): ""%>" /> </div>
+                        <form action="UserProfile" method="POST" onkeydown="return event.key != 'Enter';">
+                            <div class="form-group mb-3"> Full name: <input class="form-control" type="text" name="fullName" oninput="validateName(this.value)" value="<%=(fetched != null)? fetched.getFullName(): ""%>" /> </div>
                             <div class="form-group mb-3"> Gender: 
                                 <select class="form-control" name="gender">
                                     <%= genderMap.reduce(0, (key, val) -> "<option value=\"" + key + "\" "
@@ -96,9 +96,9 @@
                                 </select>
 
                             </div>
-                            <div class="form-group mb-3"> Mobile: <input class="form-control" type="text" name="mobile" value="<%=(fetched != null)? fetched.getMobile(): ""%>" /> </div>
+                            <div class="form-group mb-3"> Mobile: <input class="form-control" type="text" name="mobile" oninput="validateMobile(this.value)" value="<%=(fetched != null)? fetched.getMobile(): ""%>" /> </div>
                             <br>
-                            <div class="form-group mb-3"> <input class="form-control" type="submit" value="Save"> </div>
+                            <div class="form-group mb-3"> <input id="saveButton" class="btn btn btn-outline-secondary disabled container" type="submit" value="Save"> </div>
                             <input type="hidden" name="service" value="update">
                             <input type="hidden" name="redirect" value="<%=currentPage%>">
                         </form>
