@@ -21,9 +21,12 @@ async function checkPaid(price, content, id, responseCaptcha) {
             let isPaid = 0; //flag
             //get all payment
             //this will be a fatal error if the number of transactions in a small amount of time is huge
+            let code, pay, acc;
             for (let payment of sheet.data) {
                 //if price and content match, leave the loop
                 if (payment["Giá trị"] === price && payment["Mô tả"].includes(content)) {
+                    code = payment["Mô tả"];
+                    acc = payment["Số tài khoản"];
                     isPaid = 1;
                     break;
                 }
@@ -31,7 +34,9 @@ async function checkPaid(price, content, id, responseCaptcha) {
             //check flag
             if (isPaid === 1) {
                 alert("Subject's Successfully Registered!");
-                window.location.href = "RegistrationController?paidId=" + id + "&service=paid";
+                window.location.href = "RegistrationController?paidId=" + id
+                        + "&service=paid&code=" + code
+                        + "&acc=" +acc;
             } else {
                 alert("Payment Not Found!");
             }

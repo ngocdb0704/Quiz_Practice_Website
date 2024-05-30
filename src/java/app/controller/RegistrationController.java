@@ -19,6 +19,7 @@ import jakarta.servlet.http.HttpSession;
 import java.util.Vector;
 import app.entity.Package;
 import app.entity.SubjectCategory;
+import app.entity.Transaction;
 import app.model.DAOCustomer;
 
 /**
@@ -113,6 +114,7 @@ public class RegistrationController extends HttpServlet {
             start = (page - 1) * numPerPage;
             end = Math.min(page * numPerPage, size);
             Vector<Registration> responseVector = daoRegistration.getVectorByPage(registrationVector, start, end);
+            Vector<Transaction> history = daoRegistration.getTransactionHistory(userEmail);
             String sendFilter = sendFilter(parentTier1, parentTier2, parentTier3);
             float totalCost = daoRegistration.getTotalCost(userEmail);
             request.setAttribute("data", responseVector);
@@ -123,6 +125,7 @@ public class RegistrationController extends HttpServlet {
             request.setAttribute("list", listOfCategory);
             request.setAttribute("listOfStatus", listOfStatus);
             request.setAttribute("check", checkId);
+            request.setAttribute("history", history);
             request.setAttribute("checkStatus", checkStatusId);
             request.setAttribute("sendFilter", sendFilter);
             request.setAttribute("userId", cus.getUserId());
@@ -140,8 +143,10 @@ public class RegistrationController extends HttpServlet {
         // check service's value, update status
         if (service.equals("paid")) {
             String paidKey = request.getParameter("paidId");
+            String code = request.getParameter("code");
+            String acc = request.getParameter("acc");
             int paidId = Integer.parseInt(paidKey);
-            int n = daoRegistration.updateRegistrationStatus(paidId);
+            int n = daoRegistration.updateRegistrationStatus(paidId, code, acc);
             service = listAll;
             response.sendRedirect(controller);
         }

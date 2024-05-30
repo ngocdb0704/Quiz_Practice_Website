@@ -147,11 +147,65 @@
             </aside>
             <div class="col-9 mt-3">
                 <c:set var="totalCost" value="${requestScope.total}"/>
-                <h1><span>List of Registrations</span> </h1>
-                <h3><span>Total Cost: ${totalCost}$</span></h3>
+                <h1>
+                    <span>List of Registrations</span>
+                </h1>
+                <h3>Total Cost: ${Integer.valueOf(totalCost)} VND</h3>
+
                 <c:set var="page" value="${requestScope.page}"/>
                 <c:set var="filter" value="${requestScope.sendFilter}"/>
                 <nav>
+                    <div>
+                        <!-- Transaction history-->
+                        <button type="button" class="btn btn-secondary mb-3" data-bs-toggle="modal" data-bs-target="#loginModal">
+                            Transaction History
+                        </button>
+                        <!-- Modal -->
+                        <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" >
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                        </button>
+                                    </div>
+                                    <div class="modal-body"><table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">Code</th>
+                                                    <th scope="col">Time</th>
+                                                    <th scope="col">Account</th>
+                                                    <th scope="col">Content</th>
+                                                    <th scope="col">Amount</th>
+                                                    <th scope="col">Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <c:forEach items="${requestScope.history}" var="his">
+                                                    <tr>
+                                                        <th scope="row">${his.transactionCode}</th>
+                                                        <td>${his.transactionTime}</td>
+                                                        <td>${his.transactionAccount}</td>
+                                                        <td>${his.transactionContent}</td>
+                                                        <td>${his.transactionMoney}</td>
+                                                        <td>
+                                                            <c:choose>
+                                                                <c:when test="${his.transactionStatus==2}">
+                                                                    Pending
+                                                                </c:when>
+                                                                <c:when test="${his.transactionStatus>2}">
+                                                                    Success
+                                                                </c:when>
+                                                            </c:choose>
+                                                        </td>
+                                                    </tr>
+                                                </c:forEach>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <ul class="pagination">
                         <!-- get all pages -->
                         <c:forEach begin="${1}" end="${requestScope.num}" var="i">
