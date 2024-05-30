@@ -24,37 +24,60 @@ public class DAOResetTokens extends DBContext {
         return result;
     }
     
-    public ResetRecord getByToken(String token) throws SQLException {
-        PreparedStatement stmt = connection.prepareStatement("select * from [ResetToken] where [Token] = ?");
-        stmt.setString(1, token);
-        List<ResetRecord> result = extractResults(stmt.executeQuery());
+    public ResetRecord getByToken(String token) {
+        try {
+            PreparedStatement stmt = connection.prepareStatement("select * from [ResetToken] where [Token] = ?");
+            stmt.setString(1, token);
+            List<ResetRecord> result = extractResults(stmt.executeQuery());
 
-        return result.isEmpty() ? null : result.get(0);
+            return result.isEmpty() ? null : result.get(0);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return null;
     }
     
-    public String createForUserId(int userId, int seconds) throws SQLException {
-        if (seconds < 1) throw new IllegalArgumentException("Time must be at least 1 second");
+    public String createForUserId(int userId, int minutes) {
+        if (minutes < 1) throw new IllegalArgumentException("Time must be at least 1 minute");
 
-        deleteToken(userId);
+        boolean success = deleteToken(userId);
+        if (!success) {
+            return null;
+        }
         
         String token = UUID.randomUUID().toString();
-        Instant expireDate = Instant.now().plus(seconds, ChronoUnit.SECONDS);
+        Instant expireDate = Instant.now().plus(minutes, ChronoUnit.MINUTES);
         String sql = "insert into [ResetToken] ([UserId], [Token], [ValidTo]) values (?, ?, ?)";
 
-        PreparedStatement stmt = connection.prepareStatement(sql);
-        stmt.setInt(1, userId);
-        stmt.setString(2, token);
-        stmt.setTimestamp(3, Timestamp.from(expireDate));
-        stmt.executeUpdate();
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, userId);
+            stmt.setString(2, token);
+            stmt.setTimestamp(3, Timestamp.from(expireDate));
+            stmt.executeUpdate();
 
-        return token;
+            return token;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return null;
     }
 
-    public void deleteToken(int userId) throws SQLException {
+    public boolean deleteToken(int userId) {
         String sql = "delete from [ResetToken] where [UserId] = ?";
 
-        PreparedStatement stmt = connection.prepareStatement(sql);
-        stmt.setInt(1, userId);
-        stmt.executeUpdate();
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, userId);
+            stmt.executeUpdate();
+
+            return true;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return false;
     }
 }

@@ -72,7 +72,14 @@
                                 If your email exists in our database, a message with instruction
                                 will be sent to it.
                             </p>
-                            <p class="text-secondary">This email expires after ${timeout} seconds.</p>
+                            <p class="text-secondary">
+                                <c:if test="${timeout > 60}">
+                                This email expires after ${timeout / 60} minutes
+                                </c:if>
+                                <c:if test="${timeout < 60}">
+                                This email expires after ${timeout} seconds
+                                </c:if>
+                            </p>
                             <a href="user/reset">
                                 <button class="btn btn-outline btn-secondary">Go back</button>
                             </a>

@@ -10,7 +10,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -50,5 +52,32 @@ public class DAOSubject extends DBContext {
             Logger.getLogger(DAOSubject.class.getName()).log(Level.SEVERE, null, ex);
         }
         return vec;
+    }
+    
+    public List<Subject> getEnoughToDisplay(int ammoutOfSubjects) {
+        List<Subject> Out = new ArrayList<>();
+        String sql = "SELECT TOP (?) s.SubjectId, s.SubjectTitle, s.SubjectTagLine, s.SubjectThumbnail FROM Subject s;";
+        PreparedStatement pre;
+        try {
+            pre = connection.prepareStatement(sql);
+            pre.setInt(1, ammoutOfSubjects);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                Subject a = new Subject();
+                a.setSubjectId(rs.getInt(1));
+                a.setSubjectName(rs.getString(2));
+                a.setTagLine(rs.getString(3));
+                a.setThumbnail(rs.getString(4));
+                Out.add(a);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return Out;
+    }
+    
+    public static void main(String[] args) {
+        DAOSubject test = new DAOSubject();
+        System.out.println(test.getEnoughToDisplay(1).size());
     }
 }

@@ -7,22 +7,37 @@ package app.entity;
 /**
  *
  * @author OwO
- * Modified by QuanNM @3pm May 25th: Change to new RoleId and GenderId to adhere to the database update, 
- *      please use DAOGender and DAORole to get mapping from Id to Value from now on.
+ * 
  */
 
 public class User {
     private int userId;
     private String email;
     private String password;
-    private int roleId;
+    private String role;
     private String fullName;
-    private int genderId;
+    private String gender;
     private String mobile;
     private boolean isActive;
+    
+    private int roleId;
+    private int genderId;
 
     public User() {}
+    
+    //Uses String gender and role
+    public User(int userId, String email, String password, String role, String fullName, String gender, String mobile, boolean isActive) {
+        this.userId = userId;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+        this.fullName = fullName;
+        this.gender = gender;
+        this.mobile = mobile;
+        this.isActive = isActive;
+    }
 
+    //Uses genderId and roleId
     public User(int userId, String email, String password, int roleId, String fullName, int genderId, String mobile, boolean isActive) {
         this.userId = userId;
         this.email = email;
@@ -58,12 +73,12 @@ public class User {
         this.password = password;
     }
 
-    public int getRoleId() {
-        return roleId;
+    public String getRole() {
+        return role;
     }
 
-    public void setRoleId(int roleId) {
-        this.roleId = roleId;
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public String getFullName() {
@@ -74,12 +89,12 @@ public class User {
         this.fullName = fullName;
     }
 
-    public int getGenderId() {
-        return genderId;
+    public String getGender() {
+        return gender;
     }
 
-    public void setGenderId(int genderId) {
-        this.genderId = genderId;
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 
     public String getMobile() {
@@ -97,6 +112,21 @@ public class User {
     public void setIsActive(boolean isActive) {
         this.isActive = isActive;
     }
-    
-    
+
+    public int getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(int roleId) {
+        this.roleId = roleId;
+    }
+
+    public int getGenderId() {
+        return genderId;
+    }
+
+    public void setGenderId(int genderId) {
+        this.genderId = genderId;
+    }
+
 }

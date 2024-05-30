@@ -1,3 +1,5 @@
+<%@page import="java.util.List, java.util.ArrayList, app.entity.Slide, app.dal.DAOSlide, app.entity.Subject, app.dal.DAOSubject, app.dal.DAOBlog, app.entity.Blog" %>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -39,7 +41,7 @@
         var successMessage = '<%= session.getAttribute("successMessage") %>';
          if (successMessage && successMessage !== "null" && successMessage.length > 0) {
             showNotification(successMessage);
-            session.removeAttribute("successMessage");
+            <% session.removeAttribute("successMessage"); %>
         }
     };
 </script>

@@ -208,4 +208,6 @@ CREATE TABLE [dbo].[Blog](
 	[BlogCategoryId] [int] foreign key references [dbo].[BlogCategory](BlogCategoryId),
 	[BlogTitle] [nvarchar](512),
 	[UpdatedTime] [datetime],
-	[PostText] [ntext])
+	[PostBrief] [nvarchar](2048),
+	[PostText] [ntext]
+)

@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="6.0" xmlns="https://jakarta.ee/xml/ns/jakartaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd">
-
+    <servlet>
+        <servlet-name>VerificationUserRegister</servlet-name>
+        <servlet-class>app.controller.VerificationUserRegister</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>default</servlet-name>
         <url-pattern>/public/*</url-pattern>
     </servlet-mapping>
-
     <servlet>
         <servlet-name>CustomerController</servlet-name>
         <servlet-class>app.controller.CustomerController</servlet-class>
@@ -27,10 +29,6 @@
         <url-pattern>/CustomerController</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>RegistrationController</servlet-name>
-        <url-pattern>/RegistrationController</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
         <servlet-name>default</servlet-name>
         <url-pattern>*.js</url-pattern>
     </servlet-mapping>
@@ -46,6 +44,10 @@
         <servlet-name>ResetPasswordController</servlet-name>
         <url-pattern>/user/reset</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RegistrationController</servlet-name>
+        <url-pattern>/RegistrationController</url-pattern>
+    </servlet-mapping>
     <servlet>
         <servlet-name>UserProfile</servlet-name>
         <servlet-class>app.controller.UserProfile</servlet-class>
@@ -53,5 +55,9 @@
     <servlet-mapping>
         <servlet-name>UserProfile</servlet-name>
         <url-pattern>/UserProfile</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>VerificationUserRegister</servlet-name>
+        <url-pattern>/VerificationUserRegister</url-pattern>
     </servlet-mapping>
 </web-app>
