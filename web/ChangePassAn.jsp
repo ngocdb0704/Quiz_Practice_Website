@@ -11,29 +11,6 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Change Password</title>
         <%@include file="/common/ImportBootstrap.jsp" %>
-<<<<<<< Updated upstream
-        <!--<link rel="stylesheet" href="public/css/ChangePassAn.css">-->
-<!--        <script>
-            function showNotification(message) {
-                var notification = document.getElementById("notification");
-                notification.innerHTML = message;
-                notification.classList.add("show");
-                setTimeout(function () {
-                    notification.classList.remove("show");
-                }, 3000); // Hide the notification after 3 seconds
-            }
-
-// Check if there is a success message and show the notification
-            window.onload = function () {
-                var changePassMessage = '<%= session.getAttribute("changePassMessage") %>';
-                if (changePassMessage && changePassMessage !== null) {
-                    showNotification(changePassMessage);
-                    session.removeAttribute("changePassMessage");
-                }
-            };
-        </script>-->
-=======
->>>>>>> Stashed changes
     </head>
     <body>
 
