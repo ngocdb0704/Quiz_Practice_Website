@@ -26,21 +26,56 @@ if(vector == null ){%>
 </head>
 <body>
 
-<div class="container"> 
+<div class="container-xl"> 
     <header>
         <h1>Customer Management</h1>
-        <a href="CustomerController?service=listAll" class="btn btn-primary">Home</a>
-        <a href="insertCustomer.html" class="btn btn-success">New User</a>
+        <a href="admin_index.jsp" class="btn btn-primary">Home</a>
+        <a href="addUser.jsp" class="btn btn-success">New User</a>
     </header>
 
-    <section class="filters">
-        <div class="dropdown">
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f1f1f1;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+</style>
+<div>
+<a href="CustomerControllerURL?service=listAll">Home</a>
+<div>
+<form method="get">
+    <a href="insertCustomer.html">New User</a>
+</form>
+    </div>
+</div>
+
+
+
+<div>
+    <div class="dropdown">
     <button class="dropbtn">Sort By</button>
     <div class="dropdown-content">
         <a href="CustomerController?service=sortbyID">Sort by ID</a>
         <a href="CustomerController?service=sortbyName">Sort by FullName</a>
         <a href="CustomerController?service=sortbyMail">Sort by Email</a>
         <a href="CustomerController?service=sortbyPhone">Sort by Mobile</a>
+        <a href="CustomerController?service=sortbyGen">Sort by Gender</a>
+           <a href="CustomerController?service=sortbyRole">Sort by Role</a>
+             <a href="CustomerController?service=sortbyStatus">Sort by Status</a>
     </div>
 </div>
     <div class="dropdown">
@@ -92,7 +127,7 @@ if(vector == null ){%>
     </section>
 
     <main>
-        <table class="table table-striped table-bordered">
+        <table class="table">
           <% String titleTable=(String)request.getAttribute("titleTable");%>
         <caption><%=titleTable%></caption>
         <tr>
@@ -105,7 +140,7 @@ if(vector == null ){%>
             <th>Mobile</th>
             <th>Active Status</th>
             <th>Edit</th>
-            <th>View</th>
+            <th>View Details</th>
         </tr>
 
         <% 
@@ -115,13 +150,13 @@ if(vector == null ){%>
             <td><%=cus.getUserId()%></td>
             <td><%=cus.getEmail()%></td>
             <td><%=cus.getPassword()%></td>
-            <td><%=cus.getRole()%></td>
+            <td><%=cus.getRoleId()%></td>
             <td><%=cus.getFullName()%></td>
-            <td><%=cus.getGender()%></td>
+            <td><%=cus.getGenderId()%></td>
             <td><%=cus.getMobile()%></td>
-            <td><%=cus.isIsActive()%></td>
+            <td><%=(cus.isIsActive() == true ? "Active" : "Not Active")%></td>
             <td><a href="CustomerController?service=update&id=<%=cus.getUserId()%>">Edit</a></td>
-            <td><a href="CustomerController?service=view&id=<%=cus.getUserId()%>">View</a></td>
+            <td><a href="CustomerController?service=detailsList&id=<%=cus.getUserId()%>">View Details</a></td>
         </tr>
         <%}%>
         </table>

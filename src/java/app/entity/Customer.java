@@ -13,9 +13,9 @@ public class Customer {
     private int userId;
     private String email;
     private String password;
-    private String role;
+    private String roleid;
     private String fullName;
-    private String gender;
+    private String genderid;
     private String mobile;
     private boolean isActive;
 
@@ -27,9 +27,9 @@ public class Customer {
         this.userId = userId;
         this.email = email;
         this.password = password;
-        this.role = role;
+        this.roleid = role;
         this.fullName = fullName;
-        this.gender = gender;
+        this.genderid = gender;
         this.mobile = mobile;
         this.isActive = isActive;
     }
@@ -58,12 +58,12 @@ public class Customer {
         this.password = password;
     }
 
-    public String getRole() {
-        return role;
+    public String getRoleId() {
+        return roleid;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setRoleId(String roleid) {
+        this.roleid = roleid;
     }
 
     public String getFullName() {
@@ -74,12 +74,12 @@ public class Customer {
         this.fullName = fullName;
     }
 
-    public String getGender() {
-        return gender;
+    public String getGenderId() {
+        return genderid;
     }
 
-    public void setGender(String gender) {
-        this.gender = gender;
+    public void setGenderId(String genderid) {
+        this.genderid = genderid;
     }
 
     public String getMobile() {
@@ -100,7 +100,7 @@ public class Customer {
 
     @Override
     public String toString() {
-        return "Customer{" + "userId=" + userId + ", email=" + email + ", password=" + password + ", role=" + role + ", fullName=" + fullName + ", gender=" + gender + ", mobile=" + mobile + ", isActive=" + isActive + '}';
+        return "Customer{" + "userId=" + userId + ", email=" + email + ", password=" + password + ", roleid=" + roleid + ", fullName=" + fullName + ", genderid=" + genderid + ", mobile=" + mobile + ", isActive=" + isActive + '}';
     }
 
    

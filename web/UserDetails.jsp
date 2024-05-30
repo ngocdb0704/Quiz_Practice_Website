@@ -1,8 +1,4 @@
-<%-- 
-    Document   : UserDetails
-    Created on : May 27, 2024, 11:10:13 PM
-    Author     : Administrator
---%>
+
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="java.util.Vector,app.entity.Customer,app.model.DAOCustomer"%>
@@ -20,13 +16,14 @@ if(vector == null ){%>
 <link href="css/style.css" rel="stylesheet" type="text/css"/>
     <body>
         <div>
+            <a href="admin_index.jsp">Home</a>
     <table border="1" class="table">
         <% String titleTable=(String)request.getAttribute("titleTable");%>
         <caption><%=titleTable%></caption>
         <tr>
             <th>UserID</th>
             <th>Email</th>
-            <th>Password</th>
+            <th>Avatar</th>
             <th>Role</th>
             <th>FullName</th>
             <th>Gender</th>
@@ -42,10 +39,10 @@ if(vector == null ){%>
         <tr>
             <td><%=cus.getUserId()%></td>
             <td><%=cus.getEmail()%></td>
-            <td><%=cus.getPassword()%></td>
-            <td><%=cus.getRole()%></td>
+            <td><img src="UserProfile?service=showPic&uId =<%=cus.getUserId()%> "></td>
+            <td><%=cus.getRoleId()%></td>
             <td><%=cus.getFullName()%></td>
-            <td><%=cus.getGender()%></td>
+            <td><%=cus.getGenderId()%></td>
             <td><%=cus.getMobile()%></td>
             <td><%=cus.isIsActive()%></td>
             <td><a href="CustomerController?service=update&id=<%=cus.getUserId()%>">Edit</a></td>
