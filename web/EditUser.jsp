@@ -17,13 +17,13 @@
                     =(Vector<Customer>)request.getAttribute("vector");
         Customer cus =vector.get(0);
         %>
-        <form action="CustomerControllerURL?service=listAll" method="post">
+        <form action="CustomerController?service=listAll" method="post">
   <table>
       <caption>Edit User</caption>
      
       <tr>
           <td>ID</td>
-          <td><input type="text" name="ID" value="<%=cus.getUserID()%>"></td>
+          <td><input type="text" name="UserId" value="<%=cus.getUserId()%>"></td>
       </tr>
       <tr>
           <td>Email</td>
@@ -34,16 +34,16 @@
           <td><input type="text" name="Password" id="" value="<%=cus.getPassword()%>"></td>
       </tr>
       <tr>
-          <td>Role</td>
-          <td><input type="text" name="Role" id="" value="<%=cus.getRole()%>"></td>
+          <td>RoleId</td>
+          <td><input type="text" name="RoleId" id="" value="<%=cus.getRole()%>"></td>
       </tr>
       <tr>
           <td>FullName</td>
           <td><input type="text" name="FullName" id="" value="<%=cus.getFullName()%>"></td>
       </tr>
       <tr>
-          <td>Gender</td>
-          <td><input type="text" name="Gender" id="" value="<%=cus.getGender()%>"></td>
+          <td>GenderId</td>
+          <td><input type="text" name="GenderId" id="" value="<%=cus.getGender()%>"></td>
       </tr>
       <tr>
           <td>Mobile</td>

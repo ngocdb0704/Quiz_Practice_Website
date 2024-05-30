@@ -83,7 +83,7 @@
                             <a href="user/reset">
                                 <button class="btn btn-outline btn-secondary">Go back</button>
                             </a>
-                            <a href="home">
+                            <a href="">
                                 <button class="btn btn-primary">Go home</button>
                             </a>
                         </div>
