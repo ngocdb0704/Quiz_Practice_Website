@@ -6,6 +6,7 @@ package app.dal;
 
 import app.dal.DBContext;
 import app.entity.Subject;
+import app.entity.SubjectCategory;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -21,25 +22,31 @@ import java.util.logging.Logger;
  */
 public class DAOSubject extends DBContext {
 
-    public Vector<Subject> getFilterList() {
-        Vector<Subject> vec = new Vector<>();
+    public Vector<SubjectCategory> getFilterList() {
+        Vector<SubjectCategory> vec = new Vector<>();
         try {
             Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-            ResultSet rs = statement.executeQuery("select s.SubjectId, "
-                    + "s.SubjectName, s.SubjectCategory from Registration r, "
-                    + "Subject s where r.SubjectId = s.SubjectId");
-            String alreadyAddedCategory = "";
-            int i=1;
+            //change query due to database script's change
+            ResultSet rs
+                    = statement.executeQuery("""
+                    with CategoryHierarchy as (
+                        select  SubjectCategoryId, SubjectCategoryName,
+                                    SubjectParentCategory from SubjectCategory 
+                                    where SubjectParentCategory = 0 
+                        union all
+                        select  sc.SubjectCategoryId,
+                                        sc.SubjectCategoryName,
+                                        sc.SubjectParentCategory from SubjectCategory sc
+                                        inner join CategoryHierarchy ch 
+                                        on ch.SubjectCategoryId = sc.SubjectParentCategory
+                    )
+                    select * from CategoryHierarchy""");
             while (rs.next()) {
-                int id = i;
+                int id = rs.getInt(1);
                 String name = rs.getString(2);
-                String category = rs.getString(3);
-                if (!alreadyAddedCategory.contains(category)) {
-                    Subject sub = new Subject(id, name, category);
-                    vec.add(sub);
-                    alreadyAddedCategory += category + "/";
-                    i++;
-                }
+                int categoryParent = rs.getInt(3);
+                SubjectCategory cat = new SubjectCategory(id, name, categoryParent);
+                vec.add(cat);
             }
         } catch (SQLException ex) {
             Logger.getLogger(DAOSubject.class.getName()).log(Level.SEVERE, null, ex);

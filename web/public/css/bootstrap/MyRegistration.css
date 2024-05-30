@@ -1,28 +1,6 @@
-/*
-Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
-Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this template
-*/
-/* 
-    Created on : 20 thg 5, 2024, 17:34:52
-    Author     : admin
-*/
-
-
-.siderbar{
-    position: sticky;
-    top: 20px;
+.payButton{
+    display: block;
 }
-
-@media screen and (max-height: 450px) {
-    .sider {
-        padding-top: 15px;
-    }
-    .sider a {
-        font-size: 18px;
-    }
+.qrimg{
+    display: block;
 }
-.regist{
-    width: 18rem;
-    display: inline-block;
-}
-

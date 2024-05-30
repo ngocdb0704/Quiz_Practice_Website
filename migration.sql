@@ -117,19 +117,19 @@ SET QUOTED_IDENTIFIER ON
 
 Go
 CREATE TABLE [dbo].[Gender](
-	[GenderId] [int] primary key,
+	[GenderId] [int] IDENTITY(1,1) primary key ,
 	[GenderName] [varchar](50))
 
 GO
 
 CREATE TABLE [dbo].[Role](
-	[RoleId] [int] primary key,
+	[RoleId] [int] IDENTITY(1,1) primary key,
 	[RoleName] [varchar](50))
 
 GO
 
 CREATE TABLE [dbo].[User](
-	[UserId] [int] primary key,
+	[UserId] [int] IDENTITY(1,1) primary key,
 	[Email] [varchar](50) UNIQUE,
 	[Password] [varchar](50),
 	[RoleId] [int]  foreign key references [dbo].[Role](RoleId),
@@ -153,13 +153,13 @@ CREATE TABLE [dbo].[ResetToken](
 GO
 
 CREATE TABLE [dbo].[SubjectCategory](
-	[SubjectCategoryId] [int] primary key,
+	[SubjectCategoryId] [int] IDENTITY(1,1) primary key,
 	[SubjectCategoryName] [varchar](50))
 
 GO
 
 CREATE TABLE [dbo].[Subject](
-	[SubjectId] [int] primary key,
+	[SubjectId] [int] IDENTITY(1,1) primary key,
 	[SubjectTitle] [varchar](50),
 	[SubjectCategoryId] [int] foreign key references [dbo].[SubjectCategory](SubjectCategoryId),
 	[SubjectStatus] [bit],
@@ -172,7 +172,7 @@ CREATE TABLE [dbo].[Subject](
 GO
 
 CREATE TABLE [dbo].[Package](
-	[PackageId] [int] primary key,
+	[PackageId] [int] IDENTITY(1,1) primary key,
 	[SubjectId] [int] foreign key references [dbo].[Subject](SubjectId),
 	[PackageName] [nvarchar](50),
 	[PackageDuration] [int],
@@ -183,27 +183,30 @@ CREATE TABLE [dbo].[Package](
 GO
 
 CREATE TABLE [dbo].[RegistrationStatus](
-	[RegistrationStatusId] [int] primary key,
+	[RegistrationStatusId] [int] IDENTITY(1,1) primary key,
 	[RegistrationStatusName] [varchar](50))
 
 GO
 CREATE TABLE [dbo].[Registration](
-	[RegistrationId] [int] primary key,
+	[RegistrationId] [int] IDENTITY(1,1) primary key,
 	[UserId] [int] foreign key references [dbo].[User](UserId),
 	[RegistrationTime] [date],
 	[PackageId] [int] foreign key references [dbo].[Package](PackageId),
 	[TotalCost] [float],
 	[RegistrationStatusId] [int] foreign key references [dbo].[RegistrationStatus](RegistrationStatusId),
 	[ValidFrom] [date],
-	[ValidTo] [date])
+	[ValidTo] [date],
+	[TransactionContent] [varchar](255),
+	[TransactionCode] [varchar](255),
+	[TransactionAccount] [varchar](255))
 Go
 CREATE TABLE [dbo].[BlogCategory](
-	[BlogCategoryId] [int] primary key,
+	[BlogCategoryId] [int] IDENTITY(1,1) primary key,
 	[BlogCategoryName] [varchar](50))
 
 Go
 CREATE TABLE [dbo].[Blog](
-	[BlogId] [int] primary key,
+	[BlogId] [int] IDENTITY(1,1) primary key,
 	[UserId] [int] foreign key references [dbo].[User](UserId),
 	[BlogCategoryId] [int] foreign key references [dbo].[BlogCategory](BlogCategoryId),
 	[BlogTitle] [nvarchar](512),
