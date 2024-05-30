@@ -70,9 +70,16 @@ public class DAOBlog extends DBContext {
         return 0;
     }
     
+    //Hard-coded ids
+    static int[] ListOfHotPosts = {1, 3, 4, 5};
+    
     public List<Blog> getEnoughToDisplay(int ammoutOfBlogs) {
         List<Blog> Out = new ArrayList<>();
-        String sql = "SELECT TOP (?) * FROM Blog";
+        String sql = "SELECT TOP (?) * FROM Blog WHERE BlogId IN (";
+        for (int i: ListOfHotPosts) sql += i + ", ";
+        sql = sql.substring(0, sql.length() - 2);
+        sql += ")";
+        
         PreparedStatement pre;
         try {
             pre = connection.prepareStatement(sql);
@@ -87,6 +94,8 @@ public class DAOBlog extends DBContext {
     }
     
     public static void main(String[] args) {
-        System.out.println(new DAOBlog().getEnoughToDisplay(3).size());
+        List<Blog> g = new DAOBlog().getEnoughToDisplay(7);
+        System.out.println(g.size());
+        System.out.println(g.get(0).getPostText());
     }
 }

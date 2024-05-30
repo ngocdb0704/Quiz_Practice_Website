@@ -159,7 +159,23 @@ public class DAOUser extends DBContext {
         }
     }
     
+    //to be replaced with better ways immediately after showcase
+    public String idToName(int id) {
+                String sql = "SELECT FullName FROM [User] where UserId = '" + id + "';";
+        try {
+            Statement state = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = state.executeQuery(sql);
+            if (rs.next()) {
+                return rs.getString(1);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
+    
     public static void main(String[] args) {
         System.out.println(new DAOUser().getAll());
+        System.out.println(new DAOUser().idToName(1));
     }
 }

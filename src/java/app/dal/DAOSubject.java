@@ -54,9 +54,16 @@ public class DAOSubject extends DBContext {
         return vec;
     }
     
+    //Hard-coded ids
+    static int[] ListOfFeaturedSubjectId = {1, 2, 3, 4, 5};
+    
     public List<Subject> getEnoughToDisplay(int ammoutOfSubjects) {
         List<Subject> Out = new ArrayList<>();
-        String sql = "SELECT TOP (?) s.SubjectId, s.SubjectTitle, s.SubjectTagLine, s.SubjectThumbnail FROM Subject s;";
+        String sql = "SELECT TOP (?) s.SubjectId, s.SubjectTitle, s.SubjectTagLine, s.SubjectThumbnail FROM Subject s WHERE s.SubjectId in (";
+        for (int i: ListOfFeaturedSubjectId) sql += i + ", ";
+        sql = sql.substring(0, sql.length() - 2);
+        sql += ")";
+        
         PreparedStatement pre;
         try {
             pre = connection.prepareStatement(sql);
@@ -78,6 +85,6 @@ public class DAOSubject extends DBContext {
     
     public static void main(String[] args) {
         DAOSubject test = new DAOSubject();
-        System.out.println(test.getEnoughToDisplay(1).size());
+        System.out.println(test.getEnoughToDisplay(5).size());
     }
 }

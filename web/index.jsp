@@ -1,4 +1,4 @@
-<%@page import="java.util.List, java.util.ArrayList, app.entity.Slide, app.dal.DAOSlide, app.entity.Subject, app.dal.DAOSubject, app.dal.DAOBlog, app.entity.Blog" %>
+<%@page import="java.util.List, java.util.ArrayList, app.entity.Slide, app.dal.DAOSlide, app.entity.Subject, app.dal.DAOSubject, app.dal.DAOBlog, app.entity.Blog, app.dal.DAOUser" %>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -50,6 +50,7 @@
     <% DAOSlide daoSlide = new DAOSlide(); 
        DAOBlog daoBlog = new DAOBlog();
        DAOSubject daoSubject = new DAOSubject();
+       DAOUser daoUser = new DAOUser();
     %>
     
     
@@ -98,16 +99,19 @@
         <%}%>
         
         <div class="post-list">
-            Sort by <button class="btn btn-outline-primary disabled">Hot <i class="bi bi-fire"></i></button> <button class="btn btn-outline-primary active">New <i class="bi bi-bar-chart-line"></i></button>
+            <!--Sort by <button class="btn btn-outline-primary disabled">Hot <i class="bi bi-fire"></i></button> <button class="btn btn-outline-primary active">New <i class="bi bi-bar-chart-line"></i></button-->
             <%for (Blog blog: daoBlog.getEnoughToDisplay(5)) {%>
             <div class="card">
                 <div class="card-body">
                     <img class="profilePic" src="./public/images/anonymous-user.webp">
-                    <h5 class="card-title">Post title</h5>
-                    <i>Date</i>
+                    <h5 class="card-title"><%=daoUser.idToName(blog.getUserId())%></h5>
+                    <i><%=blog.getUpdatedTime()%></i>
                 </div>
-                <p class="card-text container">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                <img class="card-img-bottom" src="./public/images/anonymous-user.webp" alt="Card image cap">
+                <div class="container">
+                    <h5><%=blog.getBlogTitle()%></h5>
+                    <p class="card-text"><%=blog.getPostText()%></p>
+                </div>
+                <img class="card-img-bottom" src="./public/images/blogimg.jpg" alt="Card image cap">
             </div>
             <%}%>
         </div>
