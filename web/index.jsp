@@ -103,7 +103,7 @@
             <%for (Blog blog: daoBlog.getEnoughToDisplay(5)) {%>
             <div class="card">
                 <div class="card-body">
-                    <img class="profilePic" src="./public/images/anonymous-user.webp">
+                    <img class="profilePic" src="UserProfile?service=showPic&uId=<%=blog.getUserId()%>">
                     <h5 class="card-title"><%=daoUser.idToName(blog.getUserId())%></h5>
                     <i><%=blog.getUpdatedTime()%></i>
                 </div>

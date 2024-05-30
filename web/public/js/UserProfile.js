@@ -5,13 +5,21 @@
 
 let uploadSubmission = document.getElementById("upload-submission");
 let uploadName = document.getElementById("upload-name");
+let imgSubmit = document.getElementById("img-submit-btn");
 
 function noticeFileUpload(name) {
     uploadSubmission.style.display = "block";
-    console.log(name);
-    console.log(name.lastIndexOf("/"));
-    
-    uploadName.innerHTML = "Selected file: " + name.slice(name.lastIndexOf("\\") + 1);
+    //console.log(name);
+    //console.log(name.lastIndexOf("/"));
+
+    if (name.endsWith(".jpg") || name.endsWith(".png")) {
+        imgSubmit.style.display = "block";
+        uploadName.innerHTML = "Selected file: " + name.slice(name.lastIndexOf("\\") + 1);
+
+    } else {
+        imgSubmit.style.display = "none";
+        uploadName.innerHTML = "<strong style=\"color: red;\">Please select a .png or .jpg file!</strong>";
+    }
 }
 
 let body = document.querySelector("body");

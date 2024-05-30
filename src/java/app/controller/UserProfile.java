@@ -70,7 +70,7 @@ public class UserProfile extends HttpServlet {
         }
 
         //All of the serives that require users to be logged in (session has a valid userId) will be behind this point, so this check for userId and redirect user to Unauthorized.jsp or let user continue.
-        if (uId == null) {
+        if (uId == null && !service.equals("showPic")) {
             request.getRequestDispatcher("Unauthorized.jsp").forward(request, response);
             return;
         }
@@ -134,27 +134,8 @@ public class UserProfile extends HttpServlet {
                     fetched = dao.getProfileImage(uId);
                 }
                 
-                System.out.println("up log" + uId);
                 //Check if user has a profile picture
                 if (fetched == null) {
-                    System.out.println("up log" + uId);
-                    
-                    /*
-                    response.setContentType("image/gif");
-                    ServletContext cntxt = this.getServletContext();
-                    String fName = "public/images/anonymous-user.webp";
-                    InputStream ins = cntxt.getResourceAsStream(fName);
-
-                    //Return anonymous-user.webp via an OutputStream
-                    try (OutputStream o = response.getOutputStream()) {
-                        byte[] fetchedDefault = new byte[ins.available()];
-                        ins.read(fetchedDefault);
-                        o.write(fetchedDefault);
-                        o.flush();
-                        o.close();
-                    }
-                    */
-                    
                     request.getRequestDispatcher("public/images/anonymous-user.webp").forward(request, response);
 
                 } else {

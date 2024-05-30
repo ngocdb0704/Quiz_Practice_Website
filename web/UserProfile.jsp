@@ -78,7 +78,7 @@
                             <input type="hidden" name="redirect" value="<%=currentPage%>">
                             <div id="upload-submission">
                                 <p id="upload-name">Selected file: none</p>
-                                <input class="btn btn-primary" type="submit" value="Save as new profile picture" />
+                                <input id="img-submit-btn" class="btn btn-primary" type="submit" value="Save as new profile picture" />
                             </div>
                         </form>
                     </div>
