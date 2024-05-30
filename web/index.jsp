@@ -48,7 +48,6 @@
     <body>
         <%@include file="/common/header.jsp" %>
         <main class="container">
-            <!--DEBUG BY QUANNM, REMOVE SOON-->
             Current user email: <%
             try {
                 String userEmail = (String)session.getAttribute("userEmail");

@@ -19,6 +19,9 @@
                 <li class="nav-item">
                     <a class="nav-link" href="RegistrationController">My Registration</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="admin_index.jsp">Admin-only Page</a>
+                </li>
             </ul>
             <div class="d-flex gap-2">
                 <div id="notification" class="notification"></div>

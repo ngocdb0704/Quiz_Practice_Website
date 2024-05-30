@@ -138,25 +138,25 @@ public class DAOCustomer extends DBContext {
 
     public int addCustomers(Customer cus) {
         int n = 0;
-        String sql = "INSERT INTO [dbo].[User]\n" +
-"           ([UserId]\n" +
-"           ,[Email]\n" +
-"           ,[Password]\n" +
-"           ,[RoleId]\n" +
-"           ,[FullName]\n" +
-"           ,[GenderId]\n" +
-"           ,[Mobile]\n" +
-"           ,[IsActive])\n" +
-"     VALUES\n" +
-"           (?,?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO [dbo].[User]\n"
+                + "           ([UserId]\n"
+                + "           ,[Email]\n"
+                + "           ,[Password]\n"
+                + "           ,[RoleId]\n"
+                + "           ,[FullName]\n"
+                + "           ,[GenderId]\n"
+                + "           ,[Mobile]\n"
+                + "           ,[IsActive])\n"
+                + "     VALUES\n"
+                + "           (?,?,?,?,?,?,?,?)";
         try {
             PreparedStatement pre = connection.prepareStatement(sql);
             pre.setInt(1, cus.getUserId());
             pre.setString(2, cus.getEmail());
             pre.setString(3, cus.getPassword());
-            pre.setString(4, cus.getRole());
+            pre.setString(4, cus.getRoleId());
             pre.setString(5, cus.getFullName());
-            pre.setString(6, cus.getGender());
+            pre.setString(6, cus.getGenderId());
             pre.setString(7, cus.getMobile());
             pre.setBoolean(8, cus.isIsActive());
             n = pre.executeUpdate();
@@ -170,7 +170,8 @@ public class DAOCustomer extends DBContext {
     public int updateUser(Customer cus) {
         int n = 0;
         String sql = "UPDATE [dbo].[User]\n"
-                + "   SET [Email] = ?\n"
+                + "  SET  [UserId] = ?"
+                + "      ,[Email] = ?\n"
                 + "      ,[Password] = ?\n"
                 + "      ,[RoleId] = ?\n"
                 + "      ,[FullName] = ?\n"
@@ -180,14 +181,15 @@ public class DAOCustomer extends DBContext {
                 + " WHERE UserId = ?";
         try {
             PreparedStatement pre = connection.prepareStatement(sql);
-            pre.setString(1, cus.getEmail());
-            pre.setString(2, cus.getPassword());
-            pre.setString(3, cus.getRole());
-            pre.setString(4, cus.getFullName());
-            pre.setString(5, cus.getGender());
-            pre.setString(6, cus.getMobile());
-            pre.setBoolean(7, cus.isIsActive());
-            pre.setInt(8, cus.getUserId());
+            pre.setInt(1,cus.getUserId());
+            pre.setString(2, cus.getEmail());
+            pre.setString(3, cus.getPassword());
+            pre.setString(4, cus.getRoleId());
+            pre.setString(5,cus.getFullName());
+            pre.setString(6, cus.getGenderId());
+            pre.setString(7, cus.getMobile());
+            pre.setBoolean(8, cus.isIsActive());
+            pre.setInt(9,cus.getUserId());
             n = pre.executeUpdate();
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -197,9 +199,7 @@ public class DAOCustomer extends DBContext {
 
     public static void main(String[] args) {
         DAOCustomer dao = new DAOCustomer();
-                int n = dao.updateUser(
-                        new Customer(2, "dunglhhe181216@fpt.edu.vn", "12345", "3", "lehungdung", "1", "1232", false)
-                );
+        int n = dao.addCustomers(new Customer(3, "quannm@fpt.edu.vn", "1234", "1", "nguyenminhquan", "1", "293510", true));
         if (n > 0) {
             System.out.println("UPDATED!!!");
         }

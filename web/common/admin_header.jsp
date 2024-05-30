@@ -8,13 +8,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link" href="index.jsp">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="CustomerController?service=listAll">Customer Manage</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="CustomerController?service=detailsList">Customer Details</a>
+                    <a class="nav-link" href="CustomerController?service=listAll">User Manage</a>
                 </li>
             </ul>
         </div>
