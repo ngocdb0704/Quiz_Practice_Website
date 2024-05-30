@@ -15,6 +15,9 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
 }
 
 #upload-label {
+   position: absolute;
+   bottom: 0;
+   left: 0;
    cursor: pointer;
    opacity: 0.6;
    color: white;

@@ -6,6 +6,8 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="app.entity.User, app.dal.DAOUser, app.dal.DAOGender, app.dal.DAORole, java.util.concurrent.ConcurrentHashMap" %>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!-- TODO: Format this away from scriptlet spam bc this is pretty unreadable -->
 <!DOCTYPE html>
 <html>
     <head>
@@ -28,8 +30,6 @@
         }
         catch (Exception e1) {}
         
-        System.out.println("aaa" + currentPage.length());
-        
         //get userId attribute from session, get and set it if the attribute does't exist. 
         try {
             uId = Integer.parseInt(request.getParameter("userId"));
@@ -40,7 +40,6 @@
                     fetched = dao.getUserByEmail(session.getAttribute("userEmail").toString());
                     uId = fetched.getUserId();
                     session.setAttribute("userId", uId);
-                    System.out.println("Id: " + uId);
                 }
                 catch (Exception e1) {System.out.println(e1);}
             }
@@ -56,23 +55,22 @@
             <h1>Please login to view you profile</h1>
             <%
             } else {
-                //ConcurrentHashMap roleMap = new DAORole().getMap(), genderMap = new DAOGender().getMap();
-                String role = ""; 
                 final int genderId = fetched.getGenderId();
                 ConcurrentHashMap genderMap = new DAOGender().getMap();
-                try {
+                
+                String role = "";
+                try {  //redundancy
                     role = new DAORole().getMap().get(fetched.getRoleId());
-                    genderMap = new DAOGender().getMap();
                 } catch (Exception e){}
 
 
             %>
             <div class="card mb-3"> 
-                <div class="row g-0" style="width: 100%; margin: 0;">
-                    <div class="col-lg-4">
+                <div class="row g-0 w-100 m-0">
+                    <div class="col-lg-4 container">
                         <form method="post" action="UserProfile" enctype="multipart/form-data">
-                            <div id="img-div" style="border: 1px solid black">
-                                <img style="width: 240px" src="UserProfile?service=showPic" alt="Profile picture" />
+                            <div style="position: relative" class="w-100 border border-dark" style="width: 100%;">
+                                <img style="width: 100%; max-height: 300px; object-fit: cover" src="UserProfile?service=showPic" alt="Profile picture" />
                                 <input id="upload" type="file" name="upload" onchange="noticeFileUpload(this.value)"/>
                                 <label id="upload-label" for="upload">Select image</label>
                             </div>
@@ -80,15 +78,15 @@
                             <input type="hidden" name="redirect" value="<%=currentPage%>">
                             <div id="upload-submission">
                                 <p id="upload-name">Selected file: none</p>
-                                <input type="submit" value="Save as new profile picture" />
+                                <input id="img-submit-btn" class="btn btn-primary" type="submit" value="Save as new profile picture" />
                             </div>
                         </form>
                     </div>
 
                     <div class="col-lg-8 container-lg">
                         <div class="form-group mb-3"> Email: <input class="form-control" style="background-color: #cecece; border: 1px solid black" type="text" name="email" value="<%=(fetched != null)? fetched.getEmail(): ""%>" readonly/> </div>
-                        <form action="UserProfile" method="POST">
-                            <div class="form-group mb-3"> Full name: <input class="form-control" type="text" name="fullName" value="<%=(fetched != null)? fetched.getFullName(): ""%>" /> </div>
+                        <form action="UserProfile" method="POST" onkeydown="return event.key != 'Enter';">
+                            <div class="form-group mb-3"> Full name: <input class="form-control" type="text" name="fullName" oninput="validateName(this.value)" value="<%=(fetched != null)? fetched.getFullName(): ""%>" /> </div>
                             <div class="form-group mb-3"> Gender: 
                                 <select class="form-control" name="gender">
                                     <%= genderMap.reduce(0, (key, val) -> "<option value=\"" + key + "\" "
@@ -98,22 +96,18 @@
                                 </select>
 
                             </div>
-                            <div class="form-group mb-3"> Mobile: <input class="form-control" type="text" name="mobile" value="<%=(fetched != null)? fetched.getMobile(): ""%>" /> </div>
+                            <div class="form-group mb-3"> Mobile: <input class="form-control" type="text" name="mobile" oninput="validateMobile(this.value)" value="<%=(fetched != null)? fetched.getMobile(): ""%>" /> </div>
                             <br>
-                            <div class="form-group mb-3"> <input class="form-control" type="submit" value="Save"> </div>
+                            <div class="form-group mb-3"> <input id="saveButton" class="btn btn btn-outline-secondary disabled container" type="submit" value="Save"> </div>
                             <input type="hidden" name="service" value="update">
                             <input type="hidden" name="redirect" value="<%=currentPage%>">
                         </form>
                     </div>
                 </div>
 
-                <%
-                    if (role.equals("Admin")) {
-                %>
+                <%if (role.equals("Admin")) {%>
                 <p style="position: absolute; top: -55px; color: red">Admin</p>
-                <%
-                    }
-                %>
+                <%}%>
             </div>
         </main>
         <%

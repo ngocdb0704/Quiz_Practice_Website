@@ -5,13 +5,21 @@
 
 let uploadSubmission = document.getElementById("upload-submission");
 let uploadName = document.getElementById("upload-name");
+let imgSubmit = document.getElementById("img-submit-btn");
 
 function noticeFileUpload(name) {
     uploadSubmission.style.display = "block";
-    console.log(name);
-    console.log(name.lastIndexOf("/"));
-    
-    uploadName.innerHTML = "Selected file: " + name.slice(name.lastIndexOf("\\") + 1);
+    //console.log(name);
+    //console.log(name.lastIndexOf("/"));
+
+    if (name.endsWith(".jpg") || name.endsWith(".png")) {
+        imgSubmit.style.display = "block";
+        uploadName.innerHTML = "Selected file: " + name.slice(name.lastIndexOf("\\") + 1);
+
+    } else {
+        imgSubmit.style.display = "none";
+        uploadName.innerHTML = "<strong style=\"color: red;\">Please select a .png or .jpg file!</strong>";
+    }
 }
 
 let body = document.querySelector("body");
@@ -23,4 +31,38 @@ function displayPopUp(url) {
 function closePopUp() {
     let popupIframe = parent.document.querySelector(".popup-iframe");
     if (body && popupIframe) popupIframe.remove();
+}
+
+let saveButton;
+let buttonAllowed = "btn btn-primary container", buttonBlocked = "btn btn-outline-secondary disabled container";
+let allowSaveName = true;
+let allowSaveMobile = true;
+
+function changeSaveButtonStatus() {
+    if (!saveButton) saveButton = document.getElementById("saveButton");
+    if (allowSaveName && allowSaveMobile) saveButton.classList = buttonAllowed;
+    else saveButton.classList = buttonBlocked;
+}
+
+let checkName = /^.*[^a-z].*$|^$/i;
+function validateName(val) {
+    let blocked = false;
+    val.split(" ").forEach((it, ind) => {
+        if (it.match(checkName)) {
+            allowSaveName = false;
+            blocked = true;
+        }
+            
+        });
+    if (!blocked) allowSaveName = true;
+    
+    changeSaveButtonStatus();
+}
+
+let checkMobile = /^0[9,8][0-9]{8,9}$/i;
+function validateMobile(val) {
+    if (val.match(checkMobile)) allowSaveMobile = true;
+    else allowSaveMobile = false;
+    
+    changeSaveButtonStatus();
 }
