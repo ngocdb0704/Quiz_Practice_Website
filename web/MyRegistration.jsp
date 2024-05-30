@@ -186,7 +186,7 @@
                                                         <td>${his.transactionTime}</td>
                                                         <td>${his.transactionAccount}</td>
                                                         <td>${his.transactionContent}</td>
-                                                        <td>${his.transactionMoney}</td>
+                                                        <td>${his.transactionMoney*1000}</td>
                                                         <td>
                                                             <c:choose>
                                                                 <c:when test="${his.transactionStatus==2}">

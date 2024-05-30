@@ -70,7 +70,7 @@ public class UserProfile extends HttpServlet {
         }
 
         //All of the serives that require users to be logged in (session has a valid userId) will be behind this point, so this check for userId and redirect user to Unauthorized.jsp or let user continue.
-        if (uId == null) {
+        if (uId == null && !service.equals("showPic")) {
             request.getRequestDispatcher("Unauthorized.jsp").forward(request, response);
             return;
         }
@@ -88,6 +88,7 @@ public class UserProfile extends HttpServlet {
                     
                     dao.updateUserProfile(uId, fullName, genderId, mobile);
                     String redirectTo = request.getParameter("redirect");
+                    System.out.println("Redirect to: " + redirectTo);
                     response.sendRedirect(redirectTo);
                     //request.getRequestDispatcher(redirectTo).forward(request, response);
                 } catch (Exception e) {
@@ -116,29 +117,26 @@ public class UserProfile extends HttpServlet {
                 }
                  */
                 String redirectTo = request.getParameter("redirect");
+                System.out.println("Redirect to: " + redirectTo);
                 response.sendRedirect(redirectTo);
                 //request.getRequestDispatcher(redirectTo).forward(request, response);
             }
 
             //Fetch and return user's profile picture through http
             if (service.equals("showPic")) {
-                byte[] fetched = dao.getProfileImage(uId);
+                byte[] fetched;
+                
+                try {
+                    //If an UID is provided as a paremeter, fetch profile image of the user with that UID instead
+                    fetched = dao.getProfileImage(Integer.parseInt(request.getParameter("uId")));
+                }
+                catch(Exception e) {
+                    fetched = dao.getProfileImage(uId);
+                }
                 
                 //Check if user has a profile picture
                 if (fetched == null) {
-                    response.setContentType("image/gif");
-                    ServletContext cntxt = this.getServletContext();
-                    String fName = "public/images/anonymous-user.webp";
-                    InputStream ins = cntxt.getResourceAsStream(fName);
-
-                    //Return anonymous-user.webp via an OutputStream
-                    try (OutputStream o = response.getOutputStream()) {
-                        byte[] fetchedDefault = new byte[ins.available()];
-                        ins.read(fetchedDefault);
-                        o.write(fetchedDefault);
-                        o.flush();
-                        o.close();
-                    }
+                    request.getRequestDispatcher("public/images/anonymous-user.webp").forward(request, response);
 
                 } else {
                     //Return fetched image via an OutputStream

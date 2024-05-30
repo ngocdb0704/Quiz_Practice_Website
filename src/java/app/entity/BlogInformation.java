@@ -3,6 +3,7 @@ package app.entity;
 import java.sql.Timestamp;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 
 public class BlogInformation {
     private int blogId;
