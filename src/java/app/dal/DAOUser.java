@@ -24,6 +24,8 @@ public class DAOUser extends DBContext {
         } catch (SQLException ex) {
             ex.printStackTrace();
     }
+        return false;
+    }
 
     public List<User> extractResults(ResultSet rs) throws SQLException {
         List<User> result = new ArrayList<>();
@@ -39,8 +41,7 @@ public class DAOUser extends DBContext {
             user.setIsActive(rs.getBoolean("IsActive"));
             result.add(user);
         }
-
-        return false;
+        return result;
     }
 
     public void updatePassByUser(String user, String pass) {
@@ -57,8 +58,6 @@ public class DAOUser extends DBContext {
             Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
-    //=============================
     
 	private Vector<User> getFull(String sql) {
         Vector<User> Out = new Vector<User>();
