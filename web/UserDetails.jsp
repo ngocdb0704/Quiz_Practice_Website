@@ -39,7 +39,7 @@ if(vector == null ){%>
         <tr>
             <td><%=cus.getUserId()%></td>
             <td><%=cus.getEmail()%></td>
-            <td><img src="UserProfile?service=showPic&uId =<%=cus.getUserId()%> "></td>
+            <td><img src="UserProfile?service=showPic&uId =<%=cus.getUserId()%>" width="100" height="100"></td>
             <td><%=cus.getRoleId()%></td>
             <td><%=cus.getFullName()%></td>
             <td><%=cus.getGenderId()%></td>
