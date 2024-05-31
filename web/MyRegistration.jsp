@@ -157,11 +157,11 @@
                 <nav>
                     <div>
                         <!-- Transaction history-->
-                        <button type="button" class="btn btn-secondary mb-3" data-bs-toggle="modal" data-bs-target="#loginModal">
+                        <button type="button" class="btn btn-secondary mb-3" data-bs-toggle="modal" data-bs-target="#hisModal">
                             Transaction History
                         </button>
                         <!-- Modal -->
-                        <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" >
+                        <div class="modal fade" id="hisModal" tabindex="-1" role="dialog" >
                             <div class="modal-dialog modal-dialog-centered" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
