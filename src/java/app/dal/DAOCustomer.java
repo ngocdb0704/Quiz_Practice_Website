@@ -199,9 +199,11 @@ public class DAOCustomer extends DBContext {
 
     public static void main(String[] args) {
         DAOCustomer dao = new DAOCustomer();
-        int n = dao.addCustomers(new Customer(3, "quannm@fpt.edu.vn", "1234", "1", "nguyenminhquan", "1", "293510", true));
+        Customer cus = dao.searchbyEmail("ngocdbhe182383@fpt.edu.vn").get(0);
+        cus.setRoleId("2");
+        int n = dao.updateUser(cus);
         if (n > 0) {
-            System.out.println("UPDATED!!!");
+            System.out.println(cus.getRoleId());
         }
     }
 }
