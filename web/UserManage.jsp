@@ -32,17 +32,6 @@ if(vector == null ){%>
                 <a href="admin_index.jsp" class="btn btn-primary">Home</a>
                 <a href="addUser.jsp" class="btn btn-success">New User</a>
             </header>
-
-            <div>
-                <a href="CustomerControllerURL?service=listAll">Home</a>
-                <div>
-                    <form method="get">
-                        <a href="insertCustomer.html">New User</a>
-                    </form>
-                </div>
-            </div>
-
-
             <section class="filters">
                 <div>
                     <div class="dropdown">

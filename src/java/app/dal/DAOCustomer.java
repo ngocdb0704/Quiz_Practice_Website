@@ -170,8 +170,7 @@ public class DAOCustomer extends DBContext {
     public int updateUser(Customer cus) {
         int n = 0;
         String sql = "UPDATE [dbo].[User]\n"
-                + "  SET  [UserId] = ?"
-                + "      ,[Email] = ?\n"
+                + "  SET  [Email] = ?\n"
                 + "      ,[Password] = ?\n"
                 + "      ,[RoleId] = ?\n"
                 + "      ,[FullName] = ?\n"
@@ -181,15 +180,14 @@ public class DAOCustomer extends DBContext {
                 + " WHERE UserId = ?";
         try {
             PreparedStatement pre = connection.prepareStatement(sql);
-            pre.setInt(1,cus.getUserId());
-            pre.setString(2, cus.getEmail());
-            pre.setString(3, cus.getPassword());
-            pre.setString(4, cus.getRoleId());
-            pre.setString(5,cus.getFullName());
-            pre.setString(6, cus.getGenderId());
-            pre.setString(7, cus.getMobile());
-            pre.setBoolean(8, cus.isIsActive());
-            pre.setInt(9,cus.getUserId());
+            pre.setString(1, cus.getEmail());
+            pre.setString(2, cus.getPassword());
+            pre.setString(3, cus.getRoleId());
+            pre.setString(4,cus.getFullName());
+            pre.setString(5, cus.getGenderId());
+            pre.setString(6, cus.getMobile());
+            pre.setBoolean(7, cus.isIsActive());
+            pre.setInt(8,cus.getUserId());
             n = pre.executeUpdate();
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -200,7 +198,7 @@ public class DAOCustomer extends DBContext {
     public static void main(String[] args) {
         DAOCustomer dao = new DAOCustomer();
         Customer cus = dao.searchbyEmail("ngocdbhe182383@fpt.edu.vn").get(0);
-        cus.setRoleId("2");
+        cus.setRoleId("5");
         int n = dao.updateUser(cus);
         if (n > 0) {
             System.out.println(cus.getRoleId());

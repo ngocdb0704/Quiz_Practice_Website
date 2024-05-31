@@ -281,7 +281,7 @@ public class CustomerController extends HttpServlet {
                         + "FROM [User] u \n"
                         + "JOIN [Role] r ON u.RoleId = r.RoleId\n"
                         + "JOIN [Gender] g on u.GenderId = g.GenderId\n"
-                        + "WHERE r.RoleId = '1';");
+                        + "WHERE r.RoleId = '2';");
                 request.setAttribute("data", vector);
                 request.setAttribute("titlePage", "UserManage");
                 request.setAttribute("titleTable", "List of Registered User that is Guest");
@@ -297,7 +297,7 @@ public class CustomerController extends HttpServlet {
                         + "FROM [User] u \n"
                         + "JOIN [Role] r ON u.RoleId = r.RoleId\n"
                         + "JOIN [Gender] g on u.GenderId = g.GenderId\n"
-                        + "WHERE r.RoleId = '2';");
+                        + "WHERE r.RoleId = '1';");
                 request.setAttribute("data", vector);
                 request.setAttribute("titlePage", "UserManage");
                 request.setAttribute("titleTable", "List of Registered User that is Customer");
