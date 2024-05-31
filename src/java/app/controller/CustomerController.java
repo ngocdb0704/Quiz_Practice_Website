@@ -248,8 +248,9 @@ public class CustomerController extends HttpServlet {
                 dispath.forward(request, response);
             }
             if (service.equals("malefilter")) {
-                Vector<Customer> vector = dao.getAll("SELECT u.UserId, u.Email, u.Password, u.RoleId, u.FullName, g.GenderName as Gender, u.Mobile, u.IsActive \n"
+                Vector<Customer> vector = dao.getAll("SELECT u.UserId, u.Email, u.Password, r.RoleName, u.FullName, g.GenderName as Gender, u.Mobile, u.IsActive \n"
                         + "FROM [User] u \n"
+                        + "JOIN [Role] r ON u.RoleId = r.RoleId\n"
                         + "JOIN Gender g ON u.GenderId = g.GenderId\n"
                         + "WHERE u.GenderId = '1';");
                 request.setAttribute("data", vector);
