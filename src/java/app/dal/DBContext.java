@@ -13,7 +13,7 @@ public class DBContext implements AutoCloseable {
     public DBContext() {
         try {
             //Change the username password and url to connect your own database
-            String username = "sa";
+            String username = "sa"; 
             String password = "123";
             String url = "jdbc:sqlserver://localhost:1433;databaseName=Quiz_Practice";
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");

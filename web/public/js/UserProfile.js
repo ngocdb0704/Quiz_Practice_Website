@@ -5,7 +5,18 @@
 
 let uploadSubmission = document.getElementById("upload-submission");
 let uploadName = document.getElementById("upload-name");
-let imgSubmit = document.getElementById("img-submit-btn");
+let fileInput = document.getElementById('upload');
+let imgDisplay = document.getElementById('img-display');
+
+fileInput.addEventListener('change', event => {
+  if (event.target.files.length > 0) {
+    imgDisplay.src = URL.createObjectURL(
+      event.target.files[0],
+    );
+
+    imgDisplay.style.display = 'block';
+  }
+});
 
 function noticeFileUpload(name) {
     uploadSubmission.style.display = "block";
@@ -13,12 +24,13 @@ function noticeFileUpload(name) {
     //console.log(name.lastIndexOf("/"));
 
     if (name.endsWith(".jpg") || name.endsWith(".png")) {
-        imgSubmit.style.display = "block";
         uploadName.innerHTML = "Selected file: " + name.slice(name.lastIndexOf("\\") + 1);
+        uploadName.innerHTML += "<br><p style=\"color: blue;\">(Save profile to save new profile picture)</p>";
+        changeSaveButtonStatus();
 
     } else {
-        imgSubmit.style.display = "none";
-        uploadName.innerHTML = "<strong style=\"color: red;\">Please select a .png or .jpg file!</strong>";
+        uploadName.innerHTML = "<strong style=\"color: red;\">Please select a .png or .jpg file!<br>(Your profile picture will nout be changed)</strong>";
+        fileInput.value = null;
     }
 }
 
@@ -33,36 +45,65 @@ function closePopUp() {
     if (body && popupIframe) popupIframe.remove();
 }
 
-let saveButton;
-let buttonAllowed = "btn btn-primary container", buttonBlocked = "btn btn-outline-secondary disabled container";
+let saveButton = document.getElementById("saveButton");
+let buttonAllowed = "form-control btn btn-primary container", buttonBlocked = "form-control btn btn-outline-secondary disabled container";
+let fullNameInput = document.getElementById("fullNameInput"), mobileInput = document.getElementById("mobileInput");
+let fullNameWarning = document.getElementById("fullNameWarning"), mobileWarning = document.getElementById("mobileWarning");
 let allowSaveName = true;
 let allowSaveMobile = true;
 
 function changeSaveButtonStatus() {
-    if (!saveButton) saveButton = document.getElementById("saveButton");
     if (allowSaveName && allowSaveMobile) saveButton.classList = buttonAllowed;
     else saveButton.classList = buttonBlocked;
 }
 
 let checkName = /^.*[^a-z].*$|^$/i;
-function validateName(val) {
+function validateName(val) {    
     let blocked = false;
     val.split(" ").forEach((it, ind) => {
         if (it.match(checkName)) {
             allowSaveName = false;
             blocked = true;
+            fullNameInput.classList.add("is-invalid");
+            if (fullNameInput.value.length < 1) fullNameWarning.innerHTML = "Please enter your full name";
+            else fullNameWarning.innerHTML = "Please don't put numbers and special characters in, and make sure to separate each word with a white space character";
         }
             
         });
-    if (!blocked) allowSaveName = true;
+    if (!blocked) {
+        allowSaveName = true;
+        fullNameInput.classList.remove("is-invalid");
+        fullNameWarning.innerHTML = "";
+    }
     
     changeSaveButtonStatus();
 }
 
 let checkMobile = /^0[9,8][0-9]{8,9}$/i;
 function validateMobile(val) {
-    if (val.match(checkMobile)) allowSaveMobile = true;
-    else allowSaveMobile = false;
+    if (val.match(checkMobile))  {
+        allowSaveMobile = true;
+        mobileInput.classList.remove("is-invalid");
+        mobileWarning.innerHTML = "";
+    } else {
+        allowSaveMobile = false;
+        mobileInput.classList.add("is-invalid");
+        if (fullNameInput.value.length < 1) mobileWarning.innerHTML = "Please enter your mobile number";
+        else mobileWarning.innerHTML = "Please input 9 to 10 numbers as your mobile number";
+    }
     
     changeSaveButtonStatus();
+}
+
+function formReset() {
+    allowSaveName = true;
+    fullNameInput.classList.remove("is-invalid");
+    allowSaveMobile = true;
+    mobileInput.classList.remove("is-invalid");
+    fullNameWarning.innerHTML = "";
+    mobileWarning.innerHTML = "";
+    imgDisplay.src = "UserProfile?service=showPic";
+    fileInput.value = null;
+    uploadSubmission.style.display = "none";
+    saveButton.classList = buttonBlocked;
 }
