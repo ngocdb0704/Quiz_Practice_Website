@@ -21,11 +21,14 @@ import app.entity.Package;
 import app.entity.SubjectCategory;
 import app.entity.Transaction;
 import app.model.DAOCustomer;
+import app.utils.Config;
+import jakarta.servlet.annotation.WebServlet;
 
 /**
  *
  * @author admin
  */
+@WebServlet(name="RegistrationController", urlPatterns={"/user/MyRegistrations"})
 public class RegistrationController extends HttpServlet {
 
     /**
@@ -44,16 +47,19 @@ public class RegistrationController extends HttpServlet {
         DAOSubject daoSubject = new DAOSubject();
         DAOCustomer daoCustomer = new DAOCustomer();
         HttpSession session = request.getSession();
+        Config cfg = new Config(getServletContext());
         String service = request.getParameter("service");
         String redirectTo;
         String userEmail = "";
         String listAll = "listAll";
         int page;
-        int numPerPage = 4;
         int start;
         int end;
         int i;
-        String controller = "RegistrationController";
+        int numPerPage = cfg.getIntOrDefault("registration.pagination.size", 4);
+        String bankCode = cfg.getStringOrDefault("bankcode", null);
+        String ownerBankAccount = cfg.getStringOrDefault("owner.bankaccount", null);
+        String controller = "MyRegistrations";
         //list of checked categories from form on jsp
         String[] parentTier1Raw = request.getParameterValues("idTier1");
         String[] parentTier2Raw = request.getParameterValues("idTier2");
@@ -100,8 +106,8 @@ public class RegistrationController extends HttpServlet {
                     status, inputKey);
             Customer cus = daoCustomer.searchbyEmail(userEmail).get(0);
             int size = registrationVector.size();
-            //number of pages for pagination, each page has 4 cards of registration
-            int num = (size % 4 == 0 ? (size / 4) : ((size / 4) + 1));
+            //number of pages for pagination, each page has 6 (or 4 if config failed getting registration pagination size) cards of registration
+            int num = (size % numPerPage == 0 ? (size / numPerPage) : ((size / numPerPage) + 1));
             String xpage = request.getParameter("page");
             //get currently requested page
             //if null, show first page
@@ -116,11 +122,14 @@ public class RegistrationController extends HttpServlet {
             Vector<Registration> responseVector = daoRegistration.getVectorByPage(registrationVector, start, end);
             Vector<Transaction> history = daoRegistration.getTransactionHistory(userEmail);
             String sendFilter = sendFilter(parentTier1, parentTier2, parentTier3);
-            float totalCost = daoRegistration.getTotalCost(userEmail);
+            String noti = (String) session.getAttribute("noti");
+            if(noti != null){
+                request.setAttribute("noti", noti);
+                session.removeAttribute("noti");
+            }
             request.setAttribute("data", responseVector);
             request.setAttribute("page", page);
             request.setAttribute("num", num);
-            request.setAttribute("total", totalCost);
             request.setAttribute("key", inputKey);
             request.setAttribute("list", listOfCategory);
             request.setAttribute("listOfStatus", listOfStatus);
@@ -129,6 +138,8 @@ public class RegistrationController extends HttpServlet {
             request.setAttribute("checkStatus", checkStatusId);
             request.setAttribute("sendFilter", sendFilter);
             request.setAttribute("userId", cus.getUserId());
+            request.setAttribute("bankCode", bankCode);
+            request.setAttribute("ownerAccount", ownerBankAccount);
             redirectTo = "/MyRegistration.jsp";
             dispath(request, response, redirectTo);
         }
@@ -137,6 +148,8 @@ public class RegistrationController extends HttpServlet {
             String removeKey = request.getParameter("cancelId");
             int removeId = Integer.parseInt(removeKey);
             int n = daoRegistration.removeRegistration(removeId);
+            String noti = "Cancel registration id "+ removeKey + " successfully!";
+            session.setAttribute("noti", noti);
             service = listAll;
             response.sendRedirect(controller);
         }

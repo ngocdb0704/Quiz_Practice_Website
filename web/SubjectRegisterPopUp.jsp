@@ -15,9 +15,8 @@
     <body>
         <div class="row">
             <c:set var="registEdit" value="${requestScope.registId}"/>
-            <form>
-                <h1>Register Subject Popup</h1>
-            </form>
+            <h4>We are working on Subject Register pop-up. Thank you for your visit!</h4>
+            <img src="https://static.vecteezy.com/system/resources/previews/003/857/417/original/people-working-in-the-office-free-vector.jpg" alt="alt"/>
         </div>
     </body>
 </html>

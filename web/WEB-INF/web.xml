@@ -44,7 +44,7 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>RegistrationController</servlet-name>
-        <url-pattern>/RegistrationController</url-pattern>
+        <url-pattern>/user/MyRegistrations</url-pattern>
     </servlet-mapping>
     
     <servlet>
