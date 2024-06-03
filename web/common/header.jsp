@@ -1,5 +1,5 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<nav class="navbar navbar-expand-lg bg-body-tertiary" style="z-index: 1">
+<nav class="navbar navbar-expand-lg bg-body-tertiary" style="z-index: 1;">
     <div class="container-fluid">
         <a class="navbar-brand" href="#">Quiz Practice</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -17,7 +17,7 @@
                     <a class="nav-link" href="blogs/list">Blogs</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="RegistrationController">My Registration</a>
+                    <a class="nav-link" href="user/MyRegistrations">My Registrations</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="admin_index.jsp">Admin-Only Page</a>

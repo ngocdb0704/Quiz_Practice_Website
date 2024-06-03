@@ -3,11 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/JavaScript.js to edit this template
  */
 
-function cancellation(subject) {
-    if (confirm("Confirm cancellation registration id " + subject + " ?") === true) {
-        window.location.href = "RegistrationController?cancelId=" + subject + "&service=cancel";
-    }
-}
+
 //check payment after modal's closure
 async function checkPaid(price, content, id, responseCaptcha) {
     //if not captcha then alert then return to list
@@ -34,16 +30,16 @@ async function checkPaid(price, content, id, responseCaptcha) {
             //check flag
             if (isPaid === 1) {
                 alert("Subject's Successfully Registered!");
-                window.location.href = "RegistrationController?paidId=" + id
+                window.location.href = "user/MyRegistrations?paidId=" + id
                         + "&service=paid&code=" + code
-                        + "&acc=" +acc;
+                        + "&acc=" + acc;
             } else {
                 alert("Payment Not Found!");
             }
         } catch {
             console.error("Error");
         }
-    }else{
+    } else {
         alert("Check the captcha please!");
     }
 
