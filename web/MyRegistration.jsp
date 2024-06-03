@@ -37,6 +37,7 @@
                         <c:set var="bankCode" value="${requestScope.bankCode}"/>
                         <c:set var="owner" value="${requestScope.ownerAccount}"/>
                         <c:set var="noti" value="${requestScope.noti}"/>
+                        <c:set var="snoti" value="${requestScope.successNoti}"/>
                         <form action="user/MyRegistrations">
                             <div class="mb-3">
                                 <div class="row card-body container justify-content-center">
@@ -165,6 +166,12 @@
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                     </c:if>
+                    <c:if test="${snoti != null}">
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <strong>Notification</strong> ${snoti}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    </c:if>
                     <h1>
                         My Registrations
                     </h1>
@@ -252,7 +259,8 @@
                                                 </ul>
                                             </div>
                                         </div>
-                                        <div class="col-md-2 mt-md-5">
+                                        <div class="col-md-2 mt-md-3">
+                                            <h5>Total Cost:</h5>
                                             <h5>${Integer.valueOf(p.totalCost*1000)} VND</h5>
                                             <diV class="row">
                                                 <!-- Button buy trigger modal -->
