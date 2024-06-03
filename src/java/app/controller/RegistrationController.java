@@ -127,6 +127,11 @@ public class RegistrationController extends HttpServlet {
                 request.setAttribute("noti", noti);
                 session.removeAttribute("noti");
             }
+            String successNoti = (String) session.getAttribute("successNoti");
+            if(successNoti != null){
+                request.setAttribute("successNoti", successNoti);
+                session.removeAttribute("successNoti");
+            }
             request.setAttribute("data", responseVector);
             request.setAttribute("page", page);
             request.setAttribute("num", num);
@@ -160,6 +165,8 @@ public class RegistrationController extends HttpServlet {
             String acc = request.getParameter("acc");
             int paidId = Integer.parseInt(paidKey);
             int n = daoRegistration.updateRegistrationStatus(paidId, code, acc);
+            String successNoti = "Paid registration id "+ paidKey + " successfully!";
+            session.setAttribute("successNoti", successNoti);
             service = listAll;
             response.sendRedirect(controller);
         }
