@@ -30,7 +30,7 @@
                         <input type="hidden" name = "service" value = "login"/>
                     </div>
                     <div class="form-group text-center">
-                        <a href="UserRegisterThroughMail.jsp">Sign up</a> | <a href="user/reset">Forgot password?</a>
+                        <a href="user/reset">Forgot password?</a>
                     </div>
                 </form>
             </div>

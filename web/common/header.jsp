@@ -1,3 +1,6 @@
+<head>
+    <jsp:include page="/ChangePassAn.jsp" />
+</head>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <nav class="navbar navbar-expand-lg bg-body-tertiary" style="z-index: 1">
     <div class="container-fluid">
@@ -39,6 +42,9 @@
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#loginModal">
                         Login
                     </button>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#registerModal">
+                        Register
+                    </button>
                 </c:if>
             </div>
         </div>
@@ -73,7 +79,7 @@
     </div>
 </div>
 
-<div class="modal fade" id="changePassModal" tabindex="-1" role="dialog" >
+<div class="modal fade" id="registerModal" tabindex="-1" role="dialog" >
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -81,7 +87,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <jsp:include page="/ChangePassAn.jsp" />
+                <jsp:include page="/UserRegisterThroughMail.jsp" />
             </div>
         </div>
     </div>

@@ -26,30 +26,41 @@
         %>
 
 
-
-        <div class="changepass-container">
-            <div class="modal-body">
-                <form method="post" action="loginviewofAn" class="form-changepass">
-                    <h3 classs="text-center">Change Password</h3>
-                    <div class="form-group mb-3">
-                        <label for="prePass">Previous Password: </label>
-                        <input type="password" name="prePass" class="form-control"/>
+        <div class="modal fade" id="changePassModal" tabindex="-1" role="dialog" >
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        </button>
                     </div>
-                    <div class="form-group mb-3">
-                        <label for="newPass">New Password: </label>
-                        <input type="password" name="newPass" class="form-control"/>
+                    <div class="modal-body">
+                        <jsp:include page="/ChangePassAn.jsp" />
+                        <form method="post" action="loginviewofAn" class="form-changepass">
+                            <h3 classs="text-center">Change Password</h3>
+                            <div class="form-group mb-3">
+                                <label for="prePass">Previous Password: </label>
+                                <input type="password" name="prePass" class="form-control"/>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="newPass">New Password: </label>
+                                <input type="password" name="newPass" class="form-control"/>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="confirmPass">Confirm Password: </label>
+                                <input type="password" name="confirmPass" class="form-control"/>
+                            </div>
+                            <div class="form-group text-center">
+                                <input type="submit" name="submit" value="Change Password" class="btn btn-primary"/>
+                                <input type="hidden" name = "service" value = "changepass"/>
+                            </div>
                     </div>
-                    <div class="form-group mb-3">
-                        <label for="confirmPass">Confirm Password: </label>
-                        <input type="password" name="confirmPass" class="form-control"/>
-                    </div>
-                    <div class="form-group text-center">
-                        <input type="submit" name="submit" value="Change Password" class="btn btn-primary"/>
-                        <input type="hidden" name = "service" value = "changepass"/>
-                    </div>
+                    </form>
                 </div>
-            </form>
+            </div>
         </div>
-        <%}%>
-    </body>
+    </div>
+
+
+    <%}%>
+</body>
 </html>

@@ -19,8 +19,8 @@
                 <input type="hidden" name="action" value="register">
 
                 <div class="text-center">
-                    <h2>User Registration</h2>
                     <p class="mb-3">Please enter your email and password to register</p>
+                    Already have an account? <a href="index.jsp">Log in</a>
                 </div>
 
                 <div class="mb-3">
@@ -31,6 +31,21 @@
                 <div class="mb-3">
                     <label class="form-label">Password</label>
                     <input type="password" class="form-control" name="password" placeholder="Enter your password" required>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" class="form-control" name="text" placeholder="Enter your full name">
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Gender</label>
+                    <input type="text" class="form-control" name="text" placeholder="Enter your gender">
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Mobile</label>
+                    <input type="text" class="form-control" name="text" placeholder="Enter your mobile">
                 </div>
 
                 <div class="mb-3">
