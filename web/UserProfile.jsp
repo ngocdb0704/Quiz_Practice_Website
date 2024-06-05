@@ -80,7 +80,7 @@
                     <div class="col-lg-8 container-lg">
                         <div class="form-group mb-3"> Email: <input class="form-control" style="background-color: #cecece; border: 1px solid black" type="text" name="email" value="<%=(fetched != null)? fetched.getEmail(): ""%>" readonly/> </div>
                         <form id="profileForm" action="UserProfile" method="POST" onreset="formReset()" onkeydown="return event.key != 'Enter';" enctype="multipart/form-data">
-                            <input id="upload" type="file" name="upload" onchange="noticeFileUpload(this.value);"/>
+                            <input id="upload" type="file" name="upload"/>
                             <div class="form-group mb-3"> 
                                 <label for="fullNameInput">Full name:</label>
                                 <input id="fullNameInput" class="form-control" type="text" name="fullName" oninput="validateName(this.value)" value="<%=(fetched != null)? fetched.getFullName(): ""%>" /> 
