@@ -15,7 +15,7 @@ let fullNameWarning = document.getElementById("fullNameWarning"), mobileWarning 
 let allowSaveName = true;
 let allowSaveMobile = true;
 
-fileInput.addEventListener('change', event => {
+if (fileInput) fileInput.addEventListener('change', event => {
     if (event.target.files.length > 0) {
         uploadSubmission.style.display = "block";
         let file = event.target.files[0];
