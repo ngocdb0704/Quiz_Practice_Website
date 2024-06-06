@@ -11,6 +11,7 @@ import app.dal.DAOSlide;
 import app.entity.Subject; 
 import app.dal.DAOSubject; 
 import app.dal.DAOBlog; 
+import app.dal.DAOBlogCategory;
 import app.entity.Blog; 
 import app.dal.DAOUser;
 import java.io.IOException;
@@ -20,7 +21,10 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -42,6 +46,48 @@ public class Homepage extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         
         HttpSession session = request.getSession();
+        
+        String service = request.getParameter("service");
+        
+        if (service != null) {
+            if (service.equals("hotposts")) {
+                int offSet = 0;
+                try {
+                    offSet = Integer.parseInt(session.getAttribute("hotpostOffset").toString());
+                }
+                catch (Exception e) {}
+                
+                DAOBlog daoBlog = new DAOBlog();
+                List<Blog> fetchPost = daoBlog.getEnoughToDisplay(5, offSet);
+                
+                ConcurrentHashMap<Integer, String> catHMap = null;
+                try {
+                    catHMap = (ConcurrentHashMap<Integer, String>)session.getAttribute("blogCategoryMap");
+                }
+                catch (Exception e) {
+                    DAOBlogCategory daoBlogC = new DAOBlogCategory();
+                    catHMap = daoBlogC.getMap();
+                    session.setAttribute("blogCategoryMap", catHMap);
+                }
+                
+                response.setContentType("application/json");
+                try( PrintWriter out = response.getWriter()){
+                    out.print(Arrays.stream(fetchPost.toArray())
+                        .map(obj -> (Blog)obj)
+                        .map(blog -> String.format("{\"BlogId\": %d, \"UserId\": %d, \"BlogCategoryId\": %d, \"BlogTitle\": \"%s\", \"UpdatedTime\": \"%s\", \"PostText\": \"%s\"}"
+                                ,blog.getBlogId()
+                                , blog.getUserId()
+                                , blog.getBlogCategoryId()
+                                , blog.getBlogTitle()
+                                , blog.getUpdatedTime()
+                                , blog.getPostText()
+                        ))
+                        .collect(Collectors.toList())
+                    );
+                }
+                return;
+            }
+        }
         
         if (session.getAttribute("homeSliders") == null) {
             DAOSlide daoSlide = new DAOSlide(); 
