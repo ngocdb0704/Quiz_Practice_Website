@@ -7,15 +7,16 @@ package app.entity;
  */
 public class Question {
     private int questionID;
-    private String questionName;
+    private String questionName, explanation;
     private int level, subjectID, lessonID;
 
     public Question() {
     }
 
-    public Question(int questionID, String questionName, int level, int subjectID, int lessonID) {
+    public Question(int questionID, String questionName, String explanation, int level, int subjectID, int lessonID) {
         this.questionID = questionID;
         this.questionName = questionName;
+        this.explanation = explanation;
         this.level = level;
         this.subjectID = subjectID;
         this.lessonID = lessonID;
@@ -61,10 +62,18 @@ public class Question {
         this.lessonID = lessonID;
     }
 
+    public String getExplanation() {
+        return explanation;
+    }
+
+    public void setExplanation(String explanation) {
+        this.explanation = explanation;
+    }
+
     @Override
     public String toString() {
-        return "Question{" + "questionID=" + questionID + ", questionName=" + questionName + ", level=" + level + ", subjectID=" + subjectID + ", lessonID=" + lessonID + '}';
+        return "Question{" + "questionID=" + questionID + ", questionName=" + questionName + ", explanation=" + explanation + ", level=" + level + ", subjectID=" + subjectID + ", lessonID=" + lessonID + '}';
     }
-    
+
     
 }
