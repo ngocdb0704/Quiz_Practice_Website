@@ -6,26 +6,19 @@ package app.entity;
  * @author Hoapmhe173343
  */
 public class Question {
-    private int questionID, subjectID;
-    private String questionText;
-    private String optionA, optionB, optionC, optionD;
-    private String correctAnswer, explanation;
-    private int questionLevel;
+    private int questionID;
+    private String questionName;
+    private int level, subjectID, lessonID;
 
     public Question() {
     }
 
-    public Question(int questionID, int subjectID, String questionText, String optionA, String optionB, String optionC, String optionD, String correctAnswer, String explanation, int questionLevel) {
+    public Question(int questionID, String questionName, int level, int subjectID, int lessonID) {
         this.questionID = questionID;
+        this.questionName = questionName;
+        this.level = level;
         this.subjectID = subjectID;
-        this.questionText = questionText;
-        this.optionA = optionA;
-        this.optionB = optionB;
-        this.optionC = optionC;
-        this.optionD = optionD;
-        this.correctAnswer = correctAnswer;
-        this.explanation = explanation;
-        this.questionLevel = questionLevel;
+        this.lessonID = lessonID;
     }
 
     public int getQuestionID() {
@@ -36,6 +29,22 @@ public class Question {
         this.questionID = questionID;
     }
 
+    public String getQuestionName() {
+        return questionName;
+    }
+
+    public void setQuestionName(String questionName) {
+        this.questionName = questionName;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
     public int getSubjectID() {
         return subjectID;
     }
@@ -44,68 +53,17 @@ public class Question {
         this.subjectID = subjectID;
     }
 
-    public String getQuestionText() {
-        return questionText;
+    public int getLessonID() {
+        return lessonID;
     }
 
-    public void setQuestionText(String questionText) {
-        this.questionText = questionText;
+    public void setLessonID(int lessonID) {
+        this.lessonID = lessonID;
     }
 
-    public String getOptionA() {
-        return optionA;
-    }
-
-    public void setOptionA(String optionA) {
-        this.optionA = optionA;
-    }
-
-    public String getOptionB() {
-        return optionB;
-    }
-
-    public void setOptionB(String optionB) {
-        this.optionB = optionB;
-    }
-
-    public String getOptionC() {
-        return optionC;
-    }
-
-    public void setOptionC(String optionC) {
-        this.optionC = optionC;
-    }
-
-    public String getOptionD() {
-        return optionD;
-    }
-
-    public void setOptionD(String optionD) {
-        this.optionD = optionD;
-    }
-
-    public String getCorrectAnswer() {
-        return correctAnswer;
-    }
-
-    public void setCorrectAnswer(String correctAnswer) {
-        this.correctAnswer = correctAnswer;
-    }
-
-    public String getExplanation() {
-        return explanation;
-    }
-
-    public void setExplanation(String explanation) {
-        this.explanation = explanation;
-    }
-
-    public int getQuestionLevel() {
-        return questionLevel;
-    }
-
-    public void setQuestionLevel(int questionLevel) {
-        this.questionLevel = questionLevel;
+    @Override
+    public String toString() {
+        return "Question{" + "questionID=" + questionID + ", questionName=" + questionName + ", level=" + level + ", subjectID=" + subjectID + ", lessonID=" + lessonID + '}';
     }
     
     
