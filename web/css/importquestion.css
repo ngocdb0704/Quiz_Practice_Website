@@ -2,11 +2,6 @@
     Created on : Jun 5, 2024, 11:17:33 AM
     Author     : Hoapmhe173343
 */
-.inputBox, .form-group {
-    margin-top: 20px;
-    margin-bottom: 20px;
-}
-
 label {
     display: block;
     font-weight: bold;
@@ -35,7 +30,7 @@ label {
 }
 
 .container {
-    max-width: 800px;
+    max-width: 500px;
     background-color: #f9f9f9;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
