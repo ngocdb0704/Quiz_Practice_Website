@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 public class DAOBlog extends DBContext {
 
     public class QueryResult {
+
         private int totalItems;
         private int pageSize;
         private List<BlogInformation> results;
@@ -33,7 +34,7 @@ public class DAOBlog extends DBContext {
 
         public int getTotalPages() {
             if (pageSize > 0) {
-                return (int)(Math.ceil((double)totalItems / pageSize));
+                return (int) (Math.ceil((double) totalItems / pageSize));
             }
 
             return 0;
@@ -41,36 +42,38 @@ public class DAOBlog extends DBContext {
     }
 
     private static final String LISTING_QUERY = "select\n"
-                + "b.BlogId,\n"
-                + "b.BlogTitle,\n"
-                + "b.PostBrief,\n"
-                + "b.UpdatedTime,\n"
-                + "u.FullName,\n"
-                + "u.UserId,\n"
-                + "c.BlogCategoryId,\n"
-                + "c.BlogCategoryName\n"
-                + "from [Blog] b\n"
-                + "inner join [BlogCategory] c on b.BlogCategoryId = c.BlogCategoryId\n"
-                + "inner join [User] u on u.UserId = b.UserId\n";
+            + "b.BlogId,\n"
+            + "b.BlogTitle,\n"
+            + "b.PostBrief,\n"
+            + "b.UpdatedTime,\n"
+            + "u.FullName,\n"
+            + "u.UserId,\n"
+            + "c.BlogCategoryId,\n"
+            + "c.BlogCategoryName\n"
+            + "from [Blog] b\n"
+            + "inner join [BlogCategory] c on b.BlogCategoryId = c.BlogCategoryId\n"
+            + "inner join [User] u on u.UserId = b.UserId\n";
 
     private static final String COUNT_LISTING_QUERY = "select count(b.BlogId)\n"
-                + "from [Blog] b\n"
-                + "inner join [BlogCategory] c on b.BlogCategoryId = c.BlogCategoryId\n"
-                + "where (? is NULL or b.[BlogTitle] LIKE ?) and\n"
-                + "(? = -1 or c.[BlogCategoryId] = ?) and \n"
-                + "((? is NULL or ? is NULL) or (b.[UpdatedTime] between ? and ?))";
+            + "from [Blog] b\n"
+            + "inner join [BlogCategory] c on b.BlogCategoryId = c.BlogCategoryId\n"
+            + "where (? is NULL or b.[BlogTitle] LIKE ?) and\n"
+            + "(? = -1 or c.[BlogCategoryId] = ?) and \n"
+            + "((? is NULL or ? is NULL) or (b.[UpdatedTime] between ? and ?))";
 
     private static final String FILTERED_QUERY = LISTING_QUERY
-                + "where (? is NULL or b.[BlogTitle] LIKE ?) and\n"
-                + "(? = -1 or c.[BlogCategoryId] = ?) and \n"
-                + "((? is NULL or ? is NULL) or (b.[UpdatedTime] between ? and ?))\n"
-                + "order by b.[UpdatedTime] desc\n";
+            + "where (? is NULL or b.[BlogTitle] LIKE ?) and\n"
+            + "(? = -1 or c.[BlogCategoryId] = ?) and \n"
+            + "((? is NULL or ? is NULL) or (b.[UpdatedTime] between ? and ?))\n"
+            + "order by b.[UpdatedTime] desc\n";
 
     /**
-     * Download blog listings paginated by category and title term
-     * Blog listing is metadata of a blog, without including the post text
+     * Download blog listings paginated by category and title term Blog listing
+     * is metadata of a blog, without including the post text
+     *
      * @param query - Blog title keyword to search
-     * @param categoryId - Finds all blogs that is in this category, -1 for all categories
+     * @param categoryId - Finds all blogs that is in this category, -1 for all
+     * categories
      * @param startDate - Start of updated time range
      * @param endDate - End of updated time range
      * @param page - Page number starts at one
@@ -82,30 +85,34 @@ public class DAOBlog extends DBContext {
             LocalDate startDate, LocalDate endDate,
             int page, int pageSize
     ) {
-        if (page < 1) page = 1;
-        if (pageSize < 1) pageSize = 1;
+        if (page < 1) {
+            page = 1;
+        }
+        if (pageSize < 1) {
+            pageSize = 1;
+        }
 
-        String sql = FILTERED_QUERY +
-                "offset ? rows fetch next ? rows only";
+        String sql = FILTERED_QUERY
+                + "offset ? rows fetch next ? rows only";
 
         String likeStatement = (query == null) ? null : "%" + query + "%";
 
         try {
             PreparedStatement queryStmt = connection.prepareStatement(sql);
-           
+
             //because we define page to start at one however sql server expects 0 offset
             int offset = (page - 1) * pageSize;
-            
+
             Timestamp startTimestamp = null;
             Timestamp endTimestamp = null;
-            
+
             if (startDate != null && endDate != null) {
                 LocalDateTime s = startDate.atTime(0, 0, 0);
                 LocalDateTime e = endDate.atTime(23, 59, 59);
                 startTimestamp = Timestamp.from(s.toInstant(ZoneOffset.UTC));
                 endTimestamp = Timestamp.from(e.toInstant(ZoneOffset.UTC));
             }
-            
+
             queryStmt.setString(1, likeStatement);
             queryStmt.setString(2, likeStatement);
             queryStmt.setInt(3, categoryId);
@@ -146,32 +153,38 @@ public class DAOBlog extends DBContext {
 
         return new QueryResult(0, 0, new ArrayList<>());
     }
-    
+
     //Hard-coded ids
-    static int[] ListOfHotPosts = {1, 3, 4, 5};
-    
+    //TODO: Make an algorithm to define what posts are considered as "hot"
+    static int[] ListOfHotPosts = {1, 8, 2, 4, 10, 3, 6, 7, 9, 46, 26, 25, 16, 38, 44, 50, 31, 27, 39, 40, 49, 18, 42, 34};
+
     public List<Blog> getEnoughToDisplay(int ammout, int offSet) {
         List<Blog> Out = new ArrayList<>();
-        String sql = "SELECT BlogId, UserId, BlogCategoryId, BlogTitle, UpdatedTime, PostText FROM Blog WHERE BlogId IN ("
-                + Arrays.stream(ListOfHotPosts).mapToObj(Integer::toString).collect(Collectors.joining(","))
-                + ") ORDER BY BlogId DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
-        
+        System.out.println(Arrays.stream(Arrays.copyOfRange(ListOfHotPosts, offSet, Math.min(offSet + ammout, ListOfHotPosts.length)))
+                .mapToObj(Integer::toString).collect(Collectors.joining(",")));
+        String sql = "SELECT TOP (?) BlogId, UserId, BlogCategoryId, BlogTitle, UpdatedTime, PostBrief FROM Blog WHERE BlogId IN ("
+                + Arrays.stream(Arrays.copyOfRange(ListOfHotPosts, offSet, Math.min(offSet + ammout, ListOfHotPosts.length)))
+                        .mapToObj(Integer::toString).collect(Collectors.joining(","))
+                + ")";
+        System.out.println(sql);
+
         PreparedStatement pre;
         try {
             pre = connection.prepareStatement(sql);
-            pre.setInt(1, offSet);
-            pre.setInt(2, ammout);
+            pre.setInt(1, ammout);
             ResultSet rs = pre.executeQuery();
             while (rs.next()) {
                 Blog a = new Blog(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getString(4), rs.getString(5), rs.getString(6));
                 Out.add(a);
             }
-        } catch (SQLException ex) {System.out.println(ex);}
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
         return Out;
     }
-    
+
     public static void main(String[] args) {
         DAOBlog test = new DAOBlog();
-        System.out.println(test.getEnoughToDisplay(3, 1));
+        System.out.println(test.getEnoughToDisplay(3, 3));
     }
 }
