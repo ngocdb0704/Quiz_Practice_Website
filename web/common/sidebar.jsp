@@ -47,6 +47,14 @@
                 <%}%>
 
             </div>
+            <%if(!(session.getAttribute("userEmail") == null)) {%>
+            <div>
+                <form method="post" action="loginviewofAn">
+                    <button type="submit" class="btn">Logout</button>
+                    <input type="hidden" name="service" value="logout"/>
+                </form>
+            </div>
+            <%}%>
         </ul>
     </div>
 </div>
