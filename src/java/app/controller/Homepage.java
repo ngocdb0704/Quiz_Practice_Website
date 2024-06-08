@@ -52,14 +52,22 @@ public class Homepage extends HttpServlet {
         if (service != null) {
             if (service.equals("hotposts")) {
                 int offSet = 0;
-                try {
+                //Get session offset
+                if (request.getParameter("resetOffset") == null || !request.getParameter("resetOffset").equals("true")) try {
                     offSet = Integer.parseInt(session.getAttribute("hotpostOffset").toString());
                 }
                 catch (Exception e) {}
                 
-                DAOBlog daoBlog = new DAOBlog();
-                List<Blog> fetchPost = daoBlog.getEnoughToDisplay(5, offSet);
+                int ammount = 1;
+                try {
+                    ammount = Integer.parseInt(request.getParameter("ammount"));
+                }
+                catch (Exception e) {}
                 
+                DAOBlog daoBlog = new DAOBlog();
+                List<Blog> fetchPost = daoBlog.getEnoughToDisplay(ammount, offSet);
+                
+                //Get category map, this is currently not used for anything
                 ConcurrentHashMap<Integer, String> catMap = null;
                 try {
                     catMap = (ConcurrentHashMap<Integer, String>)session.getAttribute("blogCategoryMap");
@@ -70,28 +78,34 @@ public class Homepage extends HttpServlet {
                     session.setAttribute("blogCategoryMap", catMap);
                 }
                 
+                //Get a map of user id -> user full name
                 DAOUser daoUser = new DAOUser();
                 final ConcurrentHashMap<Integer, String> fullNameMap = daoUser.idArrayToNameMap(
                         fetchPost.stream()
                                 .map((post) -> post.getUserId())
                                 .mapToInt(i -> i).toArray());
                 
+                //fullNameMap check null
                 if (!(fullNameMap == null || fullNameMap.isEmpty())) {
-                response.setContentType("application/json");
-                try( PrintWriter out = response.getWriter()){
-                    out.print(Arrays.stream(fetchPost.toArray())
-                        .map(obj -> (Blog)obj)
-                        .map(blog -> String.format("{\"BlogId\": %d, \"FullName\": \"%s\", \"BlogCategoryId\": %d, \"BlogTitle\": \"%s\", \"UpdatedTime\": \"%s\", \"PostText\": \"%s\"}"
-                                ,blog.getBlogId()
-                                , fullNameMap.get(blog.getUserId())
-                                , blog.getBlogCategoryId()
-                                , blog.getBlogTitle()
-                                , blog.getUpdatedTime()
-                                , blog.getPostText()
-                        ))
-                        .collect(Collectors.toList())
-                    );
-                }
+                    //increase hotpost offset by the ammount of posts that was returned by DAO
+                    session.setAttribute("hotpostOffset", offSet + fetchPost.size());
+                    //return fecthed posts in the form of json
+                    response.setContentType("application/json");
+                    try( PrintWriter out = response.getWriter()){
+                        out.print(Arrays.stream(fetchPost.toArray())
+                            .map(obj -> (Blog)obj)
+                            .map(blog -> String.format("{\"BlogId\": %d, \"UserId\": %d, \"FullName\": \"%s\", \"BlogCategoryId\": %d, \"BlogTitle\": \"%s\", \"UpdatedTime\": \"%s\", \"CardContent\": \"%s\"}"
+                                    ,blog.getBlogId()
+                                    , blog.getUserId()
+                                    , fullNameMap.get(blog.getUserId())
+                                    , blog.getBlogCategoryId()
+                                    , blog.getBlogTitle()
+                                    , blog.getUpdatedTime()
+                                    , blog.getPostBrief()
+                            ))
+                            .collect(Collectors.toList())
+                        );
+                    }
                 }
                 return;
             }
