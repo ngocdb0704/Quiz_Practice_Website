@@ -7,9 +7,12 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.Arrays;
 import java.util.Vector;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 public class DAOUser extends DBContext {
 
@@ -207,6 +210,23 @@ public class DAOUser extends DBContext {
             ex.printStackTrace();
         }
         return null;
+    }
+    
+    public ConcurrentHashMap<Integer, String> idArrayToNameMap(int[] ids) {
+        ConcurrentHashMap<Integer, String> Out = new ConcurrentHashMap<>();
+        String sql = "SELECT UserId, FullName FROM [User] where UserId in (" 
+                + Arrays.stream(ids).mapToObj(Integer::toString).collect(Collectors.joining(",")) 
+                + ");";
+        try {
+            Statement state = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = state.executeQuery(sql);
+            while (rs.next()) {
+                Out.put(rs.getInt(1), rs.getString(2));
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return Out;
     }
     
     public static void main(String[] args) {

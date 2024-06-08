@@ -89,6 +89,11 @@
             </div>
         </div>
         </c:if>
+                  
+        <div id="posts" class="post-list">
+        </div>
+        
+        <script src="./public/js/HomeDisplayPosts.js"></script>
         
     </main>
     <%@include file="/common/footer.jsp" %>

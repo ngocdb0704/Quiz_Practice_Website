@@ -10,7 +10,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class DAOBlog extends DBContext {
 
@@ -150,13 +152,9 @@ public class DAOBlog extends DBContext {
     
     public List<Blog> getEnoughToDisplay(int ammout, int offSet) {
         List<Blog> Out = new ArrayList<>();
-        String sql = "SELECT BlogId, UserId, BlogCategoryId, BlogTitle, UpdatedTime, PostText FROM Blog WHERE BlogId IN (";
-        
-        for (int i: ListOfHotPosts) sql += i + ", ";
-        sql = sql.substring(0, sql.length() - 2);
-        sql += ")";
-        
-        sql += "ORDER BY BlogId DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+        String sql = "SELECT BlogId, UserId, BlogCategoryId, BlogTitle, UpdatedTime, PostText FROM Blog WHERE BlogId IN ("
+                + Arrays.stream(ListOfHotPosts).mapToObj(Integer::toString).collect(Collectors.joining(","))
+                + ") ORDER BY BlogId DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
         
         PreparedStatement pre;
         try {

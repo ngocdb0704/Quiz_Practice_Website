@@ -60,23 +60,30 @@ public class Homepage extends HttpServlet {
                 DAOBlog daoBlog = new DAOBlog();
                 List<Blog> fetchPost = daoBlog.getEnoughToDisplay(5, offSet);
                 
-                ConcurrentHashMap<Integer, String> catHMap = null;
+                ConcurrentHashMap<Integer, String> catMap = null;
                 try {
-                    catHMap = (ConcurrentHashMap<Integer, String>)session.getAttribute("blogCategoryMap");
+                    catMap = (ConcurrentHashMap<Integer, String>)session.getAttribute("blogCategoryMap");
                 }
                 catch (Exception e) {
                     DAOBlogCategory daoBlogC = new DAOBlogCategory();
-                    catHMap = daoBlogC.getMap();
-                    session.setAttribute("blogCategoryMap", catHMap);
+                    catMap = daoBlogC.getMap();
+                    session.setAttribute("blogCategoryMap", catMap);
                 }
                 
+                DAOUser daoUser = new DAOUser();
+                final ConcurrentHashMap<Integer, String> fullNameMap = daoUser.idArrayToNameMap(
+                        fetchPost.stream()
+                                .map((post) -> post.getUserId())
+                                .mapToInt(i -> i).toArray());
+                
+                if (!(fullNameMap == null || fullNameMap.isEmpty())) {
                 response.setContentType("application/json");
                 try( PrintWriter out = response.getWriter()){
                     out.print(Arrays.stream(fetchPost.toArray())
                         .map(obj -> (Blog)obj)
-                        .map(blog -> String.format("{\"BlogId\": %d, \"UserId\": %d, \"BlogCategoryId\": %d, \"BlogTitle\": \"%s\", \"UpdatedTime\": \"%s\", \"PostText\": \"%s\"}"
+                        .map(blog -> String.format("{\"BlogId\": %d, \"FullName\": \"%s\", \"BlogCategoryId\": %d, \"BlogTitle\": \"%s\", \"UpdatedTime\": \"%s\", \"PostText\": \"%s\"}"
                                 ,blog.getBlogId()
-                                , blog.getUserId()
+                                , fullNameMap.get(blog.getUserId())
                                 , blog.getBlogCategoryId()
                                 , blog.getBlogTitle()
                                 , blog.getUpdatedTime()
@@ -84,6 +91,7 @@ public class Homepage extends HttpServlet {
                         ))
                         .collect(Collectors.toList())
                     );
+                }
                 }
                 return;
             }
