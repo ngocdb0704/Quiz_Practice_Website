@@ -4,6 +4,28 @@
         <servlet-name>VerificationUserRegister</servlet-name>
         <servlet-class>app.controller.VerificationUserRegister</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>Homepage</servlet-name>
+        <servlet-class>app.controller.Homepage</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Homepage</servlet-name>
+        <url-pattern>/Homepage</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>Homepage</servlet-name>
+        <url-pattern>/index..*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Homepage</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Homepage</servlet-name>
+        <url-pattern>/Home</url-pattern>
+    </servlet-mapping>
+    
     <servlet-mapping>
         <servlet-name>default</servlet-name>
         <url-pattern>/public/*</url-pattern>

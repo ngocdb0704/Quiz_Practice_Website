@@ -87,7 +87,7 @@ public class UserProfile extends HttpServlet {
                         dao.updateProfileImage(uId, uploaded);
                     }
                 } catch (Exception e) {
-                    System.out.println("A1: " + e);
+                    System.out.println("ProfileUpdate1: " + e);
                 }
 
                 try {
@@ -104,7 +104,7 @@ public class UserProfile extends HttpServlet {
                     //request.getRequestDispatcher(redirectTo).forward(request, response);
                 } catch (Exception e) {
                     //TODO: Redirect to an error page
-                    System.out.println("A2: " + e);
+                    System.out.println("ProfileUpdate2:  " + e);
                 }
 
             }
@@ -129,8 +129,6 @@ public class UserProfile extends HttpServlet {
                     o.close();
                 }
                  */
-                System.out.println("AAAAAAAAAAAAAAA");
-                
                 String redirectTo = request.getParameter("redirect");
                 System.out.println("Redirect to: " + redirectTo);
                 response.sendRedirect(redirectTo);

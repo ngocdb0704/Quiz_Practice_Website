@@ -10,7 +10,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class DAOBlog extends DBContext {
 
@@ -148,17 +150,17 @@ public class DAOBlog extends DBContext {
     //Hard-coded ids
     static int[] ListOfHotPosts = {1, 3, 4, 5};
     
-    public List<Blog> getEnoughToDisplay(int ammoutOfBlogs) {
+    public List<Blog> getEnoughToDisplay(int ammout, int offSet) {
         List<Blog> Out = new ArrayList<>();
-        String sql = "SELECT TOP (?) * FROM Blog WHERE BlogId IN (";
-        for (int i: ListOfHotPosts) sql += i + ", ";
-        sql = sql.substring(0, sql.length() - 2);
-        sql += ")";
+        String sql = "SELECT BlogId, UserId, BlogCategoryId, BlogTitle, UpdatedTime, PostText FROM Blog WHERE BlogId IN ("
+                + Arrays.stream(ListOfHotPosts).mapToObj(Integer::toString).collect(Collectors.joining(","))
+                + ") ORDER BY BlogId DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
         
         PreparedStatement pre;
         try {
             pre = connection.prepareStatement(sql);
-            pre.setInt(1, ammoutOfBlogs);
+            pre.setInt(1, offSet);
+            pre.setInt(2, ammout);
             ResultSet rs = pre.executeQuery();
             while (rs.next()) {
                 Blog a = new Blog(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getString(4), rs.getString(5), rs.getString(6));
@@ -169,8 +171,7 @@ public class DAOBlog extends DBContext {
     }
     
     public static void main(String[] args) {
-        List<Blog> g = new DAOBlog().getEnoughToDisplay(7);
-        System.out.println(g.size());
-        System.out.println(g.get(0).getPostText());
+        DAOBlog test = new DAOBlog();
+        System.out.println(test.getEnoughToDisplay(3, 1));
     }
 }

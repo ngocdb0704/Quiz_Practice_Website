@@ -7,9 +7,12 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.Arrays;
 import java.util.Vector;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 public class DAOUser extends DBContext {
 
@@ -71,7 +74,7 @@ public class DAOUser extends DBContext {
             Statement state = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
             ResultSet rs = state.executeQuery(sql);
             if (rs.next()) {
-                return new User(rs.getInt(1), rs.getString(2), 
+                return new User(rs.getInt(1), rs.getString(2),
                         rs.getString(3), rs.getInt(4), rs.getString(5),
                         rs.getInt(6), rs.getString(7), rs.getBoolean(8));
             }
@@ -80,7 +83,6 @@ public class DAOUser extends DBContext {
         }
         return null;
     }
-
 
     public User getUserByEmail(String email) {
         String sql = "SELECT * FROM [User] where Email = ?";
@@ -194,6 +196,23 @@ public class DAOUser extends DBContext {
             result.add(user);
         }
         return result;
+    }
+
+    public ConcurrentHashMap<Integer, String> idArrayToNameMap(int[] ids) {
+        ConcurrentHashMap<Integer, String> Out = new ConcurrentHashMap<>();
+        String sql = "SELECT UserId, FullName FROM [User] where UserId in ("
+                + Arrays.stream(ids).mapToObj(Integer::toString).collect(Collectors.joining(","))
+                + ");";
+        try {
+            Statement state = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = state.executeQuery(sql);
+            while (rs.next()) {
+                Out.put(rs.getInt(1), rs.getString(2));
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return Out;
     }
 
     public static void main(String[] args) {

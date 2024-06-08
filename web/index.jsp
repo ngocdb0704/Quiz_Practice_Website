@@ -1,122 +1,18 @@
-<%@page import="java.util.List, java.util.ArrayList, app.entity.Slide, app.dal.DAOSlide, app.entity.Subject, app.dal.DAOSubject, app.dal.DAOBlog, app.entity.Blog, app.dal.DAOUser" %>
+<%-- 
+    Document   : index
+    Created on : Jun 5, 2024, 7:41:16 AM
+    Author     : QuanNM
+--%>
 
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset=utf-8>
-  <title>Home</title>
-  <%@include file="/common/ImportBootstrap.jsp" %>
-  <link rel="stylesheet" href="common/ExtendBody.css"/>
-  <link rel="stylesheet" href="public/css/HomePage.css"/>
-  <style>
-    .notification {
-        background-color: #4CAF50;
-        color: white;
-        text-align: center;
-        padding: 16px;
-        position: fixed;
-        top: 0;
-        left: 50%;
-        transform: translateX(-50%);
-        z-index: 9999;
-        opacity: 0;
-        visibility: hidden;
-        transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
-    }
-    .show {
-        opacity: 1;
-        visibility: visible;
-    }
-</style>
-<script>
-    function showNotification(message) {
-        var notification = document.getElementById("notification");
-        notification.innerHTML = message;
-        notification.classList.add("show");
-        setTimeout(function () {
-            notification.classList.remove("show");
-        }, 3000); 
-    }
-    window.onload = function () {
-        var successMessage = '<%= session.getAttribute("successMessage") %>';
-         if (successMessage && successMessage !== "null" && successMessage.length > 0) {
-            showNotification(successMessage);
-            <% session.removeAttribute("successMessage"); %>
-        }
-    };
-</script>
-</head>
-<body>
-    <% DAOSlide daoSlide = new DAOSlide(); 
-       DAOBlog daoBlog = new DAOBlog();
-       DAOSubject daoSubject = new DAOSubject();
-       DAOUser daoUser = new DAOUser();
-    %>
-    
-    
-    <%@include file="/common/header.jsp" %>
-    <%@include file="/common/sidebar.jsp" %>
-    
-    <main class="container">
-        <div id="sliders" class="slider carousel slide mh-75" data-bs-ride="carousel">
-            <div class="carousel-inner">
-                <% int count = 1; 
-                for (Slide sl : daoSlide.getSliderList()) { %>
-                <div class="carousel-item <%=(count == 1)? "active" : ""%>">
-                    <a href="<%=sl.getBacklink()%>"><img id="slide_<%=count++%>" class="d-block w-100" src="<%=sl.getImageRef()%>" alt="<%=sl.getTitle()%>" ></a>
-                </div>
-                <%}%>
-            </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#sliders" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#sliders" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
-            </button>
-        </div>
-        
-        <% 
-        List<Subject> featuredSubjects = daoSubject.getEnoughToDisplay(5);
-        if (featuredSubjects.size() > 0) { %>
-        <div class="featured-subject">
-            <h2>Featured subjects</h2>
-            
-            <div class="d-flex flex-row flex-nowrap overflow-auto">
-                <%for (Subject s: featuredSubjects) {%>
-                <div class="card">
-                    <img class="card-img-top" src="<%=s.getThumbnail()%>" alt="Card image cap">
-                    <div class="card-body">
-                        <h5 class="card-title"><%=s.getSubjectName()%></h5>
-                        <p class="card-text"><%=s.getTagLine()%></p>
-                        <a href="#" class="btn btn-primary">Explore</a>
-                    </div>
-                </div>
-                <%}%>
-            </div>
-        </div>
-        <%}%>
-        
-        <div class="post-list">
-            <!--Sort by <button class="btn btn-outline-primary disabled">Hot <i class="bi bi-fire"></i></button> <button class="btn btn-outline-primary active">New <i class="bi bi-bar-chart-line"></i></button-->
-            <%for (Blog blog: daoBlog.getEnoughToDisplay(5)) {%>
-            <div class="card">
-                <div class="card-body">
-                    <img class="profilePic" src="UserProfile?service=showPic&uId=<%=blog.getUserId()%>">
-                    <h5 class="card-title"><%=daoUser.idToName(blog.getUserId())%></h5>
-                    <i><%=blog.getUpdatedTime()%></i>
-                </div>
-                <div class="container">
-                    <h5><%=blog.getBlogTitle()%></h5>
-                    <p class="card-text"><%=blog.getPostText()%></p>
-                </div>
-                <img class="card-img-bottom" src="./public/images/blogimg.jpg" alt="Card image cap">
-            </div>
-            <%}%>
-        </div>
-        
-    </main>
-    <%@include file="/common/footer.jsp" %>
-</body>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Index Page</title>
+    </head>
+    <body>
+        <h1>You probably shouldn't be here. Redirecting you to the homepage...</h1>
+        <jsp:forward page="/Hompage"/>
+    </body>
 </html>
