@@ -388,9 +388,8 @@ public class DAORegistration extends DBContext {
         }
         return n;
     }
-
     public static void main(String[] args) {
         DAORegistration dao = new DAORegistration();
-        System.out.println(dao.updateRegistrationStatus(1, "USER1COURSE 1 2 2 21432", "0777"));
+        System.out.println(dao.getStatusId());
     }
 }

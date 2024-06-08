@@ -192,7 +192,6 @@ CREATE TABLE [dbo].[Registration](
 	[UserId] [int] foreign key references [dbo].[User](UserId),
 	[RegistrationTime] [date],
 	[PackageId] [int] foreign key references [dbo].[Package](PackageId),
-	[TotalCost] [float],
 	[RegistrationStatusId] [int] foreign key references [dbo].[RegistrationStatus](RegistrationStatusId),
 	[ValidFrom] [date],
 	[ValidTo] [date],
@@ -211,4 +210,7 @@ CREATE TABLE [dbo].[Blog](
 	[BlogCategoryId] [int] foreign key references [dbo].[BlogCategory](BlogCategoryId),
 	[BlogTitle] [nvarchar](512),
 	[UpdatedTime] [datetime],
-	[PostText] [ntext])
+	[PostBrief] [nvarchar](2048),
+	[PostText] [ntext]
+)
+
