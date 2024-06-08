@@ -34,7 +34,6 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <jsp:include page="/ChangePassAn.jsp" />
                         <form method="post" action="loginviewofAn" class="form-changepass">
                             <h3 classs="text-center">Change Password</h3>
                             <div class="form-group mb-3">

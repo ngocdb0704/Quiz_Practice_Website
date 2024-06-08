@@ -71,7 +71,8 @@ public class DAOUser extends DBContext {
             Statement state = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
             ResultSet rs = state.executeQuery(sql);
             if (rs.next()) {
-                return new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs.getString(5),
+                return new User(rs.getInt(1), rs.getString(2), 
+                        rs.getString(3), rs.getInt(4), rs.getString(5),
                         rs.getInt(6), rs.getString(7), rs.getBoolean(8));
             }
         } catch (SQLException ex) {
@@ -79,6 +80,7 @@ public class DAOUser extends DBContext {
         }
         return null;
     }
+
 
     public User getUserByEmail(String email) {
         String sql = "SELECT * FROM [User] where Email = ?";
