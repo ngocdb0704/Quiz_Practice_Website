@@ -4,3 +4,8 @@
     flex-direction: column;
     justify-content: flex-end;
 }
+
+.cover-image {
+    object-fit: cover;
+    aspect-ratio: 16 / 10;
+}

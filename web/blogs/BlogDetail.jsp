@@ -32,21 +32,62 @@
                     </div>
 
                     <div class="mb-3">
-                        <img src="public/images/blogimg.jpg" height="400" width="100%" class="rounded" alt="Main Image">
+                        <img src="public/images/blogimg.jpg" class="cover-image rounded-3" height="400" width="100%" class="rounded" alt="Main Image">
                     </div>
 
-                    <div class="mb-3 card">
+                    <div class="mb-3 card w-50">
                         <div class="card-body">
                             <h5 class="card-title fw-bold">Table of Contents</h5>
-                        </div>
+                            <ul>
+                                <li><a href="blogs/detail?id=${information.getBlogId()}#heading1">1. Understanding the Exam Format</a></li>
+                                <li><a href="blogs/detail?id=${information.getBlogId()}#heading2">2. Effective Study Techniques</a></li>
+                                <li><a href="blogs/detail?id=${information.getBlogId()}#heading3">3. Time Management</a></li>
+                                <li><a href="blogs/detail?id=${information.getBlogId()}#heading4">4. Practice with Past Papers</a></li>
+                                <li><a href="blogs/detail?id=${information.getBlogId()}#heading5">5. On the Day of the Exam</a></li>
+                            </ul>
+                        </div> 
                     </div>
 
                     <div>
-                        <h2>Heading 1</h2>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua...</p>
+                        <h2 id="heading1">Understanding the Exam Format</h2>
+                        <p>Knowing the structure of the exam you are preparing for is crucial. Make sure to:</p>
+                        <ul>
+                            <li>Review the syllabus thoroughly.</li>
+                            <li>Understand the types of questions that will be asked (e.g., multiple-choice, essay, true/false).</li>
+                            <li>Get familiar with the marking scheme.</li>
+                        </ul>
 
-                        <h2>Heading 2</h2>
-                        <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat...</p>
+                        <h2 id="heading2">Effective Study Techniques</h2>
+                        <p>Effective study techniques can significantly improve your retention and understanding of the material:</p>
+                        <ul>
+                            <li>Use active learning methods such as summarizing information in your own words.</li>
+                            <li>Take regular breaks to avoid burnout.</li>
+                            <li>Use mnemonic devices to remember key information.</li>
+                        </ul>
+
+                        <h2 id="heading3">Time Management</h2>
+                        <p>Managing your time efficiently during your study sessions and the exam is essential:</p>
+                        <ul>
+                            <li>Create a study schedule and stick to it.</li>
+                            <li>Prioritize topics based on their importance and difficulty.</li>
+                            <li>Allocate specific time slots for revision and practice tests.</li>
+                        </ul>
+
+                        <h2 id="heading4">Practice with Past Papers</h2>
+                        <p>Practicing with past exam papers can help you get used to the format and timing of the exam:</p>
+                        <ul>
+                            <li>Simulate exam conditions by timing yourself while practicing.</li>
+                            <li>Review your answers and understand your mistakes.</li>
+                            <li>Identify patterns in questions and topics that frequently appear.</li>
+                        </ul>
+
+                        <h2 id="heading5">On the Day of the Exam</h2>
+                        <p>What you do on the day of the exam can also impact your performance:</p>
+                        <ul>
+                            <li>Get a good night's sleep before the exam day.</li>
+                            <li>Have a healthy breakfast to fuel your brain.</li>
+                            <li>Arrive at the exam venue early to avoid any last-minute stress.</li>
+                        </ul>
                     </div>
 
                     <div class="mt-5">
