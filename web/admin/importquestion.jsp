@@ -21,7 +21,8 @@
                     <input type="file" name="file" class="flex-grow-1" accept=".xlsx" required/>
                     <button class="btn btn-primary" type="submit">Upload</button>
                 </form>
-                <button class="btn btn-info col-md-12 mt-3">Download the import question template</button>
+                <a href="${pageContext.request.contextPath}/public/template/question_template.xlsx" 
+                   class="btn btn-info col-md-12 mt-3" download>Download the import question template</a>
                 <div class="message">${notification}</div>
             </div>
         </div>
