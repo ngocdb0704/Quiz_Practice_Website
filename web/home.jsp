@@ -6,6 +6,7 @@
   <meta charset=utf-8>
   <title>Home</title>
   <%@include file="/common/ImportBootstrap.jsp" %>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
   <link rel="stylesheet" href="common/ExtendBody.css"/>
   <link rel="stylesheet" href="public/css/HomePage.css"/>
   <style>
