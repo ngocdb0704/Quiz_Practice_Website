@@ -85,6 +85,7 @@ public class DAOSubject extends DBContext {
         return Out;
     }
     
+    
     public static void main(String[] args) {
         DAOSubject test = new DAOSubject();
         System.out.println(test.getEnoughToDisplay(5).size());
