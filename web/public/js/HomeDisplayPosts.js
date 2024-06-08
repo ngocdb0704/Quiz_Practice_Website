@@ -5,36 +5,41 @@
 
 let postContainer = document.getElementById("posts");
 
-console.log(postContainer);
-function postElement(postId, fullName, postTime, postTitle, postText) {
+function postElement(postId, userId, fullName, postTime, postTitle, CardContent) {
     return `
-            <div class="card">
+            <div id="post_${postId}" class="card">
                 <div class="card-body">
-                    <img class="profilePic" src="UserProfile?service=showPic&uId=${postId}">
+                    <img class="profilePic" src="UserProfile?service=showPic&uId=${userId}">
                     <h5 class="card-title">${fullName}</h5>
                     <i>${postTime}</i>
                 </div>
                 <div class="container">
                     <h5>${postTitle}</h5>
-                    <p class="card-text">${postText}</p>
+                    <p class="card-text">${CardContent}</p>
                 </div>
                 <img class="card-img-bottom" src="./public/images/blogimg.jpg" alt="Card image cap">
             </div>
             `;
 } 
 
-function appendHotposts(ammount) {
+function appendHotposts(ammount, resetOffset) {
     if (postContainer) {
-        fetch("http://localhost:8080/QuizPractice/Home?service=hotposts")
+        fetch("http://localhost:8080/QuizPractice/Home?service=hotposts" + (resetOffset? "&resetOffset=true":"") + "&ammount=" + ammount)
                 .then((res) => res.text())
                 .then((text) => {
-                    let wordList = JSON.parse(text);
-                    console.log(wordList);
-                    wordList.forEach((post, index) => {
-                        postContainer.innerHTML += postElement(post.BlogId, post.FullName, post.UpdatedTime, post.BlogTitle, post.PostText);
-                    });
+                    if (text) {
+                        let blogList = JSON.parse(text);
+                        blogList.forEach((post, index) => {
+                            postContainer.innerHTML += postElement(post.BlogId, post.UserId, post.FullName, post.UpdatedTime, post.BlogTitle, post.CardContent);
+                        });
+                    }
                 });
     }
 }
 
-appendHotposts(5)
+function resetFeed() {
+    postContainer.innerHTML = "";
+    appendHotposts(5, true);
+}
+
+appendHotposts(5, false);

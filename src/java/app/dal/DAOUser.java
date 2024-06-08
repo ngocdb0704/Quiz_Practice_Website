@@ -236,6 +236,5 @@ public class DAOUser extends DBContext {
     }
 
     public static void main(String[] args) {
-        
     }
 }
