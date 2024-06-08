@@ -1,6 +1,3 @@
-<head>
-    <jsp:include page="/ChangePassAn.jsp" />
-</head>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <nav class="navbar navbar-expand-lg bg-body-tertiary" style="z-index: 1">
     <div class="container-fluid">
@@ -92,3 +89,5 @@
         </div>
     </div>
 </div>
+
+<jsp:include page="/ChangePassAn.jsp" />
