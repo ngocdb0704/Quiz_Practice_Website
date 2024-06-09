@@ -6,6 +6,7 @@ import app.dal.DAOBlog.QueryResult;
 import app.dal.DAOBlogCategory;
 import app.entity.BlogCategory;
 import app.entity.BlogInformation;
+import app.entity.MarkdownDocument;
 import app.utils.Parsers;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -23,13 +24,16 @@ public class BlogDetailController extends HttpServlet {
     throws ServletException, IOException {
         DAOBlog daoBlog = new DAOBlog();
         DAOBlogCategory daoCategory = new DAOBlogCategory();
-        BlogInformation information = null;
 
         String idRaw = request.getParameter("id");
         if (idRaw != null) {
             try {
                 int id = Integer.parseInt(idRaw);
-                information = daoBlog.getBlogInformationById(id);
+                BlogInformation information = daoBlog.getBlogInformationById(id);
+                MarkdownDocument document = daoBlog.getPostTextById(id);
+
+                request.setAttribute("information", information);
+                request.setAttribute("document", document);
             } catch (NumberFormatException ex) {
                 ex.printStackTrace();
             }
@@ -40,9 +44,7 @@ public class BlogDetailController extends HttpServlet {
             QueryResult latestPosts = daoBlog.getRecentBlogs(4);
             request.setAttribute("recents", latestPosts.getResults());
         }
-
         
-        request.setAttribute("information", information);
         request.getRequestDispatcher("BlogDetail.jsp").forward(request, response);
     } 
 
