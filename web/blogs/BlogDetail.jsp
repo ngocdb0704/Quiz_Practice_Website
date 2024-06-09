@@ -13,8 +13,9 @@
     </head>
     <body class="body-layout">
         <%@include file="/common/header.jsp" %>
+        <c:set var="currentUrl" value="blogs/detail?id=${param.id}" />
         <jsp:useBean id="formatter" class="app.utils.FormatData" />
-        
+
         <main class="container mt-3">
             <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
                 <ol class="breadcrumb">
@@ -28,7 +29,16 @@
                 </ol>
             </nav>
             <div class="row">
-                <div class="col-md-8">
+                <div style="width: 60px;">
+                    <div class="toc">
+                        <div class="toc-icon">
+                            <i class="bi bi-book-fill"></i>
+                        </div>
+                        <h5>Table of Contents</h5>
+                        ${document.getHtmlTableOfContents(currentUrl)}
+                    </div>
+                </div>
+                <div class="col-md-7">
                     <h1>${information.getBlogTitle()}</h1>
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
@@ -44,14 +54,6 @@
 
                     <div class="mb-3">
                         <img src="public/images/blogimg.jpg" class="cover-image rounded-3" height="400" width="100%" class="rounded" alt="Main Image">
-                    </div>
-
-                    <div class="mb-3 card w-50">
-                        <div class="card-body">
-                            <h5 class="card-title fw-bold">Table of Contents</h5>
-                            <c:set var="currentUrl" value="blogs/detail?id=${param.id}" />
-                            ${document.getHtmlTableOfContents(currentUrl)}
-                        </div> 
                     </div>
 
                     <div>
@@ -124,5 +126,6 @@
             </div>
         </main>
         <%@include file="/common/footer.jsp" %>
+        <script src="blogs/BlogDetail.js"></script>
     </body>
 </html>
