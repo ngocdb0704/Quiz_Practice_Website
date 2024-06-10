@@ -13,6 +13,8 @@ public class Subject {
     private int subjectId;
     private String subjectName;
     private String tagLine;
+    private String briefInfo;
+    private String subjectDescription;
     private String thumbnail;
     private String lowestPackageName;
     private float packageListPrice;
@@ -30,6 +32,16 @@ public class Subject {
         this.packageListPrice = packageListPrice;
         this.packageSalePrice = packageSalePrice;
     }
+
+    public Subject(int subjectId, String subjectName, String tagLine, String briefInfo, String subjectDescription, String thumbnail) {
+        this.subjectId = subjectId;
+        this.subjectName = subjectName;
+        this.tagLine = tagLine;
+        this.briefInfo = briefInfo;
+        this.subjectDescription = subjectDescription;
+        this.thumbnail = thumbnail;
+    }
+
 
     public int getSubjectId() {
         return subjectId;
@@ -87,4 +99,20 @@ public class Subject {
         this.packageSalePrice = packageSalePrice;
     }
 
+    public String getBriefInfo() {
+        return briefInfo;
+    }
+
+    public void setBriefInfo(String briefInfo) {
+        this.briefInfo = briefInfo;
+    }
+
+    public String getSubjectDescription() {
+        return subjectDescription;
+    }
+
+    public void setSubjectDescription(String subjectDescription) {
+        this.subjectDescription = subjectDescription;
+    }
+    
 }

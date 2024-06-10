@@ -88,6 +88,10 @@
         <servlet-name>UserProfile</servlet-name>
         <url-pattern>/UserProfile</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>SubjectDetails</servlet-name>
+        <servlet-class>app.controller.SubjectDetailsController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>VerificationUserRegister</servlet-name>
         <url-pattern>/VerificationUserRegister</url-pattern>
@@ -101,7 +105,7 @@
         <url-pattern>/public/SubjectsList</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>SubjectDetailsController</servlet-name>
-        <url-pattern>/SubjectDetailsController</url-pattern>
+        <servlet-name>SubjectDetails</servlet-name>
+        <url-pattern>/SubjectDetails</url-pattern>
     </servlet-mapping>
 </web-app>
