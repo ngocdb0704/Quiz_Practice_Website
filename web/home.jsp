@@ -104,9 +104,7 @@
             </div>
             
             <div id="posts" class="post-list">
-                
             </div>
-            <button class="lh-lg mx-2 btn btn-outline-warning active" onclick="appendHotposts(5, false)">Test load post button</button>
         </div>
         
         <script src="./public/js/HomeDisplayPosts.js"></script>

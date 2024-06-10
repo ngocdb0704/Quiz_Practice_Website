@@ -203,8 +203,8 @@ public class DAOBlog extends DBContext {
     //Hard-coded ids
     //TODO: Make an algorithm to define what posts are considered as "hot"
     static int[] ListOfHotPosts = {1, 8, 2, 4, 10, 3, 6, 7, 9, 46, 26, 25, 16, 38, 44, 50, 31, 27, 39, 40, 49, 18, 42, 34};
-
-    public List<Blog> getEnoughToDisplay(int ammout, int offSet) {
+    
+    public List<Blog> getHotpostsForDisplay(int ammout, int offSet) {
         List<Blog> Out = new ArrayList<>();
         String sql = "SELECT TOP (?) BlogId, UserId, BlogCategoryId, BlogTitle, UpdatedTime, PostBrief FROM Blog WHERE BlogId IN ("
                 + Arrays.stream(Arrays.copyOfRange(ListOfHotPosts, offSet, Math.min(offSet + ammout, ListOfHotPosts.length)))
@@ -229,6 +229,6 @@ public class DAOBlog extends DBContext {
 
     public static void main(String[] args) {
         DAOBlog test = new DAOBlog();
-        System.out.println(test.getEnoughToDisplay(3, 3));
+        System.out.println(test.getHotpostsForDisplay(3, 3));
     }
 }
