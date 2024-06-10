@@ -206,8 +206,6 @@ public class DAOBlog extends DBContext {
 
     public List<Blog> getEnoughToDisplay(int ammout, int offSet) {
         List<Blog> Out = new ArrayList<>();
-        System.out.println(Arrays.stream(Arrays.copyOfRange(ListOfHotPosts, offSet, Math.min(offSet + ammout, ListOfHotPosts.length)))
-                .mapToObj(Integer::toString).collect(Collectors.joining(",")));
         String sql = "SELECT TOP (?) BlogId, UserId, BlogCategoryId, BlogTitle, UpdatedTime, PostBrief FROM Blog WHERE BlogId IN ("
                 + Arrays.stream(Arrays.copyOfRange(ListOfHotPosts, offSet, Math.min(offSet + ammout, ListOfHotPosts.length)))
                         .mapToObj(Integer::toString).collect(Collectors.joining(","))

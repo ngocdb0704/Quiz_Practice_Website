@@ -82,7 +82,7 @@
                     <img class="card-img-top" src="${subject.getThumbnail()}" alt="Card image cap">
                     <div class="card-body">
                         <h5 class="card-title">${subject.getSubjectName()}</h5>
-                        <p class="card-text">${subject.getTagLine()}></p>
+                        <p class="card-text">${subject.getTagLine()}</p>
                         <a href="#" class="btn btn-primary">Explore</a>
                     </div>
                 </div>
