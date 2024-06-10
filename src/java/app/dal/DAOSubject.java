@@ -302,25 +302,18 @@ with CategoryHierarchy as
         }
         return vec;
     }
-
-    //Hard-coded ids
-    static int[] ListOfFeaturedSubjectId = {1, 2, 3, 4, 5};
-
-    public List<Subject> getEnoughToDisplay(int ammoutOfSubjects) {
+    
+    public List<Subject> getFeaturedSubjects(int ammoutOfSubjects) {
         List<Subject> Out = new ArrayList<>();
-        String sql = "SELECT TOP (?) s.SubjectId, s.SubjectTitle, s.SubjectTagLine, s.SubjectThumbnail FROM Subject s WHERE s.SubjectId in (";
-        for (int i : ListOfFeaturedSubjectId) {
-            sql += i + ", ";
-        }
-        sql = sql.substring(0, sql.length() - 2);
-        sql += ")";
-
+        String sql = "SELECT TOP (?) s.SubjectId, s.SubjectTitle, s.SubjectTagLine, s.SubjectThumbnail FROM Subject s WHERE s.IsFeaturedSubject = 1";
+        
         PreparedStatement pre;
         try {
             pre = connection.prepareStatement(sql);
             pre.setInt(1, ammoutOfSubjects);
             ResultSet rs = pre.executeQuery();
             while (rs.next()) {
+                //Couldn't overload a contructor for this specific purpose lol
                 Subject a = new Subject();
                 a.setSubjectId(rs.getInt(1));
                 a.setSubjectName(rs.getString(2));

@@ -65,7 +65,7 @@ public class Homepage extends HttpServlet {
                 catch (Exception e) {}
                 
                 DAOBlog daoBlog = new DAOBlog();
-                List<Blog> fetchPost = daoBlog.getEnoughToDisplay(ammount, offSet);
+                List<Blog> fetchPost = daoBlog.getHotpostsForDisplay(ammount, offSet);
                 
                 //Get category map, this is currently not used for anything
                 ConcurrentHashMap<Integer, String> catMap = null;
@@ -119,7 +119,7 @@ public class Homepage extends HttpServlet {
         
         if (session.getAttribute("featuredSubjects") == null) {
             DAOSubject daoSubject = new DAOSubject();
-            List<Subject> featuredSubjects = daoSubject.getEnoughToDisplay(5);
+            List<Subject> featuredSubjects = daoSubject.getFeaturedSubjects(10);
             if (featuredSubjects.size() > 0) session.setAttribute("featuredSubjects", featuredSubjects);
         }
         
