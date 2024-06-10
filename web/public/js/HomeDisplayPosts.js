@@ -37,7 +37,7 @@ function postElement(postId, userId, fullName, postTime, postTitle, CardContent)
 let firstLoad = true;
 function appendHotposts(ammount, resetOffset) {
     if (postContainer) {
-        fetch("http://localhost:8080/QuizPractice/Home?service=hotposts" + (resetOffset? "&resetOffset=true":"") + "&ammount=" + ammount)
+        fetch("QuizPractice/Home?service=hotposts" + (resetOffset? "&resetOffset=true":"") + "&ammount=" + ammount)
                 .then((res) => res.text())
                 .then((text) => {
                     if (text) {
