@@ -14,6 +14,7 @@
         <script src="common/common.js"></script>
 
         <link href="blogs/BlogList.css" rel="stylesheet">
+        <link href="blogs/BlogItem.css" rel="stylesheet">
     </head>
     <body class="body-layout">
         <%@include file="/common/header.jsp" %>
@@ -96,7 +97,7 @@
                                         <b>${blog.getAuthorFullName()}</b>
                                          | ${formatter.dateFormat(blog.getUpdatedTime())}
                                     </h6>
-                                    <a href="#" class="btn blog-read-more btn-primary align-self-end">Read More</a>
+                                    <a href="blogs/detail?id=${blog.getBlogId()}" class="btn blog-read-more btn-primary align-self-end">Read More</a>
                                 </div>
                             </div>
                         </c:forEach>

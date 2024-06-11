@@ -42,6 +42,10 @@ public class BlogInformation {
         return categoryName;
     }
 
+    public int getCategoryId() {
+        return this.categoryId;
+    }
+
     public void setCategoryId(int id) {
         this.categoryId = id;
     }
