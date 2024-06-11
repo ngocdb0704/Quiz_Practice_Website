@@ -12,7 +12,6 @@
         <servlet-name>Homepage</servlet-name>
         <url-pattern>/Homepage</url-pattern>
     </servlet-mapping>
-    
     <servlet-mapping>
         <servlet-name>Homepage</servlet-name>
         <url-pattern>/index..*</url-pattern>
@@ -25,7 +24,6 @@
         <servlet-name>Homepage</servlet-name>
         <url-pattern>/Home</url-pattern>
     </servlet-mapping>
-    
     <servlet-mapping>
         <servlet-name>default</servlet-name>
         <url-pattern>/public/*</url-pattern>
@@ -41,6 +39,10 @@
     <servlet>
         <servlet-name>LoginControllerTempOfAnForLoginView</servlet-name>
         <servlet-class>app.controller.LoginControllerTempOfAnForLoginView</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>QuestionListServlet</servlet-name>
+        <servlet-class>app.controller.QuestionListServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>LoginControllerTempOfAnForLoginView</servlet-name>
@@ -81,5 +83,9 @@
     <servlet-mapping>
         <servlet-name>VerificationUserRegister</servlet-name>
         <url-pattern>/VerificationUserRegister</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>QuestionListServlet</servlet-name>
+        <url-pattern>/questionlist</url-pattern>
     </servlet-mapping>
 </web-app>

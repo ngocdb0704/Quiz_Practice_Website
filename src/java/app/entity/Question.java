@@ -1,6 +1,9 @@
 
 package app.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author Hoapmhe173343
@@ -9,8 +12,9 @@ public class Question {
     private int questionID;
     private String questionName, explanation;
     private int level, subjectID, lessonID;
-
+    private List<Answer> answers;
     public Question() {
+        this.answers = new ArrayList<>();
     }
 
     public Question(int questionID, String questionName, String explanation, int level, int subjectID, int lessonID) {
@@ -70,10 +74,20 @@ public class Question {
         this.explanation = explanation;
     }
 
-    @Override
-    public String toString() {
-        return "Question{" + "questionID=" + questionID + ", questionName=" + questionName + ", explanation=" + explanation + ", level=" + level + ", subjectID=" + subjectID + ", lessonID=" + lessonID + '}';
+    public List<Answer> getAnswers() {
+        return answers;
     }
 
+    public void setAnswers(List<Answer> answers) {
+        this.answers = answers;
+    }
+
+    @Override
+    public String toString() {
+        return "Question{" + "questionID=" + questionID + ", questionName=" + questionName + ", explanation=" + explanation + ", level=" + level + ", subjectID=" + subjectID + ", lessonID=" + lessonID + ", answers=" + answers + '}';
+    }
+    
+    
+    
     
 }
