@@ -1,5 +1,6 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="myTags" tagdir="/WEB-INF/tags" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -9,6 +10,7 @@
         <%@include file="/common/ImportBootstrap.jsp" %>
         <link href="common/common.css" rel="stylesheet">
         <link href="blogs/BlogDetail.css" rel="stylesheet">
+        <link href="blogs/BlogItem.css" rel="stylesheet">
         <script src="common/common.js"></script>
     </head>
     <body class="body-layout">
@@ -29,13 +31,15 @@
                 </ol>
             </nav>
             <div class="row">
-                <div style="width: 60px;">
-                    <div class="toc">
+                <div style="width: 80px;">
+                    <div class="toc-container">
                         <div class="toc-icon">
                             <i class="bi bi-book-fill"></i>
                         </div>
-                        <h5>Table of Contents</h5>
-                        ${document.getHtmlTableOfContents(currentUrl)}
+                        <div class="toc">
+                            <h5>Table of Contents</h5>
+                            ${document.getHtmlTableOfContents(currentUrl)}
+                        </div>
                     </div>
                 </div>
                 <div class="col-md-7">
@@ -56,13 +60,10 @@
                         <img src="public/images/blogimg.jpg" class="cover-image rounded-3" height="400" width="100%" class="rounded" alt="Main Image">
                     </div>
 
-                    <div>
+                    <div class="blog-content">
                         ${document.toHtml()}
                     </div>
 
-                    <div class="mt-5">
-                        <h5>Related Posts by same Category</h5>
-                    </div>
                 </div>
 
                 <div class="col-md-4">
@@ -122,6 +123,15 @@
                             <a href="blogs/list" class="btn btn-outline-primary">View all</a>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <div class="my-5">
+                <h3 class="text-center fw-bold">Related Posts</h3>
+                <div class="related-grid">
+                    <c:forEach items="${related}" var="blog">
+                        <myTags:BlogItem blog="${blog}" />
+                    </c:forEach>
                 </div>
             </div>
         </main>

@@ -105,6 +105,10 @@ public class DAOBlog extends DBContext {
         return null;
     }
 
+    public QueryResult getByCategory(int categoryId, int limit) {
+        return searchBlogListingsPaginated(null, categoryId, null, null, 1, limit);
+    }
+
     public QueryResult getRecentBlogs(int limit) {
         return searchBlogListingsPaginated(null, -1, null, null, 1, limit);
     }

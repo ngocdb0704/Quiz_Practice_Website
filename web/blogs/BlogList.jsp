@@ -1,5 +1,6 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="myTags" tagdir="/WEB-INF/tags" %>
 <%@page import="app.utils.URLUtils" %>
 
 <!DOCTYPE html>
@@ -19,7 +20,6 @@
     <body class="body-layout">
         <%@include file="/common/header.jsp" %>
         
-        <jsp:useBean id="formatter" class="app.utils.FormatData" />
         <main class="container my-2">
             <div class="text-center my-3">
                 <h1 class="">Blogs</h1>
@@ -68,38 +68,7 @@
                 <section class="flex-grow-1">
                     <div class="blog-grid">
                         <c:forEach items="${blogs}" var="blog">
-                            <div class="card blog-item">
-                                <img src="public/images/blogimg.jpg" class="card-img-top blog-item-img" alt="...">
-                                <div class="card-body d-flex flex-column">
-                                    <c:if test="${empty param.q}">
-                                        <h4 class="card-title">
-                                            ${blog.getBlogTitle()}
-                                        </h4>
-                                    </c:if>
-                                    <c:if test="${not empty param.q}">
-                                        <c:set
-                                            var="split"
-                                            value="${formatter.splitBySubstring(blog.getBlogTitle(), param.q)}" />
-                                        <h4 class="card-title">
-                                            ${split[0]}<span class="bg-warning">${split[1]}</span>${split[2]}
-                                        </h4>
-                                    </c:if>
-
-                                    <div>
-                                        <span class="badge bg-primary">${blog.getCategoryName()}</span>
-                                    </div>
-                                    <p class="card-text text-body-secondary mt-3">${blog.getPostBrief()}</p>
-                                </div>
-
-                                <div class="card-footer d-flex align-items-center justify-content-between">
-                                    <h6 class="card-subtitle text-body-secondary">
-                                        <i class="bi bi-person-circle"></i>
-                                        <b>${blog.getAuthorFullName()}</b>
-                                         | ${formatter.dateFormat(blog.getUpdatedTime())}
-                                    </h6>
-                                    <a href="blogs/detail?id=${blog.getBlogId()}" class="btn blog-read-more btn-primary align-self-end">Read More</a>
-                                </div>
-                            </div>
+                            <myTags:BlogItem highlight="${param.q}" blog="${blog}" />
                         </c:forEach>
                     </div>
                     
