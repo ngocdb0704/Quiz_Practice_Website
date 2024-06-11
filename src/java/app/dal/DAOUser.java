@@ -28,6 +28,7 @@ public class DAOUser extends DBContext {
         return false;
     }
 
+    //==================================
     public void updatePassByUser(String user, String pass) {
         String sql = "UPDATE [User]\n"
                 + "   SET Password = ?\n"
@@ -43,8 +44,26 @@ public class DAOUser extends DBContext {
         }
     }
 
+    public void addUser(User user) {
+        String sql = "INSERT INTO [dbo].[User] "
+                + "([Email], [Password], [RoleId], [FullName], [GenderId], [Mobile], [isActive]) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+        try {
+            PreparedStatement pre = connection.prepareStatement(sql);
+            pre.setString(1, user.getEmail());
+            pre.setString(2, user.getPassword());
+            pre.setInt(3, user.getRoleId());
+            pre.setString(4, user.getFullName());
+            pre.setInt(5, user.getGenderId());
+            pre.setString(6, user.getMobile());
+            pre.setBoolean(7, true);
+            pre.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     //=============================
-    
     private Vector<User> getFull(String sql) {
         Vector<User> Out = new Vector<User>();
         try {
@@ -158,9 +177,9 @@ public class DAOUser extends DBContext {
             return 0;
         }
     }
-    
+
     public static void main(String[] args) {
-        System.out.println(new DAOUser().getAll());
+        User user = new User(1, "abc@gmail.com", "123abcdef321", 1, "uwu", 1, "0123456788", true);
+        new DAOUser().addUser(user);
     }
 }
-

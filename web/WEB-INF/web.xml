@@ -40,6 +40,10 @@
         <servlet-name>ResetPasswordController</servlet-name>
         <servlet-class>app.controller.ResetPasswordController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>SendVerificationCodeUserRegister</servlet-name>
+        <servlet-class>app.controller.SendVerificationCodeUserRegister</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ResetPasswordController</servlet-name>
         <url-pattern>/user/reset</url-pattern>
@@ -59,5 +63,9 @@
     <servlet-mapping>
         <servlet-name>VerificationUserRegister</servlet-name>
         <url-pattern>/VerificationUserRegister</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SendVerificationCodeUserRegister</servlet-name>
+        <url-pattern>/SendVerificationCode</url-pattern>
     </servlet-mapping>
 </web-app>

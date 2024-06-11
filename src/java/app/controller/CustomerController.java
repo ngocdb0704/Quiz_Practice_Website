@@ -4,7 +4,7 @@
  */
 package app.controller;
 
-import app.model.DAOCustomer;
+import app.dal.DAOCustomer;
 import app.entity.Customer;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
@@ -16,7 +16,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.sql.ResultSet;
 import java.util.List;
 import java.util.Vector;
-import app.model.DAOCustomer;
+import app.dal.DAOCustomer;
 
 /**
  *
