@@ -83,7 +83,7 @@
                     <div class="card-body">
                         <h5 class="card-title">${subject.getSubjectName()}</h5>
                         <p class="card-text">${subject.getTagLine()}</p>
-                        <a href="#" class="btn btn-primary">Explore</a>
+                        <a href="SubjectDetails?subjectId=${subject.getSubjectId()}" class="btn btn-primary">Explore</a>
                     </div>
                 </div>
                 </c:forEach>
@@ -92,7 +92,7 @@
         </c:if>
                   
         <div class="container">
-            <div class="p-2 rounded bg-light d-flex sticky-top">
+            <div class="p-2 mt-5 rounded bg-light d-flex sticky-top">
                 <h3 class="mx-2">Sort by: </h3>
                     <input type="radio" class="btn-check" name="options" id="SortHot" autocomplete="off" checked>
                     <label for="SortHot" class="lh-lg mx-2 btn btn-outline-primary">Hot <i class="bi bi-fire"></i></label>

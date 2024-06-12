@@ -14,19 +14,52 @@
         <title>Subject details</title>
         <%@include file="/common/ImportBootstrap.jsp" %>
         <link rel="stylesheet" href="common/ExtendBody.css"/>
+        <link rel="stylesheet" href="./public/css/SubjectDetails.css"/>
+        <script src="./public/js/SubjectDetails.js"></script>
     </head>
     <body>
         <%@include file="/common/header.jsp" %>
-        
-        <!-- Sider here -->
-        <main class="container">
-            <a href="#"><- Back</a>
-            <h1><c:out value="${subjectDetails.getSubjectName()}"/></h1>
-            <h2><c:out value="${subjectDetails.getTagLine()}"/></h2>
-            <h2><c:out value="${subjectDetails.getBriefInfo()}"/></h2>
-            <button class="btn btn-primary">Register</button>
-            <h2><c:out value="${subjectDetails.getSubjectDescription()}"/></h2>
+
+
+        <main class="row">
+            <div class="col-lg-2 col-md-3 col-sm-12 mx-lg-3 mx-md-0 bg-light border rounded-3">
+                <h1>Sider</h1>
+            </div>
+
+            <div class="col py-3">
+                <!--a href="#"><- Back</a-->
+                <div id="subject-brief" style="" class="container rounded-3 p-5">
+                    <div style="height: 250px"></div>
+
+                    <img id='subject-thumbnail' src="${subjectDetails.getThumbnail()}" alt="alt"/>
+
+                    <div id="info-div bg-white">
+                        <h1>${subjectDetails.getSubjectName()}</h1>
+                        <h2>${subjectDetails.getTagLine()}</h2>
+                        <h2>${subjectDetails.getBriefInfo()}</h2>
+
+                        <div class="row">
+                            <div class="col-lg-3 col-md-6">
+                                <div class="input-group">
+                                    <button class="btn btn-primary">Register</button>
+                                    <select class="form-select" id="inputGroupSelect04" aria-label="Example select with button addon">
+                                        <option selected>Choose...</option>
+                                        <option value="1">One</option>
+                                        <option value="2">Two</option>
+                                        <option value="3">Three</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>    
+
+                <div class="container mt-5">
+                    ${subjectDetails.getSubjectDescription()}
+                </div>
+            </div>
         </main>
+
         <%@include file="/common/footer.jsp" %>
     </body>
 </html>
