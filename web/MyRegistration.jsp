@@ -17,6 +17,7 @@
         <title>My Registration</title>
         <%@include file="/common/ImportBootstrap.jsp" %>
         <link rel="stylesheet" href="public/css/bootstrap/MyRegistration.css"/>
+        <link rel="stylesheet" href="common/ExtendBody.css"/>
         <script src="public/js/MyRegistration.js"></script>
         <!-- Script google reCaptcha -->
         <script src="https://www.google.com/recaptcha/api.js" async defer></script>

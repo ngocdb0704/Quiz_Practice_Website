@@ -14,14 +14,16 @@
                     <a class="nav-link" href="index.jsp">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="">Courses</a>
+                    <a class="nav-link" href="public/SubjectsList">Subjects List</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="blogs/list">Blogs</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="user/MyRegistrations">My Registration</a>
-                </li>
+                <c:if test="${not empty sessionScope.userEmail}">
+                    <li class="nav-item">
+                        <a class="nav-link" href="user/MyRegistrations">My Registration</a>
+                    </li>
+                </c:if>
             </ul>
             <div class="d-flex gap-2">
                 <div id="notification" class="notification"></div>
