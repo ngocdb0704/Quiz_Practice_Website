@@ -62,6 +62,22 @@ public class DAOUser extends DBContext {
             Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    public boolean isEmailRegistered(String email) {
+        boolean isRegistered = false;
+        String sql = "SELECT COUNT(*) FROM [dbo].[User] WHERE email = ?";
+        try {
+            PreparedStatement pre = connection.prepareStatement(sql);
+            pre.setString(1, email);
+            ResultSet resultSet = pre.executeQuery();
+            if (resultSet.next()) {
+                isRegistered = resultSet.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return isRegistered;
+    }
 
     //=============================
     private Vector<User> getFull(String sql) {
