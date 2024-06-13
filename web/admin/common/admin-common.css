@@ -43,10 +43,11 @@
     color: white;
     transition: width 400ms;
     overflow: hidden;
+    padding: 10px;
 }
 
 .admin-aside.hide {
-    width: 0;
+    width: 65px;
 }
 
 .admin-aside-fixed-container {
@@ -61,6 +62,16 @@
     padding-top: 10px;
     font-size: 17px;
     padding-bottom: 10px;
+    transition: transform 300ms;
+}
+
+.admin-aside-title::after {
+    position: absolute;
+    white-space: nowrap;
+    margin-left: 5px;
+    content: attr(data-title);
+    opacity: 1;
+    transition: opacity 300ms;
 }
 
 .admin-aside-title i {
@@ -76,9 +87,30 @@
 
 .admin-aside-link {
     color: rgba(255, 255, 255, 0.5);
-    padding: 12px 10px;
     display: block;
     text-align: left;
+    padding: 10px 0 10px 15px;
+}
+
+.admin-aside-link::after {
+    position: absolute;
+    margin-left: 5px;
+    content: attr(data-title);
+    opacity: 1;
+    transition: opacity 300ms;
+}
+
+
+.admin-aside.hide .admin-aside-link::after {
+    opacity: 0;
+}
+
+.admin-aside.hide .admin-aside-title::after {
+    opacity: 0;
+}
+
+.admin-aside.hide .admin-aside-title {
+    transform: translateX(13px);
 }
 
 .admin-aside-link.active {
