@@ -2,6 +2,7 @@ package app.dal;
 
 import app.entity.BlogInformation;
 import app.entity.Blog;
+import app.entity.MarkdownDocument;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -66,6 +67,51 @@ public class DAOBlog extends DBContext {
             + "(? = -1 or c.[BlogCategoryId] = ?) and \n"
             + "((? is NULL or ? is NULL) or (b.[UpdatedTime] between ? and ?))\n"
             + "order by b.[UpdatedTime] desc\n";
+
+    public MarkdownDocument getPostTextById(int id) {
+        String sql = "select PostText from [Blog] where BlogId = ?";
+        
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return new MarkdownDocument(rs.getString("PostText"));
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return null;
+    }
+    
+    public BlogInformation getBlogInformationById(int id) {
+        String sql = LISTING_QUERY
+                + "where b.BlogId = ?";
+        
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+            
+            if (rs.next()) {
+                return new BlogInformation(rs);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        
+        return null;
+    }
+
+    public QueryResult getByCategory(int categoryId, int limit) {
+        return searchBlogListingsPaginated(null, categoryId, null, null, 1, limit);
+    }
+
+    public QueryResult getRecentBlogs(int limit) {
+        return searchBlogListingsPaginated(null, -1, null, null, 1, limit);
+    }
 
     /**
      * Download blog listings paginated by category and title term Blog listing
