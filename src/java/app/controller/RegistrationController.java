@@ -28,7 +28,7 @@ import jakarta.servlet.annotation.WebServlet;
  *
  * @author admin
  */
-@WebServlet(name="RegistrationController", urlPatterns={"/user/MyRegistrations"})
+@WebServlet(name = "RegistrationController", urlPatterns = {"/user/MyRegistrations"})
 public class RegistrationController extends HttpServlet {
 
     /**
@@ -123,12 +123,12 @@ public class RegistrationController extends HttpServlet {
             Vector<Transaction> history = daoRegistration.getTransactionHistory(userEmail);
             String sendFilter = sendFilter(parentTier1, parentTier2, parentTier3);
             String noti = (String) session.getAttribute("noti");
-            if(noti != null){
+            if (noti != null) {
                 request.setAttribute("noti", noti);
                 session.removeAttribute("noti");
             }
             String successNoti = (String) session.getAttribute("successNoti");
-            if(successNoti != null){
+            if (successNoti != null) {
                 request.setAttribute("successNoti", successNoti);
                 session.removeAttribute("successNoti");
             }
@@ -153,7 +153,7 @@ public class RegistrationController extends HttpServlet {
             String removeKey = request.getParameter("cancelId");
             int removeId = Integer.parseInt(removeKey);
             int n = daoRegistration.removeRegistration(removeId);
-            String noti = "Cancel registration id "+ removeKey + " successfully!";
+            String noti = "Cancel registration id " + removeKey + " successfully!";
             session.setAttribute("noti", noti);
             service = listAll;
             response.sendRedirect(controller);
@@ -165,7 +165,7 @@ public class RegistrationController extends HttpServlet {
             String acc = request.getParameter("acc");
             int paidId = Integer.parseInt(paidKey);
             int n = daoRegistration.updateRegistrationStatus(paidId, code, acc);
-            String successNoti = "Paid registration id "+ paidKey + " successfully!";
+            String successNoti = "Paid registration id " + paidKey + " successfully!";
             session.setAttribute("successNoti", successNoti);
             service = listAll;
             response.sendRedirect(controller);
