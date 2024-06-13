@@ -1,0 +1,41 @@
+
+/* 
+    Created on : Jun 13, 2024, 10:25:34 PM
+    Author     : Hoapmhe173343
+*/
+.pagination-area {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 50px; /* Khoảng cách phía trên */
+}
+
+.page-number ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+}
+
+.page-number ul li {
+    margin: 0 5px;
+}
+
+.page-number ul li a {
+    text-decoration: none;
+    color: #000;
+    padding: 10px 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.page-number ul li a:hover {
+    background-color: #a0e307; /* Màu nền khi hover */
+}
+
+.active a {
+    background-color: #007bff; /* Màu nền bạn muốn cho trang active */
+    color: white; /* Màu chữ bạn muốn cho trang active */
+    border-radius: 5px; /* Tùy chọn: để làm cho các góc bo tròn */
+    padding: 5px 10px; /* Tùy chọn: để thêm khoảng cách xung quanh văn bản */
+}
