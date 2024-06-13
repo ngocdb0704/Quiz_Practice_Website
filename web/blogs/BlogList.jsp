@@ -1,7 +1,6 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="myTags" tagdir="/WEB-INF/tags" %>
-<%@page import="app.utils.URLUtils" %>
 
 <!DOCTYPE html>
 <html>
@@ -29,6 +28,13 @@
                     </h5>
                 </c:if>
             </div>
+            <myTags:Paginator
+                className="mt-3 d-flex justify-content-end"
+                total="${pagesCount}"
+                size="1"
+                current="${param.page}"
+                url="blogs/list"
+            />
             <div class="d-flex gap-3 blog-main-section">
                 <aside>
                     <form class="blog-sidebar" method="GET" action="blogs/list">
@@ -66,6 +72,7 @@
                     </form>
                 </aside>
                 <section class="flex-grow-1">
+
                     <div class="blog-grid">
                         <c:forEach items="${blogs}" var="blog">
                             <myTags:BlogItem highlight="${param.q}" blog="${blog}" />
@@ -82,20 +89,13 @@
                         </div>
                     </c:if>
 
-                    <nav class="d-flex justify-content-center mt-3">
-                        <c:set var="paramsMap" value="${URLUtils.cloneParamsMap(param)}" />
-                        <ul class="pagination">
-                            <c:forEach begin="1" end="${pagesCount}" var="page">
-                                <li class="page-item ${(empty param.page and page == 1) or (param.page eq page) ? "active" : ""}">
-                                    <c:set target="${paramsMap}" property="page" value="${page.toString()}" />
-                                    <a
-                                        class="page-link"
-                                        href="blogs/list${URLUtils.getQueryParamsString(paramsMap)}"
-                                    >${page}</a>
-                                </li>
-                            </c:forEach>
-                        </ul>
-                    </nav>
+                    <myTags:Paginator
+                        className="mt-3 d-flex justify-content-end"
+                        total="${pagesCount}"
+                        size="1"
+                        current="${param.page}"
+                        url="blogs/list"
+                    />
                 </section>
             </div>
         </main>

@@ -9,19 +9,21 @@
 <div class="card blog-item">
     <img src="public/images/blogimg.jpg" class="card-img-top blog-item-img" alt="...">
     <div class="card-body d-flex flex-column">
-        <c:if test="${empty highlight}">
-            <h4 class="card-title">
-                ${blog.getBlogTitle()}
-            </h4>
-        </c:if>
-        <c:if test="${not empty highlight}">
-            <c:set
-                var="split"
-                value="${formatter.splitBySubstring(blog.getBlogTitle(), highlight)}" />
-            <h4 class="card-title">
-                ${split[0]}<span class="bg-warning">${split[1]}</span>${split[2]}
-            </h4>
-        </c:if>
+        <a href="blogs/detail?id=${blog.getBlogId()}" class="invisible-link">
+            <c:if test="${empty highlight}">
+                <h4 class="card-title">
+                    ${blog.getBlogTitle()}
+                </h4>
+            </c:if>
+            <c:if test="${not empty highlight}">
+                <c:set
+                    var="split"
+                    value="${formatter.splitBySubstring(blog.getBlogTitle(), highlight)}" />
+                <h4 class="card-title">
+                    ${split[0]}<span class="bg-warning">${split[1]}</span>${split[2]}
+                </h4>
+            </c:if>
+        </a>
             
         <div>
             <span class="badge bg-primary">${blog.getCategoryName()}</span>

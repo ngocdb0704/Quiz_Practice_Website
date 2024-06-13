@@ -8,7 +8,7 @@
                 <i class="bi bi-file-check-fill"></i>
                 Subject List
             </a>
-            <a href="quiz" class="btn admin-aside-link">
+            <a href="questionlist" class="btn admin-aside-link">
                 <i class="bi bi-file-check-fill"></i>
                 Question List
             </a>
