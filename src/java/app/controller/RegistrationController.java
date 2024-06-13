@@ -4,7 +4,7 @@
  */
 package app.controller;
 
-import app.dal.DAOPackage;
+import app.dal.DAOCustomer;
 import app.dal.DAORegistration;
 import app.dal.DAOSubject;
 import app.entity.Customer;
@@ -17,10 +17,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.util.Vector;
-import app.entity.Package;
 import app.entity.SubjectCategory;
 import app.entity.Transaction;
-import app.model.DAOCustomer;
 import app.utils.Config;
 import jakarta.servlet.annotation.WebServlet;
 
