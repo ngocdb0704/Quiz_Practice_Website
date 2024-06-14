@@ -167,6 +167,8 @@ CREATE TABLE [dbo].[Subject](
 	[SubjectCreatedDate] [date],
 	[SubjectUpdatedDate] [date],
 	[SubjectTagLine] [varchar](50),
+	[SubjectBriefInfo] [varchar](300),
+	[SubjectDescription] [ntext],
 	[SubjectThumbnail] [varchar](255))
 
 GO
@@ -211,6 +213,6 @@ CREATE TABLE [dbo].[Blog](
 	[BlogTitle] [nvarchar](512),
 	[UpdatedTime] [datetime],
 	[PostBrief] [nvarchar](2048),
-	[PostText] [ntext]
-)
+	[PostText] [ntext])
+Go
 
