@@ -8,6 +8,10 @@
         <servlet-name>Homepage</servlet-name>
         <servlet-class>app.controller.Homepage</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>SubjectController</servlet-name>
+        <servlet-class>app.controller.SubjectController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Homepage</servlet-name>
         <url-pattern>/Homepage</url-pattern>
@@ -83,6 +87,10 @@
     <servlet-mapping>
         <servlet-name>VerificationUserRegister</servlet-name>
         <url-pattern>/VerificationUserRegister</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SubjectController</servlet-name>
+        <url-pattern>/public/SubjectsList</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>QuestionListServlet</servlet-name>

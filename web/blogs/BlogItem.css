@@ -25,3 +25,8 @@
 .blog-item:hover .card-title {
     text-decoration: underline;
 }
+
+.invisible-link {
+    color: initial;
+    text-decoration: none;
+}

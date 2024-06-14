@@ -12,8 +12,6 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Question List</title>
         <%@include file="/common/ImportBootstrap.jsp" %>
-        <link rel="stylesheet" href="common/admin-common.css">
-        <script src="common/admin-common.js"></script>
         <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/questionlist.css" />
     
         <style>
@@ -37,11 +35,13 @@
             text-align: center;
         }
     </style>
+        <link rel="stylesheet" href="admin/common/admin-common.css">
+        <script src="admin/common/admin-common.js"></script>
     </head>
     <body>
         <div class="admin-layout">
-            <%@include file="/common/admin-header.jsp" %>
-            <%@include file="/common/admin-sidebar.jsp" %>
+            <%@include file="/admin/common/admin-header.jsp" %>
+            <%@include file="/admin/common/admin-sidebar.jsp" %>
             <main class="admin-main">
                 <h1>Question Management</h1>
     

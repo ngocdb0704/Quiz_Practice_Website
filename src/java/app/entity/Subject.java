@@ -12,11 +12,8 @@ public class Subject {
 
     private int subjectId;
     private String subjectName;
-    private String subjectCategory;
     private String tagLine;
     private String thumbnail;
-    private String createdDate;
-    private String updatedDate;
     private String lowestPackageName;
     private float packageListPrice;
     private float packageSalePrice;
@@ -24,14 +21,11 @@ public class Subject {
     public Subject() {
     }
 
-    public Subject(int subjectId, String subjectName, String subjectCategory, String tagLine, String thumbnail, String createdDate, String updatedDate, String lowestPackageName, float packageListPrice, float packageSalePrice) {
+    public Subject(int subjectId, String subjectName, String tagLine, String thumbnail, String lowestPackageName, float packageListPrice, float packageSalePrice) {
         this.subjectId = subjectId;
         this.subjectName = subjectName;
-        this.subjectCategory = subjectCategory;
         this.tagLine = tagLine;
         this.thumbnail = thumbnail;
-        this.createdDate = createdDate;
-        this.updatedDate = updatedDate;
         this.lowestPackageName = lowestPackageName;
         this.packageListPrice = packageListPrice;
         this.packageSalePrice = packageSalePrice;
@@ -45,24 +39,12 @@ public class Subject {
         return subjectName;
     }
 
-    public String getSubjectCategory() {
-        return subjectCategory;
-    }
-
     public String getTagLine() {
         return tagLine;
     }
 
     public String getThumbnail() {
         return thumbnail;
-    }
-
-    public String getCreatedDate() {
-        return createdDate;
-    }
-
-    public String getUpdatedDate() {
-        return updatedDate;
     }
 
     public String getLowestPackageName() {
@@ -85,24 +67,12 @@ public class Subject {
         this.subjectName = subjectName;
     }
 
-    public void setSubjectCategory(String subjectCategory) {
-        this.subjectCategory = subjectCategory;
-    }
-
     public void setTagLine(String tagLine) {
         this.tagLine = tagLine;
     }
 
     public void setThumbnail(String thumbnail) {
         this.thumbnail = thumbnail;
-    }
-
-    public void setCreatedDate(String createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public void setUpdatedDate(String updatedDate) {
-        this.updatedDate = updatedDate;
     }
 
     public void setLowestPackageName(String lowestPackageName) {

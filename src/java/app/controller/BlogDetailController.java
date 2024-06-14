@@ -32,6 +32,9 @@ public class BlogDetailController extends HttpServlet {
                 BlogInformation information = daoBlog.getBlogInformationById(id);
                 MarkdownDocument document = daoBlog.getPostTextById(id);
 
+                QueryResult relatedPosts = daoBlog.getByCategory(information.getCategoryId(), 3);
+
+                request.setAttribute("related", relatedPosts.getResults());
                 request.setAttribute("information", information);
                 request.setAttribute("document", document);
             } catch (NumberFormatException ex) {
