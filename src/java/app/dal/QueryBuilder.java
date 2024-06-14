@@ -9,20 +9,24 @@ import java.util.List;
 public class QueryBuilder {
     private String baseSql;
     private int existingParamCount;
-    private List<Object> parameters = new ArrayList<>();
-    private StringBuilder whereClause = new StringBuilder();
+    private List<Object> parameters;
+    private StringBuilder whereClause;
+    private StringBuilder orderByClause;
 
     private int pageNumber = -1; 
     private int pageSize = -1;   
-    private boolean orderByCalled = false;
-    private boolean whereCalled = false;
+    private boolean isLoggingEnabled = false;
 
-    public enum OrderDirection {
+    public static enum OrderDirection {
         ASC, DESC
     }
 
-    public enum Operator {
-        IN("IN"), BETWEEN("BETWEEN"), EQUALS("=");
+    public static enum Operator {
+        IN("IN"),
+        BETWEEN("BETWEEN"),
+        EQUALS("="),
+        LIKE("LIKE");
+
         private final String name;
 
         private Operator(String name) {
@@ -35,8 +39,21 @@ public class QueryBuilder {
     }
 
     public QueryBuilder(String baseSql) {
-        this.baseSql = baseSql;
+        this.baseSql = baseSql.trim();
         this.existingParamCount = countQuestionMarks(baseSql);
+        this.whereClause = new StringBuilder();
+        this.orderByClause = new StringBuilder();
+        this.parameters = new ArrayList<>();
+    }
+
+    public QueryBuilder(String baseSql, QueryBuilder existing) {
+        this.baseSql = baseSql.trim();
+        this.existingParamCount = countQuestionMarks(baseSql);
+
+        this.whereClause = new StringBuilder(existing.whereClause);
+        this.orderByClause = new StringBuilder();
+        this.parameters = new ArrayList<>();
+        this.parameters.addAll(existing.parameters);
     }
 
     private int countQuestionMarks(String sql) {
@@ -49,62 +66,59 @@ public class QueryBuilder {
         return count;
     }
 
-    public QueryBuilder where(String column, Operator operator, Object... values) throws Exception {
-        if (orderByCalled) {
-            throw new Exception("where must be called before orderBy");
-        }
-
-        whereCalled = true;
+    public QueryBuilder where(String column, Operator operator, Object... values) throws IllegalArgumentException {
         if (whereClause.length() > 0) {
             whereClause.append(" AND ");
         }
 
         whereClause.append(column).append(" ").append(operator.getName());
 
-        if (operator == Operator.EQUALS) {
-            whereClause.append(" ?");
-            parameters.add(values[0]);
-        } else if (operator == Operator.BETWEEN) {
-            if (values.length != 2) {
-                throw new Exception("BETWEEN operator requires exactly two values");
-            }
-            whereClause.append(" ? AND ?");
-            parameters.add(values[0]);
-            parameters.add(values[1]);
-        } else {  // IN operator
-            whereClause.append(" (");
-            for (int i = 0; i < values.length; i++) {
-                whereClause.append("?");
-                if (i < values.length - 1) {
-                    whereClause.append(", ");
-                }
-                parameters.add(values[i]);
-            }
-            whereClause.append(")");
+        switch (operator) {
+            case LIKE, EQUALS:
+                whereClause.append(" ?");
+                parameters.add(values[0]);
+                break;
+            case BETWEEN:
+                if (values.length != 2) {
+                    throw new IllegalArgumentException("BETWEEN operator requires exactly two values");
+                }   whereClause.append(" ? AND ?");
+                parameters.add(values[0]);
+                parameters.add(values[1]);
+                break;
+            case IN:
+                whereClause.append(" (");
+                for (int i = 0; i < values.length; i++) {
+                    whereClause.append("?");
+                    if (i < values.length - 1) {
+                        whereClause.append(", ");
+                    }
+                    parameters.add(values[i]);
+                }   whereClause.append(")");
+                break;
         }
         return this;
     }
 
-    public QueryBuilder orderBy(String column, OrderDirection direction) throws Exception {
-        if (!whereCalled) {
-            throw new Exception("orderBy cannot be called before where");
+    public QueryBuilder orderBy(String column, OrderDirection direction) {
+        if (!orderByClause.isEmpty()) {
+            orderByClause.append(",");
         }
-
-        orderByCalled = true;
-        baseSql += " ORDER BY " + column + " " + direction.name();
+        orderByClause.append(String.format(" %s %s", column, direction.toString()));
         return this;
     }
 
-    public QueryBuilder page(int pageNumber, int pageSize) throws Exception {
-        if (!orderByCalled) {
-            throw new Exception("page cannot be called before orderBy");
+    public QueryBuilder page(int pageNumber, int pageSize) throws IllegalStateException {
+        if (orderByClause.isEmpty()) {
+            throw new IllegalStateException("page cannot be called before orderBy");
         }
 
-        if (pageNumber < 1 || pageSize < 1) {
-            throw new Exception("Page number and page size must be positive");
-        }
-        this.pageNumber = pageNumber;
-        this.pageSize = pageSize;
+        this.pageNumber = pageNumber > 0 ? pageNumber : 0;
+        this.pageSize = pageSize > 1 ? pageSize : 1;
+        return this;
+    }
+
+    public QueryBuilder setLoggingEnabled(boolean enabled) {
+        this.isLoggingEnabled = enabled;
         return this;
     }
 
@@ -115,14 +129,21 @@ public class QueryBuilder {
             finalSql += " WHERE " + whereClause;
         }
 
+        if (!orderByClause.isEmpty()) {
+            finalSql += " ORDER BY " + orderByClause;
+        }
+
         if (pageNumber > 0 && pageSize > 0) {
             finalSql += " OFFSET ? ROWS " +
                         "FETCH NEXT ? ROWS ONLY";
         } 
 
-        System.out.println(finalSql);
+        if (isLoggingEnabled) {
+            System.out.println(finalSql);
+        }
 
         PreparedStatement ps = connection.prepareStatement(finalSql);
+
         int paramIndex = existingParamCount + 1;
         for (Object param : parameters) {
             ps.setObject(paramIndex++, param);
