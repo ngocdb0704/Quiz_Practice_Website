@@ -52,8 +52,12 @@
                     <form method="get" action="filterQuestions">
                         <label for="subject">Subject:</label>
                         <select id="subject" name="subject">
-                            <!-- Add options dynamically or statically -->
+                            <option value="all">All subjects</option>
+                            <c:forEach var="subject" items="${listSubjectTitle}">
+                                <option value="${subject}">${subject}</option>
+                            </c:forEach>
                         </select>
+                        
                         <label for="lesson">Lesson:</label>
                         <select id="lesson" name="lesson">
                             <!-- Add options dynamically or statically -->
