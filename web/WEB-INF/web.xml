@@ -94,6 +94,6 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>QuestionListServlet</servlet-name>
-        <url-pattern>/questionlist</url-pattern>
+        <url-pattern>/admin/questionlist</url-pattern>
     </servlet-mapping>
 </web-app>

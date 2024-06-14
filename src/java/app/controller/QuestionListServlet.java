@@ -46,7 +46,7 @@ public class QuestionListServlet extends HttpServlet {
         request.setAttribute("listQuestion", listQuestion);
         request.setAttribute("listSubjectTitle", listSubjectTitle);
         
-        request.getRequestDispatcher("admin/questionlist.jsp").forward(request, response);
+        request.getRequestDispatcher("/admin/questionlist.jsp").forward(request, response);
     } 
 
     

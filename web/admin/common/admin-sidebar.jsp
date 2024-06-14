@@ -6,7 +6,7 @@
         <a href="admin/subjects" class="btn admin-aside-link active" data-title="Subject List">
             <i class="bi bi-file-check-fill"></i>
         </a>
-        <a href="admin/questionlist.jsp" class="btn admin-aside-link" data-title="Question List">
+        <a href="admin/questionlist" class="btn admin-aside-link" data-title="Question List">
             <i class="bi bi-file-check-fill"></i>
         </a>
         <a href="admin/quizzeslist" class="btn admin-aside-link" data-title="Quizzes List">

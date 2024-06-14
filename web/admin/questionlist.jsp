@@ -107,7 +107,7 @@
                         <ul>
                             <c:forEach begin="1" end="${totalPage}" var="pageNumber">
                                 <li class="${pageNumber == currentPage ? 'active' : ''}">
-                                    <a href="questionlist?page=${pageNumber}">${pageNumber}</a>
+                                    <a href="admin/questionlist?page=${pageNumber}">${pageNumber}</a>
                                 </li>
                             </c:forEach>
                         </ul>
