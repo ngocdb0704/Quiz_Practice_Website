@@ -331,6 +331,42 @@ public class DAOSubject extends DBContext {
 
     public static void main(String[] args) {
         DAOSubject test = new DAOSubject();
-        System.out.println(test.getFeaturedSubject().size());
+        System.out.println(test.countQuestion());
+    }
+    
+    /**
+     *
+     * @author Hoapmhe173343
+     */
+    public List<String> getAllSubjectTitle(){
+        List<String> listSubjectTitle = new ArrayList();
+        String sql = "SELECT [SubjectTitle]\n" +
+                    "  FROM [dbo].[Subject]";
+        
+        try{
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                listSubjectTitle.add(rs.getString("SubjectTitle"));
+            }
+        }catch(Exception e){
+            System.out.println(e);
+        }
+        return listSubjectTitle;
+    }
+    
+    public int countQuestion() {
+        String sql = "SELECT COUNT(*) FROM Question";
+        int totalItem = 0;
+
+        try (PreparedStatement ps = connection.prepareStatement(sql); 
+                ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                totalItem = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+        }
+
+        return totalItem;
     }
 }
