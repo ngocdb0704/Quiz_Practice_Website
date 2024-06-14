@@ -1,3 +1,5 @@
+DROP TABLE [dbo].[Answer];
+DROP TABLE [dbo].[Question];
 DROP TABLE [dbo].[Blog];
 DROP TABLE [dbo].[BlogCategory];
 DROP TABLE [dbo].[Registration];
@@ -113,7 +115,21 @@ CREATE TABLE [dbo].[Blog](
 	[PostBrief] [nvarchar](2048),
 	[PostText] [ntext]
 )
+GO
+CREATE TABLE [dbo].[Question](
+	[QuestionID] [int] IDENTITY(1,1) primary key,
+	[QuestionText] [text],
+	[Explanation] [text],
+	[Level] [int],
+	[SubjectID] [int] foreign key references [dbo].[Subject](SubjectId),
+	[LessonID] [int])
 
+GO
+CREATE TABLE [dbo].[Answer](
+	[AnswerID] [int] IDENTITY(1,1) primary key,
+	[QuestionID] [int] foreign key references [dbo].[Question](QuestionID),
+	[AnswerName] [text],
+	[IsCorrect] [bit])
 INSERT INTO [SubjectCategory] VALUES('Natural Science', 0);
 INSERT INTO [SubjectCategory] VALUES('Social Science', 0);
 INSERT INTO [SubjectCategory] VALUES('Technology & IT', 0);
