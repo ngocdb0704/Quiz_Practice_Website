@@ -19,31 +19,6 @@ import app.dal.QueryBuilder.OrderDirection;
 
 public class DAOBlog extends DBContext {
 
-    public class QueryResult {
-
-        private int totalItems;
-        private int pageSize;
-        private List<BlogInformation> results;
-
-        public QueryResult(int total, int pageSize, List<BlogInformation> results) {
-            this.totalItems = total;
-            this.pageSize = pageSize;
-            this.results = results;
-        }
-
-        public List<BlogInformation> getResults() {
-            return results;
-        }
-
-        public int getTotalPages() {
-            if (pageSize > 0) {
-                return (int) (Math.ceil((double) totalItems / pageSize));
-            }
-
-            return 0;
-        }
-    }
-
     private static final String LISTING_QUERY = "select\n"
             + "b.BlogId,\n"
             + "b.BlogTitle,\n"

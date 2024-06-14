@@ -1,6 +1,10 @@
 
 package app.controller;
 
+import app.dal.DAOQuiz;
+import app.dal.QueryResult;
+import app.utils.Config;
+import app.utils.Parsers;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -16,6 +20,22 @@ public class QuizzesListController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
+        Config cfg = new Config(getServletContext());
+
+        int page = Parsers.parseIntOrDefault(request.getParameter("page"), 1);
+        int pageSize = cfg.getIntOrDefault("pagination.size", 5);
+        DAOQuiz daoQuiz = new DAOQuiz();
+
+        boolean published = 
+                Parsers.parseIntOrDefault(request.getParameter("published"), 1) == 1 ? true : false;
+
+        QueryResult result = daoQuiz.search(
+                request.getParameter("quizName"),
+                published,
+                page, pageSize
+        );
+        request.setAttribute("result", result);
+
         request.getRequestDispatcher(PAGE_NAME).forward(request, response);
     } 
 

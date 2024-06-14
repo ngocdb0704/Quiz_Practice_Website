@@ -230,3 +230,20 @@ CREATE TABLE [dbo].[Answer](
 	[AnswerName] [text],
 	[IsCorrect] [bit])
 
+CREATE TABLE [dbo].[Quiz] (
+	[QuizId] [int] IDENTITY(1, 1) primary key,
+	[SubjectId] [int] not null foreign key references [dbo].[Subject](SubjectId),
+	[QuizName] nvarchar(255) default(N''),
+	[Level] char(10) check([Level] in (0, 1, 2)) default(0), --easy, medium, hard
+	[DurationInMinutes] int check([DurationInMinutes] > 0) default(60),
+	[PassRate] int check(0 <= [PassRate] and [PassRate] <= 100) default(50),
+	[QuizType] char(10) check([QuizType] in (0, 1)) default(0), --simulation, lesson-quiz
+	[IsPublished] bit,
+	[UpdatedTime] [datetime] default(CURRENT_TIMESTAMP)
+);
+
+CREATE TABLE [dbo].[QuizQuestion] (
+	[QuizId] [int] foreign key references [dbo].[Quiz]([QuizId]) on delete cascade,
+	[QuestionId] [int] foreign key references [dbo].[Question]([QuestionId])
+	PRIMARY KEY([QuizId], [QuestionId])
+);

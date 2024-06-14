@@ -25,6 +25,10 @@ public class QueryBuilder {
         IN("IN"),
         BETWEEN("BETWEEN"),
         EQUALS("="),
+        GREATER(">"),
+        SMALLER("<"),
+        SMALLER_EQ("<="),
+        GREATER_EQ(">="),
         LIKE("LIKE");
 
         private final String name;
@@ -74,7 +78,7 @@ public class QueryBuilder {
         whereClause.append(column).append(" ").append(operator.getName());
 
         switch (operator) {
-            case LIKE, EQUALS:
+            case LIKE, EQUALS, GREATER, SMALLER, GREATER_EQ, SMALLER_EQ:
                 whereClause.append(" ?");
                 parameters.add(values[0]);
                 break;

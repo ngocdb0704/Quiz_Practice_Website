@@ -3,35 +3,57 @@ package app.dal;
 import static app.dal.QueryBuilder.Operator;
 import static app.dal.QueryBuilder.OrderDirection;
 import app.entity.BlogInformation;
+import app.entity.QuizInformation;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DAOQuiz extends DBContext {
-    private static final String LISTING_QUERY = "select\n"
-            + "b.BlogId,\n"
-            + "b.BlogTitle,\n"
-            + "b.PostBrief,\n"
-            + "b.UpdatedTime,\n"
-            + "u.FullName,\n"
-            + "u.UserId,\n"
-            + "c.BlogCategoryId,\n"
-            + "c.BlogCategoryName\n"
-            + "from [Blog] b\n"
-            + "inner join [BlogCategory] c on b.BlogCategoryId = c.BlogCategoryId\n"
-            + "inner join [User] u on u.UserId = b.UserId\n";
+    private static final String LISTING_QUERY =
+            "select q.*, s.SubjectTitle from [Quiz] q\n"
+            + "inner join [Subject] s on q.SubjectId = s.SubjectId";
 
-    public void get() throws Exception {
-        PreparedStatement stmt = new QueryBuilder(LISTING_QUERY)
-                .where("b.BlogTitle", Operator.LIKE, "%Top%")
-                .toPreparedStatement(connection);
+    private static final String COUNT_LISTING_QUERY =
+            "select count(*) from [Quiz] q\n"
+            + "inner join [Subject] s on q.SubjectId = s.SubjectId";
 
-        ResultSet rs = stmt.executeQuery();
+    public QueryResult search(
+            String quizName,
+            boolean published,
+            int page, int pageSize
+    ) {
+        List<QuizInformation> ret = new ArrayList<>();
+        int count = 0;
 
-        while (rs.next()) {
-            System.out.println(new BlogInformation(rs));
+        try {
+            QueryBuilder query = new QueryBuilder(LISTING_QUERY)
+                    .where("IsPublished", Operator.EQUALS, published)
+                    .orderBy("q.UpdatedTime", OrderDirection.DESC);
+
+            if (quizName != null && !quizName.isBlank()) {
+                query.where("QuizName", Operator.LIKE, "%" + quizName + "%");
+            }
+
+            ResultSet rs = new QueryBuilder(COUNT_LISTING_QUERY, query)
+                    .toPreparedStatement(connection)
+                    .executeQuery();
+
+            if (rs.next()) {
+                count = rs.getInt(1);
+            }
+
+            rs = query
+                    .page(page, pageSize)
+                    .toPreparedStatement(connection)
+                    .executeQuery();
+
+            while (rs.next()) {
+                ret.add(new QuizInformation(rs));
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
-    }
-    
-    public static void main(String[] args) throws Exception {
-        new DAOQuiz().get();
+
+        return new QueryResult(count, pageSize, ret);
     }
 }

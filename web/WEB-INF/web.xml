@@ -88,6 +88,10 @@
         <servlet-name>UserProfile</servlet-name>
         <servlet-class>app.controller.UserProfile</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>QuestionListServlet</servlet-name>
+        <servlet-class>app.controller.QuestionListServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>UserProfile</servlet-name>
         <url-pattern>/UserProfile</url-pattern>
