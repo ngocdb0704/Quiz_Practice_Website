@@ -41,10 +41,12 @@ public class SubjectController extends HttpServlet {
         Config cfg = new Config(getServletContext());
         int numPerCarousel = cfg.getIntOrDefault("subjectList.carousel.size", 3);
         String service = request.getParameter("service");
+        String goToPara = request.getParameter("goToPos");
         String redirectTo;
         int i;
         int page;
         int start, end;
+        int goToPosOnWeb = 0;
         int numPerPage = cfg.getIntOrDefault("subjectList.pagination.size", 4);
         Vector<Subject> newSubjectList = daoSubject.getNewSubject();
         Vector<Subject> saleSubjectList = daoSubject.getBigSaleSubject();
@@ -75,6 +77,9 @@ public class SubjectController extends HttpServlet {
         }
         if (service == null) {
             service = "listAll";
+        }
+        if(goToPara != null){
+            goToPosOnWeb = Integer.parseInt(goToPara);
         }
         if (service.equals("listAll")) {
             String sendFilter = sendFilter(parentTier1, parentTier2, parentTier3);
@@ -120,6 +125,7 @@ public class SubjectController extends HttpServlet {
             request.setAttribute("sendFilter", sendFilter);
             request.setAttribute("page", page);
             request.setAttribute("key", inputKey);
+            request.setAttribute("goTo", goToPosOnWeb);
             redirectTo = "/SubjectList.jsp";
             dispath(request, response, redirectTo);
         }
