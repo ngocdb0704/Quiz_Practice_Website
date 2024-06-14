@@ -15,12 +15,90 @@
         <link rel="stylesheet" href="common/admin-common.css">
         <script src="common/admin-common.js"></script>
         <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/questionlist.css" />
+    
+        <style>
+        /* Add some basic styling for the table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .filters {
+            margin-bottom: 20px;
+        }
+        .pagination {
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
     </head>
     <body>
         <div class="admin-layout">
             <%@include file="/common/admin-header.jsp" %>
             <%@include file="/common/admin-sidebar.jsp" %>
             <main class="admin-main">
+                <h1>Question Management</h1>
+    
+    <!-- Filters Section -->
+    <div class="filters">
+        <form method="get" action="filterQuestions">
+            <label for="subject">Subject:</label>
+            <select id="subject" name="subject">
+                <!-- Add options dynamically or statically -->
+            </select>
+            <label for="lesson">Lesson:</label>
+            <select id="lesson" name="lesson">
+                <!-- Add options dynamically or statically -->
+            </select>
+            <label for="dimension">Dimension(s):</label>
+            <select id="dimension" name="dimension">
+                <!-- Add options dynamically or statically -->
+            </select>
+            <label for="level">Level:</label>
+            <select id="level" name="level">
+                <!-- Add options dynamically or statically -->
+            </select>
+            <label for="status">Status:</label>
+            <select id="status" name="status">
+                <!-- Add options dynamically or statically -->
+            </select>
+            <label for="searchContent">Search by Content:</label>
+            <input type="text" id="searchContent" name="searchContent" />
+            <button type="submit">Filter</button>
+        </form>
+    </div>
+
+    <!-- Questions List Section -->
+    <table>
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>Question Content</th>
+                <th>Subject</th>
+                <th>Lesson</th>
+                <th>Level</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <c:forEach var="question" items="${listQuestion}" varStatus="status">
+                <tr>
+                    <td>${status.index + 1}</td>
+                    <td>${question.questionName}</td>
+                    <td>${question.subjectID}</td>
+                    <td>${question.lessonID}</td>
+                    <td>${question.level}</td>
+
+                </tr>
+            </c:forEach>
+        </tbody>
+    </table>
 
 
                 <%--pagging--%>

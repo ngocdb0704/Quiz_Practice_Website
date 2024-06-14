@@ -88,7 +88,7 @@ public class DAOSubject extends DBContext {
     
     public static void main(String[] args) {
         DAOSubject test = new DAOSubject();
-        System.out.println(test.getAllSubjectTitle());
+        System.out.println(test.countQuestion());
     }
     
     /**
@@ -113,7 +113,7 @@ public class DAOSubject extends DBContext {
     }
     
     public int countQuestion() {
-        String sql = "SELECT COUNT(*) FROM Subject";
+        String sql = "SELECT COUNT(*) FROM Question";
         int totalItem = 0;
 
         try (PreparedStatement ps = connection.prepareStatement(sql); 

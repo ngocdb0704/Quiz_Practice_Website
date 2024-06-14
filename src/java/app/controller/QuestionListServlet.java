@@ -39,7 +39,8 @@ public class QuestionListServlet extends HttpServlet {
         
         int totalQuestion = subDao.countQuestion();
         int totalPage = (int) Math.ceil((double) totalQuestion / record);
-        
+        System.out.println("tt question " + totalQuestion);
+        System.out.println("tt page" + totalPage);
         request.setAttribute("totalPage", totalPage);
         request.setAttribute("currentPage", page);
         request.setAttribute("listQuestion", listQuestion);
