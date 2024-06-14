@@ -3,9 +3,10 @@
 
 <%@attribute name="title" type="java.lang.String" required="true" %>
 <%@attribute name="href" type="java.lang.String" required="true" %>
+<%@attribute name="icon" type="java.lang.String" required="false" %>
 
 <c:set var="match" value="${urlPattern.contains(href)}" />
 
 <a href="${href}" class="btn admin-aside-link ${match ? 'active' : ''}" data-title="${title}">
-    <i class="bi bi-file-check-fill"></i>
+    <i class="bi ${icon}"></i>
 </a>
