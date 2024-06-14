@@ -14,7 +14,7 @@
             <%@include file="/admin/common/admin-header.jsp" %>
             <%@include file="/admin/common/admin-sidebar.jsp" %>
             <main class="admin-main">
-                <img src="https://images.klipfolio.com/website/public/5a275fee-d42b-4f31-91f6-8148d4d729af/executive%20dashboard.png" class="demo-img">
+                <h1>Path Info: ${urlPattern}</h1>
             </main>
         </div>
     </body>
