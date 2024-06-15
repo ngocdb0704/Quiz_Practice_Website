@@ -15,17 +15,18 @@ public class Blog {
     String BlogTitle;
     String UpdatedTime; 
     String PostText;
+    String PostBrief;
 
     public Blog() {
     }
 
-    public Blog(Integer BlogId, Integer UserId, Integer BlogCategoryId, String BlogTitle, String UpdatedTime, String PostText) {
+    public Blog(Integer BlogId, Integer UserId, Integer BlogCategoryId, String BlogTitle, String UpdatedTime, String PostBrief) {
         this.BlogId = BlogId;
         this.UserId = UserId;
         this.BlogCategoryId = BlogCategoryId;
         this.BlogTitle = BlogTitle;
         this.UpdatedTime = UpdatedTime;
-        this.PostText = PostText;
+        this.PostBrief = PostBrief;
     }
 
     public Integer getBlogId() {
@@ -76,8 +77,16 @@ public class Blog {
         this.PostText = PostText;
     }
 
+    public String getPostBrief() {
+        return PostBrief;
+    }
+
+    public void setPostBrief(String PostBrief) {
+        this.PostBrief = PostBrief;
+    }
+
     @Override
     public String toString() {
-        return "Blog{" + "BlogId=" + BlogId + ", UserId=" + UserId + ", BlogCategoryId=" + BlogCategoryId + ", BlogTitle=" + BlogTitle + ", UpdatedTime=" + UpdatedTime + ", PostText=" + PostText + '}';
+        return "Blog{" + "BlogId=" + BlogId + ", UserId=" + UserId + ", BlogCategoryId=" + BlogCategoryId + ", BlogTitle=" + BlogTitle + ", UpdatedTime=" + UpdatedTime + ", PostText=" + PostText + ", PostBrief=" + PostBrief + '}';
     }
 }

@@ -12,6 +12,7 @@ public class Package {
 
     private int packageId;
     private String packageName;
+    private float listPrice;
     private float salePrice;
 
     public Package() {
@@ -20,6 +21,13 @@ public class Package {
     public Package(int packageId, String packageName, float salePrice) {
         this.packageId = packageId;
         this.packageName = packageName;
+        this.salePrice = salePrice;
+    }
+
+    public Package(int packageId, String packageName, float listPrice, float salePrice) {
+        this.packageId = packageId;
+        this.packageName = packageName;
+        this.listPrice = listPrice;
         this.salePrice = salePrice;
     }
 
@@ -46,5 +54,15 @@ public class Package {
     public void setSalePrice(float salePrice) {
         this.salePrice = salePrice;
     }
+
+    public float getListPrice() {
+        return listPrice;
+    }
+
+    public void setListPrice(float listPrice) {
+        this.listPrice = listPrice;
+    }
+    
+    
 
 }

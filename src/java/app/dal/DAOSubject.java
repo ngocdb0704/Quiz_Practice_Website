@@ -23,6 +23,37 @@ import java.util.logging.Logger;
  * @author admin
  */
 public class DAOSubject extends DBContext {
+    
+    public Vector<Subject> getRegisteredSubjects(String email) {
+        Vector<Subject> vec = new Vector<>();
+        String sql = """
+                     select s.SubjectId, s.SubjectTitle from [Registration] r
+                     join [User] u on r.UserId = u.UserId
+                     join Package p on p.PackageId = r.PackageId
+                     join [Subject] s on p.SubjectId = s.SubjectId
+                     where u.Email like ? ESCAPE '!'""";
+        email = email.replace("!", "!!")
+                .replace("%", "!%")
+                .replace("_", "!_")
+                .replace("[", "![");
+        try {
+            PreparedStatement pre = connection.prepareStatement(sql);
+            if (email != null) {
+                pre.setString(1, "%" + email + "%");
+            }
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                Subject sub = new Subject();
+                sub.setSubjectId(rs.getInt(1));
+                sub.setSubjectName(rs.getString(2));
+                vec.add(sub);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DAOSubject.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return vec;
+    }
+    
     public Vector<Subject> getVectorByPage(Vector<Subject> vec,
             int start, int end) {
         Vector<Subject> outputVec = new Vector<>();
@@ -31,6 +62,7 @@ public class DAOSubject extends DBContext {
         }
         return outputVec;
     }
+    
     public String addTierToSQL(int[] parent, int tier, int flag) {
         String sql = "";
         if (flag == 0) {
@@ -62,40 +94,42 @@ public class DAOSubject extends DBContext {
         sql += ")";
         return sql;
     }
-
+    
     public Vector<Subject> getWithToken(int[] parentTier1, int[] parentTier2,
-            int[] parentTier3, String inputKey, int order) {
+            int[] parentTier3, String inputKey, int order, int[] level) {
         Vector<Subject> vec = new Vector<>();
         int flagAND = 0;
         String sql = """
-with CategoryHierarchy as 
-                        (select SubjectCategoryId,SubjectCategoryName,
-                        SubjectParentCategory from SubjectCategory
-                        where SubjectParentCategory = 0
-                        union all
-                        select sc.SubjectCategoryId,sc.SubjectCategoryName,sc.SubjectParentCategory 
-                        from SubjectCategory sc
-                        inner join CategoryHierarchy ch 
-                        on ch.SubjectCategoryId = sc.SubjectParentCategory)					
-                        select tableLowest.SubjectId, tableSubject.SubjectTitle,
-                        tableSubject.SubjectTagLine, tableSubject.SubjectThumbnail,
-                        tableSubject.PackageName, tableSubject.ListPrice,
-                        tableSubject.SalePrice, tableSubject.ParentTier3,
-                        tableSubject.ParentTier2, tableSubject.ParentTier1 from 
-                        (select s.SubjectId, MIN(p.SalePrice) as 'SalePrice' from Package p
-                        join Subject s on s.SubjectId = p.SubjectId
-                        GROUP BY s.SubjectId ) tableLowest
-                        left join 
-                        (select s.SubjectId, s.SubjectTitle, s.SubjectTagLine,s.SubjectThumbnail,
-                        p.PackageName, p.ListPrice, p.SalePrice, sc.SubjectCategoryId as 'ParentTier3',
-                        sc.SubjectParentCategory as 'ParentTier2', ch.SubjectParentCategory as 'ParentTier1'
-                        ,s.SubjectUpdatedDate                     
-                        from [Subject] s
-                        join [Package] p on p.SubjectId = s.SubjectId
-                        join [SubjectCategory] sc on sc.SubjectCategoryId = s.SubjectCategoryId
-                        left join CategoryHierarchy ch on ch.SubjectCategoryId = sc.SubjectParentCategory) tableSubject
-                        on tableLowest.SubjectId = tableSubject.SubjectId
-                        where tableLowest.SalePrice = tableSubject.SalePrice 
+                     with CategoryHierarchy as 
+                     (select SubjectCategoryId,SubjectCategoryName,
+                     SubjectParentCategory from SubjectCategory
+                     where SubjectParentCategory = 0
+                     union all
+                     select sc.SubjectCategoryId,sc.SubjectCategoryName,sc.SubjectParentCategory 
+                     from SubjectCategory sc
+                     inner join CategoryHierarchy ch 
+                     on ch.SubjectCategoryId = sc.SubjectParentCategory)					
+                     select tableLowest.SubjectId, tableSubject.SubjectTitle,
+                     tableSubject.SubjectTagLine, tableSubject.SubjectThumbnail,
+                     tableSubject.PackageName, tableSubject.ListPrice,
+                     tableSubject.SalePrice, tableSubject.ParentTier3,
+                     tableSubject.ParentTier2, tableSubject.ParentTier1,
+                     tableSubject.SubjectLevelName from 
+                     (select s.SubjectId, MIN(p.SalePrice) as 'SalePrice' from Package p
+                     join Subject s on s.SubjectId = p.SubjectId
+                     GROUP BY s.SubjectId ) tableLowest
+                     left join 
+                     (select s.SubjectId, s.SubjectTitle, s.SubjectTagLine,s.SubjectThumbnail,
+                     p.PackageName, p.ListPrice, p.SalePrice, sc.SubjectCategoryId as 'ParentTier3',
+                     sc.SubjectParentCategory as 'ParentTier2', ch.SubjectParentCategory as 'ParentTier1'
+                     ,s.SubjectUpdatedDate, sl.SubjectLevelName, sl.SubjectLevelId                     
+                     from [Subject] s
+                     join [Package] p on p.SubjectId = s.SubjectId
+                     join [SubjectCategory] sc on sc.SubjectCategoryId = s.SubjectCategoryId
+                     join [SubjectLevel] sl on sl.SubjectLevelId = s.SubjectLevelId
+                     left join CategoryHierarchy ch on ch.SubjectCategoryId = sc.SubjectParentCategory) tableSubject
+                     on tableLowest.SubjectId = tableSubject.SubjectId
+                     where tableLowest.SalePrice = tableSubject.SalePrice 
                               """;
         if (parentTier3 != null) {
             sql += addTierToSQL(parentTier3, 3, flagAND);
@@ -115,7 +149,19 @@ with CategoryHierarchy as
                 flagAND = 1;
             }
         }
-        if(flagAND == 1) sql += ")";
+        if (flagAND == 1) {
+            sql += ")";
+        }
+        if (level != null) {
+            sql += " and tableSubject.SubjectLevelId in(";
+            for (int i = 0; i < level.length; i++) {
+                sql += level[i] + ",";
+            }
+            if (sql.endsWith(",")) {
+                sql = sql.substring(0, sql.length() - 1);
+            }
+            sql += ")";
+        }
         if (inputKey != null) {
             inputKey = inputKey.replace("!", "!!")
                     .replace("%", "!%")
@@ -157,7 +203,7 @@ with CategoryHierarchy as
         }
         return vec;
     }
-
+    
     public Vector<Subject> getFeaturedSubject() {
         Vector<Subject> vec = new Vector<>();
         try {
@@ -194,7 +240,7 @@ with CategoryHierarchy as
         }
         return vec;
     }
-
+    
     public Vector<Subject> getBigSaleSubject() {
         Vector<Subject> vec = new Vector<>();
         try {
@@ -231,7 +277,7 @@ with CategoryHierarchy as
         }
         return vec;
     }
-
+    
     public Vector<Subject> getNewSubject() {
         Vector<Subject> vec = new Vector<>();
         try {
@@ -270,7 +316,28 @@ with CategoryHierarchy as
         }
         return vec;
     }
-
+    
+    public Vector<SubjectCategory> getLevelList() {
+        Vector<SubjectCategory> vec = new Vector<>();
+        try {
+            Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            //change query due to database script's change
+            ResultSet rs
+                    = statement.executeQuery("select sl.SubjectLevelId,  sl.SubjectLevelName  from [SubjectLevel] sl");
+            while (rs.next()) {
+                SubjectCategory cat = new SubjectCategory();
+                int id = rs.getInt(1);
+                String name = rs.getString(2);
+                cat.setCateId(id);
+                cat.setCateName(name);
+                vec.add(cat);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DAOSubject.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return vec;
+    }
+    
     public Vector<SubjectCategory> getFilterList() {
         Vector<SubjectCategory> vec = new Vector<>();
         try {
@@ -302,25 +369,36 @@ with CategoryHierarchy as
         }
         return vec;
     }
-
-    //Hard-coded ids
-    static int[] ListOfFeaturedSubjectId = {1, 2, 3, 4, 5};
-
-    public List<Subject> getEnoughToDisplay(int ammoutOfSubjects) {
-        List<Subject> Out = new ArrayList<>();
-        String sql = "SELECT TOP (?) s.SubjectId, s.SubjectTitle, s.SubjectTagLine, s.SubjectThumbnail FROM Subject s WHERE s.SubjectId in (";
-        for (int i : ListOfFeaturedSubjectId) {
-            sql += i + ", ";
+    
+    public Subject getSubjectById(int id) {
+        Subject Out = null;
+        String sql = "SELECT TOP 1 SubjectId, SubjectTitle, SubjectTagLine, SubjectBriefInfo, SubjectDescription, SubjectThumbnail FROM Subject WHERE SubjectId = ?";
+        
+        PreparedStatement pre;
+        try {
+            pre = connection.prepareStatement(sql);
+            pre.setInt(1, id);
+            ResultSet rs = pre.executeQuery();
+            if (rs.next()) {
+                Out = new Subject(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
         }
-        sql = sql.substring(0, sql.length() - 2);
-        sql += ")";
-
+        return Out;
+    }
+    
+    public List<Subject> getFeaturedSubjects(int ammoutOfSubjects) {
+        List<Subject> Out = new ArrayList<>();
+        String sql = "SELECT TOP (?) s.SubjectId, s.SubjectTitle, s.SubjectTagLine, s.SubjectThumbnail FROM Subject s WHERE s.IsFeaturedSubject = 1";
+        
         PreparedStatement pre;
         try {
             pre = connection.prepareStatement(sql);
             pre.setInt(1, ammoutOfSubjects);
             ResultSet rs = pre.executeQuery();
             while (rs.next()) {
+                //Couldn't overload a contructor for this specific purpose lol
                 Subject a = new Subject();
                 a.setSubjectId(rs.getInt(1));
                 a.setSubjectName(rs.getString(2));
@@ -333,9 +411,9 @@ with CategoryHierarchy as
         }
         return Out;
     }
-
+    
     public static void main(String[] args) {
         DAOSubject test = new DAOSubject();
-        System.out.println(test.getWithToken(null, null, null, null, 0).size());
+        System.out.println(test.getRegisteredSubjects("ngocdb").size());
     }
 }
