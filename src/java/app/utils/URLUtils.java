@@ -16,7 +16,7 @@ public class URLUtils {
         );
     }
     
-    public static Map<String, String> cloneParamsMap(Map<String, String> queryParamsMap) {
+    public static Map<String, String[]> cloneParamsMap(Map<String, String[]> queryParamsMap) {
         return new HashMap<>(queryParamsMap);
     }
     

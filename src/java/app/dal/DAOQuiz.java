@@ -21,7 +21,6 @@ public class DAOQuiz extends DBContext {
     public void markDraft(Integer[] ids) {
         try {
             new QueryBuilder("update [Quiz] set IsPublished = 0")
-                .setLoggingEnabled(true)
                 .where("QuizId", Operator.IN, ids)
                 .toPreparedStatement(connection)
                 .executeUpdate();
@@ -33,7 +32,6 @@ public class DAOQuiz extends DBContext {
     public void publish(Integer[] ids) {
         try {
             new QueryBuilder("update [Quiz] set IsPublished = 1")
-                .setLoggingEnabled(true)
                 .where("QuizId", Operator.IN, ids)
                 .toPreparedStatement(connection)
                 .executeUpdate();
@@ -45,7 +43,6 @@ public class DAOQuiz extends DBContext {
     public void delete(Integer[] ids) {
         try {
             new QueryBuilder("delete from [Quiz]")
-                .setLoggingEnabled(true)
                 .where("QuizId", Operator.IN, ids)
                 .toPreparedStatement(connection)
                 .executeUpdate();

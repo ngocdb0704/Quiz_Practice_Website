@@ -21,21 +21,17 @@
                         <i class="bi bi-clipboard-check-fill"></i> Quizzes List
                     </h2>
                     <ul class="nav nav-tabs">
-                        <li @click="deselectAll" class="nav-item">
-                            <myTags:QueryPreservingLink
-                                className="nav-link ${empty param.published or param.published eq '1' ? 'active' : ''}"
-                                key="published"
-                                value="1"
-                                href="admin/quizzeslist"
-                            >Published</myTags:QueryPreservingLink>
+                        <li class="nav-item">
+                            <a
+                                class="nav-link ${empty param.published or param.published eq '1' ? 'active' : ''}"
+                                href="admin/quizzeslist?published=1"
+                            >Published</a>
                         </li>
-                        <li @click="deselectAll" class="nav-item">
-                            <myTags:QueryPreservingLink
-                                className="nav-link ${param.published eq '0' ? 'active' : ''}"
-                                key="published"
-                                value="0"
-                                href="admin/quizzeslist"
-                            >Draft</myTags:QueryPreservingLink>
+                        <li class="nav-item">
+                            <a
+                                class="nav-link ${param.published eq '0' ? 'active' : ''}"
+                                href="admin/quizzeslist?published=0"
+                            >Draft</a>
                         </li>
                     </ul>
 
@@ -97,6 +93,16 @@
                             </div>
                         </div>
                     </div>
+
+                    <c:if test="${result.getTotalPages() > 0}">
+                        <myTags:Paginator
+                            className="mt-3 d-flex justify-content-end"
+                            current="${param.page}"
+                            total="${result.getTotalPages()}"
+                            size="1"
+                            url="admin/quizzeslist"
+                        />
+                    </c:if>
 
                     <%@include file="/admin/quizzes/QuizzesListTable.jsp" %>
 

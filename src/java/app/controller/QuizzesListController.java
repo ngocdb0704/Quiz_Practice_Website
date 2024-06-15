@@ -5,6 +5,7 @@ import app.dal.QueryResult;
 import app.entity.QuizType;
 import app.utils.Config;
 import app.utils.Parsers;
+import app.utils.URLUtils;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -14,6 +15,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @WebServlet(name="QuizzesListController", urlPatterns={"/admin/quizzeslist"})
 public class QuizzesListController extends HttpServlet {
@@ -46,6 +48,12 @@ public class QuizzesListController extends HttpServlet {
                 page, pageSize
         );
 
+        if (result.getTotalPages() > 0 && page > result.getTotalPages()) {
+            String params = request.getQueryString();
+            params = params.replace("page=" + page, "page=" + result.getTotalPages());
+            response.sendRedirect("quizzeslist?" + params);
+        }
+
         request.setAttribute("result", result);
 
         request.getRequestDispatcher(PAGE_NAME).forward(request, response);
@@ -63,21 +71,15 @@ public class QuizzesListController extends HttpServlet {
             switch (action) {
                 case "markDraft" -> daoQuiz.markDraft(ids);
                 case "publish" -> daoQuiz.publish(ids);
+                case "delete" -> daoQuiz.delete(ids);
                 default -> System.out.println(action);
             }
         }
 
         String redirectUrl = String.format(
-                "quizzeslist?published=%s&subjectIds=%s&quizTypes=%s",
-                request.getParameter("published"),
-                request.getParameter("subjectIds"),
-                request.getParameter("quizTypes")
+                "quizzeslist?published=%s",
+                request.getParameter("published")
         );
-
-        String quizName = request.getParameter("quizName");
-        if (quizName != null) {
-            redirectUrl += "&quizName=" + quizName;
-        }
 
         String page = request.getParameter("page");
         if (page != null) {

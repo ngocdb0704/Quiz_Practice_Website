@@ -1,6 +1,6 @@
 class State {
     constructor() {
-        this.map = Alpine.$persist({}).using(sessionStorage);
+        this.map = {};
         this.allSelected = false;
     }
 
