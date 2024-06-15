@@ -191,6 +191,58 @@ INSERT INTO [Subject] VALUES('Somehow',29,1,3,0,'2024-06-6','2024-06-7','This is
 INSERT INTO [Subject] VALUES('Night Call',30,1,3,0,'2024-06-5','2024-06-7','This is incredible', 'Mock brief info', 'Mock description','https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
 INSERT INTO [Subject] VALUES('Inspiration',9,1,2,0,'2024-06-4','2024-06-7','This is amazing', 'Mock brief info', 'Mock description','https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
 
+INSERT INTO [Subject] VALUES('College Algebra with the Math Sorcerer', 7, 1, 1, 1, '2004-05-01','2004-05-01','nice', 'Mock brief info', '
+	##Coursera style description
+		Sample
+		The subject description part of the subject details page will parse the description of a subject and display it similar to how Coursera display their subject info
+		Note: This section will not be displayed
+	##About
+		<h3>What you''ll learn:</h3>
+		<ul>
+		<li>Understanding differential equations and solving first order and first degree differential equations.</li>
+		<li>Apply the concept of trigonometry in real world problems.</li>
+		<li>Understanding differentiation and integration with related applications.</li>
+		<li>Solve a system of equations with the help of matrices.</li>
+		</ul>
+		<h3>Details to know</h3>
+		<span>Assessments: 16 Assessments</span>
+	##Outcome
+		<h3>Advance your subject-matter expertise
+		<ul>
+		<li>learn in-demand skills from university and industry experts</li>
+		<li>master a subject or tool with hands-on projects</li>
+		<li>develop a deep understanding of key concepts</li>
+		<li>earn a career certificate from imperial college london</li>
+		</ul>
+		<h3>Shareable certificate</h3>
+	##Lessons
+		<h3>There are 3 modules in this course</h3>
+
+		<h4>Module 1</h4>
+		<ul>
+		<li>L1</li>
+		<li>L2</li>
+		<li>L3</li>
+		</ul>
+
+		<h4>Module 2</h4>
+		<ul>
+		<li>L1</li>
+		<li>L2</li>
+		<li>L3</li>
+		</ul>
+
+		<h4>Module 3</h4>
+		<ul>
+		<li>L1</li>
+		<li>L2</li>
+		<li>L3</li>
+		</ul>
+	##Duration
+		<h3>27 hours to complete</h3>
+		<h4>3 weeks at 9 hours a week</h4>
+	##End', 'https://thumbs.comidoc.net/750/webp/2463616_13ef_3.webp');
+
 
 INSERT INTO [Subject] VALUES('iWork', 24, 1,2, 0, '2023-08-21', '2024-04-24', 'target plug-and-play e-tailers', 'Mock brief info', 'Mock description', 'https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
 INSERT INTO [Subject] VALUES('Customer Relationships', 24, 1,2, 0, '2024-06-07', '2024-06-07', 'visualize robust niches', 'Mock brief info', 'Mock description', 'https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
