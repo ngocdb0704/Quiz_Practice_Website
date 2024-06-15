@@ -88,10 +88,10 @@
                             </div>
                             <div class="form-group mb-3"> Gender: 
                                 <select class="form-control" name="gender" onchange="changeSaveButtonStatus()">
-                                    <%= genderMap.reduce(0, (key, val) -> "<option value=\"" + key + "\" "
+                                    <%= (genderMap.size() > 0)? genderMap.reduce(0, (key, val) -> "<option value=\"" + key + "\" "
                                             + (((int)key == genderId)? "selected": "")
                                             + "  >" + val + "</option>"
-                                            , (option, option1) -> option + "\n" + option1).toString()%>
+                                            , (option, option1) -> option + "\n" + option1).toString() : ""%>
                                 </select>
 
                             </div>
@@ -103,7 +103,7 @@
                             <br>
                             <div class="input-group mb-3"> 
                                 <input id="saveButton" class="btn btn-outline-secondary disabled container form-control" type="submit" value="Save"> 
-                                <input class="btn btn-secondary form-control" type="reset" value="Reset">
+                                <input class="btn btn-danger form-control" type="reset" value="Reset">
                             </div>
 
                             <input type="hidden" name="service" value="update">
