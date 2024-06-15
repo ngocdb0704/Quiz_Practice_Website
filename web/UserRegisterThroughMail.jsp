@@ -65,9 +65,15 @@
     function sendVerificationCode() {
         var email = $("input[name='email']").val();
         var button = document.querySelector("#sendCodeButton");
+
+        // Clear any previous error messages
+        $("#error-message").hide();
+
+        disableInputs(true);  // Disable inputs immediately
+        button.textContent = "Sending...";
+        button.disabled = true;
+
         if (email) {
-            button.textContent = "Sending...";
-            button.disabled = true;
             $.ajax({
                 url: "SendVerificationCode",
                 type: "POST",
@@ -85,10 +91,14 @@
                     }
                     button.textContent = "Send Code";
                     button.disabled = false;
+                    disableInputs(false);  // Re-enable inputs on error
                 }
             });
         } else {
             alert("Please enter your email.");
+            button.textContent = "Send Code";
+            button.disabled = false;
+            disableInputs(false);  // Re-enable inputs if email is empty
         }
     }
 
@@ -104,8 +114,13 @@
                 clearInterval(countdownTimer);
                 button.textContent = "Send Code";
                 button.disabled = false; // Enable button after countdown
+                disableInputs(false); // Re-enable inputs after countdown
             }
         }, 1000);
+    }
+
+    function disableInputs(disable) {
+        $("input[name='email']").prop('disabled', disable);
     }
 
     function registerUser(event) {
@@ -122,6 +137,7 @@
                     if (response === "Expired code") {
                         clearInterval(countdownTimer);
                         $("#sendCodeButton").prop('disabled', false).text('Send Code');
+                        disableInputs(false); // Re-enable inputs if code expired
                     }
                 }
             },
