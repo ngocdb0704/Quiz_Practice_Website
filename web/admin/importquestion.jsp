@@ -13,22 +13,38 @@
         <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/importquestion.css"/>
     </head>
     <body>
-        <div class="container">
+        <div>
+            <div id="liveAlertPlaceholder" class="bg-warning"></div>
             <div class="card card-body">
-                <div class="text-center border p-2">Import question </div>
-                <p>Select the file excel containing question to add to the question bank.</p>
+                <p>Select the excel file containing questions to add to the question bank.</p>
                 <form action="importquestion" method="post" class="d-flex" enctype="multipart/form-data">
                     <input type="file" name="file" class="flex-grow-1" accept=".xlsx" required/>
                     <button class="btn btn-primary" type="submit">Upload</button>
                 </form>
                 <a href="${pageContext.request.contextPath}/public/template/question_template.xlsx" 
                    class="btn btn-info col-md-12 mt-3" download>Download the import question template</a>
-                   <c:if test="${notification != null}">
-                    <div class="message">${notification}</div>
-                    
-                </c:if>
             </div>
         </div>
+                   
+                   
+        <script src="${pageContext.request.contextPath}/public/js/bootstrap/bootstrap.bundle.min.js"></script>
+        <script>
+            const alertPlaceholder = document.getElementById('liveAlertPlaceholder');
+            const appendAlert = (message, type) => {
+                const wrapper = document.createElement('div');
+                wrapper.innerHTML = [
+                    `<div class="alert alert-${type} alert-dismissible" role="alert">`,
+                    `   <div>${notification}</div>`,
+                    '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
+                    '</div>'
+                ].join('');
 
+                alertPlaceholder.append(wrapper);
+            }
+
+            <c:if test="${notification != null}">
+                appendAlert('${notification}', 'success');
+            </c:if>
+        </script>
     </body>
 </html>
