@@ -15,28 +15,6 @@
         <title>Question List</title>
         <%@include file="/common/ImportBootstrap.jsp" %>
         <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/questionlist.css" />
-
-        <style>
-            /* Add some basic styling for the table */
-            table {
-                width: 100%;
-                border-collapse: collapse;
-            }
-            th, td {
-                border: 1px solid #ddd;
-                padding: 8px;
-            }
-            th {
-                background-color: #f2f2f2;
-            }
-            .filters {
-                margin-bottom: 20px;
-            }
-            .pagination {
-                margin-top: 20px;
-                text-align: center;
-            }
-        </style>
         <link rel="stylesheet" href="admin/common/admin-common.css">
         <script src="admin/common/admin-common.js"></script>
     </head>
@@ -52,8 +30,12 @@
                     <form method="get" action="filterQuestions">
                         <label for="subject">Subject:</label>
                         <select id="subject" name="subject">
-                            <!-- Add options dynamically or statically -->
+                            <option value="all">All subjects</option>
+                            <c:forEach var="subject" items="${listSubjectTitle}">
+                                <option value="${subject}">${subject}</option>
+                            </c:forEach>
                         </select>
+
                         <label for="lesson">Lesson:</label>
                         <select id="lesson" name="lesson">
                             <!-- Add options dynamically or statically -->
@@ -70,8 +52,8 @@
                         <select id="status" name="status">
                             <!-- Add options dynamically or statically -->
                         </select>
-                        <label for="searchContent">Search by Content:</label>
-                        <input type="text" id="searchContent" name="searchContent" />
+                        <label for="searchContent"></label>
+                        <input type="text" id="searchContent" name="searchContent" placeholder="Search by Content"/>
                         <button type="submit">Filter</button>
                     </form>
                 </div>
@@ -93,10 +75,10 @@
                             <tr>
                                 <td>${status.index + 1}</td>
                                 <td>${question.questionName}</td>
-                                <td>${question.subjectID}</td>
+                                <td>${subjectMap[question.subjectID]}</td>
                                 <td>${question.lessonID}</td>
                                 <td>${question.level}</td>
-
+                                <td> <!-- Actions can be added here --></td>
                             </tr>
                         </c:forEach>
                     </tbody>

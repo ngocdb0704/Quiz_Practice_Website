@@ -134,6 +134,23 @@
     margin-top: 30px;
 }
 
+
+/*quesion list */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+th {
+    background-color: #f2f2f2;
+}
+.filters {
+    margin-bottom: 20px;
+}
+
 .admin-table .checkbox-big {
     width: 20px;
     height: 20px;

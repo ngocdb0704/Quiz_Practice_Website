@@ -12,11 +12,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.sql.Date;
 
 /**
  *
@@ -336,28 +336,28 @@ with CategoryHierarchy as
 
     public static void main(String[] args) {
         DAOSubject test = new DAOSubject();
-        System.out.println(test.countQuestion());
+        System.out.println(test.getAllSubject());
     }
     
     /**
      *
      * @author Hoapmhe173343
      */
-    public List<String> getAllSubjectTitle(){
-        List<String> listSubjectTitle = new ArrayList();
-        String sql = "SELECT [SubjectTitle]\n" +
+    public List<Subject> getAllSubject(){
+        List<Subject> listSubject = new ArrayList();
+        String sql = "SELECT *\n" +
                     "  FROM [dbo].[Subject]";
-        
         try{
             PreparedStatement ps = connection.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
-                listSubjectTitle.add(rs.getString("SubjectTitle"));
+                listSubject.add(new Subject(rs.getInt("subjectId"), 
+                        rs.getString("subjectTitle")));
             }
         }catch(Exception e){
             System.out.println(e);
         }
-        return listSubjectTitle;
+        return listSubject;
     }
     
     public int countQuestion() {
