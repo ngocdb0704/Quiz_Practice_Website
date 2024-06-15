@@ -8,6 +8,7 @@ package app.controller;
  *
  * @author OwO
  */
+import app.dal.DAOUser;
 import java.io.IOException;
 import java.util.Random;
 import jakarta.mail.*;
@@ -27,20 +28,30 @@ public class SendVerificationCodeUserRegister extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String email = request.getParameter("email");
         if (email != null && !email.isEmpty()) {
-            String verificationCode = generateVerificationCode();
-            HttpSession session = request.getSession();
-            session.setAttribute("verificationCode", verificationCode);
-            session.setAttribute("verificationCodeTimestamp", System.currentTimeMillis());
-            // Send verification code to email
-            boolean emailSent = sendEmail(email, verificationCode);
-            if (emailSent) {
-                response.setStatus(HttpServletResponse.SC_OK);
+            // Check if the email already exists in the database
+            if (isEmailRegistered(email)) {
+                response.setStatus(HttpServletResponse.SC_CONFLICT); // 409 Conflict
+                response.getWriter().write("Email already existed!");
             } else {
-                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                String verificationCode = generateVerificationCode();
+                boolean emailSent = sendEmail(email, verificationCode);
+                if (emailSent) {
+                    HttpSession session = request.getSession();
+                    session.setAttribute("verificationCode", verificationCode);
+                    session.setAttribute("verificationCodeTimestamp", System.currentTimeMillis());
+                    response.setStatus(HttpServletResponse.SC_OK);
+                } else {
+                    response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                }
             }
         } else {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
+    }
+
+    private boolean isEmailRegistered(String email) {
+        DAOUser daoUser = new DAOUser();
+        return daoUser.isEmailRegistered(email);
     }
 
     private String generateVerificationCode() {
