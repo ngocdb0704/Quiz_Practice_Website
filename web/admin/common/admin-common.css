@@ -39,7 +39,7 @@
 .admin-aside {
     grid-area: sidebar;
     background: red;
-    width: 400px;
+    width: 300px;
     color: white;
     transition: width 400ms;
     overflow: hidden;
@@ -48,11 +48,6 @@
 
 .admin-aside.hide {
     width: 65px;
-}
-
-.admin-aside-fixed-container {
-    width: 400px;
-    padding: 20px;
 }
 
 .admin-aside-title {
@@ -143,8 +138,4 @@
     width: 20px;
     height: 20px;
     cursor: pointer;
-}
-
-.admin-table tr:has(input[type="checkbox"]:checked) {
-    background: red !important;
 }

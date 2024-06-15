@@ -5,53 +5,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 
 public class QuizInformation {
-    public enum QuizLevel {
-        EASY("Easy"),
-        MEDIUM("Medium"),
-        HARD("Hard");
 
-        private String label;
-        private QuizLevel(String label) {
-            this.label = label;
-        }
-
-        public static QuizLevel fromInt(int value) {
-            return switch (value) {
-                case 0 -> EASY;
-                case 1 -> MEDIUM;
-                case 2 -> HARD;
-                default -> null;
-            };
-        }
-
-        @Override
-        public String toString() {
-            return label;
-        }
-    }
-
-    public enum QuizType {
-        SIMULATION("Simulation"),
-        LESSON_QUIZ("Lesson Quiz");
-
-        private String label;
-        private QuizType(String label) {
-            this.label = label;
-        }
-
-        public static QuizType fromInt(int value) {
-            return switch (value) {
-                case 0 -> SIMULATION;
-                case 1 -> LESSON_QUIZ;
-                default -> null;
-            };
-        }
-
-        @Override
-        public String toString() {
-            return label;
-        }
-    }
 
     private int quizId;
     private int subjectId;

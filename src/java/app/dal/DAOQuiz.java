@@ -4,6 +4,7 @@ import static app.dal.QueryBuilder.Operator;
 import static app.dal.QueryBuilder.OrderDirection;
 import app.entity.BlogInformation;
 import app.entity.QuizInformation;
+import app.entity.QuizType;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,9 +18,46 @@ public class DAOQuiz extends DBContext {
             "select count(*) from [Quiz] q\n"
             + "inner join [Subject] s on q.SubjectId = s.SubjectId";
 
+    public void markDraft(Integer[] ids) {
+        try {
+            new QueryBuilder("update [Quiz] set IsPublished = 0")
+                .setLoggingEnabled(true)
+                .where("QuizId", Operator.IN, ids)
+                .toPreparedStatement(connection)
+                .executeUpdate();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void publish(Integer[] ids) {
+        try {
+            new QueryBuilder("update [Quiz] set IsPublished = 1")
+                .setLoggingEnabled(true)
+                .where("QuizId", Operator.IN, ids)
+                .toPreparedStatement(connection)
+                .executeUpdate();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void delete(Integer[] ids) {
+        try {
+            new QueryBuilder("delete from [Quiz]")
+                .setLoggingEnabled(true)
+                .where("QuizId", Operator.IN, ids)
+                .toPreparedStatement(connection)
+                .executeUpdate();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
     public QueryResult search(
             String quizName,
             boolean published,
+            QuizType type,
             int page, int pageSize
     ) {
         List<QuizInformation> ret = new ArrayList<>();
@@ -28,10 +66,15 @@ public class DAOQuiz extends DBContext {
         try {
             QueryBuilder query = new QueryBuilder(LISTING_QUERY)
                     .where("IsPublished", Operator.EQUALS, published)
-                    .orderBy("q.UpdatedTime", OrderDirection.DESC);
+                    .orderBy("q.UpdatedTime", OrderDirection.DESC)
+                    .orderBy("q.SubjectId", OrderDirection.ASC);
 
             if (quizName != null && !quizName.isBlank()) {
                 query.where("QuizName", Operator.LIKE, "%" + quizName + "%");
+            }
+
+            if (type != null) {
+                query.where("QuizType", Operator.EQUALS, type.ordinal());
             }
 
             ResultSet rs = new QueryBuilder(COUNT_LISTING_QUERY, query)
