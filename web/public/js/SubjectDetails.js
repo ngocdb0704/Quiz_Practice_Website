@@ -22,9 +22,9 @@ function parse() {
     const description = document.getElementById("subject-description");
 
     if (description !== null) {
-        console.log(description.innerHTML.trim());
+        console.log(description.innerHTML.trim().replace(/(\r\n|\n|\r)/gm, ""));
         console.log("Evoked");
-        if (description.innerHTML.trim().match(/^##Coursera style description.*##About.*##Outcome.*##Lessons.*##Duration.*##End$/gm))
+        if (description.innerHTML.trim().replace(/(\r\n|\n|\r)/gm, "").match(/^##Coursera style description.*##About.*##Outcome.*##Lessons.*##Duration.*##End$/gm))
             courseraDesc(description);
     }
 }

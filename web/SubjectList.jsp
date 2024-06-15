@@ -13,11 +13,35 @@
         <title>Subjects List</title>
         <%@include file="/common/ImportBootstrap.jsp" %>
         <link rel="stylesheet" href="common/ExtendBody.css"/>
+        <link rel="stylesheet" href="css/SubjectsList.css"/>
+        <script src="public/js/SubjectsList.js"></script>
     </head>
-    <body>
+    <body onload="scrollAtLoad()">
         <%@include file="/common/header.jsp" %>
         <%@include file="/common/sidebar.jsp" %>
+        <div class="loader" id="load">
+            <h3 class="text-center mt-5">Loading Subjects List</h3>
+            <div class="loader-inner">
+                <div class="loader-line-wrap">
+                    <div class="loader-line"></div>
+                </div>
+                <div class="loader-line-wrap">
+                    <div class="loader-line"></div>
+                </div>
+                <div class="loader-line-wrap">
+                    <div class="loader-line"></div>
+                </div>
+                <div class="loader-line-wrap">
+                    <div class="loader-line"></div>
+                </div>
+                <div class="loader-line-wrap">
+                    <div class="loader-line"></div>
+                </div>
+            </div>
+        </div>
         <main class="container">
+            <c:set var="goTo" value="${requestScope.goTo}"/>
+            <input type="hidden" value="${goTo}" id="goToPos">
             <c:set var="numPerCarousel" value="${requestScope.numPerCarousel}"/>
             <c:set var="listNewSubject" value="${requestScope.dataNewSubject}"/>
             <c:set var="listSaleSubject" value="${requestScope.dataSaleSubject}"/>
@@ -30,6 +54,9 @@
             <c:set var="checkNewSubject" value="${requestScope.listOfIdNew}"/>
             <c:set var="checkSaleSubject" value="${requestScope.listOfIdSale}"/>
             <c:set var="checkFeatSubject" value="${requestScope.listOfIdFeat}"/>
+            <c:set var="cat" value="${requestScope.list}"/>
+            <c:set var="check" value="${requestScope.check}"/>
+            <c:set var="key" value="${requestScope.key}"/>
             <h1>Subjects List</h1>
             <section>
                 <h3>New Subjects</h3>
@@ -453,55 +480,187 @@
                     </div>
                 </c:if>
             </section>
+            <br>
             <section>
+                <c:set var="posToGo" value="${1850}"/>
+                <h1>
+                    Subjects List
+                </h1>
                 <div class="row">
-                    <aside class="col-3 sbar">                        
+                    <aside class="col-3 sbar">
+                        <div class="row mb-3">
+                            <form action="public/SubjectsList" method="post">
+                                <div class="mb-3">
+                                    <div class="row card-body container justify-content-center">
+                                        <label for="searchKey">Subject Search Box</label>
+                                        <input class="col-8" 
+                                               id="searchKey" 
+                                               type="text" value="${key}" 
+                                               name="key" 
+                                               placeholder="Search Subject by Title">
+                                        <input type="hidden" value="1850" name="goToPos">
+                                        <button class="col-3" onclick="this.form.submit()">
+                                            <i class="bi bi-search"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h4>
+                                        Filter Subjects By:
+                                    </h4>
+                                </div>
+                                <div class="accordion accordion-flush" id="accordionFlushSiderFilter">
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header">
+                                            <button class="accordion-button collapsed" 
+                                                    type="button" 
+                                                    data-bs-toggle="collapse" 
+                                                    data-bs-target="#flush-collapseOne" 
+                                                    aria-expanded="false" 
+                                                    aria-controls="flush-collapseOne">
+                                                Subject Categories
+                                            </button>
+                                        </h2>
+                                        <div id="flush-collapseOne" 
+                                             class="accordion-collapse collapse" 
+                                             data-bs-parent="#accordionFlushSiderFilter">
+                                            <div class="accordion-body">
+                                                <ul class="list-group list-group-flush">
+                                                    <li class="list-group-item">
+                                                        <!-- subject category tree -->
+                                                        <!-- tree level 0 -->
+                                                        <!-- get all node -->
+                                                        <c:forEach begin="0" end="${cat.size()-1}" var="i">
+                                                            <ul class="list-group list-group-flush">
+                                                                <!-- tree level 1 or parent tier 1 -->
+                                                                <c:if test="${cat.get(i).getCateParentId()==0}">
+                                                                    <li class="list-group-item">
+                                                                        <input class="form-check-input"
+                                                                               type="checkbox" name="idTier1" 
+                                                                               value="${cat.get(i).getCateId()}"
+                                                                               ${check[i]?"checked":""}
+                                                                               onclick="this.form.submit()"/>
+                                                                        <span class="text-danger">${cat.get(i).getCateName()}</span>
+                                                                        <c:set var="parentTier1" value="${cat.get(i).getCateId()}"/>
+                                                                        <!-- get all node -->
+                                                                        <c:forEach begin="0" end="${cat.size()-1}" var="ii">
+                                                                            <ul class="list-group list-group-flush">
+                                                                                <!-- tree level 2 or parent tier 2 -->
+                                                                                <c:if test="${cat.get(ii).getCateParentId()==parentTier1}">
+                                                                                    <li class="list-group-item">
+                                                                                        <input class="form-check-input" 
+                                                                                               type="checkbox" name="idTier2" 
+                                                                                               value="${cat.get(ii).getCateId()}"
+                                                                                               ${check[ii]?"checked":""}
+                                                                                               onclick="this.form.submit()"/>
+                                                                                        <span class="text-info-emphasis">${cat.get(ii).getCateName()}</span>
+                                                                                        <c:set var="parentTier2" value="${cat.get(ii).getCateId()}"/>
+                                                                                        <!-- get all node -->
+                                                                                        <c:forEach begin="0" end="${cat.size()-1}" var="iii">
+                                                                                            <ul class="list-group list-group-flush">
+                                                                                                <!-- tree level 3 or parent tier 3 -->
+                                                                                                <c:if test="${cat.get(iii).getCateParentId()==parentTier2}">
+                                                                                                    <li class="list-group-item">
+                                                                                                        <input class="form-check-input"
+                                                                                                               type="checkbox" name="idTier3" 
+                                                                                                               value="${cat.get(iii).getCateId()}"
+                                                                                                               ${check[iii]?"checked":""}
+                                                                                                               onclick="this.form.submit()"/>
+                                                                                                        <span class="badge text-bg-light">${cat.get(iii).getCateName()}</span>
+                                                                                                    </li>
+                                                                                                </c:if>
+                                                                                            </ul>
+                                                                                        </c:forEach>
+                                                                                    </li>
+                                                                                </c:if>
+                                                                            </ul>
+                                                                        </c:forEach>
+                                                                    </li>
+                                                                </c:if>
+                                                            </ul>
+                                                        </c:forEach>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
                     </aside>
                     <div class="col-9 mt-3">
-                        <h1>
-                            Subjects List
-                        </h1>
                         <c:set var="page" value="${requestScope.page}"/>
                         <c:set var="filter" value="${requestScope.sendFilter}"/>
-                        <nav>
-                            <ul class="pagination">
-                                <li class="page-item">
-                                    <a class="page-link ${page==1?"disabled":""}" 
-                                       href="public/SubjectsList?${filter}page=${page-1}">Previous</a>
-                                </li>
-                                <!-- get all pages -->
-                                <c:forEach begin="${1}" end="${3}" var="i">
+                        <c:if test="${allSubjectsList.size()>1}">
+                            <nav>
+                                <ul class="pagination">
                                     <li class="page-item">
-                                        <a class="page-link ${i==page?"active":""}" 
-                                           href="public/SubjectsList?${filter}page=${i}">${i}</a>
+                                        <a class="page-link ${page==1?"disabled":""}" 
+                                           href="public/SubjectsList?${filter}page=${page-1}&goToPos=${posToGo}">Previous</a>
                                     </li>
-                                </c:forEach>
-                                    <li class="page-item">
-                                        <a class="page-link disabled">...</a>
-                                    </li>
-                                    <c:if test="${page > 3 && page < numOfAllSubjects-2}">
+                                    <!-- get all pages -->
+                                    <c:if test="${numOfAllSubjects > 6}">
+                                        <c:forEach begin="${1}" end="${2}" var="i">
+                                            <li class="page-item">
+                                                <a class="page-link ${i==page?"active":""}" 
+                                                   href="public/SubjectsList?${filter}page=${i}&goToPos=${posToGo}">${i}</a>
+                                            </li>
+                                        </c:forEach>
                                         <li class="page-item">
-                                        <a class="page-link active" 
-                                           href="public/SubjectsList?${filter}page=${page}">${page}</a>
-                                    </li>
-                                        <li class="page-item">
-                                        <a class="page-link disabled">...</a>
-                                    </li>
+                                            <a class="page-link disabled">...</a>
+                                        </li>
+                                        <c:if test="${page > 2 && page < numOfAllSubjects-1}">
+                                            <li class="page-item">
+                                                <a class="page-link active" 
+                                                   href="public/SubjectsList?${filter}page=${page}&goToPos=${posToGo}">${page}</a>
+                                            </li>
+                                            <li class="page-item">
+                                                <a class="page-link disabled">...</a>
+                                            </li>
+                                        </c:if>
+                                        <c:forEach begin="${numOfAllSubjects-1}" end="${numOfAllSubjects}" var="i">
+                                            <li class="page-item">
+                                                <a class="page-link ${i==page?"active":""}" 
+                                                   href="public/SubjectsList?${filter}page=${i}&goToPos=${posToGo}">${i}</a>
+                                            </li>
+                                        </c:forEach>
                                     </c:if>
-                                <c:forEach begin="${numOfAllSubjects-2}" end="${numOfAllSubjects}" var="i">
+                                    <c:if test="${numOfAllSubjects <= 6}">
+                                        <c:forEach begin="${1}" end="${numOfAllSubjects}" var="i">
+                                            <li class="page-item">
+                                                <a class="page-link ${i==page?"active":""}" 
+                                                   href="public/SubjectsList?${filter}page=${i}&goToPos=${posToGo}">${i}</a>
+                                            </li>
+                                        </c:forEach>
+                                    </c:if>        
                                     <li class="page-item">
-                                        <a class="page-link ${i==page?"active":""}" 
-                                           href="public/SubjectsList?${filter}page=${i}">${i}</a>
-                                    </li>
-                                </c:forEach>
-                                <li class="page-item">
-                                    <a class="page-link ${page==numOfAllSubjects?"disabled":""}" 
-                                       href="public/SubjectsList?${filter}page=${page+1}">Next</a>
-                                </li>    
-                            </ul>
-                        </nav>
+                                        <a class="page-link ${page==numOfAllSubjects?"disabled":""}" 
+                                           href="public/SubjectsList?${filter}page=${page+1}&goToPos=${posToGo}">Next</a>
+                                    </li>    
+                                </ul>
+                            </nav>
+                        </c:if>
                         <c:if test="${allSubjectsList.size()<1}">
-                            <h3>Empty</h3>
+                            <div>
+                                <img src="https://www.kindpng.com/picc/m/71-714432_empty-list-vector-hd-png-download.png" 
+                                     alt="alt"
+                                     height="200"/>
+                                <h3>
+                                    It seems that we don't have what you are looking for
+                                </h3>
+                                <h3>
+                                    We will update subjects list soon!
+                                </h3>
+                                <h3>
+                                    <span>
+                                        How about go back to full list ->
+                                    </span>
+                                    <span>
+                                        <a class="btn btn-primary"
+                                           href="public/SubjectsList?goToPos=1850">All Subjects</a>
+                                    </span>
+                                </h3>
+                            </div>
                         </c:if>
                         <ul class="list-group">
                             <!-- get all registrations that meet previous conditions: input key, filter -->
@@ -517,8 +676,38 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="card-body">
-                                                    <h5 class="card-title">Subject: ${p.getSubjectName()}</h5>
+                                                    <h5 class="card-title">
+                                                        <a id="subjectLink" href="index.jsp">
+                                                            ${p.getSubjectName()}
+                                                        </a>
+                                                    </h5>
                                                     <ul class="list-group list-group-flush">
+                                                        <li class="list-group-item">
+                                                            <div class="row">
+                                                                <div class="col-10">
+                                                                    <span>
+                                                                        ${p.getTagLine()}
+                                                                    </span>
+                                                                    <span>
+                                                                        <c:if test="${checkNewSubject.contains(p.getSubjectName())}">
+                                                                            <span class="badge text-bg-success">
+                                                                                New
+                                                                            </span>
+                                                                        </c:if>
+                                                                        <c:if test="${checkSaleSubject.contains(p.getSubjectName())}">
+                                                                            <span class="badge text-bg-warning">
+                                                                                Big Sale
+                                                                            </span>
+                                                                        </c:if>
+                                                                        <c:if test="${checkFeatSubject.contains(p.getSubjectName())}">
+                                                                            <span class="badge text-bg-primary">
+                                                                                Featured
+                                                                            </span>
+                                                                        </c:if>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </li>
                                                         <li class="list-group-item">
                                                             <div class="row">
                                                                 <div class="col-6">
@@ -531,24 +720,103 @@
                                             </div>
                                             <div class="col-md-2 mt-md-3">
                                                 <h5>Sale Price:</h5>
-                                                <h5>${Integer.valueOf(p.getPackageSalePrice()*1000)} VND</h5>
+                                                <h6>
+                                                    <span class="fw-light badge rounded-pill text-bg-light" 
+                                                          style=" text-decoration-line: line-through;"> 
+                                                        ${Integer.valueOf(listNewSubject.get(indexCarNewItem).getPackageListPrice()*1000)} vnd
+                                                    </span>
+                                                    <span class="badge rounded-pill text-bg-danger">
+                                                        - ${Integer.valueOf(
+                                                            (1-(p.getPackageSalePrice()/p.getPackageListPrice()))*100)}
+                                                        %
+                                                    </span>
+                                                </h6>
+                                                <h5>
+                                                    ${Integer.valueOf(p.getPackageSalePrice()*1000)} VND
+                                                </h5>
+                                                <button type="button" class="btn btn-info" 
+                                                        data-bs-toggle="modal" 
+                                                        data-bs-target=".modalRegister${p.getSubjectId()}">
+                                                    Register
+                                                </button>
+                                                <!-- Modal Register -->
+                                                <div class="modal fade modalRegister${p.getSubjectId()} "
+                                                     tabindex="-1"
+                                                     role="dialog" >
+                                                    <div class="modal-dialog modal-dialog-centered" 
+                                                         role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header text-bg-primary">
+                                                                <h4>Subject Register</h4>
+                                                                <button type="button" 
+                                                                        class="btn-close" 
+                                                                        data-bs-dismiss="modal" 
+                                                                        aria-label="Close">
+                                                                </button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <jsp:include page="/SubjectRegisterPopUp.jsp">
+                                                                    <jsp:param name="registId" value="${p.getSubjectId()}"/>
+                                                                </jsp:include>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </li>
                             </c:forEach>
                         </ul>
-                        <nav>
-                            <ul class="pagination">
-                                <!-- get all pages -->
-                                <c:forEach begin="${1}" end="${numOfAllSubjects}" var="i">
+                        <c:if test="${allSubjectsList.size()>1}">
+                            <nav>
+                                <ul class="pagination">
                                     <li class="page-item">
-                                        <a class="page-link ${i==page?"active":""}" 
-                                           href="public/SubjectsList?${filter}page=${i}">${i}</a>
+                                        <a class="page-link ${page==1?"disabled":""}" 
+                                           href="public/SubjectsList?${filter}page=${page-1}&goToPos=${posToGo}">Previous</a>
                                     </li>
-                                </c:forEach>
-                            </ul>
-                        </nav>
+                                    <!-- get all pages -->
+                                    <c:if test="${numOfAllSubjects > 6}">
+                                        <c:forEach begin="${1}" end="${2}" var="i">
+                                            <li class="page-item">
+                                                <a class="page-link ${i==page?"active":""}" 
+                                                   href="public/SubjectsList?${filter}page=${i}&goToPos=${posToGo}">${i}</a>
+                                            </li>
+                                        </c:forEach>
+                                        <li class="page-item">
+                                            <a class="page-link disabled">...</a>
+                                        </li>
+                                        <c:if test="${page > 2 && page < numOfAllSubjects-1}">
+                                            <li class="page-item">
+                                                <a class="page-link active" 
+                                                   href="public/SubjectsList?${filter}page=${page}&goToPos=${posToGo}">${page}</a>
+                                            </li>
+                                            <li class="page-item">
+                                                <a class="page-link disabled">...</a>
+                                            </li>
+                                        </c:if>
+                                        <c:forEach begin="${numOfAllSubjects-1}" end="${numOfAllSubjects}" var="i">
+                                            <li class="page-item">
+                                                <a class="page-link ${i==page?"active":""}" 
+                                                   href="public/SubjectsList?${filter}page=${i}&goToPos=${posToGo}">${i}</a>
+                                            </li>
+                                        </c:forEach>
+                                    </c:if>
+                                    <c:if test="${numOfAllSubjects <= 6}">
+                                        <c:forEach begin="${1}" end="${numOfAllSubjects}" var="i">
+                                            <li class="page-item">
+                                                <a class="page-link ${i==page?"active":""}" 
+                                                   href="public/SubjectsList?${filter}page=${i}&goToPos=${posToGo}">${i}</a>
+                                            </li>
+                                        </c:forEach>
+                                    </c:if>        
+                                    <li class="page-item">
+                                        <a class="page-link ${page==numOfAllSubjects?"disabled":""}" 
+                                           href="public/SubjectsList?${filter}page=${page+1}&goToPos=${posToGo}">Next</a>
+                                    </li>    
+                                </ul>
+                            </nav>
+                        </c:if>
                     </div>
                 </div>
             </section>
