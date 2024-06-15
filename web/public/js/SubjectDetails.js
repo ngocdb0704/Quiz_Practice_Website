@@ -22,15 +22,13 @@ function parse() {
     const description = document.getElementById("subject-description");
 
     if (description !== null) {
-        console.log(description.innerHTML.trim());
-        console.log("Evoked");
-        if (description.innerHTML.trim().match(/^##Coursera style description.*##About.*##Outcome.*##Lessons.*##Duration.*##End$/gm))
+        console.log(description.innerHTML.trim().replace(/(\r\n|\n|\r)/gm, ""));
+        if (description.innerHTML.trim().replace(/(\r\n|\n|\r)/gm, "").match(/^##Coursera style description.*##About.*##Outcome.*##Lessons.*##Duration.*##End$/gm))
             courseraDesc(description);
     }
 }
 
 function courseraDesc(description) {
-    console.log("Evoked2");
     let des = description.innerHTML;
     let about = des.slice(des.indexOf("##About") + 7, des.indexOf("##Outcome"));
     let outcome = des.slice(des.indexOf("##Outcome") + 9, des.indexOf("##Lessons"));
