@@ -6,6 +6,7 @@
   <meta charset=utf-8>
   <title>Home</title>
   <%@include file="/common/ImportBootstrap.jsp" %>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
   <link rel="stylesheet" href="common/ExtendBody.css"/>
   <link rel="stylesheet" href="public/css/HomePage.css"/>
   <style>
@@ -81,8 +82,8 @@
                     <img class="card-img-top" src="${subject.getThumbnail()}" alt="Card image cap">
                     <div class="card-body">
                         <h5 class="card-title">${subject.getSubjectName()}</h5>
-                        <p class="card-text">${subject.getTagLine()}></p>
-                        <a href="#" class="btn btn-primary">Explore</a>
+                        <p class="card-text">${subject.getTagLine()}</p>
+                        <a href="SubjectDetails?subjectId=${subject.getSubjectId()}" class="btn btn-primary">Explore</a>
                     </div>
                 </div>
                 </c:forEach>
@@ -90,7 +91,20 @@
         </div>
         </c:if>
                   
-        <div id="posts" class="post-list">
+        <div class="container">
+            <div class="p-2 mt-5 rounded bg-light d-flex sticky-top">
+                <h3 class="mx-2">Sort by: </h3>
+                    <input type="radio" class="btn-check" name="options" id="SortHot" autocomplete="off" checked>
+                    <label for="SortHot" class="lh-lg mx-2 btn btn-outline-primary">Hot <i class="bi bi-fire"></i></label>
+
+                    <input type="radio" class="btn-check" name="options" id="SortNew" autocomplete="off">
+                    <label for="SortNew" class="lh-lg mx-2 btn btn-outline-primary">New <i class="bi bi-bar-chart-line"></i></label>
+                <div style="flex-grow: 1"></div>
+                <button class="lh-lg mx-2 btn btn-outline-warning active" onclick="resetFeed()">Reset feed</button>
+            </div>
+            
+            <div id="posts" class="post-list">
+            </div>
         </div>
         
         <script src="./public/js/HomeDisplayPosts.js"></script>

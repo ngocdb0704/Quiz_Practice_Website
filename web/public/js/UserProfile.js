@@ -22,8 +22,8 @@ if (fileInput) fileInput.addEventListener('change', event => {
         if (file.size > 0) {
             console.log(file.size);
 
-            if (!(file.name.endsWith(".jpg") || file.name.endsWith(".png"))) {
-                uploadName.innerHTML = "<strong style=\"color: red;\">Please select a .png or .jpg file!</strong>";
+            if (!(file.name.endsWith(".jpg") || file.name.endsWith(".jpeg") || file.name.endsWith(".webp") || file.name.endsWith(".png"))) {
+                uploadName.innerHTML = "<strong style=\"color: red;\">Please select an image file!<br>(Your profile picture will not be changed)</strong>";
                 imgDisplay.src = "UserProfile?service=showPic";
                 fileInput.value = null;
                 return;
@@ -52,15 +52,14 @@ function noticeFileUpload(name) {
     //console.log(name);
     //console.log(name.lastIndexOf("/"));
 
-    if (name.endsWith(".jpg") || name.endsWith(".png")) {
+    if (name.endsWith(".jpg") || name.endsWith(".jpeg") || name.endsWith(".webp") || name.endsWith(".png")) {
         uploadName.innerHTML = "Selected file: " + name.slice(name.lastIndexOf("\\") + 1);
         uploadName.innerHTML += "<br><p style=\"color: blue;\">(Save profile to save new profile picture)</p>";
         changeSaveButtonStatus();
         return;
     }
-    
 
-    uploadName.innerHTML = "<strong style=\"color: red;\">Please select a .png or .jpg file!<br>(Your profile picture will nout be changed)</strong>";
+    uploadName.innerHTML = "<strong style=\"color: red;\">Please select an image file!<br>(Your profile picture will not be changed)</strong>";
     fileInput.value = null;
 }
 
