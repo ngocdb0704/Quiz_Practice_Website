@@ -9,4 +9,12 @@ function scrollAtLoad() {
         document.getElementById('load').style.display = 'none';
     }, 1000);
 }
-
+function scrollToNew() {
+    window.scrollTo(0, 150);
+}
+function scrollToBigSale() {
+    window.scrollTo(0, 720);
+}
+function scrollToFeatured() {
+    window.scrollTo(0, 1310);
+}
