@@ -173,26 +173,7 @@ INSERT INTO [SubjectLevel] VALUES('Beginner');
 INSERT INTO [SubjectLevel] VALUES('Intermediate');
 INSERT INTO [SubjectLevel] VALUES('Advanced');
 
-INSERT INTO [Subject] VALUES('College Algebra with the Math Sorcerer', 7, 1, 1, 1, '2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description', 'https://thumbs.comidoc.net/750/webp/2463616_13ef_3.webp');
-INSERT INTO [Subject] VALUES('Become an Algebra Master', 7, 1, 1, 1, '2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','https://www.tangolearn.com/wp-content/uploads/2022/03/best-online-algebra-courses-1.jpg');
-INSERT INTO [Subject] VALUES('US / United States History', 33, 1, 1, 0, '2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','https://higheredprofessor.com/wp-content/uploads/2015/05/How-many-courses-do-university-faculty-teach1.jpg');
-INSERT INTO [Subject] VALUES('C Fundamental', 29, 1, 1, 1, '2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','https://www.bostontechmom.com/wp-content/uploads/2019/03/Computer-Science-Class.jpg');
-INSERT INTO [Subject] VALUES('The Geography of Globalization', 34, 1, 1, 1,'2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','https://img77.uenicdn.com/image/upload/v1654265992/business/93f45720-1374-4925-8f1a-c50dd53034f4.jpg');
-INSERT INTO [Subject] VALUES('Pointers & Advanced C Language',29,1, 3,1,'2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','https://i.ytimg.com/vi/0zuolvgpAaY/maxresdefault.jpg');
-INSERT INTO [Subject] VALUES('Geometry Basics to Advanced',8,1, 3, 1,'2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','https://www.venturelessons.com/wp-content/uploads/2020/09/geometry-1128x635.jpg');
-INSERT INTO [Subject] VALUES('Probability and Statistics',9,1, 1, 1,'2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','https://cdn01.alison-static.net/courses/1818/alison_courseware_intro_1818.jpg');
-INSERT INTO [Subject] VALUES('Linear Algebra',10,1,1,1,'2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','https://i.ytimg.com/vi/bHwB0icYErw/maxresdefault.jpg');
-INSERT INTO [Subject] VALUES('React 18 Course 2024 - Learn React JS',23,1,1,1,'2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','https://i.ytimg.com/vi/CXa0f4-dWi4/maxresdefault.jpg');
-INSERT INTO [Subject] VALUES('Spring Boot 3, Spring 6 & Hibernate',24,1,1,0,'2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','https://crunchify.com/wp-content/uploads/2018/04/Spring-Boot-Tutorial-by-Crunchify-LLC.jpg');
-INSERT INTO [Subject] VALUES('Learn JAVA Programming',27,1,1,0,'2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','https://i.ytimg.com/vi/ZYwHJ1LiKZY/maxresdefault.jpg');
-INSERT INTO [Subject] VALUES('The Complete Python Bootcamp',28,1,2,0,'2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','https://i.ytimg.com/vi/wHXWMChMVds/maxresdefault.jpg');
-INSERT INTO [Subject] VALUES('New Subject',28,1,2,0,'2024-06-7','2024-06-7','This is nice', 'Mock brief info', 'Mock description','https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
-INSERT INTO [Subject] VALUES('Somehow',29,1,3,0,'2024-06-6','2024-06-7','This is awsome', 'Mock brief info', 'Mock description','https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
-INSERT INTO [Subject] VALUES('Night Call',30,1,3,0,'2024-06-5','2024-06-7','This is incredible', 'Mock brief info', 'Mock description','https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
-INSERT INTO [Subject] VALUES('Inspiration',9,1,2,0,'2024-06-4','2024-06-7','This is amazing', 'Mock brief info', 'Mock description','https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
-
-INSERT INTO [Subject] VALUES('College Algebra with the Math Sorcerer', 7, 1, 1, 1, '2004-05-01','2004-05-01','nice', 'Mock brief info', '
-	##Coursera style description
+INSERT INTO [Subject] VALUES('College Algebra with the Math Sorcerer', 7, 1, 1, 1, '2004-05-01','2004-05-01','nice', 'Mock brief info', '##Coursera style description
 		Sample
 		The subject description part of the subject details page will parse the description of a subject and display it similar to how Coursera display their subject info
 		Note: This section will not be displayed
@@ -242,6 +223,23 @@ INSERT INTO [Subject] VALUES('College Algebra with the Math Sorcerer', 7, 1, 1, 
 		<h3>27 hours to complete</h3>
 		<h4>3 weeks at 9 hours a week</h4>
 	##End', 'https://thumbs.comidoc.net/750/webp/2463616_13ef_3.webp');
+INSERT INTO [Subject] VALUES('Become an Algebra Master', 7, 1, 1, 1, '2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','https://www.tangolearn.com/wp-content/uploads/2022/03/best-online-algebra-courses-1.jpg');
+INSERT INTO [Subject] VALUES('US / United States History', 33, 1, 1, 0, '2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','https://higheredprofessor.com/wp-content/uploads/2015/05/How-many-courses-do-university-faculty-teach1.jpg');
+INSERT INTO [Subject] VALUES('C Fundamental', 29, 1, 1, 1, '2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','https://www.bostontechmom.com/wp-content/uploads/2019/03/Computer-Science-Class.jpg');
+INSERT INTO [Subject] VALUES('The Geography of Globalization', 34, 1, 1, 1,'2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','https://img77.uenicdn.com/image/upload/v1654265992/business/93f45720-1374-4925-8f1a-c50dd53034f4.jpg');
+INSERT INTO [Subject] VALUES('Pointers & Advanced C Language',29,1, 3,1,'2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','https://i.ytimg.com/vi/0zuolvgpAaY/maxresdefault.jpg');
+INSERT INTO [Subject] VALUES('Geometry Basics to Advanced',8,1, 3, 1,'2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','https://www.venturelessons.com/wp-content/uploads/2020/09/geometry-1128x635.jpg');
+INSERT INTO [Subject] VALUES('Probability and Statistics',9,1, 1, 1,'2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','https://cdn01.alison-static.net/courses/1818/alison_courseware_intro_1818.jpg');
+INSERT INTO [Subject] VALUES('Linear Algebra',10,1,1,1,'2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','https://i.ytimg.com/vi/bHwB0icYErw/maxresdefault.jpg');
+INSERT INTO [Subject] VALUES('React 18 Course 2024 - Learn React JS',23,1,1,1,'2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','https://i.ytimg.com/vi/CXa0f4-dWi4/maxresdefault.jpg');
+INSERT INTO [Subject] VALUES('Spring Boot 3, Spring 6 & Hibernate',24,1,1,0,'2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','https://crunchify.com/wp-content/uploads/2018/04/Spring-Boot-Tutorial-by-Crunchify-LLC.jpg');
+INSERT INTO [Subject] VALUES('Learn JAVA Programming',27,1,1,0,'2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','https://i.ytimg.com/vi/ZYwHJ1LiKZY/maxresdefault.jpg');
+INSERT INTO [Subject] VALUES('The Complete Python Bootcamp',28,1,2,0,'2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','https://i.ytimg.com/vi/wHXWMChMVds/maxresdefault.jpg');
+INSERT INTO [Subject] VALUES('New Subject',28,1,2,0,'2024-06-7','2024-06-7','This is nice', 'Mock brief info', 'Mock description','https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
+INSERT INTO [Subject] VALUES('Somehow',29,1,3,0,'2024-06-6','2024-06-7','This is awsome', 'Mock brief info', 'Mock description','https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
+INSERT INTO [Subject] VALUES('Night Call',30,1,3,0,'2024-06-5','2024-06-7','This is incredible', 'Mock brief info', 'Mock description','https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
+INSERT INTO [Subject] VALUES('Inspiration',9,1,2,0,'2024-06-4','2024-06-7','This is amazing', 'Mock brief info', 'Mock description','https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
+
 
 
 INSERT INTO [Subject] VALUES('iWork', 24, 1,2, 0, '2023-08-21', '2024-04-24', 'target plug-and-play e-tailers', 'Mock brief info', 'Mock description', 'https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
