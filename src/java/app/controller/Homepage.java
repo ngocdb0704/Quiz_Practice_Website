@@ -120,7 +120,7 @@ public class Homepage extends HttpServlet {
         if (session.getAttribute("featuredSubjects") == null) {
             DAOSubject daoSubject = new DAOSubject();
             List<Subject> featuredSubjects = daoSubject.getFeaturedSubjects(10);
-            if (featuredSubjects.size() > 0) session.setAttribute("featuredSubjects", featuredSubjects);
+            if (!featuredSubjects.isEmpty()) session.setAttribute("featuredSubjects", featuredSubjects);
         }
         
         request.getRequestDispatcher("home.jsp").forward(request, response);
