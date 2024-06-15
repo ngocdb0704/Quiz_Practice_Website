@@ -4,8 +4,10 @@
  */
 package app.controller;
 
+import app.dal.DAOPackage;
 import app.dal.DAOSubject;
 import app.entity.Subject;
+import app.entity.Package;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -13,6 +15,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.util.Vector;
 
 /**
  *
@@ -41,8 +44,14 @@ public class SubjectDetailsController extends HttpServlet {
             DAOSubject daoSubject = new DAOSubject(); 
             Subject displaySubject = daoSubject.getSubjectById(Integer.parseInt(request.getParameter("subjectId")));
             session.setAttribute("subjectDetails", displaySubject);
+            
+            DAOPackage daoPackage = new DAOPackage();
+            Package lowestPackage = daoPackage.getLowestPackageBySubjectId(Integer.parseInt(request.getParameter("subjectId")));
+            if (lowestPackage != null) session.setAttribute("lowestPackage", lowestPackage);
         }
-        catch (Exception e) {}
+        catch (Exception e) {
+            e.printStackTrace();
+        }
         
         request.getRequestDispatcher("SubjectDetails.jsp").forward(request, response);
     }
