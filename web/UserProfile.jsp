@@ -66,29 +66,28 @@
 
             %>
             <div class="card mb-3"> 
-                <div class="row g-0" style="width: 100%; margin: 0;">
-                    <div class="col-lg-4">
-                        <form method="post" action="UserProfile" enctype="multipart/form-data">
-                            <div id="img-div" style="border: 1px solid black">
-                                <img style="width: 240px" src="UserProfile?service=showPic" alt="Profile picture" />
-                                <input id="upload" type="file" name="upload" onchange="noticeFileUpload(this.value)"/>
-                                <label id="upload-label" for="upload">Select image</label>
-                            </div>
-                            <input type="hidden" name="service" value="updateProfilePicture">
-                            <input type="hidden" name="redirect" value="<%=currentPage%>">
-                            <div id="upload-submission">
-                                <p id="upload-name">Selected file: none</p>
-                                <input type="submit" value="Save as new profile picture" />
-                            </div>
-                        </form>
+                <div class="row g-0 w-100 m-0">
+                    <div class="col-lg-4 container">
+                        <div style="position: relative" class="w-100 border border-dark" style="width: 100%;">
+                            <img id="img-display" style="width: 100%; max-height: 300px; object-fit: cover" src="UserProfile?service=showPic" alt="Profile picture" />
+                            <label id="upload-label" for="upload">Select image</label>
+                        </div>
+                        <div id="upload-submission">
+                            <p id="upload-name">Selected file: none</p>
+                        </div>
                     </div>
 
                     <div class="col-lg-8 container-lg">
                         <div class="form-group mb-3"> Email: <input class="form-control" style="background-color: #cecece; border: 1px solid black" type="text" name="email" value="<%=(fetched != null)? fetched.getEmail(): ""%>" readonly/> </div>
-                        <form action="UserProfile" method="POST">
-                            <div class="form-group mb-3"> Full name: <input class="form-control" type="text" name="fullName" value="<%=(fetched != null)? fetched.getFullName(): ""%>" /> </div>
+                        <form id="profileForm" action="UserProfile" method="POST" onreset="formReset()" onkeydown="return event.key != 'Enter';" enctype="multipart/form-data">
+                            <input id="upload" type="file" name="upload"/>
+                            <div class="form-group mb-3"> 
+                                <label for="fullNameInput">Full name:</label>
+                                <input id="fullNameInput" class="form-control" type="text" name="fullName" oninput="validateName(this.value)" value="<%=(fetched != null)? fetched.getFullName(): ""%>" /> 
+                                <small id='fullNameWarning' style="color: red"></small>
+                            </div>
                             <div class="form-group mb-3"> Gender: 
-                                <select class="form-control" name="gender">
+                                <select class="form-control" name="gender" onchange="changeSaveButtonStatus()">
                                     <%= genderMap.reduce(0, (key, val) -> "<option value=\"" + key + "\" "
                                             + (((int)key == genderId)? "selected": "")
                                             + "  >" + val + "</option>"
@@ -96,9 +95,17 @@
                                 </select>
 
                             </div>
-                            <div class="form-group mb-3"> Mobile: <input class="form-control" type="text" name="mobile" value="<%=(fetched != null)? fetched.getMobile(): ""%>" /> </div>
+                            <div class="form-group mb-3"> 
+                                <label for="mobileInput">Mobile:</label>
+                                <input id="mobileInput" class="form-control" type="text" name="mobile" oninput="validateMobile(this.value)" value="<%=(fetched != null)? fetched.getMobile(): ""%>" />
+                                <small id='mobileWarning' style="color: red"></small>
+                            </div>
                             <br>
-                            <div class="form-group mb-3"> <input class="form-control" type="submit" value="Save"> </div>
+                            <div class="input-group mb-3"> 
+                                <input id="saveButton" class="btn btn-outline-secondary disabled container form-control" type="submit" value="Save"> 
+                                <input class="btn btn-secondary form-control" type="reset" value="Reset">
+                            </div>
+
                             <input type="hidden" name="service" value="update">
                             <input type="hidden" name="redirect" value="<%=currentPage%>">
                         </form>

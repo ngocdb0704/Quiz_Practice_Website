@@ -7,10 +7,10 @@ package app.entity;
 /**
  *
  * @author OwO
- * 
+ *
  */
-
 public class User {
+
     private int userId;
     private String email;
     private String password;
@@ -19,12 +19,12 @@ public class User {
     private String gender;
     private String mobile;
     private boolean isActive;
-    
     private int roleId;
     private int genderId;
 
-    public User() {}
-    
+    public User() {
+    }
+
     //Uses String gender and role
     public User(int userId, String email, String password, String role, String fullName, String gender, String mobile, boolean isActive) {
         this.userId = userId;

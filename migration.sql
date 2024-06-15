@@ -192,10 +192,12 @@ CREATE TABLE [dbo].[Registration](
 	[UserId] [int] foreign key references [dbo].[User](UserId),
 	[RegistrationTime] [date],
 	[PackageId] [int] foreign key references [dbo].[Package](PackageId),
-	[TotalCost] [float],
 	[RegistrationStatusId] [int] foreign key references [dbo].[RegistrationStatus](RegistrationStatusId),
 	[ValidFrom] [date],
-	[ValidTo] [date])
+	[ValidTo] [date],
+	[TransactionContent] [varchar](255),
+	[TransactionCode] [varchar](255),
+	[TransactionAccount] [varchar](255))
 Go
 CREATE TABLE [dbo].[BlogCategory](
 	[BlogCategoryId] [int] IDENTITY(1,1) primary key,
@@ -208,4 +210,23 @@ CREATE TABLE [dbo].[Blog](
 	[BlogCategoryId] [int] foreign key references [dbo].[BlogCategory](BlogCategoryId),
 	[BlogTitle] [nvarchar](512),
 	[UpdatedTime] [datetime],
-	[PostText] [ntext])
+	[PostBrief] [nvarchar](2048),
+	[PostText] [ntext]
+)
+
+GO
+CREATE TABLE [dbo].[Question](
+	[QuestionID] [int] IDENTITY(1,1) primary key,
+	[QuestionText] [text],
+	[Explanation] [text],
+	[Level] [int],
+	[SubjectID] [int] foreign key references [dbo].[Subject](SubjectId),
+	[LessonID] [int])
+
+GO
+CREATE TABLE [dbo].[Answer](
+	[AnswerID] [int] IDENTITY(1,1) primary key,
+	[QuestionID] [int] foreign key references [dbo].[Question](QuestionID),
+	[AnswerName] [text],
+	[IsCorrect] [bit])
+

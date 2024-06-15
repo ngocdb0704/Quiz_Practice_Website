@@ -14,14 +14,12 @@ import jakarta.servlet.ServletContext;
 import java.util.Properties;
 
 public class GmailService {
-    private ServletContext ctx;
     private Session session;
     private InternetAddress from;
     
     public GmailService(ServletContext ctx) {
-        this.ctx = ctx;
-        
-        Properties prop = Config.getConfig(ctx);
+        Config cfg = new Config(ctx);
+        Properties prop = cfg.getConfig();
         
         try {
             from = new InternetAddress(prop.getProperty("mail.account"));

@@ -1,0 +1,76 @@
+.ad-overlay {
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.5) 40%, transparent);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.cover-image {
+    object-fit: cover;
+    aspect-ratio: 16 / 10;
+}
+
+.toc-container {
+    position: sticky;
+    width: 60px;
+    height: 60px;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    top: 40px;
+    border-radius: 4px;
+    backdrop-filter: blur(10px);
+    overflow: hidden;
+    transition: width 300ms, height 300ms;
+}
+
+.toc-container:hover .toc-icon {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.toc-container:hover {
+    width: 300px;
+    height: 400px;
+}
+
+.toc-icon {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-size: 25px;
+    background: black;
+    transition: 300ms opacity;
+    z-index: 99;
+    display: grid;
+    place-items: center;
+}
+
+.toc {
+    width: 300px;
+    height: 400px;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+.toc a {
+    color: white;
+    opacity: 0.6;
+}
+
+.toc a:hover {
+    opacity: 1;
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.blog-content {
+    text-align: justify;
+}
+
+.related-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 10px;
+    margin: 0 80px;;
+}

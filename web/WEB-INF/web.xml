@@ -4,6 +4,30 @@
         <servlet-name>VerificationUserRegister</servlet-name>
         <servlet-class>app.controller.VerificationUserRegister</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>Homepage</servlet-name>
+        <servlet-class>app.controller.Homepage</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SubjectController</servlet-name>
+        <servlet-class>app.controller.SubjectController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Homepage</servlet-name>
+        <url-pattern>/Homepage</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Homepage</servlet-name>
+        <url-pattern>/index..*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Homepage</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Homepage</servlet-name>
+        <url-pattern>/Home</url-pattern>
+    </servlet-mapping>
     <servlet-mapping>
         <servlet-name>default</servlet-name>
         <url-pattern>/public/*</url-pattern>
@@ -50,7 +74,7 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>RegistrationController</servlet-name>
-        <url-pattern>/RegistrationController</url-pattern>
+        <url-pattern>/user/MyRegistrations</url-pattern>
     </servlet-mapping>
     <servlet>
         <servlet-name>UserProfile</servlet-name>
@@ -67,5 +91,9 @@
     <servlet-mapping>
         <servlet-name>SendVerificationCodeUserRegister</servlet-name>
         <url-pattern>/SendVerificationCode</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SubjectController</servlet-name>
+        <url-pattern>/public/SubjectsList</url-pattern>
     </servlet-mapping>
 </web-app>

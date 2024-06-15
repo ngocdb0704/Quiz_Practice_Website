@@ -25,7 +25,6 @@ import java.io.OutputStream;
  *
  * @author quatn
  */
-
 @MultipartConfig //This enables a native API that can read "multipart/form-data" file upload. Source: https://stackoverflow.com/questions/2422468/how-can-i-upload-files-to-a-server-using-jsp-servlet
 public class UserProfile extends HttpServlet {
 
@@ -38,7 +37,6 @@ public class UserProfile extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -56,8 +54,9 @@ public class UserProfile extends HttpServlet {
                     uId = fetched.getUserId();
                     session.setAttribute("userId", uId);
                     System.out.println("Id: " + uId);
+                } catch (Exception e1) {
+                    System.out.println(e1);
                 }
-                catch (Exception e1) {System.out.println(e1);}
             }
         }
 
@@ -70,22 +69,34 @@ public class UserProfile extends HttpServlet {
         }
 
         //All of the serives that require users to be logged in (session has a valid userId) will be behind this point, so this check for userId and redirect user to Unauthorized.jsp or let user continue.
-        if (uId == null) {
+        if (uId == null && !service.equals("showPic")) {
             request.getRequestDispatcher("Unauthorized.jsp").forward(request, response);
             return;
-        }
-        else {
+        } else {
             //Update service
             if (service.equals("update")) {
+                try {
+                    Part filePart = request.getPart("upload");
+                    //TODO: add file limit via notice popup
+                    //System.out.println(filePart.getInputStream().available());
+                    
+                    if (filePart.getSize() > 0) {
+                        InputStream ins = filePart.getInputStream();
+                        byte[] uploaded = new byte[ins.available()];
+                        ins.read(uploaded);
+                        dao.updateProfileImage(uId, uploaded);
+                    }
+                } catch (Exception e) {
+                    System.out.println("ProfileUpdate1: " + e);
+                }
+
                 try {
                     String fullName = request.getParameter("fullName");
                     int genderId = Integer.parseInt(request.getParameter("gender"));
                     String mobile = request.getParameter("mobile");
-                    
-                    
+
                     //TODO: Add parameter conditions
                     //String currentPage = request.getRequestURI().substring(request.getContextPath().length());
-                    
                     dao.updateUserProfile(uId, fullName, genderId, mobile);
                     String redirectTo = request.getParameter("redirect");
                     System.out.println("Redirect to: " + redirectTo);
@@ -93,9 +104,9 @@ public class UserProfile extends HttpServlet {
                     //request.getRequestDispatcher(redirectTo).forward(request, response);
                 } catch (Exception e) {
                     //TODO: Redirect to an error page
-                    System.out.println(e);
+                    System.out.println("ProfileUpdate2:  " + e);
                 }
-                
+
             }
 
             //Update profile picture service
@@ -104,6 +115,8 @@ public class UserProfile extends HttpServlet {
                 //TODO: add file limit via notice popup
                 //System.out.println(filePart.getInputStream().available());
 
+                System.out.println(filePart.getSize());
+                
                 InputStream ins = filePart.getInputStream();
                 byte[] uploaded = new byte[ins.available()];
                 ins.read(uploaded);
@@ -125,36 +138,16 @@ public class UserProfile extends HttpServlet {
             //Fetch and return user's profile picture through http
             if (service.equals("showPic")) {
                 byte[] fetched;
-                
+
                 try {
                     //If an UID is provided as a paremeter, fetch profile image of the user with that UID instead
                     fetched = dao.getProfileImage(Integer.parseInt(request.getParameter("uId")));
-                }
-                catch(Exception e) {
+                } catch (Exception e) {
                     fetched = dao.getProfileImage(uId);
                 }
-                
-                System.out.println("up log" + uId);
+
                 //Check if user has a profile picture
                 if (fetched == null) {
-                    System.out.println("up log" + uId);
-                    
-                    /*
-                    response.setContentType("image/gif");
-                    ServletContext cntxt = this.getServletContext();
-                    String fName = "public/images/anonymous-user.webp";
-                    InputStream ins = cntxt.getResourceAsStream(fName);
-
-                    //Return anonymous-user.webp via an OutputStream
-                    try (OutputStream o = response.getOutputStream()) {
-                        byte[] fetchedDefault = new byte[ins.available()];
-                        ins.read(fetchedDefault);
-                        o.write(fetchedDefault);
-                        o.flush();
-                        o.close();
-                    }
-                    */
-                    
                     request.getRequestDispatcher("public/images/anonymous-user.webp").forward(request, response);
 
                 } else {

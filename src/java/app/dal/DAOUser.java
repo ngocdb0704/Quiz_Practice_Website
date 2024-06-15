@@ -7,9 +7,12 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.Arrays;
 import java.util.Vector;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 public class DAOUser extends DBContext {
 
@@ -79,14 +82,16 @@ public class DAOUser extends DBContext {
         return isRegistered;
     }
 
-    //=============================
+
+
     private Vector<User> getFull(String sql) {
         Vector<User> Out = new Vector<User>();
         try {
             Statement state = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
             ResultSet rs = state.executeQuery(sql);
             while (rs.next()) {
-                Out.add(new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs.getString(5), rs.getInt(6), rs.getString(7), rs.getBoolean(8)));
+                Out.add(new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs.getString(5),
+                        rs.getInt(6), rs.getString(7), rs.getBoolean(8)));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -105,7 +110,9 @@ public class DAOUser extends DBContext {
             Statement state = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
             ResultSet rs = state.executeQuery(sql);
             if (rs.next()) {
-                return new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs.getString(5), rs.getInt(6), rs.getString(7), rs.getBoolean(8));
+                return new User(rs.getInt(1), rs.getString(2),
+                        rs.getString(3), rs.getInt(4), rs.getString(5),
+                        rs.getInt(6), rs.getString(7), rs.getBoolean(8));
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -120,7 +127,8 @@ public class DAOUser extends DBContext {
             preStat.setString(1, email);
             ResultSet rs = preStat.executeQuery();
             if (rs.next()) {
-                return new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs.getString(5), rs.getInt(6), rs.getString(7), rs.getBoolean(8));
+                return new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs.getString(5),
+                        rs.getInt(6), rs.getString(7), rs.getBoolean(8));
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -194,8 +202,56 @@ public class DAOUser extends DBContext {
         }
     }
 
+    // to be replaced with better ways immediately after showcase
+    public String idToName(int id) {
+        String sql = "SELECT FullName FROM [User] where UserId = '" + id + "';";
+        try {
+            Statement state = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = state.executeQuery(sql);
+            if (rs.next()) {
+                return rs.getString(1);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
+
+    public List<User> extractResults(ResultSet rs) throws SQLException {
+        List<User> result = new ArrayList<>();
+        while (rs.next()) {
+            User user = new User();
+            user.setUserId(rs.getInt("UserId"));
+            user.setEmail(rs.getString("Email"));
+            user.setPassword(rs.getString("Password"));
+            user.setFullName(rs.getString("FullName"));
+            user.setGenderId(rs.getInt("GenderId"));
+            user.setMobile(rs.getString("Mobile"));
+            user.setRoleId(rs.getInt("RoleId"));
+            user.setIsActive(rs.getBoolean("IsActive"));
+            result.add(user);
+        }
+        return result;
+    }
+
+    public ConcurrentHashMap<Integer, String> idArrayToNameMap(int[] ids) {
+        ConcurrentHashMap<Integer, String> Out = new ConcurrentHashMap<>();
+        String sql = "SELECT UserId, FullName FROM [User] where UserId in ("
+                + Arrays.stream(ids).mapToObj(Integer::toString).collect(Collectors.joining(","))
+                + ");";
+        try {
+            Statement state = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = state.executeQuery(sql);
+            while (rs.next()) {
+                Out.put(rs.getInt(1), rs.getString(2));
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return Out;
+    }
+
     public static void main(String[] args) {
-        User user = new User(1, "abc@gmail.com", "123abcdef321", 1, "uwu", 1, "0123456788", true);
-        new DAOUser().addUser(user);
+        
     }
 }

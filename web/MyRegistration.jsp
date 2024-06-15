@@ -7,12 +7,8 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="java.util.Vector"%>
 <%@page import="app.entity.Registration"%>
-<%@page import="app.entity.Subject"%>
-<%@page import="app.utils.FormatData"%>
-<%@page import="app.dal.DAOPackage"%>
-<%@page import="app.entity.Package"%>
-
-
+<%@page import="java.util.Random"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!DOCTYPE html>
 <html>
@@ -20,192 +16,479 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>My Registration</title>
         <%@include file="/common/ImportBootstrap.jsp" %>
-        <script src="public/js/bootstrap/MyRegistration.js"></script>
         <link rel="stylesheet" href="public/css/bootstrap/MyRegistration.css"/>
+        <link rel="stylesheet" href="common/ExtendBody.css"/>
+        <script src="public/js/MyRegistration.js"></script>
+        <!-- Script google reCaptcha -->
+        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     </head>
     <body>
         <%@include file="/common/header.jsp" %>
-            <%
-                DAOPackage daoPackage = new DAOPackage();
-                FormatData dataFormatter = new FormatData();
-                String registDate, validF, validT;
-                String statusAppear="";
-                String placeHolder ="";
-                String disableButton = "";
-                int i=0;
-                String value= (String) request.getAttribute("value");
-                String prevStatus = (String) request.getAttribute("prevStatus");
-                if(value == null) value = "";
-                if(prevStatus == null) prevStatus = "";
-                if(value.equals("")) placeHolder = "All Subjects";
-            %>
+        <%@include file="/common/sidebar.jsp" %>
+        <main class="container">
             <div class="row">
                 <aside class="col-3 sbar">
-                    <!-- fix search bug: if user search without filter, 
-                    the index of filter will be 0 which results in array index = -1
-                    sol: move filter element out of form, form will get the previous filter
-                    if the select remains unchanged-->
-                    <form class="row"  action="RegistrationController" method="get">
-                        <div class="mb-3 mt-2">
-                            <div class="row card-body container justify-content-center" 
-                                 id="inputContainer">
-                                <label for="searchText">Search Subject:</label>
-                                <input class="col-8" type="text" id="searchText"
-                                       placeholder="<%=placeHolder%>" 
-                                       value="<%=value%>" name="search">
-                                <input type="hidden" name="subjectStatus" value="<%=prevStatus%>">
-                                <button class="col-3" type="submit" 
-                                        name="submit" value="submit">
-                                    <i class="bi bi-search"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </form>
                     <div class="row mb-3">
-                        <label for="subjectCategory">Registration Status:</label>
-                        <%
-                            Vector<String> vecStat = (Vector<String>) request.getAttribute("select"); 
-                        %>
-                        <select class="col-10 form-select" name="subjectStatus" 
-                                id="subjectCategory" 
-                                onchange="sendRedirect(this, '<%=value%>')">
-                            <%
-                                    //show all elements in vector
-                                    for(String status:vecStat){
-                            %>
-                            <option value="<%=i%><%=status%>">
-                                <%=status%>
-                            </option>
-                            <%
-                                i++;
-                                }%>
-                        </select>
+                        <c:set var="cat" value="${requestScope.list}"/>
+                        <c:set var="check" value="${requestScope.check}"/>
+                        <c:set var="key" value="${requestScope.key}"/>
+                        <c:set var="status" value="${requestScope.listOfStatus}"/>
+                        <c:set var="checkStatus" value="${requestScope.checkStatus}"/>
+                        <c:set var="userId" value="${requestScope.userId}"/>
+                        <c:set var="bankCode" value="${requestScope.bankCode}"/>
+                        <c:set var="owner" value="${requestScope.ownerAccount}"/>
+                        <c:set var="noti" value="${requestScope.noti}"/>
+                        <c:set var="snoti" value="${requestScope.successNoti}"/>
+                        <form action="user/MyRegistrations">
+                            <div class="mb-3">
+                                <div class="row card-body container justify-content-center">
+                                    <label for="searchKey">Subject Search Box</label>
+                                    <input class="col-8" 
+                                           id="searchKey" 
+                                           type="text" value="${key}" 
+                                           name="key" 
+                                           placeholder="Search Subject by Title">
+                                    <button class="col-3" onclick="this.form.submit()">
+                                        <i class="bi bi-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div>
+                                <h4>
+                                    Filter Registrations By:
+                                </h4>
+                            </div>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">
+                                    <h4 class="text-primary">Status</h4>
+                                    <!-- status category tree -->
+                                    <ul class="list-group list-group-flush">
+                                        <c:forEach begin="0" end="${status.size()-1}" var="index">
+                                            <li class="list-group-item">
+                                                <input class="form-check-input" type="checkbox" name="idStatus"
+                                                       value="${status.get(index)}"
+                                                       ${checkStatus[index]?"checked":""}
+                                                       onclick="this.form.submit()"
+                                                       > <span class="badge text-bg-light">
+                                                    <!-- get all node -->
+                                                    <!-- set name to node -->
+                                                    <c:choose>
+                                                        <c:when test="${status.get(index)==1}">
+                                                            Submitted
+                                                        </c:when>
+                                                        <c:when test="${status.get(index)==2}">
+                                                            Pending Approval
+                                                        </c:when>
+                                                        <c:when test="${status.get(index)==3}">
+                                                            Active
+                                                        </c:when>
+                                                        <c:when test="${status.get(index)==4}">
+                                                            Withdrawn
+                                                        </c:when>
+                                                        <c:when test="${status.get(index)==5}">
+                                                            Inactive
+                                                        </c:when>
+                                                    </c:choose>
+                                                </span>
+                                            </li>
+                                        </c:forEach>
+                                    </ul>
+                                </li>
+                            </ul>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">
+                                    <h4 class="text-primary">Subject Categories</h4>
+                                    <!-- subject category tree -->
+                                    <!-- tree level 0 -->
+                                    <!-- get all node -->
+                                    <c:forEach begin="0" end="${cat.size()-1}" var="i">
+                                        <ul class="list-group list-group-flush">
+                                            <!-- tree level 1 or parent tier 1 -->
+                                            <c:if test="${cat.get(i).getCateParentId()==0}">
+                                                <li class="list-group-item">
+                                                    <input class="form-check-input"
+                                                           type="checkbox" name="idTier1" 
+                                                           value="${cat.get(i).getCateId()}"
+                                                           ${check[i]?"checked":""}
+                                                           onclick="this.form.submit()"/>
+                                                    <span class="text-danger">${cat.get(i).getCateName()}</span>
+                                                    <c:set var="parentTier1" value="${cat.get(i).getCateId()}"/>
+                                                    <!-- get all node -->
+                                                    <c:forEach begin="0" end="${cat.size()-1}" var="ii">
+                                                        <ul class="list-group list-group-flush">
+                                                            <!-- tree level 2 or parent tier 2 -->
+                                                            <c:if test="${cat.get(ii).getCateParentId()==parentTier1}">
+                                                                <li class="list-group-item">
+                                                                    <input class="form-check-input" 
+                                                                           type="checkbox" name="idTier2" 
+                                                                           value="${cat.get(ii).getCateId()}"
+                                                                           ${check[ii]?"checked":""}
+                                                                           onclick="this.form.submit()"/>
+                                                                    <span class="text-info-emphasis">${cat.get(ii).getCateName()}</span>
+                                                                    <c:set var="parentTier2" value="${cat.get(ii).getCateId()}"/>
+                                                                    <!-- get all node -->
+                                                                    <c:forEach begin="0" end="${cat.size()-1}" var="iii">
+                                                                        <ul class="list-group list-group-flush">
+                                                                            <!-- tree level 3 or parent tier 3 -->
+                                                                            <c:if test="${cat.get(iii).getCateParentId()==parentTier2}">
+                                                                                <li class="list-group-item">
+                                                                                    <input class="form-check-input"
+                                                                                           type="checkbox" name="idTier3" 
+                                                                                           value="${cat.get(iii).getCateId()}"
+                                                                                           ${check[iii]?"checked":""}
+                                                                                           onclick="this.form.submit()"/>
+                                                                                    <span class="badge text-bg-light">${cat.get(iii).getCateName()}</span>
+                                                                                </li>
+                                                                            </c:if>
+                                                                        </ul>
+                                                                    </c:forEach>
+                                                                </li>
+                                                            </c:if>
+                                                        </ul>
+                                                    </c:forEach>
+                                                </li>
+                                            </c:if>
+                                        </ul>
+                                    </c:forEach>
+                                </li>
+                            </ul>
+                        </form>
+                    </div>
+                    <div class="row mb-3">
                         <a class="link-primary mt-3"
                            href="ContactUs.jsp" target="_blank"
                            rel="noopener noreferrer">Contact Us</a>
                     </div>
                 </aside>
                 <div class="col-9 mt-3">
-                    <h1>List of Registrations</h1>
+                    <c:if test="${noti !=null}">
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <strong>Notification</strong> ${noti}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    </c:if>
+                    <c:if test="${snoti != null}">
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <strong>Notification</strong> ${snoti}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    </c:if>
+                    <h1>
+                        My Registrations
+                    </h1>
+                    <c:set var="page" value="${requestScope.page}"/>
+                    <c:set var="filter" value="${requestScope.sendFilter}"/>
+                    <nav>
+                        <ul class="pagination">
+                            <!-- get all pages -->
+                            <c:forEach begin="${1}" end="${requestScope.num}" var="i">
+                                <li class="page-item">
+                                    <a class="page-link ${i==page?"active":""}" 
+                                       href="user/MyRegistrations?${filter}page=${i}">${i}</a>
+                                </li>
+                            </c:forEach>
+                        </ul>
+                    </nav>
+                    <c:if test="${requestScope.data.size()<1}">
+                        <h3>Empty</h3>
+                    </c:if>
                     <ul class="list-group">
-                        <%
-                            Vector<Registration> registrationVector = (Vector<Registration>) request.getAttribute("data");
-                            for(Registration regist:registrationVector){
-                            registDate = dataFormatter.dateFormat(regist.getRegistrationTime());
-                            validF = dataFormatter.dateFormat(regist.getValidFrom());
-                            validT= dataFormatter.dateFormat(regist.getValidTo());
-                            if(regist.getStatus().equals("Submitted")){
-                                disableButton = "";
-                                statusAppear = "badge text-bg-primary";
-                            }
-                            else{
-                                disableButton = "disabled";
-                                if(regist.getStatus().equals("Active")) statusAppear = "badge text-bg-success";
-                                if(regist.getStatus().equals("Cancelled")) statusAppear = "badge text-bg-danger";
-                                if(regist.getStatus().equals("Pending Approval")) statusAppear = "badge text-bg-warning";
-                                if(regist.getStatus().equals("Withdrawn")) statusAppear = "badge text-bg-secondary";
-                            }
-                        %>
-                        <!-- Change cards' appearance -->
-                        <li class="list-group-item list-group-item-info">
-                            <div class="card mb-3">
-                                <div class="row g-0">
-                                    <div class="col-md-4">
-                                        <img src="<%=regist.getSubjectImg()%>"
-                                             class="img-fluid rounded-start" 
-                                             width="300" height="180">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="card-body">
-                                            <h5 class="card-title"><%=regist.getSubjectName()%></h5>
-                                            <h6>
-                                                <span>ID:<%=regist.getRegistrationId()%></span>  <span class="<%=statusAppear%>">Status: <%=regist.getStatus()%></span>
-                                            </h6>
-                                            <ul class="list-group list-group-flush">
-                                                <li class="list-group-item">
-                                                    <span>Registered: <%=regist.getPackageName()%></span>
-                                                    <span>on <%=registDate%></span>
-                                                </li>
-                                                <li class="list-group-item">
-                                                    <span>Valid from <%=validF%></span>
-                                                    <span class="ml-2">to <%=validT%></span>
-                                                </li>
-                                            </ul>
+                        <!-- get all registrations that meet previous conditions: input key, filter -->
+                        <c:forEach items="${requestScope.data}" var="p">
+                            <!-- Change cards' appearance -->
+                            <li class="list-group-item list-group-item-info">
+                                <div class="card mb-3">
+                                    <div class="row g-0">
+                                        <div class="col-md-4">
+                                            <img src="${p.subjectImg}"
+                                                 class="img-fluid rounded-start" 
+                                                 width="300" height="180">
                                         </div>
-                                    </div>
-                                    <div class="col-md-2 mt-md-5">
-                                        <h5><%=regist.getTotalCost()%>$</h5>
-                                        <!-- Button trigger modal -->
-                                        <!-- Remove onclick, if status is not Submitted then disabled -->
-                                        <button type="button" class="btn btn-warning"
-                                                data-bs-toggle="modal" 
-                                                data-bs-target=".modal<%=regist.getRegistrationId()%>"
-                                                <%=disableButton%>>
-                                            Edit
-                                        </button>
-                                        <!-- Modal -->
-                                        <div class="modal fade modal<%=regist.getRegistrationId()%>" tabindex="-1" aria-hidden="true">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="exampleModalLabel">Subject Register</h5>
+                                        <div class="col-md-6">
+                                            <div class="card-body">
+                                                <h5 class="card-title">Subject: ${p.subjectName}</h5>
+                                                <ul class="list-group list-group-flush">
+                                                    <li class="list-group-item">
+                                                        <div class="row">
+                                                            <div class="col-6">
+                                                                ID: ${p.registrationId}
+                                                            </div>
+                                                            <div class="col-6 ml-3">
+                                                                <span>Status: </span> 
+                                                                <span class=" <c:choose>
+                                                                          <c:when test="${p.status=='Active'}">
+                                                                              badge text-bg-success
+                                                                          </c:when>
+                                                                          <c:when test="${p.status=='Pending Approval'}">
+                                                                              badge text-bg-warning
+                                                                          </c:when>
+                                                                          <c:when test="${p.status=='Withdrawn'}">
+                                                                              badge text-bg-secondary
+                                                                          </c:when>
+                                                                          <c:when test="${p.status=='Inactive'}">
+                                                                              badge text-bg-dark
+                                                                          </c:when>
+                                                                          <c:when test="${p.status=='Submitted'}">
+                                                                              badge text-bg-primary
+                                                                          </c:when>
+                                                                      </c:choose>">
+                                                                    ${p.status}
+                                                                </span>
+                                                            </div>
+                                                        </div>        
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <div class="row">
+                                                            <div class="col-6">
+                                                                Package: ${p.packageName}
+                                                            </div>
+                                                            <div class="col-6 ml-3">
+                                                                Registration time: ${p.registrationTime==null? "N/A":p.registrationTime}
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <div class="row">
+                                                            <div class="col-6">
+                                                                Valid from: ${p.validFrom==null? "N/A":p.validFrom}
+                                                            </div>
+                                                            <div class="col-6 ml-3">
+                                                                Valid to: ${p.validTo==null? "N/A":p.validTo}
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2 mt-md-3">
+                                            <h5>Total Cost:</h5>
+                                            <h5>${Integer.valueOf(p.totalCost*1000)} VND</h5>
+                                            <diV class="row">
+                                                <!-- Button buy trigger modal -->
+                                                <div class="col-xl-4">
+                                                    <button class="btn btn-success" 
+                                                            ${p.status.equals("Submitted")?"":"disabled"}
+                                                            data-bs-toggle="modal" 
+                                                            data-bs-target=".modalBuy${p.registrationId}"
+                                                            >
+                                                        Buy
+                                                    </button>
+                                                    <!-- Modal Buy -->
+                                                    <!-- Check transaction when the modal is closed -->
+                                                    <div class="modal fade modalBuy${p.registrationId}"
+                                                         tabindex="-1"
+                                                         role="dialog" 
+                                                         data-bs-backdrop="static"
+                                                         data-bs-keyboard="false">
+                                                        <div class="modal-dialog modal-dialog-centered" 
+                                                             role="document">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header text-bg-success">
+                                                                    <h4>Payment For Registration</h4>
+                                                                    <button 
+                                                                        type="button" 
+                                                                        class="btn-close"
+                                                                        data-bs-dismiss="modal" 
+                                                                        aria-label="Close">
+                                                                    </button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <div class="row">
+                                                                        <h5>Please scan the QR below to pay</h5>
+                                                                        <!--style = 1 add background to QR
+                                                                                   = 0 no background
+                                                                            logo = 1 add bank's logo
+                                                                                  = 0 no bank's logo
+                                                                            isMask = 1 hide part of account
+                                                                                   = 0 show full account
+                                                                            bg = 69 background code (there're a lot of backgrounds, ngoc chose 69)
+                                                                        -->
+                                                                        <img src="https://vietqr.co/api/generate/${bankCode}/${owner}/VIETQR.CO/${Integer.valueOf(p.totalCost*1000)}/USER${userId}COURSE${p.registrationId}?style=1&logo=1&isMask=1&bg=22" 
+                                                                             class="img-thumbnail qrimg" 
+                                                                             alt="qrcode">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="modal-footer row">
+                                                                    <div class="row">
+                                                                        <h5>Remember to check the captcha below</h5>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-8">
+                                                                            <!-- add recaptcha to optimize pay method-->
+                                                                            <div class="g-recaptcha" 
+                                                                                 data-sitekey="6LemYewpAAAAAI4V2BR_nIibN_L8sK23JPuU8MBo"
+                                                                                 >
+                                                                            </div>
+                                                                        </div>
+                                                                        <!-- payment call checkPaid, check if the captcha is valid-->
+                                                                        <div class="col-4 payButton">
+                                                                            <button type="button" 
+                                                                                    class="btn btn-primary pay${p.registrationId}" 
+                                                                                    onclick="checkPaid(${Integer.valueOf(p.totalCost*1000)},
+                                                                                                    'USER${userId}COURSE${p.registrationId}',
+                                                                                    ${p.registrationId}, grecaptcha.getResponse())">
+                                                                                Check Payment
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                    <form action="RegistrationController" method="post">
-                                                        <div class="modal-body">
-                                                            <input type="hidden" name="service" value="update">
-                                                            <input type="hidden" name="registId" value="<%=regist.getRegistrationId()%>">
-                                                            <label for="SubjectTitle">Subject Title:</label><br>
-                                                            <input type="text" id="SubjectTitle" 
-                                                                   name="sname" 
-                                                                   value="<%=regist.getSubjectName()%>" readonly><br>
-                                                            <label for="packageList">Choose a package: </label> <br>
-                                                            <%
-                                                                Vector<Package> subjectPackage = daoPackage.getSubjectPackage(regist.getSubjectName());
-                                                                Package selectedPackage = daoPackage.getByPackageNameSubjectName(regist.getPackageName(),regist.getSubjectName());
-                                                            %>
-                                                            <select class="form-select" name="packName"
-                                                                    id="packageList">
-                                                                <option value="<%=selectedPackage.getPackageId()%>">
-                                                                    <%=selectedPackage.getPackageName()%> for only <%=selectedPackage.getSalePrice()%>$
-                                                                </option>
-                                                                <%
-                                                                        //show all elements in vector
-                                                                        for(Package pack:subjectPackage){
-                                                                            if(pack.getPackageId() != selectedPackage.getPackageId()){
-                                                                %>
-                                                                <option value="<%=pack.getPackageName()%>">
-                                                                    <%=pack.getPackageName()%> for only <%=pack.getSalePrice()%>$
-                                                                </option>
-                                                                <%
-                                                                    }
-                                                                        }%>
-                                                            </select> <br>
+                                                </div>
+                                                <div class="col-xl-6">
+                                                    <button type="button" class="btn btn-danger" 
+                                                            data-bs-toggle="modal" 
+                                                            ${p.status.equals("Submitted")?"":"disabled"}
+                                                            data-bs-target=".modalCancel${p.registrationId}">
+                                                        Cancel
+                                                    </button>
+                                                    <div class="modal fade modalCancel${p.registrationId} "
+                                                         tabindex="-1"
+                                                         role="dialog"
+                                                         data-bs-backdrop="static"
+                                                         data-bs-keyboard="false">
+                                                        <div class="modal-dialog modal-dialog-centered" 
+                                                             role="document">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header text-bg-danger">
+                                                                    <h4>Registration Cancel</h4>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <form action="user/MyRegistrations">
+                                                                        <div class="mb-3 container row">
+                                                                            <div class="card">
+                                                                                <img src="${p.subjectImg}" class="card-img-top" height="200" width="100">
+                                                                                <div class="card-body">
+                                                                                    <h5 class="card-title">${p.subjectName}</h5>
+                                                                                    <p class="card-text">
+                                                                                        <span>
+                                                                                            Registration's Id: ${p.registrationId}
+                                                                                        </span><br>
+                                                                                        <span>
+                                                                                            Package: ${p.packageName}
+                                                                                        </span><br>
+                                                                                        <span>
+                                                                                            Total Cost: ${Integer.valueOf(p.totalCost*1000)} VND
+                                                                                        </span><br>
+                                                                                        <input type="hidden" name="cancelId" value="${p.registrationId}">
+                                                                                        <input type="hidden" name="service" value="cancel">
+                                                                                    </p>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div>
+                                                                            <h5>Do you really want to cancel this registration?</h5>
+                                                                            <div class="d-flex flex-row-reverse">
+                                                                                <div class="p-2">
+                                                                                    <button type="submit" class="btn btn-danger">Confirm cancellation</button>
+                                                                                </div>
+                                                                                <div class="p-2">
+                                                                                    <button type="button" 
+                                                                                            class="btn btn-secondary ml-3"
+                                                                                            data-bs-dismiss="modal" 
+                                                                                            aria-label="Close">
+                                                                                        Decline
+                                                                                    </button>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
                                                         </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                            <input type="submit" class="btn btn-primary" value="Save Changes">
+                                                    </div>
+                                                </div>
+                                            </diV>
+                                            <div class="row mt-3">
+                                                <div class="col-xl-4">
+                                                    <!-- Button trigger modal -->
+                                                    <!-- currently do nothing -->
+                                                    <button type="button" class="btn btn-warning" 
+                                                            data-bs-toggle="modal" 
+                                                            ${p.status.equals("Submitted")?"":"disabled"}
+                                                            data-bs-target=".modalEdit${p.registrationId}">
+                                                        Edit
+                                                    </button>
+                                                    <!-- Modal Edit -->
+                                                    <div class="modal fade modalEdit${p.registrationId} "
+                                                         tabindex="-1"
+                                                         role="dialog" >
+                                                        <div class="modal-dialog modal-dialog-centered" 
+                                                             role="document">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header text-bg-warning">
+                                                                    <h4>Subject Register</h4>
+                                                                    <button type="button" 
+                                                                            class="btn-close" 
+                                                                            data-bs-dismiss="modal" 
+                                                                            aria-label="Close">
+                                                                    </button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <jsp:include page="/SubjectRegisterPopUp.jsp">
+                                                                        <jsp:param name="registId" value="${p.registrationId}"/>
+                                                                    </jsp:include>
+                                                                </div>
+                                                            </div>
                                                         </div>
-                                                    </form>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xl-6">
+                                                    <!-- Button trigger report modal -->
+                                                    <!-- currently do nothing -->
+                                                    <button type="button" class="btn btn-primary" 
+                                                            data-bs-toggle="modal" 
+                                                            ${p.status.equals("Submitted")?"":"disabled"}
+                                                            data-bs-target=".modalReport${p.registrationId}">
+                                                        Report
+                                                    </button>
+                                                    <!-- Modal Edit -->
+                                                    <div class="modal fade modalReport${p.registrationId} "
+                                                         tabindex="-1"
+                                                         role="dialog" >
+                                                        <div class="modal-dialog modal-dialog-centered" 
+                                                             role="document">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header text-bg-primary">
+                                                                    <h4>Registration Report</h4>
+                                                                    <button type="button" 
+                                                                            class="btn-close" 
+                                                                            data-bs-dismiss="modal" 
+                                                                            aria-label="Close">
+                                                                    </button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <h4>We are working on Registration Report pop-up. Thank you for your visit!</h4>
+                                                                    <img src="https://static.vecteezy.com/system/resources/previews/003/857/417/original/people-working-in-the-office-free-vector.jpg"
+                                                                         alt="alt"
+                                                                         height="430"
+                                                                         width="450"/>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div> 
-                                        <!-- Remove onclick, if status is not Submitted then disabled -->
-                                        <button class="btn btn-danger" 
-                                                onclick="cancellation('<%=regist.getStatus()%>', '<%=regist.getRegistrationId()%>')"
-                                                <%=disableButton%>>
-                                            Cancel
-                                        </button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </li>
-                        <%
-                            }
-                        %>
+                            </li>
+                        </c:forEach>
                     </ul>
+                    <nav>
+                        <ul class="pagination">
+                            <!-- get all pages -->
+                            <c:forEach begin="${1}" end="${requestScope.num}" var="i">
+                                <li class="page-item">
+                                    <a class="page-link ${i==page?"active":""}" href="user/MyRegistrations?${filter}page=${i}">${i}</a>
+                                </li>
+                            </c:forEach>
+                        </ul>
+                    </nav>
                 </div>
             </div>
-        </div>
+        </main>
         <%@include file="/common/footer.jsp" %>
     </body>
 </html>

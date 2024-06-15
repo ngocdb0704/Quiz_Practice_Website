@@ -3,6 +3,7 @@ package app.entity;
 import java.sql.Timestamp;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 
 public class BlogInformation {
     private int blogId;
@@ -39,6 +40,10 @@ public class BlogInformation {
 
     public String getCategoryName() {
         return categoryName;
+    }
+
+    public int getCategoryId() {
+        return this.categoryId;
     }
 
     public void setCategoryId(int id) {
