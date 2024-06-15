@@ -34,21 +34,21 @@ public class DAOSubject extends DBContext {
     public String addTierToSQL(int[] parent, int tier, int flag) {
         String sql = "";
         if (flag == 0) {
-            sql += " and ";
+            sql += " and( ";
         } else {
             sql += " or ";
         }
         switch (tier) {
             case 3: {
-                sql += "sc.SubjectCategoryId in (";
+                sql += "tableSubject.ParentTier3 in (";
                 break;
             }
             case 2: {
-                sql += "sc.SubjectParentCategory in (";
+                sql += "tableSubject.ParentTier2 in (";
                 break;
             }
             case 1: {
-                sql += "ch.SubjectParentCategory in (";
+                sql += "tableSubject.ParentTier1 in (";
                 break;
             }
             default:
@@ -68,55 +68,60 @@ public class DAOSubject extends DBContext {
         Vector<Subject> vec = new Vector<>();
         int flagAND = 0;
         String sql = """
-                        with CategoryHierarchy as 
-                         (select SubjectCategoryId,SubjectCategoryName,
-                         SubjectParentCategory from SubjectCategory 
-                         where SubjectParentCategory = 0
-                         union all
-                         select sc.SubjectCategoryId,
-                         sc.SubjectCategoryName,
-                         sc.SubjectParentCategory from SubjectCategory sc
-                         inner join CategoryHierarchy ch
-                         on ch.SubjectCategoryId = sc.SubjectParentCategory)
-                         select tableSubject.SubjectId, tableSubject.SubjectTitle, tableSubject.SubjectTagLine,
-                         tableSubject.SubjectThumbnail, tablePackage.PackageName, tablePackage.ListPrice, tableLowest.SalePrice,
-                         tableSubject.SubjectCategoryId as 'ParentTier3', sc.SubjectParentCategory as 'ParentTier2',
-                         ch.SubjectParentCategory as 'ParentTier1'
-                         from (select s.SubjectId, s.SubjectTitle, s.SubjectTagLine, s.SubjectThumbnail,
-                         s.SubjectUpdatedDate, s.SubjectCategoryId from Subject s
-                         where  s.SubjectStatus = 1) tableSubject
-                         left join
-                         (select s.SubjectId, MIN(p.SalePrice) as 'SalePrice' from Package p
-                         join Subject s on s.SubjectId = p.SubjectId
-                         GROUP BY s.SubjectId) tableLowest on tableLowest.SubjectId = tableSubject.SubjectId
-                         left join
-                         (select p.SubjectId, p.PackageName, p.ListPrice, p.SalePrice from Package p
-                         join Subject s on s.SubjectId = p.SubjectId) tablePackage on tablePackage.SubjectId= tableSubject.SubjectId
-                         join [SubjectCategory] sc on sc.SubjectCategoryId = tableSubject.SubjectCategoryId
-                         left join CategoryHierarchy ch on ch.SubjectCategoryId = sc.SubjectParentCategory
-                         where tablePackage.SalePrice = tableLowest.SalePrice 
+with CategoryHierarchy as 
+                        (select SubjectCategoryId,SubjectCategoryName,
+                        SubjectParentCategory from SubjectCategory
+                        where SubjectParentCategory = 0
+                        union all
+                        select sc.SubjectCategoryId,sc.SubjectCategoryName,sc.SubjectParentCategory 
+                        from SubjectCategory sc
+                        inner join CategoryHierarchy ch 
+                        on ch.SubjectCategoryId = sc.SubjectParentCategory)					
+                        select tableLowest.SubjectId, tableSubject.SubjectTitle,
+                        tableSubject.SubjectTagLine, tableSubject.SubjectThumbnail,
+                        tableSubject.PackageName, tableSubject.ListPrice,
+                        tableSubject.SalePrice, tableSubject.ParentTier3,
+                        tableSubject.ParentTier2, tableSubject.ParentTier1 from 
+                        (select s.SubjectId, MIN(p.SalePrice) as 'SalePrice' from Package p
+                        join Subject s on s.SubjectId = p.SubjectId
+                        GROUP BY s.SubjectId ) tableLowest
+                        left join 
+                        (select s.SubjectId, s.SubjectTitle, s.SubjectTagLine,s.SubjectThumbnail,
+                        p.PackageName, p.ListPrice, p.SalePrice, sc.SubjectCategoryId as 'ParentTier3',
+                        sc.SubjectParentCategory as 'ParentTier2', ch.SubjectParentCategory as 'ParentTier1'
+                        ,s.SubjectUpdatedDate                     
+                        from [Subject] s
+                        join [Package] p on p.SubjectId = s.SubjectId
+                        join [SubjectCategory] sc on sc.SubjectCategoryId = s.SubjectCategoryId
+                        left join CategoryHierarchy ch on ch.SubjectCategoryId = sc.SubjectParentCategory) tableSubject
+                        on tableLowest.SubjectId = tableSubject.SubjectId
+                        where tableLowest.SalePrice = tableSubject.SalePrice 
                               """;
+        if (parentTier3 != null) {
+            sql += addTierToSQL(parentTier3, 3, flagAND);
+            if (sql.contains("and(")) {
+                flagAND = 1;
+            }
+        }
+        if (parentTier2 != null) {
+            sql += addTierToSQL(parentTier2, 2, flagAND);
+            if (sql.contains("and(")) {
+                flagAND = 1;
+            }
+        }
+        if (parentTier1 != null) {
+            sql += addTierToSQL(parentTier1, 1, flagAND);
+            if (sql.contains("and(")) {
+                flagAND = 1;
+            }
+        }
+        if(flagAND == 1) sql += ")";
         if (inputKey != null) {
             inputKey = inputKey.replace("!", "!!")
                     .replace("%", "!%")
                     .replace("_", "!_")
                     .replace("[", "![");
             sql += " and tableSubject.SubjectTitle like ? ESCAPE '!' ";
-        }
-        if (parentTier3 != null) {
-            sql += addTierToSQL(parentTier3, 3, flagAND);
-            if (sql.contains("and")) {
-                flagAND = 1;
-            }
-        }
-        if (parentTier2 != null) {
-            sql += addTierToSQL(parentTier2, 2, flagAND);
-            if (sql.contains("and")) {
-                flagAND = 1;
-            }
-        }
-        if (parentTier1 != null) {
-            sql += addTierToSQL(parentTier1, 1, flagAND);
         }
         switch (order) {
             //order by updated date from oldest to newest

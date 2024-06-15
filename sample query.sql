@@ -178,9 +178,9 @@ INSERT INTO [Subject] VALUES('Spring Boot 3, Spring 6 & Hibernate',24,1,0,'2004-
 INSERT INTO [Subject] VALUES('Learn JAVA Programming',27,1,0,'2004-05-01','2004-05-01','nice','https://i.ytimg.com/vi/ZYwHJ1LiKZY/maxresdefault.jpg');
 INSERT INTO [Subject] VALUES('The Complete Python Bootcamp',28,1,0,'2004-05-01','2004-05-01','nice','https://i.ytimg.com/vi/wHXWMChMVds/maxresdefault.jpg');
 INSERT INTO [Subject] VALUES('New Subject',28,1,0,'2024-06-7','2024-06-7','This is nice','https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
-INSERT INTO [Subject] VALUES('New Subject',29,1,0,'2024-06-6','2024-06-7','This is awsome','https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
-INSERT INTO [Subject] VALUES('New Subject',30,1,0,'2024-06-5','2024-06-7','This is incredible','https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
-INSERT INTO [Subject] VALUES('New Subject',9,1,0,'2024-06-4','2024-06-7','This is amazing','https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
+INSERT INTO [Subject] VALUES('Somehow',29,1,0,'2024-06-6','2024-06-7','This is awsome','https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
+INSERT INTO [Subject] VALUES('Night Call',30,1,0,'2024-06-5','2024-06-7','This is incredible','https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
+INSERT INTO [Subject] VALUES('Inspiration',9,1,0,'2024-06-4','2024-06-7','This is amazing','https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
 
 
 INSERT INTO [Subject] VALUES('iWork', 24, 1, 0, '2023-08-21', '2024-04-24', 'target plug-and-play e-tailers', 'https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
