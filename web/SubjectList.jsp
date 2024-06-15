@@ -573,7 +573,7 @@
             </section>
             <br>
             <section>
-                <c:set var="posToGo" value="${1850}"/>
+                <c:set var="posToGo" value="${2035}"/>
                 <h1>
                     Subjects List
                 </h1>
@@ -589,7 +589,7 @@
                                                type="text" value="${key}" 
                                                name="key" 
                                                placeholder="Search Subject by Title">
-                                        <input type="hidden" value="1850" name="goToPos">
+                                        <input type="hidden" value="${posToGo}" name="goToPos">
                                         <button class="col-3" onclick="this.form.submit()">
                                             <i class="bi bi-search"></i>
                                         </button>
@@ -854,7 +854,7 @@
                                             <div class="col-md-5">
                                                 <div class="card-body">
                                                     <h5 class="card-title">
-                                                        <a id="subjectLink" href="index.jsp">
+                                                        <a id="subjectLink" href="SubjectDetails?subjectId=${p.getSubjectId()}">
                                                             ${p.getSubjectName()}
                                                         </a>
                                                     </h5>
