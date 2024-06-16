@@ -71,7 +71,7 @@ public class DAOQuiz extends DBContext {
             }
 
             if (type != null) {
-                query.where("QuizType", Operator.EQUALS, type.ordinal());
+                query.where("QuizType", Operator.EQUALS, type.toInt());
             }
 
             ResultSet rs = new QueryBuilder(COUNT_LISTING_QUERY, query)

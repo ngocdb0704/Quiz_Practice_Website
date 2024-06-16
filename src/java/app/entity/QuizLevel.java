@@ -18,6 +18,15 @@ public enum QuizLevel {
             default -> null;
         };
     }
+
+    public int toInt() {
+        return switch (this) {
+            case EASY -> 0;
+            case MEDIUM -> 1;
+            case HARD -> 2;
+            default -> -1;
+        };
+    }
     
     @Override
     public String toString() {

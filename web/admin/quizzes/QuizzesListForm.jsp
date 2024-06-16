@@ -36,7 +36,7 @@
                 <select id="quizTypes" name="quizTypes" class="form-control">
                     <option ${param.quizTypes eq '-1' ? 'selected' : ''} value="-1">All</option>
                     <c:forEach var="type" items="${QuizType.values()}">
-                        <option value="${type.ordinal()}" ${param.quizTypes eq type.ordinal().toString() ? 'selected' : ''}>
+                        <option value="${type.toInt()}" ${param.quizTypes eq type.toInt().toString() ? 'selected' : ''}>
                             ${type.toString()}
                         </option>
                     </c:forEach>

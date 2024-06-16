@@ -16,6 +16,14 @@ public enum QuizType {
             default -> null;
         };
     }
+
+    public int toInt() {
+        return switch (this) {
+            case SIMULATION -> 0;
+            case LESSON_QUIZ -> 1;
+            default -> -1;
+        };
+    }
     
     @Override
     public String toString() {
