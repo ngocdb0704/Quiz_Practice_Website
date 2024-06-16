@@ -33,20 +33,25 @@ public class QuizzesListController extends HttpServlet {
         String published = request.getParameter("published");
         if (published == null) {
             response.sendRedirect("?published=1");
+            return;
         }
         
-        String type = request.getParameter("quizTypes");
+        int type = Parsers.parseIntOrDefault(request.getParameter("quizTypes"), -1);
         String subject = request.getParameter("subjectIds");
+        String quizName = request.getParameter("quizName");
 
         boolean isPublished = Parsers.parseIntOrDefault(published, 1) == 1 ? true : false;
-        QuizType quizType = QuizType.fromInt(Parsers.parseIntOrDefault(type, -1));
+        QuizType quizType = QuizType.fromInt(type);
 
         QueryResult result = daoQuiz.search(
-                request.getParameter("quizName"),
+                quizName,
                 isPublished,
                 quizType,
                 page, pageSize
         );
+
+        boolean isSearching = (quizName != null && !quizName.isBlank()) || type != -1;
+        request.setAttribute("isSearching", isSearching);
 
         if (result.getTotalPages() > 0 && page > result.getTotalPages()) {
             String params = request.getQueryString();

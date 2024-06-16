@@ -67,7 +67,7 @@ public class DAOQuiz extends DBContext {
                     .orderBy("q.SubjectId", OrderDirection.ASC);
 
             if (quizName != null && !quizName.isBlank()) {
-                query.where("QuizName", Operator.LIKE, "%" + quizName + "%");
+                query.where("QuizName", Operator.LIKE, "%" + quizName.trim() + "%");
             }
 
             if (type != null) {

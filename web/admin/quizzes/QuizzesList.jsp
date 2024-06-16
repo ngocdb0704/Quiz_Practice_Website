@@ -18,7 +18,8 @@
             <main class="admin-main" x-data="state">
                 <div class="container">
                     <h2 class="my-4">
-                        <i class="bi bi-clipboard-check-fill"></i> Quizzes List
+                        <i class="bi bi-clipboard-check-fill"></i>
+                        ${isSearching ? 'Searching Quizzes List' : 'Quizzes List' }
                     </h2>
                     <ul class="nav nav-tabs">
                         <li class="nav-item">
