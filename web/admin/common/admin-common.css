@@ -39,7 +39,7 @@
 .admin-aside {
     grid-area: sidebar;
     background: red;
-    width: 300px;
+    width: 250px;
     color: white;
     transition: width 400ms;
     overflow: hidden;
@@ -132,7 +132,6 @@
 .demo-img {
     width: 100%;
     margin-top: 30px;
-<<<<<<< HEAD
 }
 
 

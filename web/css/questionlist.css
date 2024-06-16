@@ -17,3 +17,19 @@ th {
 .filters {
     margin-bottom: 20px;
 }
+
+#notification {
+    display: none;
+    padding: 10px;
+    margin-top: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+#notification.success {
+    border-color: #4caf50;
+    color: #4caf50;
+}
+#notification.fail {
+    border-color: #f44336;
+    color: #f44336;
+}

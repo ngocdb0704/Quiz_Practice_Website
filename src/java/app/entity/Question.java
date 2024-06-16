@@ -12,18 +12,22 @@ public class Question {
     private int questionID;
     private String questionName, explanation;
     private int level, subjectID, lessonID;
+    private int status;
     private List<Answer> answers;
+    
     public Question() {
         this.answers = new ArrayList<>();
     }
 
-    public Question(int questionID, String questionName, String explanation, int level, int subjectID, int lessonID) {
+    public Question(int questionID, String questionName, String explanation, int level, int subjectID, int lessonID, int status, List<Answer> answers) {
         this.questionID = questionID;
         this.questionName = questionName;
         this.explanation = explanation;
         this.level = level;
         this.subjectID = subjectID;
         this.lessonID = lessonID;
+        this.status = status;
+        this.answers = answers;
     }
 
     public int getQuestionID() {
@@ -40,6 +44,14 @@ public class Question {
 
     public void setQuestionName(String questionName) {
         this.questionName = questionName;
+    }
+
+    public String getExplanation() {
+        return explanation;
+    }
+
+    public void setExplanation(String explanation) {
+        this.explanation = explanation;
     }
 
     public int getLevel() {
@@ -66,12 +78,12 @@ public class Question {
         this.lessonID = lessonID;
     }
 
-    public String getExplanation() {
-        return explanation;
+    public int getStatus() {
+        return status;
     }
 
-    public void setExplanation(String explanation) {
-        this.explanation = explanation;
+    public void setStatus(int status) {
+        this.status = status;
     }
 
     public List<Answer> getAnswers() {
@@ -84,10 +96,8 @@ public class Question {
 
     @Override
     public String toString() {
-        return "Question{" + "questionID=" + questionID + ", questionName=" + questionName + ", explanation=" + explanation + ", level=" + level + ", subjectID=" + subjectID + ", lessonID=" + lessonID + ", answers=" + answers + '}';
+        return "Question{" + "questionID=" + questionID + ", questionName=" + questionName + ", explanation=" + explanation + ", level=" + level + ", subjectID=" + subjectID + ", lessonID=" + lessonID + ", status=" + status + ", answers=" + answers + '}';
     }
-    
-    
-    
+
     
 }
