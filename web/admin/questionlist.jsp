@@ -32,34 +32,37 @@
                     <form method="get" action="filterQuestions">
                         <label for="subject">Subject:</label>
                         <select id="subject" name="subject">
-                            <option value="all">All subjects</option>
+                            <option value="allSubject">All subjects</option>
                             <c:forEach var="entry" items="${subjectMap.entrySet()}">
                                 <option value="${entry.key}">${entry.value}</option>
                             </c:forEach>
                         </select>
 
-
                         <label for="lesson">Lesson:</label>
                         <select id="lesson" name="lesson">
                             <!-- Add options dynamically or statically -->
                         </select>
+                        
                         <label for="dimension">Dimension(s):</label>
                         <select id="dimension" name="dimension">
                             <!-- Add options dynamically or statically -->
                         </select>
+
                         <label for="level">Level:</label>
                         <select id="level" name="level">
-                            <!-- Add options dynamically or statically -->
-                        </select>
-
-                        <label for="levelFilter">Filter by Level:</label>
-                        <select id="levelFilter" onchange="filterByLevel()">
-                            <option value="">All Levels</option>
+                            <option value="allLevels">All Levels</option>
                             <c:forEach var="entry" items="${levelMap}">
                                 <option value="${entry.key}">${entry.value}</option>
                             </c:forEach>
                         </select>
 
+                        <label for="status">Status:</label>
+                        <select id="status">
+                            <option value="allStatus">All status</option>
+                            <option value="show">Show</option>
+                            <option value="hide">Hide</option>
+                        </select>
+                        
                         <label for="searchContent"></label>
                         <input type="text" id="searchContent" name="searchContent" placeholder="Search by Content"/>
                         <button type="submit">Filter</button>

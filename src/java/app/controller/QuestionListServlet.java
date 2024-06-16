@@ -50,9 +50,9 @@ public class QuestionListServlet extends HttpServlet {
 
         //level
         Map<Integer, String> levelMap = new HashMap<>();
-        levelMap.put(1, "easy");
-        levelMap.put(2, "medium");
-        levelMap.put(3, "hard");
+        levelMap.put(1, "Easy");
+        levelMap.put(2, "Medium");
+        levelMap.put(3, "Hard");
 
         request.setAttribute("levelMap", levelMap);
 
