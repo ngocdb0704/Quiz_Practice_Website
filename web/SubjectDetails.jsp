@@ -17,7 +17,7 @@
         <link rel="stylesheet" href="./public/css/SubjectDetails.css"/>
         <script src="./public/js/SubjectDetails.js"></script>
     </head>
-    <body>
+    <body onload="parse()">
         <%@include file="/common/header.jsp" %>
 
 
@@ -27,7 +27,9 @@
             </div>
 
             <div class="col py-3">
-                <!--a href="#"><- Back</a-->
+                <!--a href="#"><- Back</a
+                
+                -->
                 <div id="subject-brief" style="" class="container rounded-3 p-5">
                     <div style="height: 250px"></div>
 
@@ -38,25 +40,30 @@
                         <h2>${subjectDetails.getTagLine()}</h2>
                         <h2>${subjectDetails.getBriefInfo()}</h2>
 
-                        <div class="row">
-                            <div class="col-lg-3 col-md-6">
-                                <div class="input-group">
-                                    <button class="btn btn-primary">Register</button>
-                                    <select class="form-select" id="inputGroupSelect04" aria-label="Example select with button addon">
-                                        <option selected>Choose...</option>
-                                        <option value="1">One</option>
-                                        <option value="2">Two</option>
-                                        <option value="3">Three</option>
-                                    </select>
-                                </div>
-                            </div>
+                        <div class="container-fluid">
+                            <c:if test="${not empty lowestPackage}">
+                                <button class="btn btn-primary">Register</button>
+                                <c:if test="${lowestPackage.getListPrice() != lowestPackage.getSalePrice()}">
+                                    <span class="ms-3"><del>${lowestPackage.getListPrice() * 1000} vnd</del></span>
+                                </c:if>
+
+                                <span class="ms-3">${lowestPackage.getSalePrice() * 1000} vnd</span>
+
+                                <c:if test="${lowestPackage.getListPrice() > lowestPackage.getSalePrice()}">
+                                    <span class="badge rounded-pill text-bg-danger">-${(1 - (lowestPackage.getSalePrice() / lowestPackage.getListPrice())) * 100 }%</span>
+                                </c:if>
+                            </c:if>
+                            <c:if test="${empty lowestPackage}">
+                                <button class="btn btn-disabled">Register</button>
+                            </c:if>
                         </div>
                     </div>
                 </div>    
 
-                <div class="container mt-5">
+                <div id="subject-description" class="container mt-5">
                     ${subjectDetails.getSubjectDescription()}
                 </div>
+
             </div>
         </main>
 
