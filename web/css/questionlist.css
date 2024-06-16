@@ -1,0 +1,19 @@
+
+/* 
+    Created on : Jun 15, 2024, 5:27:57 PM
+    Author     : Hoapmhe173343
+*/
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+th {
+    background-color: #f2f2f2;
+}
+.filters {
+    margin-bottom: 20px;
+}
