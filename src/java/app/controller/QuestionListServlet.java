@@ -2,6 +2,7 @@ package app.controller;
 
 import app.dal.DAOSubject;
 import app.dal.QuestionDAO;
+import app.entity.Answer;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -26,6 +27,7 @@ public class QuestionListServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        //page
         int record = 10;
         String pageString = request.getParameter("page");
         int page;
@@ -39,13 +41,24 @@ public class QuestionListServlet extends HttpServlet {
         }
         List<Question> listQuestion = quesDao.questionPerPage(record, page);
         List<Subject> listSubjects = subDao.getAllSubject();
+
+        //subject Name
         Map<Integer, String> subjectMap = new HashMap<>();
         for (Subject subject : listSubjects) {
             subjectMap.put(subject.getSubjectId(), subject.getSubjectName());
         }
 
+        //level
+        Map<Integer, String> levelMap = new HashMap<>();
+        levelMap.put(1, "easy");
+        levelMap.put(2, "medium");
+        levelMap.put(3, "hard");
+
+        request.setAttribute("levelMap", levelMap);
+
         int totalQuestion = subDao.countQuestion();
         int totalPage = (int) Math.ceil((double) totalQuestion / record);
+
         request.setAttribute("totalPage", totalPage);
         request.setAttribute("currentPage", page);
         request.setAttribute("listQuestion", listQuestion);
@@ -57,7 +70,23 @@ public class QuestionListServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        int questionID = Integer.parseInt(request.getParameter("questionID"));
+        int status = Integer.parseInt(request.getParameter("status"));
+        System.out.println("id " + questionID + "status " + status);
+        //check update status question
+        boolean result = quesDao.setStatus(questionID, status);
 
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
+        try (PrintWriter out = response.getWriter()) {
+            if (result) {
+                out.print("{\"message\": \"Update status success!\", \"success\": true}");
+            } else {
+                out.print("{\"message\": \"Update status fail!\", \"success\": false}");
+            }
+            out.flush();
+        }
     }
 
     @Override

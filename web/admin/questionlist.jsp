@@ -17,6 +17,9 @@
         <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/questionlist.css" />
         <link rel="stylesheet" href="admin/common/admin-common.css">
         <script src="admin/common/admin-common.js"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="${pageContext.request.contextPath}/public/js/questionlist.js"></script>
+
     </head>
     <body>
         <div class="admin-layout">
@@ -24,7 +27,6 @@
             <%@include file="/admin/common/admin-sidebar.jsp" %>
             <main class="admin-main">
                 <h1>Question Management</h1>
-
                 <!-- Filters Section -->
                 <div class="filters">
                     <form method="get" action="filterQuestions">
@@ -49,10 +51,15 @@
                         <select id="level" name="level">
                             <!-- Add options dynamically or statically -->
                         </select>
-                        <label for="status">Status:</label>
-                        <select id="status" name="status">
-                            <!-- Add options dynamically or statically -->
+
+                        <label for="levelFilter">Filter by Level:</label>
+                        <select id="levelFilter" onchange="filterByLevel()">
+                            <option value="">All Levels</option>
+                            <c:forEach var="entry" items="${levelMap}">
+                                <option value="${entry.key}">${entry.value}</option>
+                            </c:forEach>
                         </select>
+
                         <label for="searchContent"></label>
                         <input type="text" id="searchContent" name="searchContent" placeholder="Search by Content"/>
                         <button type="submit">Filter</button>
@@ -83,27 +90,30 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>No</th>
+                            <th>ID</th>
                             <th>Question Content</th>
                             <th>Subject</th>
                             <th>Lesson</th>
                             <th>Level</th>
-                            <th>Actions</th>
+                            <th>Show/Hide</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <c:forEach var="question" items="${listQuestion}" varStatus="status">
+                        <c:forEach var="question" items="${listQuestion}">
                             <tr>
-                                <td>${status.index + 1}</td>
+                                <td>${question.questionID}</td>
                                 <td>${question.questionName}</td>
                                 <td>${subjectMap[question.subjectID]}</td>
                                 <td>${question.lessonID}</td>
-                                <td>${question.level}</td>
-                                <td> <!-- Actions can be added here --></td>
+                                <td>${levelMap[question.level]}</td>
+                                <td> <input type="checkbox" 
+                                            <c:if test="${question.status == 1}">checked</c:if>
+                                            onchange="updateStatus(${question.questionID}, this.checked)"></td>
                             </tr>
                         </c:forEach>
                     </tbody>
                 </table>
+
 
 
                 <%--pagging--%>
