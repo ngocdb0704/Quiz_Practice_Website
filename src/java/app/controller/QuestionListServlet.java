@@ -1,6 +1,7 @@
 package app.controller;
 
 import app.dal.DAOSubject;
+import app.dal.QueryResult;
 import app.dal.QuestionDAO;
 import app.entity.Answer;
 import java.io.IOException;
@@ -27,8 +28,15 @@ public class QuestionListServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        //page
-        int record = 10;
+        String subjectIdParam = request.getParameter("subjectId");
+        String levelParam = request.getParameter("level");
+        String statusParam = request.getParameter("status");
+        String content = request.getParameter("searchContent");
+
+        int subjectId = subjectIdParam != null ? Integer.parseInt(subjectIdParam) : 0;
+        int level = levelParam != null ? Integer.parseInt(levelParam) : 0;
+        int status = statusParam != null ? Integer.parseInt(statusParam) : 0;
+
         String pageString = request.getParameter("page");
         int page;
         try {
@@ -39,30 +47,34 @@ public class QuestionListServlet extends HttpServlet {
         } catch (NumberFormatException e) {
             page = 1;
         }
-        List<Question> listQuestion = quesDao.questionPerPage(record, page);
-        List<Subject> listSubjects = subDao.getAllSubject();
 
-        //subject Name
+        QueryResult<Question> result = quesDao.filters(subjectId, level, status, content, page, 10);
+        request.setAttribute("totalPage", result.getTotalPages());
+        request.setAttribute("currentPage", page);
+        request.setAttribute("listQuestion", result.getResults());
+
+        for (Question q : result.getResults()) {
+            System.out.println(q.getQuestionName());
+        }
+
+        List<Subject> listSubjects = subDao.getAllSubject();
         Map<Integer, String> subjectMap = new HashMap<>();
         for (Subject subject : listSubjects) {
             subjectMap.put(subject.getSubjectId(), subject.getSubjectName());
         }
 
-        //level
         Map<Integer, String> levelMap = new HashMap<>();
         levelMap.put(1, "Easy");
         levelMap.put(2, "Medium");
         levelMap.put(3, "Hard");
 
-        request.setAttribute("levelMap", levelMap);
+        Map<Integer, String> statusMap = new HashMap<>();
+        statusMap.put(0, "Hide");
+        statusMap.put(1, "Show");
 
-        int totalQuestion = subDao.countQuestion();
-        int totalPage = (int) Math.ceil((double) totalQuestion / record);
-
-        request.setAttribute("totalPage", totalPage);
-        request.setAttribute("currentPage", page);
-        request.setAttribute("listQuestion", listQuestion);
         request.setAttribute("subjectMap", subjectMap);
+        request.setAttribute("levelMap", levelMap);
+        request.setAttribute("statusMap", statusMap);
 
         request.getRequestDispatcher("/admin/questionlist.jsp").forward(request, response);
     }
