@@ -7,6 +7,7 @@ import app.entity.QuizInformation;
 import app.entity.QuizType;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class DAOQuiz extends DBContext {
@@ -21,7 +22,7 @@ public class DAOQuiz extends DBContext {
     public void markDraft(Integer[] ids) {
         try {
             new QueryBuilder("update [Quiz] set IsPublished = 0")
-                .where("QuizId", Operator.IN, ids)
+                .whereAnd("QuizId", Operator.IN, ids)
                 .toPreparedStatement(connection)
                 .executeUpdate();
         } catch (SQLException ex) {
@@ -32,7 +33,7 @@ public class DAOQuiz extends DBContext {
     public void publish(Integer[] ids) {
         try {
             new QueryBuilder("update [Quiz] set IsPublished = 1")
-                .where("QuizId", Operator.IN, ids)
+                .whereAnd("QuizId", Operator.IN, ids)
                 .toPreparedStatement(connection)
                 .executeUpdate();
         } catch (SQLException ex) {
@@ -43,9 +44,67 @@ public class DAOQuiz extends DBContext {
     public void delete(Integer[] ids) {
         try {
             new QueryBuilder("delete from [Quiz]")
-                .where("QuizId", Operator.IN, ids)
+                .whereAnd("QuizId", Operator.IN, ids)
                 .toPreparedStatement(connection)
                 .executeUpdate();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public QuizInformation getQuizById(Integer id) {
+        try {
+            ResultSet rs = new QueryBuilder(LISTING_QUERY)
+                            .whereAnd("QuizId", Operator.EQUALS, id)
+                            .toPreparedStatement(connection)
+                            .executeQuery();
+
+            if (rs.next()) {
+                return new QuizInformation(rs);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public void randomizeForQuiz(Integer id, int n) {
+        if (id == null || n <= 0) return;
+
+        try {
+            QuizInformation quiz = getQuizById(id);
+
+            if (quiz == null) return;
+            
+            PreparedStatement stmt = new QueryBuilder("select top (?) QuestionID from [Question]")
+                .whereAnd("SubjectId", Operator.EQUALS, quiz.getSubjectId())
+                .whereAnd("Status", Operator.EQUALS, 1)
+                .randomize()
+                .toPreparedStatement(connection);
+            stmt.setInt(1, n);
+
+            ResultSet rs = stmt.executeQuery();
+            List<Integer> questionIds = new ArrayList<>();
+            while (rs.next()) {
+                questionIds.add(rs.getInt("QuestionID"));
+            }
+
+            if (questionIds.isEmpty()) return;
+
+            new QueryBuilder("delete from [QuizQuestion]")
+                    .whereAnd("QuizId", Operator.EQUALS, id)
+                    .toPreparedStatement(connection)
+                    .executeUpdate();
+            
+            QueryBuilder insertQuery = new QueryBuilder();
+            insertQuery.insertInto("[QuizQuestion]", "QuizId", "QuestionId");
+            
+            for (Integer questionId : questionIds) {
+                insertQuery.values(id, questionId);
+            }
+            
+            insertQuery.toPreparedStatement(connection).executeUpdate();
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -62,16 +121,17 @@ public class DAOQuiz extends DBContext {
 
         try {
             QueryBuilder query = new QueryBuilder(LISTING_QUERY)
-                    .where("IsPublished", Operator.EQUALS, published)
+                    .setLoggingEnabled(true)
+                    .whereAnd("IsPublished", Operator.EQUALS, published)
                     .orderBy("q.UpdatedTime", OrderDirection.DESC)
                     .orderBy("q.SubjectId", OrderDirection.ASC);
 
             if (quizName != null && !quizName.isBlank()) {
-                query.where("QuizName", Operator.LIKE, "%" + quizName.trim() + "%");
+                query.whereAnd("QuizName", Operator.LIKE, "%" + quizName.trim() + "%");
             }
 
             if (type != null) {
-                query.where("QuizType", Operator.EQUALS, type.toInt());
+                query.whereAnd("QuizType", Operator.EQUALS, type.toInt());
             }
 
             ResultSet rs = new QueryBuilder(COUNT_LISTING_QUERY, query)
@@ -95,5 +155,18 @@ public class DAOQuiz extends DBContext {
         }
 
         return new QueryResult(count, pageSize, ret);
+    }
+    
+    public static void main(String[] args) throws SQLException {
+        DAOQuiz qq = new DAOQuiz();
+        
+        ResultSet rs = new QueryBuilder("select QuizId from [Quiz]")
+                .toPreparedStatement(qq.connection)
+                .executeQuery();
+        
+        while (rs.next()) {
+            int id = rs.getInt(1);
+            qq.randomizeForQuiz(id, 50);
+        }
     }
 }

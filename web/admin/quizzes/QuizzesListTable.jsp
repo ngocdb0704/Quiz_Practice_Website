@@ -1,5 +1,6 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
+<div class="table-responsive">
 <table class="admin-table table table-striped table-bordered table-hover sortable-theme-bootstrap" data-sortable>
     <thead class="thead-dark">
         <tr>
@@ -7,12 +8,13 @@
             <th>ID</th>
             <th>Subject</th>
             <th>Quiz Name</th>
+            <th># Questions</th>
             <th>Level</th>
             <th>Duration (minutes)</th>
             <th>Pass Rate</th>
             <th>Type</th>
             <th>Status</th>
-            <th>Updated Time</th>
+            <th></th>
         </tr>
     </thead>
     <tbody x-ref="tableBody">
@@ -30,6 +32,7 @@
                 <td>${quiz.getQuizId()}</td>
                 <td>${quiz.getSubjectName()}</td>
                 <td>${quiz.getQuizName()}</td>
+                <td width="30">0</td>
                 <td>
                     <c:choose>
                         <c:when test="${quiz.getLevel() eq 'HARD'}">
@@ -54,7 +57,9 @@
                         ${quiz.isPublished() ? 'Published' : 'Draft'}
                     </span>
                 </td>
-                <td>${quiz.getUpdatedTime()}</td>
+                <td>
+                    <a href="admin/quizdetails">Edit</a>
+                </td>
             </tr>
         </c:forEach>
 
@@ -65,4 +70,4 @@
         </c:if>
     </tbody>
 </table>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+</div>

@@ -104,11 +104,11 @@ public class DAOBlog extends DBContext {
             searchQuery.setLoggingEnabled(true);
 
             if (categoryId != -1) {
-                searchQuery.where("b.BlogCategoryId", Operator.EQUALS, categoryId);
+                searchQuery.whereAnd("b.BlogCategoryId", Operator.EQUALS, categoryId);
             }
 
             if (query != null && !query.isBlank()) {
-                searchQuery.where("b.BlogTitle", Operator.LIKE, "%" + query + "%");
+                searchQuery.whereAnd("b.BlogTitle", Operator.LIKE, "%" + query + "%");
             }
 
             if (startDate != null && endDate != null) {
@@ -117,7 +117,7 @@ public class DAOBlog extends DBContext {
                 Timestamp startTimestamp = Timestamp.from(s.toInstant(ZoneOffset.UTC));
                 Timestamp endTimestamp = Timestamp.from(e.toInstant(ZoneOffset.UTC));
 
-                searchQuery.where("b.UpdatedTime", Operator.BETWEEN, startTimestamp, endTimestamp);
+                searchQuery.whereAnd("b.UpdatedTime", Operator.BETWEEN, startTimestamp, endTimestamp);
             }
 
             searchQuery
