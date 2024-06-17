@@ -9,6 +9,7 @@
             <th>Subject</th>
             <th>Quiz Name</th>
             <th># Questions</th>
+            <th># Attempts</th>
             <th>Level</th>
             <th>Duration (minutes)</th>
             <th>Pass Rate</th>
@@ -19,20 +20,32 @@
     </thead>
     <tbody x-ref="tableBody">
         <c:forEach var="quiz" items="${result.getResults()}">
-            <tr data-id="${quiz.getQuizId()}" data-title="${quiz.getQuizName()}">
+            <tr>
                 <td style="text-align: center; vertical-align: middle">
                     <input
                         class="checkbox-big"
                         type="checkbox"
                         name="ids"
-                        @change="toggle('${quiz.getQuizId()}', '${quiz.getQuizName()}')"
+                        @change="toggle('${quiz.getQuizId()}', '${quiz.getQuizName()}', ${quiz.isValid()}, ${quiz.getNumberOfAttempts()})"
                         :checked="map['${quiz.getQuizId()}']"
+                        data-id="${quiz.getQuizId()}"
+                        data-title="${quiz.getQuizName()}"
+                        data-valid="${quiz.isValid()}"
+                        data-attempts="${quiz.getNumberOfAttempts()}"
                     >
                 </td>
                 <td>${quiz.getQuizId()}</td>
                 <td>${quiz.getSubjectName()}</td>
                 <td>${quiz.getQuizName()}</td>
-                <td width="30">${quiz.getQuestionCount()}</td>
+                <td>
+                    ${quiz.getQuestionCount()}
+                    <c:if test="${quiz.getQuestionCount() == 0}">
+                        <i class="bi bi-exclamation-triangle"></i>
+                    </c:if>
+                </td>
+                <td>
+                    ${quiz.getNumberOfAttempts()}
+                </td>
                 <td>
                     <c:choose>
                         <c:when test="${quiz.getLevel() eq 'HARD'}">
@@ -58,7 +71,9 @@
                     </span>
                 </td>
                 <td>
-                    <a href="admin/quizdetails">Edit</a>
+                    <a href="admin/quizdetails">
+                        ${quiz.getNumberOfAttempts() > 0 ? 'View' : 'Edit'}
+                    </a>
                 </td>
             </tr>
         </c:forEach>

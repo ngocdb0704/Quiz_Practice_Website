@@ -55,20 +55,20 @@
                                         Deselect All
                                     </button>
                                 </c:if>
-                                <button data-bs-target="#deleteModal" data-bs-toggle="modal" class="btn btn-danger" :disabled="length === 0">
+                                <button data-bs-target="#deleteModal" data-bs-toggle="modal" class="btn btn-danger" :disabled="filteredMaps.deletableLength === 0">
                                     <i class="bi bi-trash"></i>
                                     Delete
-                                    <span x-show="length > 0">
-                                        (<span x-text="length"></span>)
+                                    <span x-show="filteredMaps.deletableLength > 0">
+                                        (<span x-text="filteredMaps.deletableLength"></span>)
                                     </span>
                                 </button>
                                 <c:choose>
                                     <c:when test="${param.published eq '0'}">
-                                        <button data-bs-target="#publishModal" data-bs-toggle="modal" class="btn btn-warning" :disabled="length === 0">
+                                        <button data-bs-target="#publishModal" data-bs-toggle="modal" class="btn btn-warning" :disabled="filteredMaps.publishableLength === 0">
                                             <i class="bi bi-cloud-arrow-up"></i>
                                             Published Selected
-                                            <span x-show="length > 0">
-                                                (<span x-text="length"></span>)
+                                            <span x-show="filteredMaps.publishableLength > 0">
+                                                (<span x-text="filteredMaps.publishableLength"></span>)
                                             </span>
                                         </button>
                                     </c:when>
@@ -91,6 +91,20 @@
                                     <i class="bi bi-plus-circle"></i>
                                     Add New Quiz
                                 </button>
+                            </div>
+                            
+                            <div x-show="length - filteredMaps.deletableLength > 0" class="alert alert-danger mt-3" role="alert">
+                                <span x-text="length - filteredMaps.deletableLength"></span>
+                                /
+                                <span x-text="length"></span>
+                                of selected quizzes cannot be deleted because they have been attempted
+                            </div>
+                            
+                            <div x-show="length - filteredMaps.publishableLength > 0" class="alert alert-danger mt-3" role="alert">
+                                <span x-text="length - filteredMaps.publishableLength"></span>
+                                /
+                                <span x-text="length"></span>
+                                of selected quizzes cannot be published be because they have invalid data
                             </div>
                         </div>
                     </div>

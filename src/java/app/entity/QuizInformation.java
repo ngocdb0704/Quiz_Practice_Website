@@ -3,6 +3,7 @@ package app.entity;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.Random;
 
 public class QuizInformation {
 
@@ -18,6 +19,7 @@ public class QuizInformation {
     private QuizType type;
     private boolean published;
     private Timestamp updatedTime;
+    private int numberOfAttempts;
 
     public QuizInformation(ResultSet rs) throws SQLException {
         this.quizId = rs.getInt("QuizId");
@@ -31,6 +33,7 @@ public class QuizInformation {
         this.published = rs.getBoolean("IsPublished");
         this.updatedTime = rs.getTimestamp("UpdatedTime");
         this.questionCount = rs.getInt("QuestionCount");
+        this.numberOfAttempts = this.questionCount > 0 ? new Random().nextInt(3) : 0;
     }
 
     public int getQuizId() {
@@ -75,6 +78,14 @@ public class QuizInformation {
 
     public int getQuestionCount() {
         return questionCount;
+    }
+    
+    public int getNumberOfAttempts() {
+        return numberOfAttempts;
+    }
+    
+    public boolean isValid() {
+        return questionCount > 0;
     }
     
     @Override

@@ -15,13 +15,12 @@ public class DAOQuiz extends DBContext {
             """
             with cte as (
               select q.QuizId, count(QuestionId) as QuestionCount from [Quiz] q
-              inner join [Subject] s on q.SubjectId = s.SubjectId
               left join [QuizQuestion] qq on q.QuizId = qq.QuizId
               group by q.QuizId
             )
             select q.*, s.SubjectTitle, QuestionCount from cte
             inner join [Quiz] q on q.QuizId = cte.QuizId
-            inner join [Subject] s on q.QuizId = s.SubjectId""";
+            inner join [Subject] s on q.SubjectId = s.SubjectId""";
 
     private static final String COUNT_LISTING_QUERY =
             "select count(*) from [Quiz] q\n"
@@ -65,7 +64,7 @@ public class DAOQuiz extends DBContext {
     public QuizInformation getQuizById(Integer id) {
         try {
             ResultSet rs = new QueryBuilder(LISTING_QUERY)
-                            .whereAnd("QuizId", Operator.EQUALS, id)
+                            .whereAnd("q.QuizId", Operator.EQUALS, id)
                             .toPreparedStatement(connection)
                             .executeQuery();
 
@@ -100,7 +99,10 @@ public class DAOQuiz extends DBContext {
                 questionIds.add(rs.getInt("QuestionID"));
             }
 
-            if (questionIds.isEmpty()) return;
+            if (questionIds.isEmpty()) {
+                markDraft(new Integer[] { id });
+                return;
+            }
 
             new QueryBuilder("delete from [QuizQuestion]")
                     .whereAnd("QuizId", Operator.EQUALS, id)

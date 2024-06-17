@@ -7,14 +7,14 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body d-flex flex-column gap-2">
-                <template x-for="[key, value] in Object.entries(map)">
+                <template x-for="[key, value] in Object.entries(filteredMaps.deletable)">
                     <div class="card">
                         <input type="hidden" name="ids[]" x-bind:value="key" />
                         <div class="card-body d-flex justify-content-between">
                             <h5 class="card-title">
                                 ID <span x-text="key"></span>
                             </h5>
-                            <p class="card-text" x-text="value"></p>
+                            <p class="card-text" x-text="value.title"></p>
                         </div>
                     </div>
                 </template>
@@ -43,7 +43,7 @@
                             <h5 class="card-title">
                                 ID <span x-text="key"></span>
                             </h5>
-                            <p class="card-text" x-text="value"></p>
+                            <p class="card-text" x-text="value.title"></p>
                         </div>
                     </div>
                 </template>
@@ -65,14 +65,14 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body d-flex flex-column gap-2">
-                <template x-for="[key, value] in Object.entries(map)">
+                <template x-for="[key, value] in Object.entries(filteredMaps.publishable)">
                     <div class="card">
                         <input type="hidden" name="ids[]" x-bind:value="key" />
                         <div class="card-body d-flex justify-content-between">
                             <h5 class="card-title">
                                 ID <span x-text="key"></span>
                             </h5>
-                            <p class="card-text" x-text="value"></p>
+                            <p class="card-text" x-text="value.title"></p>
                         </div>
                     </div>
                 </template>

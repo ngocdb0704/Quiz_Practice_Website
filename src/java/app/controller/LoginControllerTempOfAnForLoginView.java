@@ -40,9 +40,9 @@ public class LoginControllerTempOfAnForLoginView extends HttpServlet {
            
             boolean flag = validateUser(username, password);
             if (flag) {
-                //login admin/expert page by roleid = 1(admin) or 2(expert)
+                //login admin/expert page by roleid = 2(admin) or 3(expert)
                 int roleId = daoUser.getRoleUser(username, password);
-                if(roleId == 1 || roleId == 2){
+                if(roleId == 2 || roleId == 3){
                     response.sendRedirect(request.getContextPath() + "/admin/questionlist");
                     return;
                 }
