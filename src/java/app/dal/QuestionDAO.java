@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import app.entity.Question;
 import app.entity.Answer;
+import static app.dal.QueryBuilder.Operator;
+import static app.dal.QueryBuilder.OrderDirection;
 /**
  *
  * @author hoapmhe173343
@@ -61,14 +63,6 @@ public class QuestionDAO extends DBContext {
             ex.printStackTrace();
         }
 
-    }
-
-    public static void main(String[] args) {
-        QuestionDAO dao = new QuestionDAO();
-        List<Question> list = dao.questionPerPage(10, 2);
-        for (Question question : list) {
-            System.out.println(question);
-        }
     }
 
     public List<Question> questionPerPage(int record, int page) {
@@ -131,7 +125,7 @@ public class QuestionDAO extends DBContext {
                     "where QuestionID = ?";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
-            ps.setBoolean(1, status == 1); 
+            ps.setInt(1, status); 
             ps.setInt(2, questionId);
             int rowsUpdated = ps.executeUpdate();
             return rowsUpdated > 0;
@@ -139,5 +133,72 @@ public class QuestionDAO extends DBContext {
             e.printStackTrace();
             return false;
         }
+    }
+    
+    public QueryResult filters(
+            int subjectId,
+            int level,
+            int status,
+            String searchContent,
+            int page, int pageSize
+    ) {
+        List<Question> ret = new ArrayList<>();
+        int count = 0;
+        String sql = "select * from Question";
+        
+        String sql1 = "select count(*) from Question";
+        
+        try {
+            QueryBuilder query = new QueryBuilder(sql)
+                    .orderBy("QuestionID", OrderDirection.ASC);
+            //subject id
+            if (subjectId != 0) {
+                query.where("SubjectID", Operator.EQUALS, subjectId);
+            }
+            //search content
+            if (searchContent != null && !searchContent.isBlank()) {
+                query.where("QuestionText", Operator.LIKE, "%" + searchContent.trim() + "%");
+            }
+            
+            //level question
+            if (level != 0) {
+                query.where("Level", Operator.EQUALS, level);
+            }
+
+            //status
+            if (status != 0) {
+                query.where("Status", Operator.EQUALS, status);
+            }
+            
+            ResultSet rs = new QueryBuilder(sql1, query)
+                    .toPreparedStatement(connection)
+                    .executeQuery();
+
+            if (rs.next()) {
+                count = rs.getInt(1);
+            }
+
+            rs = query
+                    .setLoggingEnabled(true)
+                    .page(page, pageSize)
+                    .toPreparedStatement(connection)
+                    .executeQuery();
+            
+            while (rs.next()) {
+                Question currentQuestion = new Question();
+                currentQuestion.setQuestionID(rs.getInt("QuestionID"));
+                currentQuestion.setQuestionName(rs.getString("QuestionText"));
+                currentQuestion.setExplanation(rs.getString("Explanation"));
+                currentQuestion.setLevel(rs.getInt("Level"));
+                currentQuestion.setSubjectID(rs.getInt("SubjectID"));
+                currentQuestion.setLessonID(rs.getInt("LessonID"));
+                currentQuestion.setStatus(rs.getInt("Status"));
+                ret.add(currentQuestion);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return new QueryResult(count, pageSize, ret);
     }
 }

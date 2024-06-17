@@ -10,7 +10,7 @@ function updateStatus(questionID, isChecked) {
         type: 'POST',
         data: {
             questionID: questionID,
-            status: isChecked ? 1 : 0
+            status: isChecked ? 1 : 2
         },
         success: function (response) {
             alert(response.message);

@@ -40,6 +40,12 @@ public class LoginControllerTempOfAnForLoginView extends HttpServlet {
            
             boolean flag = validateUser(username, password);
             if (flag) {
+                //login admin/expert page by roleid = 1(admin) or 2(expert)
+                int roleId = daoUser.getRoleUser(username, password);
+                if(roleId == 1 || roleId == 2){
+                    response.sendRedirect(request.getContextPath() + "/admin/questionlist");
+                    return;
+                }
                 session.setAttribute("userEmail", username);
                 String message = "Hello " + username + ". You logged in successfully";
                 session.setAttribute("successMessage", message);
