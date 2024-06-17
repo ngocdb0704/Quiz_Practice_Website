@@ -29,7 +29,8 @@ public class DAOQuiz extends DBContext {
 
     public void markDraft(Integer[] ids) {
         try {
-            new QueryBuilder("update [Quiz] set IsPublished = 0")
+            new QueryBuilder("update [Quiz] set IsPublished = 0, "
+                    + "UpdatedTime = CURRENT_TIMESTAMP")
                 .whereAnd("QuizId", Operator.IN, ids)
                 .toPreparedStatement(connection)
                 .executeUpdate();
@@ -40,7 +41,8 @@ public class DAOQuiz extends DBContext {
 
     public void publish(Integer[] ids) {
         try {
-            new QueryBuilder("update [Quiz] set IsPublished = 1")
+            new QueryBuilder("update [Quiz] set IsPublished = 1, "
+                    + "UpdatedTime = CURRENT_TIMESTAMP")
                 .whereAnd("QuizId", Operator.IN, ids)
                 .toPreparedStatement(connection)
                 .executeUpdate();
