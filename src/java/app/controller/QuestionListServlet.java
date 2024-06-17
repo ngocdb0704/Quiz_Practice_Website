@@ -36,7 +36,7 @@ public class QuestionListServlet extends HttpServlet {
         int subjectId = subjectIdParam != null ? Integer.parseInt(subjectIdParam) : 0;
         int level = levelParam != null ? Integer.parseInt(levelParam) : 0;
         int status = statusParam != null ? Integer.parseInt(statusParam) : 0;
-
+        
         String pageString = request.getParameter("page");
         int page;
         try {
@@ -46,15 +46,6 @@ public class QuestionListServlet extends HttpServlet {
             }
         } catch (NumberFormatException e) {
             page = 1;
-        }
-
-        QueryResult<Question> result = quesDao.filters(subjectId, level, status, content, page, 10);
-        request.setAttribute("totalPage", result.getTotalPages());
-        request.setAttribute("currentPage", page);
-        request.setAttribute("listQuestion", result.getResults());
-
-        for (Question q : result.getResults()) {
-            System.out.println(q.getQuestionName());
         }
 
         List<Subject> listSubjects = subDao.getAllSubject();
@@ -69,9 +60,14 @@ public class QuestionListServlet extends HttpServlet {
         levelMap.put(3, "Hard");
 
         Map<Integer, String> statusMap = new HashMap<>();
-        statusMap.put(0, "Hide");
         statusMap.put(1, "Show");
-
+        statusMap.put(2, "Hide");
+        
+        QueryResult<Question> result = quesDao.filters(subjectId, level, status, content, page, 10);
+        
+        request.setAttribute("totalPage", result.getTotalPages());
+        request.setAttribute("currentPage", page);
+        request.setAttribute("listQuestion", result.getResults());
         request.setAttribute("subjectMap", subjectMap);
         request.setAttribute("levelMap", levelMap);
         request.setAttribute("statusMap", statusMap);

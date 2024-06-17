@@ -125,7 +125,7 @@ public class QuestionDAO extends DBContext {
                     "where QuestionID = ?";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
-            ps.setBoolean(1, status == 1); 
+            ps.setInt(1, status); 
             ps.setInt(2, questionId);
             int rowsUpdated = ps.executeUpdate();
             return rowsUpdated > 0;
