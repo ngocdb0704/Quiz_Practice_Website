@@ -206,12 +206,12 @@ CREATE TABLE [dbo].[Registration](
 	[TransactionContent] [varchar](255),
 	[TransactionCode] [varchar](255),
 	[TransactionAccount] [varchar](255))
-Go
+GO
 CREATE TABLE [dbo].[BlogCategory](
 	[BlogCategoryId] [int] IDENTITY(1,1) primary key,
 	[BlogCategoryName] [varchar](50))
 
-Go
+GO
 CREATE TABLE [dbo].[Blog](
 	[BlogId] [int] IDENTITY(1,1) primary key,
 	[UserId] [int] foreign key references [dbo].[User](UserId),
@@ -220,8 +220,6 @@ CREATE TABLE [dbo].[Blog](
 	[UpdatedTime] [datetime],
 	[PostBrief] [nvarchar](2048),
 	[PostText] [ntext])
-Go
-
 GO
 CREATE TABLE [dbo].[Question](
 	[QuestionID] [int] IDENTITY(1,1) primary key,
@@ -229,15 +227,16 @@ CREATE TABLE [dbo].[Question](
 	[Explanation] [text],
 	[Level] [int],
 	[SubjectID] [int] foreign key references [dbo].[Subject](SubjectId),
-	[LessonID] [int])
-
+	[LessonID] [int],
+	[Status] bit
+)
 GO
 CREATE TABLE [dbo].[Answer](
 	[AnswerID] [int] IDENTITY(1,1) primary key,
 	[QuestionID] [int] foreign key references [dbo].[Question](QuestionID),
 	[AnswerName] [text],
 	[IsCorrect] [bit])
-
+GO
 CREATE TABLE [dbo].[Quiz] (
 	[QuizId] [int] IDENTITY(1, 1) primary key,
 	[SubjectId] [int] not null foreign key references [dbo].[Subject](SubjectId),
@@ -248,10 +247,10 @@ CREATE TABLE [dbo].[Quiz] (
 	[QuizType] char(10) check([QuizType] in (0, 1)) default(0), --simulation, lesson-quiz
 	[IsPublished] bit,
 	[UpdatedTime] [datetime] default(CURRENT_TIMESTAMP)
-);
-
+)
+GO
 CREATE TABLE [dbo].[QuizQuestion] (
 	[QuizId] [int] foreign key references [dbo].[Quiz]([QuizId]) on delete cascade,
 	[QuestionId] [int] foreign key references [dbo].[Question]([QuestionId])
 	PRIMARY KEY([QuizId], [QuestionId])
-);
+)
