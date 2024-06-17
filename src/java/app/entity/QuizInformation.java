@@ -12,6 +12,7 @@ public class QuizInformation {
     private String subjectName;
     private String quizName;
     private QuizLevel level;
+    private int questionCount;
     private int durationInMinutes;
     private int passRate;
     private QuizType type;
@@ -29,6 +30,7 @@ public class QuizInformation {
         this.type = QuizType.fromInt(rs.getInt("QuizType"));
         this.published = rs.getBoolean("IsPublished");
         this.updatedTime = rs.getTimestamp("UpdatedTime");
+        this.questionCount = rs.getInt("QuestionCount");
     }
 
     public int getQuizId() {
@@ -71,6 +73,10 @@ public class QuizInformation {
         return updatedTime;
     }
 
+    public int getQuestionCount() {
+        return questionCount;
+    }
+    
     @Override
     public String toString() {
         return "QuizInformation{" + "quizId=" + quizId + ", subjectId=" + subjectId + ", subjectName=" + subjectName + ", quizName=" + quizName + ", level=" + level + ", durationInMinutes=" + durationInMinutes + ", passRate=" + passRate + ", type=" + type + ", published=" + published + ", updatedTime=" + updatedTime + '}';

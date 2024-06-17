@@ -153,21 +153,21 @@ public class QuestionDAO extends DBContext {
                     .orderBy("QuestionID", OrderDirection.ASC);
             //subject id
             if (subjectId != 0) {
-                query.where("SubjectID", Operator.EQUALS, subjectId);
+                query.whereAnd("SubjectID", Operator.EQUALS, subjectId);
             }
             //search content
             if (searchContent != null && !searchContent.isBlank()) {
-                query.where("QuestionText", Operator.LIKE, "%" + searchContent.trim() + "%");
+                query.whereAnd("QuestionText", Operator.LIKE, "%" + searchContent.trim() + "%");
             }
             
             //level question
             if (level != 0) {
-                query.where("Level", Operator.EQUALS, level);
+                query.whereAnd("Level", Operator.EQUALS, level);
             }
 
             //status
             if (status != 0) {
-                query.where("Status", Operator.EQUALS, status);
+                query.whereAnd("Status", Operator.EQUALS, status);
             }
             
             ResultSet rs = new QueryBuilder(sql1, query)

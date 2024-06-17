@@ -12,8 +12,16 @@ import java.util.List;
 
 public class DAOQuiz extends DBContext {
     private static final String LISTING_QUERY =
-            "select q.*, s.SubjectTitle from [Quiz] q\n"
-            + "inner join [Subject] s on q.SubjectId = s.SubjectId";
+            """
+            with cte as (
+              select q.QuizId, count(QuestionId) as QuestionCount from [Quiz] q
+              inner join [Subject] s on q.SubjectId = s.SubjectId
+              left join [QuizQuestion] qq on q.QuizId = qq.QuizId
+              group by q.QuizId
+            )
+            select q.*, s.SubjectTitle, QuestionCount from cte
+            inner join [Quiz] q on q.QuizId = cte.QuizId
+            inner join [Subject] s on q.QuizId = s.SubjectId""";
 
     private static final String COUNT_LISTING_QUERY =
             "select count(*) from [Quiz] q\n"

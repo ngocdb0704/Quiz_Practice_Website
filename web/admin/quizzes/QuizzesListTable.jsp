@@ -32,7 +32,7 @@
                 <td>${quiz.getQuizId()}</td>
                 <td>${quiz.getSubjectName()}</td>
                 <td>${quiz.getQuizName()}</td>
-                <td width="30">0</td>
+                <td width="30">${quiz.getQuestionCount()}</td>
                 <td>
                     <c:choose>
                         <c:when test="${quiz.getLevel() eq 'HARD'}">
