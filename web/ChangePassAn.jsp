@@ -13,6 +13,9 @@
         <%@include file="/common/ImportBootstrap.jsp" %>
     </head>
     <body>
+
+        <div id="notification" class="notification"></div>
+
         <%
                 String username = (String) session.getAttribute("userEmail");
                 if (username == null || username.length() < 1) {

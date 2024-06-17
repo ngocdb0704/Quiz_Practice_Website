@@ -1,6 +1,6 @@
 <%@taglib prefix="myTags" tagdir="/WEB-INF/tags" %>
 
-<aside class="admin-aside bg-dark">
+<aside class="admin-aside bg-dark hide">
     <h5 class="admin-aside-title" data-title="Course Content">
         <i class="bi bi-book"></i> 
     </h5>

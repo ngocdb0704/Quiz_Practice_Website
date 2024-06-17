@@ -13,11 +13,35 @@
         <title>Subjects List</title>
         <%@include file="/common/ImportBootstrap.jsp" %>
         <link rel="stylesheet" href="common/ExtendBody.css"/>
+        <link rel="stylesheet" href="css/SubjectsList.css"/>
+        <script src="public/js/SubjectsList.js"></script>
     </head>
-    <body>
+    <body onload="scrollAtLoad()">
         <%@include file="/common/header.jsp" %>
         <%@include file="/common/sidebar.jsp" %>
+        <div class="loader" id="load">
+            <h3 class="text-center mt-5">Loading Subjects List</h3>
+            <div class="loader-inner">
+                <div class="loader-line-wrap">
+                    <div class="loader-line"></div>
+                </div>
+                <div class="loader-line-wrap">
+                    <div class="loader-line"></div>
+                </div>
+                <div class="loader-line-wrap">
+                    <div class="loader-line"></div>
+                </div>
+                <div class="loader-line-wrap">
+                    <div class="loader-line"></div>
+                </div>
+                <div class="loader-line-wrap">
+                    <div class="loader-line"></div>
+                </div>
+            </div>
+        </div>
         <main class="container">
+            <c:set var="goTo" value="${requestScope.goTo}"/>
+            <input type="hidden" value="${goTo}" id="goToPos">
             <c:set var="numPerCarousel" value="${requestScope.numPerCarousel}"/>
             <c:set var="listNewSubject" value="${requestScope.dataNewSubject}"/>
             <c:set var="listSaleSubject" value="${requestScope.dataSaleSubject}"/>
@@ -30,7 +54,23 @@
             <c:set var="checkNewSubject" value="${requestScope.listOfIdNew}"/>
             <c:set var="checkSaleSubject" value="${requestScope.listOfIdSale}"/>
             <c:set var="checkFeatSubject" value="${requestScope.listOfIdFeat}"/>
-            <h1>Subjects List</h1>
+            <c:set var="cat" value="${requestScope.list}"/>
+            <c:set var="check" value="${requestScope.check}"/>
+            <c:set var="levels" value="${requestScope.levels}"/>
+            <c:set var="checkLevel" value="${requestScope.checkLevel}"/>
+            <c:set var="key" value="${requestScope.key}"/>
+            <c:set var="order" value="${requestScope.order}"/>
+            <c:set var="listRegistered" value="${requestScope.listOfIdRegist}"/>
+            <div>
+                <h1>
+                    Subjects List
+                </h1>
+                <nav class="nav nav-pills" style="background-color: #e3f2fd;">
+                    <a class="nav-link active disabled" href="public/SubjectsList">For Individual</a>
+                    <a class="nav-link" href="#">For University</a>
+                    <a class="nav-link" href="#">For Business</a>
+                </nav>
+            </div>
             <section>
                 <h3>New Subjects</h3>
                 <c:if test="${numOfCarouselNew == 0}">
@@ -81,14 +121,40 @@
                                                         <p>
                                                         <p>
                                                             <c:if test="${checkNewSubject.contains(listNewSubject.get(indexCarNewItem).getSubjectName())}">
-                                                                <a style="text-decoration: none;" href="" class="badge text-bg-success">New</a>
+                                                                <button type="button" 
+                                                                        onclick="scrollToNew()"
+                                                                        class="badge text-bg-success">
+                                                                    New
+                                                                </button>
                                                             </c:if>
                                                             <c:if test="${checkSaleSubject.contains(listNewSubject.get(indexCarNewItem).getSubjectName())}">
-                                                                <a style="text-decoration: none;" href="" class="badge text-bg-warning">Big Sale</a>
+                                                                <button type="button" 
+                                                                        onclick="scrollToBigSale()"
+                                                                        class="badge text-bg-warning">
+                                                                    Big Sale
+                                                                </button>
                                                             </c:if>
                                                             <c:if test="${checkFeatSubject.contains(listNewSubject.get(indexCarNewItem).getSubjectName())}">
-                                                                <a style="text-decoration: none;" href="" class="badge text-bg-primary">Featured</a>
+                                                                <button type="button" 
+                                                                        onclick="scrollToFeatured()"
+                                                                        class="badge text-bg-primary">
+                                                                    Featured
+                                                                </button>
                                                             </c:if>
+                                                        </p>
+                                                        <p>
+                                                            <c:choose>
+                                                                <c:when test="${listRegistered.contains(listNewSubject.get(indexCarNewItem).getSubjectName())}">
+                                                                    <a class="badge text-bg-dark" 
+                                                                       href="user/MyRegistrations?key=${listNewSubject.get(indexCarNewItem).getSubjectName()}"
+                                                                       style="text-decoration: none;">
+                                                                        In My Registrations
+                                                                    </a>
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    <br>
+                                                                </c:otherwise>
+                                                            </c:choose>
                                                         </p>
                                                         <p>
                                                             Package: ${listNewSubject.get(indexCarNewItem).getLowestPackageName()}
@@ -222,14 +288,40 @@
                                                         <p>
                                                         <p>
                                                             <c:if test="${checkNewSubject.contains(listSaleSubject.get(indexCarSaleItem).getSubjectName())}">
-                                                                <a style="text-decoration: none;" href="" class="badge text-bg-success">New</a>
+                                                                <button type="button" 
+                                                                        onclick="scrollToNew()"
+                                                                        class="badge text-bg-success">
+                                                                    New
+                                                                </button>
                                                             </c:if>
                                                             <c:if test="${checkSaleSubject.contains(listSaleSubject.get(indexCarSaleItem).getSubjectName())}">
-                                                                <a style="text-decoration: none;" href="" class="badge text-bg-warning">Big Sale</a>
+                                                                <button type="button" 
+                                                                        onclick="scrollToBigSale()"
+                                                                        class="badge text-bg-warning">
+                                                                    Big Sale
+                                                                </button>
                                                             </c:if>
                                                             <c:if test="${checkFeatSubject.contains(listSaleSubject.get(indexCarSaleItem).getSubjectName())}">
-                                                                <a style="text-decoration: none;" href="" class="badge text-bg-primary">Featured</a>
+                                                                <button type="button" 
+                                                                        onclick="scrollToFeatured()"
+                                                                        class="badge text-bg-primary">
+                                                                    Featured
+                                                                </button>
                                                             </c:if>
+                                                        </p>
+                                                        <p>
+                                                            <c:choose>
+                                                                <c:when test="${listRegistered.contains(listSaleSubject.get(indexCarSaleItem).getSubjectName())}">
+                                                                    <a class="badge text-bg-dark" 
+                                                                       href="user/MyRegistrations?key=${listSaleSubject.get(indexCarSaleItem).getSubjectName()}"
+                                                                       style="text-decoration: none;">
+                                                                        In My Registrations
+                                                                    </a>
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    <br>
+                                                                </c:otherwise>
+                                                            </c:choose>
                                                         </p>
                                                         <p>
                                                             Package: ${listSaleSubject.get(indexCarSaleItem).getLowestPackageName()}
@@ -363,14 +455,40 @@
                                                         <p>
                                                         <p>
                                                             <c:if test="${checkNewSubject.contains(listFeaturedSubject.get(indexCarFeatItem).getSubjectName())}">
-                                                                <a style="text-decoration: none;" href="" class="badge text-bg-success">New</a>
+                                                                <button type="button" 
+                                                                        onclick="scrollToNew()"
+                                                                        class="badge text-bg-success">
+                                                                    New
+                                                                </button>
                                                             </c:if>
                                                             <c:if test="${checkSaleSubject.contains(listFeaturedSubject.get(indexCarFeatItem).getSubjectName())}">
-                                                                <a style="text-decoration: none;" href="" class="badge text-bg-warning">Big Sale</a>
+                                                                <button type="button" 
+                                                                        onclick="scrollToBigSale()"
+                                                                        class="badge text-bg-warning">
+                                                                    Big Sale
+                                                                </button>
                                                             </c:if>
                                                             <c:if test="${checkFeatSubject.contains(listFeaturedSubject.get(indexCarFeatItem).getSubjectName())}">
-                                                                <a style="text-decoration: none;" href="" class="badge text-bg-primary">Featured</a>
+                                                                <button type="button" 
+                                                                        onclick="scrollToFeatured()"
+                                                                        class="badge text-bg-primary">
+                                                                    Featured
+                                                                </button>
                                                             </c:if>
+                                                        </p>
+                                                        <p>
+                                                            <c:choose>
+                                                                <c:when test="${listRegistered.contains(listFeaturedSubject.get(indexCarFeatItem).getSubjectName())}">
+                                                                    <a class="badge text-bg-dark" 
+                                                                       href="user/MyRegistrations?key=${listFeaturedSubject.get(indexCarFeatItem).getSubjectName()}"
+                                                                       style="text-decoration: none;">
+                                                                        In My Registrations
+                                                                    </a>
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    <br>
+                                                                </c:otherwise>
+                                                            </c:choose>
                                                         </p>
                                                         <p>
                                                             Package: ${listFeaturedSubject.get(indexCarFeatItem).getLowestPackageName()}
@@ -453,55 +571,273 @@
                     </div>
                 </c:if>
             </section>
+            <br>
             <section>
+                <c:set var="posToGo" value="${2035}"/>
+                <h1>
+                    Subjects List
+                </h1>
                 <div class="row">
-                    <aside class="col-3 sbar">                        
+                    <aside class="col-4 sbar">
+                        <div class="row mb-3">
+                            <form action="public/SubjectsList" method="get">
+                                <div class="mb-3">
+                                    <div class="row card-body container justify-content-center">
+                                        <label for="searchKey">Subject Search Box</label>
+                                        <input class="col-8" 
+                                               id="searchKey" 
+                                               type="text" value="${key}" 
+                                               name="key" 
+                                               placeholder="Search Subject by Title">
+                                        <input type="hidden" value="${posToGo}" name="goToPos">
+                                        <button class="col-3" onclick="this.form.submit()">
+                                            <i class="bi bi-search"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h4>
+                                        Filter Subjects By:
+                                    </h4>
+                                </div>
+                                <div class="accordion " id="accordionFlushSiderFilter">
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header">
+                                            <button class="accordion-button collapsed" 
+                                                    type="button" 
+                                                    data-bs-toggle="collapse" 
+                                                    data-bs-target="#flush-collapseOne" 
+                                                    aria-expanded="false" 
+                                                    aria-controls="flush-collapseOne">
+                                                Subject Categories
+                                            </button>
+                                        </h2>
+                                        <div id="flush-collapseOne" 
+                                             class="accordion-collapse collapse" 
+                                             data-bs-parent="#accordionFlushSiderFilter">
+                                            <div class="accordion-body">
+                                                <ul class="list-group list-group-flush">
+                                                    <li class="list-group-item">
+                                                        <!-- subject category tree -->
+                                                        <!-- tree level 0 -->
+                                                        <!-- get all node -->
+                                                        <c:forEach begin="0" end="${cat.size()-1}" var="i">
+                                                            <ul class="list-group list-group-flush">
+                                                                <!-- tree level 1 or parent tier 1 -->
+                                                                <c:if test="${cat.get(i).getCateParentId()==0}">
+                                                                    <li class="list-group-item">
+                                                                        <input class="form-check-input"
+                                                                               type="checkbox" name="idTier1" 
+                                                                               value="${cat.get(i).getCateId()}"
+                                                                               ${check[i]?"checked":""}
+                                                                               onclick="this.form.submit()"/>
+                                                                        <span class="text-danger">${cat.get(i).getCateName()}</span>
+                                                                        <c:set var="parentTier1" value="${cat.get(i).getCateId()}"/>
+                                                                        <!-- get all node -->
+                                                                        <c:forEach begin="0" end="${cat.size()-1}" var="ii">
+                                                                            <ul class="list-group list-group-flush">
+                                                                                <!-- tree level 2 or parent tier 2 -->
+                                                                                <c:if test="${cat.get(ii).getCateParentId()==parentTier1}">
+                                                                                    <li class="list-group-item">
+                                                                                        <input class="form-check-input" 
+                                                                                               type="checkbox" name="idTier2" 
+                                                                                               value="${cat.get(ii).getCateId()}"
+                                                                                               ${check[ii]?"checked":""}
+                                                                                               onclick="this.form.submit()"/>
+                                                                                        <span class="text-info-emphasis">${cat.get(ii).getCateName()}</span>
+                                                                                        <c:set var="parentTier2" value="${cat.get(ii).getCateId()}"/>
+                                                                                        <!-- get all node -->
+                                                                                        <c:forEach begin="0" end="${cat.size()-1}" var="iii">
+                                                                                            <ul class="list-group list-group-flush">
+                                                                                                <!-- tree level 3 or parent tier 3 -->
+                                                                                                <c:if test="${cat.get(iii).getCateParentId()==parentTier2}">
+                                                                                                    <li class="list-group-item">
+                                                                                                        <input class="form-check-input"
+                                                                                                               type="checkbox" name="idTier3" 
+                                                                                                               value="${cat.get(iii).getCateId()}"
+                                                                                                               ${check[iii]?"checked":""}
+                                                                                                               onclick="this.form.submit()"/>
+                                                                                                        <span class="badge text-bg-light">${cat.get(iii).getCateName()}</span>
+                                                                                                    </li>
+                                                                                                </c:if>
+                                                                                            </ul>
+                                                                                        </c:forEach>
+                                                                                    </li>
+                                                                                </c:if>
+                                                                            </ul>
+                                                                        </c:forEach>
+                                                                    </li>
+                                                                </c:if>
+                                                            </ul>
+                                                        </c:forEach>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header">
+                                            <button class="accordion-button collapsed" 
+                                                    type="button" data-bs-toggle="collapse" 
+                                                    data-bs-target="#flush-collapseTwo" 
+                                                    aria-expanded="false" 
+                                                    aria-controls="flush-collapseTwo">
+                                                Levels
+                                            </button>
+                                        </h2>
+                                        <div id="flush-collapseTwo" 
+                                             class="accordion-collapse collapse" 
+                                             data-bs-parent="#accordionFlushSiderFilter">
+                                            <div class="accordion-body">
+                                                <ul class="list-group list-group-flush">
+                                                    <c:forEach begin="0" end="${levels.size()-1}" var="index">
+                                                        <li class="list-group-item">
+                                                            <input class="form-check-input" type="checkbox" name="level"
+                                                                   value="${levels.get(index).getCateId()}"
+                                                                   ${checkLevel[index]?"checked":""}
+                                                                   onclick="this.form.submit()"
+                                                                   > <span class="badge text-bg-light">
+                                                                <!-- get all node -->
+                                                                <!-- set name to node -->
+                                                                ${levels.get(index).getCateName()}
+                                                            </span>
+                                                        </li>
+                                                    </c:forEach>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <h4 class="mt-3">
+                                    Featured Subjects:
+                                </h4>
+                                <div class="accordion" id="featuredAccordion">
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header">
+                                            <button class="accordion-button collapsed" 
+                                                    type="button" data-bs-toggle="collapse" 
+                                                    data-bs-target="#flush-collapseThree" 
+                                                    aria-expanded="false" 
+                                                    aria-controls="flush-collapseThree">
+                                                Featured Subjects
+                                            </button>
+                                        </h2>
+                                        <div id="flush-collapseThree" 
+                                             class="accordion-collapse collapse" 
+                                             data-bs-parent="#featuredAccordion">
+                                            <div class="accordion-body">
+                                                <ul>
+                                                    <c:forEach begin="0" end="${listFeaturedSubject.size()-1}" var="iFeat">
+                                                        <li>
+                                                            <a class="btn btn-link" href="">
+                                                                ${listFeaturedSubject.get(iFeat).getSubjectName()}
+                                                            </a>
+                                                        </li>
+                                                    </c:forEach>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="row mb-3">
+                            <a class="link-primary mt-3"
+                               href="ContactUs.jsp" target="_blank"
+                               rel="noopener noreferrer">Contact Us</a>
+                        </div>
                     </aside>
-                    <div class="col-9 mt-3">
-                        <h1>
-                            Subjects List
-                        </h1>
+                    <div class="col-8 mt-3">
                         <c:set var="page" value="${requestScope.page}"/>
                         <c:set var="filter" value="${requestScope.sendFilter}"/>
-                        <nav>
-                            <ul class="pagination">
-                                <li class="page-item">
-                                    <a class="page-link ${page==1?"disabled":""}" 
-                                       href="public/SubjectsList?${filter}page=${page-1}">Previous</a>
-                                </li>
-                                <!-- get all pages -->
-                                <c:forEach begin="${1}" end="${3}" var="i">
+                        <c:if test="${allSubjectsList.size()>1}">
+                            <nav class="row">
+                                <ul class="pagination col-8">
                                     <li class="page-item">
-                                        <a class="page-link ${i==page?"active":""}" 
-                                           href="public/SubjectsList?${filter}page=${i}">${i}</a>
+                                        <a class="page-link ${page==1?"disabled":""}" 
+                                           href="public/SubjectsList?${filter}page=${page-1}&goToPos=${posToGo}&orderList=${order}">Previous</a>
                                     </li>
-                                </c:forEach>
-                                    <li class="page-item">
-                                        <a class="page-link disabled">...</a>
-                                    </li>
-                                    <c:if test="${page > 3 && page < numOfAllSubjects-2}">
+                                    <!-- get all pages -->
+                                    <c:if test="${numOfAllSubjects > 6}">
+                                        <c:forEach begin="${1}" end="${2}" var="i">
+                                            <li class="page-item">
+                                                <a class="page-link ${i==page?"active":""}" 
+                                                   href="public/SubjectsList?${filter}page=${i}&goToPos=${posToGo}&orderList=${order}">${i}</a>
+                                            </li>
+                                        </c:forEach>
                                         <li class="page-item">
-                                        <a class="page-link active" 
-                                           href="public/SubjectsList?${filter}page=${page}">${page}</a>
-                                    </li>
-                                        <li class="page-item">
-                                        <a class="page-link disabled">...</a>
-                                    </li>
+                                            <a class="page-link disabled">...</a>
+                                        </li>
+                                        <c:if test="${page > 2 && page < numOfAllSubjects-1}">
+                                            <li class="page-item">
+                                                <a class="page-link active" 
+                                                   href="public/SubjectsList?${filter}page=${page}&goToPos=${posToGo}&orderList=${order}">${page}</a>
+                                            </li>
+                                            <li class="page-item">
+                                                <a class="page-link disabled">...</a>
+                                            </li>
+                                        </c:if>
+                                        <c:forEach begin="${numOfAllSubjects-1}" end="${numOfAllSubjects}" var="i">
+                                            <li class="page-item">
+                                                <a class="page-link ${i==page?"active":""}" 
+                                                   href="public/SubjectsList?${filter}page=${i}&goToPos=${posToGo}&orderList=${order}">${i}</a>
+                                            </li>
+                                        </c:forEach>
                                     </c:if>
-                                <c:forEach begin="${numOfAllSubjects-2}" end="${numOfAllSubjects}" var="i">
+                                    <c:if test="${numOfAllSubjects <= 6}">
+                                        <c:forEach begin="${1}" end="${numOfAllSubjects}" var="i">
+                                            <li class="page-item">
+                                                <a class="page-link ${i==page?"active":""}" 
+                                                   href="public/SubjectsList?${filter}page=${i}&goToPos=${posToGo}&orderList=${order}">${i}</a>
+                                            </li>
+                                        </c:forEach>
+                                    </c:if>        
                                     <li class="page-item">
-                                        <a class="page-link ${i==page?"active":""}" 
-                                           href="public/SubjectsList?${filter}page=${i}">${i}</a>
+                                        <a class="page-link ${page==numOfAllSubjects?"disabled":""}" 
+                                           href="public/SubjectsList?${filter}page=${page+1}&goToPos=${posToGo}&orderList=${order}">Next</a>
                                     </li>
-                                </c:forEach>
-                                <li class="page-item">
-                                    <a class="page-link ${page==numOfAllSubjects?"disabled":""}" 
-                                       href="public/SubjectsList?${filter}page=${page+1}">Next</a>
-                                </li>    
-                            </ul>
-                        </nav>
+                                </ul>
+                                <div class="col-4">
+                                    <h4>Sort by Updated Date: </h4>
+                                    <ul class="pagination">
+                                        <li class="page-item">
+                                            <a class=" page-link ${order==1?"active":""}" 
+                                               href="public/SubjectsList?${filter}page=${page}&goToPos=${posToGo}&orderList=1">
+                                                Latest
+                                            </a>
+
+                                        </li>
+                                        <li class="page-item">
+                                            <a class=" page-link ${order==0?"active":""}" 
+                                               href="public/SubjectsList?${filter}page=${page}&goToPos=${posToGo}&orderList=0">
+                                                Oldest
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </nav>
+                        </c:if>
                         <c:if test="${allSubjectsList.size()<1}">
-                            <h3>Empty</h3>
+                            <div>
+                                <img src="https://www.kindpng.com/picc/m/71-714432_empty-list-vector-hd-png-download.png" 
+                                     alt="alt"
+                                     height="200"/>
+                                <h3>
+                                    It seems that we don't have what you are looking for
+                                </h3>
+                                <h3>
+                                    We will update subjects list soon!
+                                </h3>
+                                <h3>
+                                    <span>
+                                        How about go back to full list ->
+                                    </span>
+                                    <span>
+                                        <a class="btn btn-primary"
+                                           href="public/SubjectsList?goToPos=1850">All Subjects</a>
+                                    </span>
+                                </h3>
+                            </div>
                         </c:if>
                         <ul class="list-group">
                             <!-- get all registrations that meet previous conditions: input key, filter -->
@@ -515,14 +851,57 @@
                                                      class="img-fluid rounded-start" 
                                                      width="300" height="180">
                                             </div>
-                                            <div class="col-md-6">
+                                            <div class="col-md-5">
                                                 <div class="card-body">
-                                                    <h5 class="card-title">Subject: ${p.getSubjectName()}</h5>
+                                                    <h5 class="card-title">
+                                                        <a id="subjectLink" href="SubjectDetails?subjectId=${p.getSubjectId()}">
+                                                            ${p.getSubjectName()}
+                                                        </a>
+                                                    </h5>
                                                     <ul class="list-group list-group-flush">
                                                         <li class="list-group-item">
                                                             <div class="row">
-                                                                <div class="col-6">
-                                                                    Package: ${p.getLowestPackageName()}
+                                                                <div class="col-10">
+                                                                    <p>
+                                                                        ${p.getTagLine()}
+                                                                    </p>
+                                                                    <p>
+                                                                        <c:if test="${checkNewSubject.contains(p.getSubjectName())}">
+                                                                            <button type="button" 
+                                                                                    onclick="scrollToNew()"
+                                                                                    class="badge text-bg-success">
+                                                                                New
+                                                                            </button>
+                                                                        </c:if>
+                                                                        <c:if test="${checkSaleSubject.contains(p.getSubjectName())}">
+                                                                            <button type="button" 
+                                                                                    onclick="scrollToBigSale()"
+                                                                                    class="badge text-bg-warning">
+                                                                                Big Sale
+                                                                            </button>
+                                                                        </c:if>
+                                                                        <c:if test="${checkFeatSubject.contains(p.getSubjectName())}">
+                                                                            <button type="button" 
+                                                                                    onclick="scrollToFeatured()"
+                                                                                    class="badge text-bg-primary">
+                                                                                Featured
+                                                                            </button>
+                                                                        </c:if>
+                                                                    </p>
+                                                                    <p>
+                                                                        <c:choose>
+                                                                            <c:when test="${listRegistered.contains(p.getSubjectName())}">
+                                                                                <a class="badge text-bg-dark" 
+                                                                                   href="user/MyRegistrations?key=${p.getSubjectName()}"
+                                                                                   style="text-decoration: none;">
+                                                                                    In My Registrations
+                                                                                </a>
+                                                                            </c:when>
+                                                                        </c:choose>
+                                                                    </p>
+                                                                    <p>
+                                                                        Package: ${p.getLowestPackageName()}
+                                                                    </p>
                                                                 </div>
                                                             </div>
                                                         </li>
@@ -531,24 +910,117 @@
                                             </div>
                                             <div class="col-md-2 mt-md-3">
                                                 <h5>Sale Price:</h5>
-                                                <h5>${Integer.valueOf(p.getPackageSalePrice()*1000)} VND</h5>
+                                                <h6>
+                                                    <span class="fw-light badge rounded-pill text-bg-light" 
+                                                          style=" text-decoration-line: line-through;"> 
+                                                        ${Integer.valueOf(listNewSubject.get(indexCarNewItem).getPackageListPrice()*1000)} vnd
+                                                    </span>
+                                                    <span class="badge rounded-pill text-bg-danger">
+                                                        - ${Integer.valueOf(
+                                                            (1-(p.getPackageSalePrice()/p.getPackageListPrice()))*100)}
+                                                        %
+                                                    </span>
+                                                </h6>
+                                                <h5>
+                                                    ${Integer.valueOf(p.getPackageSalePrice()*1000)} VND
+                                                </h5>
+                                                <diV class="row">
+                                                    <div class="col-xl-7">
+                                                        <!-- Button buy trigger modal -->
+                                                        <button type="button" class="btn btn-primary" 
+                                                                data-bs-toggle="modal" 
+                                                                data-bs-target=".modalRegister${p.getSubjectId()}">
+                                                            Register
+                                                        </button>
+                                                        <!-- Modal Register -->
+                                                        <div class="modal fade modalRegister${p.getSubjectId()} "
+                                                             tabindex="-1"
+                                                             role="dialog" >
+                                                            <div class="modal-dialog modal-dialog-centered" 
+                                                                 role="document">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header text-bg-primary">
+                                                                        <h4>Subject Register</h4>
+                                                                        <button type="button" 
+                                                                                class="btn-close" 
+                                                                                data-bs-dismiss="modal" 
+                                                                                aria-label="Close">
+                                                                        </button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        <jsp:include page="/SubjectRegisterPopUp.jsp">
+                                                                            <jsp:param name="registId" value="${p.getSubjectId()}"/>
+                                                                        </jsp:include>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xl-4">
+                                                        <a class="btn text-bg-success ${listRegistered == null ? "disabled":""}" 
+                                                           href="GiftCenter.jsp"
+                                                           style="text-decoration: none;"
+                                                           >
+                                                            Gift
+                                                        </a>
+                                                    </div>
+                                                </diV>
                                             </div>
                                         </div>
                                     </div>
                                 </li>
                             </c:forEach>
                         </ul>
-                        <nav>
-                            <ul class="pagination">
-                                <!-- get all pages -->
-                                <c:forEach begin="${1}" end="${numOfAllSubjects}" var="i">
+                        <c:if test="${allSubjectsList.size()>1}">
+                            <nav>
+                                <ul class="pagination col-8">
                                     <li class="page-item">
-                                        <a class="page-link ${i==page?"active":""}" 
-                                           href="public/SubjectsList?${filter}page=${i}">${i}</a>
+                                        <a class="page-link ${page==1?"disabled":""}" 
+                                           href="public/SubjectsList?${filter}page=${page-1}&goToPos=${posToGo}&orderList=${order}">Previous</a>
                                     </li>
-                                </c:forEach>
-                            </ul>
-                        </nav>
+                                    <!-- get all pages -->
+                                    <c:if test="${numOfAllSubjects > 6}">
+                                        <c:forEach begin="${1}" end="${2}" var="i">
+                                            <li class="page-item">
+                                                <a class="page-link ${i==page?"active":""}" 
+                                                   href="public/SubjectsList?${filter}page=${i}&goToPos=${posToGo}&orderList=${order}">${i}</a>
+                                            </li>
+                                        </c:forEach>
+                                        <li class="page-item">
+                                            <a class="page-link disabled">...</a>
+                                        </li>
+                                        <c:if test="${page > 2 && page < numOfAllSubjects-1}">
+                                            <li class="page-item">
+                                                <a class="page-link active" 
+                                                   href="public/SubjectsList?${filter}page=${page}&goToPos=${posToGo}&orderList=${order}">${page}</a>
+                                            </li>
+                                            <li class="page-item">
+                                                <a class="page-link disabled">...</a>
+                                            </li>
+                                        </c:if>
+                                        <c:forEach begin="${numOfAllSubjects-1}" end="${numOfAllSubjects}" var="i">
+                                            <li class="page-item">
+                                                <a class="page-link ${i==page?"active":""}" 
+                                                   href="public/SubjectsList?${filter}page=${i}&goToPos=${posToGo}&orderList=${order}">${i}</a>
+                                            </li>
+                                        </c:forEach>
+                                    </c:if>
+                                    <c:if test="${numOfAllSubjects <= 6}">
+                                        <c:forEach begin="${1}" end="${numOfAllSubjects}" var="i">
+                                            <li class="page-item">
+                                                <a class="page-link ${i==page?"active":""}" 
+                                                   href="public/SubjectsList?${filter}page=${i}&goToPos=${posToGo}&orderList=${order}">${i}</a>
+                                            </li>
+                                        </c:forEach>
+                                    </c:if>        
+                                    <li class="page-item">
+                                        <a class="page-link ${page==numOfAllSubjects?"disabled":""}" 
+                                           href="public/SubjectsList?${filter}page=${page+1}&goToPos=${posToGo}&orderList=${order}">Next</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </c:if>
                     </div>
                 </div>
             </section>

@@ -1,8 +1,8 @@
 package app.controller;
 
 import app.dal.DAOBlog;
-import app.dal.DAOBlog.QueryResult;
 import app.dal.DAOBlogCategory;
+import app.dal.QueryResult;
 import app.utils.Config;
 import app.utils.Parsers;
 import java.io.IOException;
