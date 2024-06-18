@@ -23,6 +23,7 @@ import java.util.logging.Logger;
  * @author admin
  */
 public class DAOSubject extends DBContext {
+
     public Vector<Subject> getVectorByPage(Vector<Subject> vec,
             int start, int end) {
         Vector<Subject> outputVec = new Vector<>();
@@ -31,6 +32,7 @@ public class DAOSubject extends DBContext {
         }
         return outputVec;
     }
+
     public String addTierToSQL(int[] parent, int tier, int flag) {
         String sql = "";
         if (flag == 0) {
@@ -115,7 +117,9 @@ with CategoryHierarchy as
                 flagAND = 1;
             }
         }
-        if(flagAND == 1) sql += ")";
+        if (flagAND == 1) {
+            sql += ")";
+        }
         if (inputKey != null) {
             inputKey = inputKey.replace("!", "!!")
                     .replace("%", "!%")
@@ -302,11 +306,11 @@ with CategoryHierarchy as
         }
         return vec;
     }
-    
+
     public Subject getSubjectById(int id) {
         Subject Out = null;
         String sql = "SELECT TOP 1 SubjectId, SubjectTitle, SubjectTagLine, SubjectBriefInfo, SubjectDescription, SubjectThumbnail FROM Subject WHERE SubjectId = ?";
-        
+
         PreparedStatement pre;
         try {
             pre = connection.prepareStatement(sql);
@@ -320,11 +324,34 @@ with CategoryHierarchy as
         }
         return Out;
     }
-    
+
+    public List<String> getSubjectCategoryLineById(int id) {
+        List<String> Out = new ArrayList<>();
+        String sql = "SELECT TOP 1 * from SubjectCategory where SubjectCategoryId = ?";
+
+        PreparedStatement pre;
+        try {
+            int parentId = id, emergencyExit = 12; //just in case
+            while (parentId > 0 && emergencyExit-- > 0) {
+                pre = connection.prepareStatement(sql);
+                pre.setInt(1, parentId);
+                ResultSet rs = pre.executeQuery();
+                if (rs.next()) {
+                    Out.add(rs.getString(2));
+                    parentId = rs.getInt(3);
+                }
+                else break;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return Out;
+    }
+
     public List<Subject> getFeaturedSubjects(int ammoutOfSubjects) {
         List<Subject> Out = new ArrayList<>();
         String sql = "SELECT TOP (?) s.SubjectId, s.SubjectTitle, s.SubjectTagLine, s.SubjectThumbnail FROM Subject s WHERE s.IsFeaturedSubject = 1";
-        
+
         PreparedStatement pre;
         try {
             pre = connection.prepareStatement(sql);
@@ -348,5 +375,6 @@ with CategoryHierarchy as
     public static void main(String[] args) {
         DAOSubject test = new DAOSubject();
         System.out.println(test.getWithToken(null, null, null, null, 0).size());
+        System.out.println(test.getSubjectCategoryLineById(23));
     }
 }

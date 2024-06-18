@@ -15,6 +15,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.util.List;
 import java.util.Vector;
 
 /**
@@ -44,6 +45,9 @@ public class SubjectDetailsController extends HttpServlet {
             DAOSubject daoSubject = new DAOSubject(); 
             Subject displaySubject = daoSubject.getSubjectById(Integer.parseInt(request.getParameter("subjectId")));
             session.setAttribute("subjectDetails", displaySubject);
+            
+            //List<String> categoryLine = daoSubject.getSubjectById(displaySubject.get);
+            //session.setAttribute("subjectDetails", displaySubject);
             
             DAOPackage daoPackage = new DAOPackage();
             Package lowestPackage = daoPackage.getLowestPackageBySubjectId(Integer.parseInt(request.getParameter("subjectId")));

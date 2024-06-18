@@ -23,7 +23,45 @@
 
         <main class="row">
             <div class="col-lg-2 col-md-3 col-sm-12 mx-lg-3 mx-md-0 bg-light border rounded-3">
-                <h1>Sider</h1>
+                <h4 class="pt-3">Search for subject:</h4>
+
+                <div id="subject-search" class="input-group">
+                    <input type="text" class="form-control">
+                    <span class="input-group-text">
+                        <i class="bi bi-search"></i>
+                    </span>
+                </div>
+
+                <div class="card pt-3 mt-5 w-100">
+                    <div class="card-header py-0 bg-white">
+                        <h4 class="">Category:</h4>
+                    </div>
+                    <ul class="pt-1 pb-3 list-group list-group-flush">
+                        <ul>
+                            <li>A</li>
+                            <ul>
+                                <li>B</li>
+                                <ul>
+                                    <li>C</li>
+                                </ul>
+                            </ul>
+                        </ul>
+                    </ul>
+                </div>
+
+                <div class="card pt-3 mt-5 w-100">
+                    <div class="card-header py-0 bg-white">
+                        <h4 class="">Tags:</h4>
+                    </div>
+                    <ul class="pt-1 pb-3 list-group list-group-flush">
+                        <ul>
+                            <li>A</li>
+                            <li>B</li>
+                            <li>C</li>
+                        </ul>
+                    </ul>
+                </div>
+
             </div>
 
             <div class="col py-3">
@@ -54,7 +92,11 @@
                                 </c:if>
                             </c:if>
                             <c:if test="${empty lowestPackage}">
-                                <button class="btn btn-disabled">Register</button>
+                                <button style="cursor: default" class="btn btn-secondary btn-disabled">Register 
+                                    <div class="w3tooltip"><i class="bi bi-question-circle"></i>
+                                        <span class="w3tooltiptext">This subject does not currently have any packages available, please come back later.</span>
+                                    </div>
+                                </button>
                             </c:if>
                         </div>
                     </div>
