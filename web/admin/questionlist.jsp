@@ -34,7 +34,9 @@
                         <select name="subjectId">
                             <option value="0">All subjects</option>
                             <c:forEach var="entry" items="${subjectMap.entrySet()}">
-                                <option value="${entry.key}">${entry.value}</option>
+                                <option value="${entry.key}" 
+                                        <c:if test="${entry.key == param.subjectId}">selected</c:if>
+                                        >${entry.value}</option>
                             </c:forEach>
                         </select>
 
@@ -42,12 +44,14 @@
                         <select id="lesson" name="lesson">
                             <!-- Add options dynamically or statically -->
                         </select>
-                        
+
                         <label for="level">Level:</label>
                         <select name="level">
                             <option value="0">All Levels</option>
                             <c:forEach var="entry" items="${levelMap}">
-                                <option value="${entry.key}">${entry.value}</option>
+                                <option value="${entry.key}" 
+                                        <c:if test="${entry.key == param.level}">selected</c:if>
+                                        >${entry.value}</option>
                             </c:forEach>
                         </select>
 
@@ -55,10 +59,12 @@
                         <select name="status">
                             <option value="0">All status</option>
                             <c:forEach var="entry" items="${statusMap}">
-                                <option value="${entry.key}">${entry.value}</option>
+                                <option value="${entry.key}" 
+                                        <c:if test="${entry.key == param.status}">selected</c:if>
+                                        >${entry.value}</option>
                             </c:forEach>
                         </select>
-                        
+
                         <label for="searchContent"></label>
                         <input type="text" name="searchContent" placeholder="Search by Content"/>
                         <button type="submit">Filter</button>
@@ -96,9 +102,12 @@
                             <th>Lesson</th>
                             <th>Level</th>
                             <th>Show/Hide</th>
+                            <th>Details</th>
                         </tr>
                     </thead>
                     <tbody>
+
+
                         <c:forEach var="question" items="${listQuestion}" varStatus="status">
                             <tr>
                                 <td>${status.index + 1}</td>
@@ -107,24 +116,30 @@
                                 <td>${subjectMap[question.subjectID]}</td>
                                 <td>${question.lessonID}</td>
                                 <td>${levelMap[question.level]}</td>
-                                <td> <input type="checkbox" 
-                                            <c:if test="${question.status == 1}">checked</c:if>
-                                            onchange="updateStatus(${question.questionID}, this.checked)"></td>
-                            </tr>
+                                <td>
+                                    <c:if test="${question.status == 1}">Show</c:if>
+                                    <c:if test="${question.status == 2}">Hide</c:if>
+                                    </td>
+                                    <td><a href="#">Link</a></td>
+                                </tr>
                         </c:forEach>
                     </tbody>
                 </table>
 
-
-
+                <c:if test="${not empty notfound}">
+                    <p class="text-center text-danger m-3">${notfound}</p>
+                </c:if>
                 <%--pagging--%>
-                <myTags:Paginator
-                    className="mt-3 d-flex justify-content-center"
-                    total="${totalPage}"
-                    size="1"
-                    current="${currentPage}"
-                    url="admin/questionlist"
-                    />
+                <c:if test="${empty notfound}">
+                    <myTags:Paginator
+                        className="mt-3 d-flex justify-content-center"
+                        total="${totalPage}"
+                        size="1"
+                        current="${currentPage}"
+                        url="admin/questionlist"
+                        />
+                </c:if>
+
             </main>
         </div>
     </body>
