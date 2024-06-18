@@ -15,7 +15,7 @@
             <%@include file="/admin/common/admin-header.jsp" %>
             <%@include file="/admin/common/subject-sidebar.jsp" %>
             <main class="admin-main">
-                <div class="container">
+                <div class="container"x-data="crudState">
                     <h2 class="my-4">
                         <i class="bi bi-clipboard-check-fill"></i>
                         Subject Details
@@ -40,14 +40,33 @@
                             >Price Package</a>
                         </li>
                     </ul>
+                            
+                    <div class="my-4 card">
+                        <div class="card-body">
+                            <div class="d-flex gap-2">
+                                <div class="flex-grow-1"></div>
+
+                                <button
+                                    data-bs-target="#createModal"
+                                    data-bs-toggle="modal"
+                                    class="btn btn-primary"
+                                    @click="addPackage"
+                                >
+                                    <i class="bi bi-plus-circle"></i>
+                                    Add New Package
+                                </button>
+                            </div>
+                        </div>
+                    </div>
 
                     <%@include file="/admin/subjectdetail/pricepackage/PricePackageTable.jsp" %>
+                    <%@include file="/admin/subjectdetail/pricepackage/PriceModals.jsp" %>
                 </div>
             </main>
         </div>
 
-        <%@include file="/admin/subjectdetail/pricepackage/PriceModals.jsp" %>
 
+        <script src="admin/subjectdetail/pricepackage/PricePackage.js"></script>
         <script src="public/js/sortable/sortable.min.js"></script>
         <script src="public/js/alpine/core.min.js"></script>
     </body>

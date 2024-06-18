@@ -9,7 +9,6 @@ package app.entity;
  * @author admin
  */
 public class Package {
-
     private int packageId;
     private String packageName;
     private float listPrice;
@@ -64,6 +63,39 @@ public class Package {
     public void setListPrice(float listPrice) {
         this.listPrice = listPrice;
     }
+    
+    public int getSalePriceVND() {
+        return (int)(this.salePrice * 1000);
+    }
+    
+    public int getListPriceVND() {
+        return (int)(this.listPrice * 1000);
+    }
+    
+    public void setListPriceVND(int listPrice) {
+        this.listPrice = (float)listPrice / 1000;
+    }
+    
+    private void setSalePriceVND(int salePrice) {
+        this.salePrice = (float)salePrice / 1000;
+    }
+    
+    public void applySale(int percentage) {
+        if (percentage < 0) percentage = 0;
+        else if (percentage > 100) percentage = 100;
+        
+        percentage = 100 - percentage;
+        
+        int vnd = (int)Math.floor(((float)percentage / 100) * getListPriceVND());
+        setSalePriceVND(vnd);
+    }
+    
+    public int getSalePercent() {
+        if (listPrice == 0) {
+            return 0;
+        }
+        return Math.round((1 - (salePrice / listPrice)) * 100);
+    }
 
     public boolean isActive() {
         return active;
@@ -83,6 +115,7 @@ public class Package {
     }
 
     public void setDuration(int duration) {
+        if (duration < 1) duration = 1;
         this.duration = duration;
     }
 }

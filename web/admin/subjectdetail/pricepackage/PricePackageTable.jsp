@@ -19,8 +19,8 @@
                 <td>${pkg.getPackageId()}</td>
                 <td>${pkg.getPackageName()}</td>
                 <td>${pkg.getDuration()}</td>
-                <td>${pkg.getListPrice()}</td>
-                <td>${pkg.getSalePrice()}</td>
+                <td>${pkg.getListPriceVND()} VND</td>
+                <td>${pkg.getSalePriceVND()} VND</td>
                 <td>${pkg.isActive() ? 'Active' : 'Inactive'}</td>
                 <td width="190" class="d-flex gap-2">
                     <c:choose>
@@ -41,7 +41,17 @@
                             >Activate</button>
                         </c:otherwise>
                     </c:choose>
-                    <button class="btn btn-outline-dark">Edit</button>
+                    <button
+                        data-bs-toggle="modal"
+                        data-bs-target="#createModal"
+                        data-id="${pkg.getPackageId()}"
+                        data-name="${pkg.getPackageName()}"
+                        data-duration="${pkg.getDuration()}"
+                        data-list-price="${pkg.getListPriceVND()}"
+                        data-sale-percentage="${pkg.getSalePercent()}"
+                        @click="editPackage"
+                        class="btn btn-outline-dark"
+                    >Edit</button>
                 </td>
             </tr>
         </c:forEach>
