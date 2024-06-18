@@ -70,7 +70,7 @@
                     </div>
 
                     <h4 class="mt-5">Featured subjects</h4>
-                <c:forEach var="subject" items="${dataFeaturedSubject}" begin="1" end="5">
+                <c:forEach var="subject" items="${dataFeaturedSubject}" begin="0" end="5">
                     <a class="featured-subject" href="SubjectDetails?subjectId=${subject.getSubjectId()}">
                         <div class="my-2 ps-1 border border-1 rounded-1">
                             <p class="mb-1">${subject.getSubjectName()}</p>
@@ -94,8 +94,8 @@
 
                     <div id="info-div bg-white">
                         <h1>${subjectDetails.getSubjectName()}</h1>
-                        <h2>${subjectDetails.getTagLine()}</h2>
-                        <h2>${subjectDetails.getBriefInfo()}</h2>
+                        <h3>${subjectDetails.getTagLine()}</h3>
+                        <p>${subjectDetails.getBriefInfo()}</p>
 
                         <div class="container-fluid">
                             <c:if test="${not empty lowestPackage}">

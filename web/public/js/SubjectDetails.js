@@ -14,15 +14,16 @@ const courseraNav =`
 `;
 
 //<a> href to #element-id doesn't work for some reason
-function navDriect(id) {
-    window.location.href = window.location.href.slice(0, window.location.href.indexOf('#')) + id;
+function navDriect(tag) {
+    if (window.location.href.includes('#')) window.location.href = window.location.href.slice(0, window.location.href.indexOf('#')) + tag;
+    else window.location.href += tag;
 }
 
 function parse() {
     const description = document.getElementById("subject-description");
 
     if (description !== null) {
-        console.log(description.innerHTML.trim().replace(/(\r\n|\n|\r)/gm, ""));
+        //console.log(description.innerHTML.trim().replace(/(\r\n|\n|\r)/gm, ""));
         if (description.innerHTML.trim().replace(/(\r\n|\n|\r)/gm, "").match(/^##Coursera style description.*##About.*##Outcome.*##Lessons.*##Duration.*##End$/gm))
             courseraDesc(description);
     }
@@ -35,7 +36,7 @@ function courseraDesc(description) {
     let lesson = des.slice(des.indexOf("##Lessons") + 9, des.indexOf("##Duration"));
     let duration = des.slice(des.indexOf("##Duration") + 10, des.indexOf("##End"));
 
-    console.log([about, outcome, lesson, duration]);
+    //console.log([about, outcome, lesson, duration]);
 
     description.innerHTML = courseraNav;
     description.innerHTML +=
