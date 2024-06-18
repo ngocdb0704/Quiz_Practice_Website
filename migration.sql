@@ -156,6 +156,11 @@ CREATE TABLE [dbo].[SubjectCategory](
 	[SubjectCategoryId] [int] IDENTITY(1,1) primary key,
 	[SubjectCategoryName] [varchar](50))
 
+	GO
+
+CREATE TABLE [dbo].[SubjectLevel](
+	[SubjectLevelId] [int] IDENTITY(1,1) primary key,
+	[SubjectLevelName] [varchar](50))
 GO
 
 CREATE TABLE [dbo].[Subject](
@@ -163,6 +168,7 @@ CREATE TABLE [dbo].[Subject](
 	[SubjectTitle] [varchar](50),
 	[SubjectCategoryId] [int] foreign key references [dbo].[SubjectCategory](SubjectCategoryId),
 	[SubjectStatus] [bit],
+	[SubjectLevelId] [int] foreign key references [dbo].[SubjectLevel](SubjectLevelId),
 	[IsFeaturedSubject] [bit],
 	[SubjectCreatedDate] [date],
 	[SubjectUpdatedDate] [date],
