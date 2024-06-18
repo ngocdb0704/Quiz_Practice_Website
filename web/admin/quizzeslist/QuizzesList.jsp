@@ -36,7 +36,7 @@
                         </li>
                     </ul>
 
-                    <%@include file="/admin/quizzes/QuizzesListForm.jsp" %>
+                    <%@include file="/admin/quizzeslist/QuizzesListForm.jsp" %>
 
                     <div class="my-4 card">
                         <div class="card-body">
@@ -119,7 +119,7 @@
                         />
                     </c:if>
 
-                    <%@include file="/admin/quizzes/QuizzesListTable.jsp" %>
+                    <%@include file="/admin/quizzeslist/QuizzesListTable.jsp" %>
 
                     <c:if test="${result.getTotalPages() > 0}">
                         <myTags:Paginator
@@ -132,7 +132,7 @@
                     </c:if>
                 </div>
 
-                <%@include file="/admin/quizzes/QuizModals.jsp" %>
+                <%@include file="/admin/quizzeslist/QuizModals.jsp" %>
             </main>
         </div>
 

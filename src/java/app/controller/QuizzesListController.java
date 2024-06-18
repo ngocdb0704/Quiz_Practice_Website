@@ -19,7 +19,7 @@ import java.util.Map;
 
 @WebServlet(name="QuizzesListController", urlPatterns={"/admin/quizzeslist"})
 public class QuizzesListController extends HttpServlet {
-    private final static String PAGE_NAME = "/admin/quizzes/QuizzesList.jsp";
+    private final static String PAGE_NAME = "/admin/quizzeslist/QuizzesList.jsp";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
