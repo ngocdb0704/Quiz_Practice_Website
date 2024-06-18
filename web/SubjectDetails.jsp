@@ -6,6 +6,7 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <!DOCTYPE html>
 <html>
@@ -25,42 +26,60 @@
             <div class="col-lg-2 col-md-3 col-sm-12 mx-lg-3 mx-md-0 bg-light border rounded-3">
                 <h4 class="pt-3">Search for subject:</h4>
 
-                <div id="subject-search" class="input-group">
-                    <input type="text" class="form-control">
-                    <span class="input-group-text">
+                <form action="public/SubjectsList#searchKey" id="subject-search" class="input-group">
+                    <input type="text" name="key" class="form-control">
+                    <span class="input-group-text" onclick="document.getElementById('subject-search').submit();">
                         <i class="bi bi-search"></i>
                     </span>
-                </div>
+                </form>
 
                 <div class="card pt-3 mt-5 w-100">
                     <div class="card-header py-0 bg-white">
-                        <h4 class="">Category:</h4>
+                        <h4 class="">Category</h4>
                     </div>
-                    <ul class="pt-1 pb-3 list-group list-group-flush">
-                        <ul>
-                            <li>A</li>
+                    <ul id="subject-category" class="pt-1 pb-3 list-group list-group-flush">
+                        <%int tier = 1;%>
+                        <c:forEach var="category" items="${subjectDetailsCategoryLine}">
                             <ul>
-                                <li>B</li>
-                                <ul>
-                                    <li>C</li>
-                                </ul>
+                                <li><a href="./public/SubjectsList?idTier<%=tier++%>=${category.getCateId()}#searchKey">${category.getCateName()}</a></li>
+                                </c:forEach>
+                                <c:forEach var="category" items="${subjectDetailsCategoryLine}">
                             </ul>
-                        </ul>
+                        </c:forEach>
                     </ul>
                 </div>
 
-                <div class="card pt-3 mt-5 w-100">
+                <div id="subject-tags" class="card pt-3 mt-5 w-100">
                     <div class="card-header py-0 bg-white">
-                        <h4 class="">Tags:</h4>
+                        <h4 class="">Tags</h4>
                     </div>
                     <ul class="pt-1 pb-3 list-group list-group-flush">
-                        <ul>
-                            <li>A</li>
-                            <li>B</li>
-                            <li>C</li>
+                        <ul><!--ul is here to force all tags into a single line-->
+                            <c:if test="${SubjectTagNew}">
+                                <span><a class="badge text-bg-success" href="./public/SubjectsList#carouselNewSubject">New</a></span>
+                            </c:if>
+                            <c:if test="${SubjectTagBigSale}">
+                                <span><a class="badge text-bg-warning" href="./public/SubjectsList#carouselSaleSubject">Big Sale</a></span>
+                            </c:if>
+                            <c:if test="${SubjectTagFeatured}">
+                                <span><a class="badge text-bg-primary" href="./public/SubjectsList#carouselFeaturedSubject">Featured</a></span>
+                            </c:if>
+                        </ul>  
+                        <c:if test="${!SubjectTagNew && !SubjectTagFeatured && !SubjectTagBigSale}"><p class="ps-2">This subject has no tags</p></c:if>
                         </ul>
-                    </ul>
-                </div>
+                    </div>
+
+                    <h4 class="mt-5">Featured subjects</h4>
+                <c:forEach var="subject" items="${dataFeaturedSubject}" begin="1" end="5">
+                    <a class="featured-subject" href="SubjectDetails?subjectId=${subject.getSubjectId()}">
+                        <div class="my-2 ps-1 border border-1 rounded-1">
+                            <p class="mb-1">${subject.getSubjectName()}</p>
+                            <small>${subject.getTagLine()}</small>
+                        </div>
+                    </a>
+                </c:forEach>
+
+                <a class="d-inline-block link-primary mt-5" href="ContactUs.jsp" target="_blank" rel="noopener noreferrer">Contact Us</a>
 
             </div>
 
@@ -80,15 +99,15 @@
 
                         <div class="container-fluid">
                             <c:if test="${not empty lowestPackage}">
-                                <button class="btn btn-primary">Register</button>
+                                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target=".modalRegister">Register</button>
                                 <c:if test="${lowestPackage.getListPrice() != lowestPackage.getSalePrice()}">
-                                    <span class="ms-3"><del>${lowestPackage.getListPrice() * 1000} vnd</del></span>
+                                    <span class="price-tag ms-3"><del>${lowestPackage.getListPrice() * 1000} vnd</del></span>
                                 </c:if>
 
-                                <span class="ms-3">${lowestPackage.getSalePrice() * 1000} vnd</span>
+                                <span class="price-tag ms-3">${lowestPackage.getSalePrice() * 1000} vnd</span>
 
                                 <c:if test="${lowestPackage.getListPrice() > lowestPackage.getSalePrice()}">
-                                    <span class="badge rounded-pill text-bg-danger">-${(1 - (lowestPackage.getSalePrice() / lowestPackage.getListPrice())) * 100 }%</span>
+                                    <span class="badge rounded-pill text-bg-danger">-<fmt:formatNumber value="${(1 - (lowestPackage.getSalePrice() / lowestPackage.getListPrice())) * 100 }" minFractionDigits="0" maxFractionDigits="0"/>%</span>
                                 </c:if>
                             </c:if>
                             <c:if test="${empty lowestPackage}">
@@ -112,3 +131,26 @@
         <%@include file="/common/footer.jsp" %>
     </body>
 </html>
+
+<!-- Modal Register -->
+<div class="modal fade modalRegister"
+     tabindex="-1"
+     role="dialog" >
+    <div class="modal-dialog modal-dialog-centered" 
+         role="document">
+        <div class="modal-content">
+            <div class="modal-header text-bg-primary">
+                <h4>Subject Register</h4>
+                <button type="button" 
+                        class="btn-close" 
+                        data-bs-dismiss="modal" 
+                        aria-label="Close">
+                </button>
+            </div>
+            <div class="modal-body">
+                <jsp:include page="/SubjectRegisterPopUp.jsp">
+                    <jsp:param name="registId" value="${subjectDetails.getSubjectId()}"/>
+                </jsp:include>
+            </div>
+        </div>
+</div>

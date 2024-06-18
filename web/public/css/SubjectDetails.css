@@ -48,6 +48,31 @@
     }
 }
 
+#subject-category ul {
+  list-style-type: square;
+}
+
+#subject-tags ul {
+  list-style-type: square;
+}
+
+.price-tag  {
+    /*why this don't worl'*/
+}
+
+.featured-subject {
+    text-decoration: none;
+}
+
+.featured-subject p {
+    color: #007bff;
+    text-decoration-line: underline;
+    text-decoration-color: #007bff;
+}
+
+.featured-subject small {
+    color: black;
+}
 /*
 .input-box{
     position: relative;
@@ -64,6 +89,15 @@
 
 #subject-search * {
     border-color: black;
+}
+
+#subject-search span {
+    cursor: pointer;
+    transition-duration: 0.2s;
+}
+
+#subject-search span:hover {
+    background-color: lightskyblue;
 }
 
 

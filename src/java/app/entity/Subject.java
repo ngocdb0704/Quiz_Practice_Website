@@ -17,6 +17,7 @@ public class Subject {
     private String subjectDescription;
     private String thumbnail;
     private String lowestPackageName;
+    private int categoryId;
     private float packageListPrice;
     private float packageSalePrice;
 
@@ -33,13 +34,14 @@ public class Subject {
         this.packageSalePrice = packageSalePrice;
     }
 
-    public Subject(int subjectId, String subjectName, String tagLine, String briefInfo, String subjectDescription, String thumbnail) {
+    public Subject(int subjectId, String subjectName, String tagLine, String briefInfo, String subjectDescription, String thumbnail, int categoryId) {
         this.subjectId = subjectId;
         this.subjectName = subjectName;
         this.tagLine = tagLine;
         this.briefInfo = briefInfo;
         this.subjectDescription = subjectDescription;
         this.thumbnail = thumbnail;
+        this.categoryId = categoryId;
     }
 
 
@@ -114,5 +116,12 @@ public class Subject {
     public void setSubjectDescription(String subjectDescription) {
         this.subjectDescription = subjectDescription;
     }
-    
+
+    public int getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(int categoryId) {
+        this.categoryId = categoryId;
+    }
 }

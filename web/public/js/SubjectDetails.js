@@ -32,7 +32,7 @@ function courseraDesc(description) {
     let des = description.innerHTML;
     let about = des.slice(des.indexOf("##About") + 7, des.indexOf("##Outcome"));
     let outcome = des.slice(des.indexOf("##Outcome") + 9, des.indexOf("##Lessons"));
-    let lesson = des.slice(des.indexOf("##Lessons") + 8, des.indexOf("##Duration"));
+    let lesson = des.slice(des.indexOf("##Lessons") + 9, des.indexOf("##Duration"));
     let duration = des.slice(des.indexOf("##Duration") + 10, des.indexOf("##End"));
 
     console.log([about, outcome, lesson, duration]);
@@ -60,25 +60,25 @@ function courseraDesc(description) {
                 durationH = $('#duration').outerHeight(),
                 wH = $(window).height(),
                 wS = $(this).scrollTop();
-        if (wS > (durationT + durationH - wH)) {
+        if (wS > (durationT + durationH - wH  + 150)) {
             //console.log('#duration on the view!');
             navAbout.classList.remove('c-active');
             navOutcome.classList.remove('c-active');
             navLessons.classList.remove('c-active');
             navDuration.classList.add('c-active');
-        } else if (wS > (lessonsT + lessonsH - wH)) {
+        } else if (wS > (lessonsT + lessonsH - wH  + 500)) {
             //console.log('#lessons on the view!');
             navAbout.classList.remove('c-active');
             navOutcome.classList.remove('c-active');
             navLessons.classList.add('c-active');
             navDuration.classList.remove('c-active');
-        } else if (wS > (outcomeT + outcomeH - wH)) {
+        } else if (wS > (outcomeT + outcomeH - wH + 500)) {
             //console.log('#outcome on the view!');
             navAbout.classList.remove('c-active');
             navOutcome.classList.add('c-active');
             navLessons.classList.remove('c-active');
             navDuration.classList.remove('c-active');
-        } else if (wS > (aboutT + aboutH - wH)) {
+        } else {
             //console.log('#about on the view!');
             navAbout.classList.add('c-active');
             navOutcome.classList.remove('c-active');

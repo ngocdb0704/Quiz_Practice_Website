@@ -372,7 +372,7 @@ public class DAOSubject extends DBContext {
 
     public Subject getSubjectById(int id) {
         Subject Out = null;
-        String sql = "SELECT TOP 1 SubjectId, SubjectTitle, SubjectTagLine, SubjectBriefInfo, SubjectDescription, SubjectThumbnail FROM Subject WHERE SubjectId = ?";
+        String sql = "SELECT TOP 1 SubjectId, SubjectTitle, SubjectTagLine, SubjectBriefInfo, SubjectDescription, SubjectThumbnail, SubjectCategoryId FROM Subject WHERE SubjectId = ?";
 
         PreparedStatement pre;
         try {
@@ -380,7 +380,7 @@ public class DAOSubject extends DBContext {
             pre.setInt(1, id);
             ResultSet rs = pre.executeQuery();
             if (rs.next()) {
-                Out = new Subject(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6));
+                Out = new Subject(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getInt(7));
             }
         } catch (SQLException ex) {
             Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
@@ -388,8 +388,8 @@ public class DAOSubject extends DBContext {
         return Out;
     }
 
-    public List<String> getSubjectCategoryLineById(int id) {
-        List<String> Out = new ArrayList<>();
+    public List<SubjectCategory> getSubjectCategoryLineById(int id) {
+        List<SubjectCategory> Out = new ArrayList<>();
         String sql = "SELECT TOP 1 * from SubjectCategory where SubjectCategoryId = ?";
 
         PreparedStatement pre;
@@ -400,8 +400,9 @@ public class DAOSubject extends DBContext {
                 pre.setInt(1, parentId);
                 ResultSet rs = pre.executeQuery();
                 if (rs.next()) {
-                    Out.add(rs.getString(2));
                     parentId = rs.getInt(3);
+                    Out.add(new SubjectCategory(rs.getInt(1), rs.getString(2), parentId));
+                    
                 }
                 else break;
             }
@@ -437,8 +438,9 @@ public class DAOSubject extends DBContext {
     
     public static void main(String[] args) {
         DAOSubject test = new DAOSubject();
-        System.out.println(test.getWithToken(null, null, null, null, 0).size());
         System.out.println(test.getSubjectCategoryLineById(23));
-        System.out.println(test.getRegisteredSubjects("ngocdb").size());
+        System.out.println(test.getNewSubject()
+                .stream().map(a -> a.getSubjectId()).anyMatch(s -> s == 14));
+                //.reduce((a, b) -> a + "," + b));
     }
 }

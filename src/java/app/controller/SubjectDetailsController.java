@@ -7,6 +7,7 @@ package app.controller;
 import app.dal.DAOPackage;
 import app.dal.DAOSubject;
 import app.entity.Subject;
+import app.entity.SubjectCategory;
 import app.entity.Package;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -15,6 +16,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
 
@@ -36,28 +38,68 @@ public class SubjectDetailsController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-                
+
         HttpSession session = request.getSession();
-        
+
         String service = request.getParameter("service");
-        
+
         try {
-            DAOSubject daoSubject = new DAOSubject(); 
-            Subject displaySubject = daoSubject.getSubjectById(Integer.parseInt(request.getParameter("subjectId")));
+            DAOSubject daoSubject = new DAOSubject();
+            int id = Integer.parseInt(request.getParameter("subjectId"));
+
+            Subject displaySubject = daoSubject.getSubjectById(id);
             session.setAttribute("subjectDetails", displaySubject);
+
+            List<SubjectCategory> categoryLine = daoSubject.getSubjectCategoryLineById(displaySubject.getCategoryId());
+            System.out.println(categoryLine.get(0));
+            Collections.reverse(categoryLine);
+
+            session.setAttribute("subjectDetailsCategoryLine", categoryLine);
+
+            //TODO: Optimise this mess
+            Vector<Subject> newSubjectList = (Vector<Subject>) request.getAttribute("dataNewSubject");
+            if (request.getAttribute("dataNewSubject") == null) {
+                newSubjectList = daoSubject.getNewSubject();
+                request.setAttribute("dataNewSubject", newSubjectList);
+            }
+            if (newSubjectList.stream().map(prdct -> prdct.getSubjectId()).anyMatch(sId -> sId == id)) {
+                request.setAttribute("SubjectTagNew", true);
+            } else {
+                request.setAttribute("SubjectTagNew", false);
+            }
             
-            //List<String> categoryLine = daoSubject.getSubjectById(displaySubject.get);
-            //session.setAttribute("subjectDetails", displaySubject);
-            
+            Vector<Subject> saleSubjectList = (Vector<Subject>) request.getAttribute("dataSaleSubject");
+            if (request.getAttribute("dataSaleSubject") == null) {
+                saleSubjectList = daoSubject.getBigSaleSubject();
+                request.setAttribute("dataSaleSubject", saleSubjectList);
+            }
+            if (saleSubjectList.stream().map(prdct -> prdct.getSubjectId()).anyMatch(sId -> sId == id)) {
+                request.setAttribute("SubjectTagBigSale", true);
+            } else {
+                request.setAttribute("SubjectTagBigSale", false);
+            }
+
+            Vector<Subject> featuredSubjectList = (Vector<Subject>) request.getAttribute("dataFeaturedSubject");
+            if (request.getAttribute("dataFeaturedSubject") == null) {
+                featuredSubjectList = daoSubject.getFeaturedSubject();
+                request.setAttribute("dataFeaturedSubject", featuredSubjectList);
+            }
+            if (featuredSubjectList.stream().map(prdct -> prdct.getSubjectId()).anyMatch(sId -> sId == id)) {
+                request.setAttribute("SubjectTagFeatured", true);
+            } else {
+                request.setAttribute("SubjectTagFeatured", false);
+            }
+
             DAOPackage daoPackage = new DAOPackage();
-            Package lowestPackage = daoPackage.getLowestPackageBySubjectId(Integer.parseInt(request.getParameter("subjectId")));
-            if (lowestPackage != null) session.setAttribute("lowestPackage", lowestPackage);
-        }
-        catch (Exception e) {
+            Package lowestPackage = daoPackage.getLowestPackageBySubjectId(id);
+            if (lowestPackage != null) {
+                session.setAttribute("lowestPackage", lowestPackage);
+            }
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        
         request.getRequestDispatcher("SubjectDetails.jsp").forward(request, response);
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
