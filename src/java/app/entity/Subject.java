@@ -23,7 +23,12 @@ public class Subject {
 
     public Subject() {
     }
-
+    
+    public Subject(int subjectId, String subjectName){
+        this.subjectId = subjectId;
+        this.subjectName = subjectName;
+    }
+    
     public Subject(int subjectId, String subjectName, String tagLine, String thumbnail, String lowestPackageName, float packageListPrice, float packageSalePrice) {
         this.subjectId = subjectId;
         this.subjectName = subjectName;

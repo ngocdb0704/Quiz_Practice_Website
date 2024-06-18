@@ -1,0 +1,35 @@
+
+/* 
+    Created on : Jun 15, 2024, 5:27:57 PM
+    Author     : Hoapmhe173343
+*/
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+th {
+    background-color: #f2f2f2;
+}
+.filters {
+    margin-bottom: 20px;
+}
+
+#notification {
+    display: none;
+    padding: 10px;
+    margin-top: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+#notification.success {
+    border-color: #4caf50;
+    color: #4caf50;
+}
+#notification.fail {
+    border-color: #f44336;
+    color: #f44336;
+}

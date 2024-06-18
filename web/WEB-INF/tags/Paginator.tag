@@ -38,7 +38,7 @@
                 >1</a>
             </li>
             <c:if test="${begin > 2}">
-                <li class="page-item"><a class="page-link" href="#">...</a></li>
+                <li class="page-item"><a class="page-link">...</a></li>
             </c:if>
         </c:if>
 
@@ -54,7 +54,7 @@
 
         <c:if test="${end < total}">
             <c:if test="${end < total - 1}">
-                <li class="page-item"><a class="page-link" href="#">...</a></li>
+                <li class="page-item"><a class="page-link">...</a></li>
             </c:if>
             <li class="page-item ${current eq total ? "active" : ""}">
                 <c:set target="${paramsMap}" property="page" value="${total.toString()}" />

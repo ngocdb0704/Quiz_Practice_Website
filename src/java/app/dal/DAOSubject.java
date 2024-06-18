@@ -12,11 +12,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.sql.Date;
 
 /**
  *
@@ -442,5 +442,41 @@ public class DAOSubject extends DBContext {
         System.out.println(test.getNewSubject()
                 .stream().map(a -> a.getSubjectId()).anyMatch(s -> s == 14));
                 //.reduce((a, b) -> a + "," + b));
+    }
+    
+    /**
+     *
+     * @author Hoapmhe173343
+     */
+    public List<Subject> getAllSubject(){
+        List<Subject> listSubject = new ArrayList();
+        String sql = "SELECT *\n" +
+                    "  FROM [dbo].[Subject]";
+        try{
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                listSubject.add(new Subject(rs.getInt("subjectId"), 
+                        rs.getString("subjectTitle")));
+            }
+        }catch(Exception e){
+            System.out.println(e);
+        }
+        return listSubject;
+    }
+    
+    public int countQuestion() {
+        String sql = "SELECT COUNT(*) FROM Question";
+        int totalItem = 0;
+
+        try (PreparedStatement ps = connection.prepareStatement(sql); 
+                ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                totalItem = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+        }
+
+        return totalItem;
     }
 }
