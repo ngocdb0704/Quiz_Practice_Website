@@ -76,24 +76,20 @@ public class Package {
         this.listPrice = (float)listPrice / 1000;
     }
     
-    private void setSalePriceVND(int salePrice) {
-        this.salePrice = (float)salePrice / 1000;
-    }
-    
     public void applySale(int percentage) {
         if (percentage < 0) percentage = 0;
         else if (percentage > 100) percentage = 100;
         
         percentage = 100 - percentage;
         
-        int vnd = (int)Math.floor(((float)percentage / 100) * getListPriceVND());
-        setSalePriceVND(vnd);
+        this.salePrice = ((float)percentage / 100) * this.listPrice;
     }
     
     public int getSalePercent() {
         if (listPrice == 0) {
             return 0;
         }
+        
         return Math.round((1 - (salePrice / listPrice)) * 100);
     }
 

@@ -6,18 +6,7 @@ class CRUDState {
             name: '',
             duration: 1,
             listPrice: 1000,
-            salePercentage: 0,
-            salePrice: 1000
-        }
-    }
-    
-    calculateSalePrice() {
-        if (this.form.listPrice && this.form.salePercentage) {
-            const listPrice = Math.max(1000, this.form.listPrice);
-            
-            this.form.salePercentage = Math.max(0, Math.min(100, this.form.salePercentage));
-            const applied = listPrice - (listPrice * this.form.salePercentage / 100);
-            this.form.salePrice = Math.floor(applied);
+            salePercentage: 0
         }
     }
     
@@ -36,8 +25,7 @@ class CRUDState {
             name: '',
             duration: 1,
             listPrice: 1000,
-            salePercentage: 0,
-            salePrice: 1000
+            salePercentage: 0
         };
         new bootstrap.Modal(document.getElementById('crudModal')).show();
     }

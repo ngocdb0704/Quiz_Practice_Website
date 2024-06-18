@@ -57,20 +57,17 @@
                     </div>
                     <div class="mb-3">
                         <label for="duration" class="form-label">Duration (months)</label>
-                        <input name="duration" type="number" class="form-control" id="duration" min="1" x-model="form.duration" placeholder="Enter duration in months" required>
+                        <input name="duration" type="number" class="form-control" id="duration" min="1" max="48" x-model="form.duration" placeholder="Enter duration in months" required>
                     </div>
                     <div class="mb-3">
                         <label for="listPrice" class="form-label">List Price</label>
-                        <input name="price" type="number" @input="calculateSalePrice" class="form-control" id="listPrice" min="1000" x-model="form.listPrice" placeholder="Enter list price" required>
+                        <input name="price" type="number" class="form-control" id="listPrice" min="1000" max="2000000000" x-model="form.listPrice" placeholder="Enter list price" required>
                     </div>
                     <div class="mb-3">
                         <label for="salePercentage" class="form-label">Sale Percent</label>
-                        <input name="percentage" type="number" class="form-control" id="salePercentage" x-model="form.salePercentage" placeholder="Sale %" min="0" max="100" @input="calculateSalePrice" required>
+                        <input name="percentage" type="number" class="form-control" id="salePercentage" x-model="form.salePercentage" placeholder="Sale %" min="0" max="100" required>
                     </div>
-                    <div class="mb-3">
-                        <label for="salePrice" class="form-label">Calculated Sale Price</label>
-                        <input type="number" class="form-control" id="salePrice" x-model="form.salePrice" disabled>
-                    </div>
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
