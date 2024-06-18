@@ -14,6 +14,8 @@ public class Package {
     private String packageName;
     private float listPrice;
     private float salePrice;
+    private int duration;
+    private boolean active;
 
     public Package() {
     }
@@ -62,7 +64,25 @@ public class Package {
     public void setListPrice(float listPrice) {
         this.listPrice = listPrice;
     }
-    
-    
 
+    public boolean isActive() {
+        return active;
+    }
+
+    @Override
+    public String toString() {
+        return "Package{" + "packageId=" + packageId + ", packageName=" + packageName + ", listPrice=" + listPrice + ", salePrice=" + salePrice + ", duration=" + duration + ", active=" + active + '}';
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public int getDuration() {
+        return duration;
+    }
+
+    public void setDuration(int duration) {
+        this.duration = duration;
+    }
 }

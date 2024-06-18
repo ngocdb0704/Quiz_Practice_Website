@@ -138,7 +138,6 @@
 
         <script src="admin/quizzes/QuizzesList.js"></script>
         <script src="public/js/sortable/sortable.min.js"></script>
-        <script src="public/js/alpine/persist.min.js"></script>
         <script src="public/js/alpine/core.min.js"></script>
     </body>
 </html>
