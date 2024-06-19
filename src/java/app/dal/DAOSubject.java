@@ -62,7 +62,7 @@ public class DAOSubject extends DBContext {
         }
         return outputVec;
     }
-    
+
     public String addTierToSQL(int[] parent, int tier, int flag) {
         String sql = "";
         if (flag == 0) {
@@ -369,18 +369,42 @@ public class DAOSubject extends DBContext {
         }
         return vec;
     }
-    
+
     public Subject getSubjectById(int id) {
         Subject Out = null;
-        String sql = "SELECT TOP 1 SubjectId, SubjectTitle, SubjectTagLine, SubjectBriefInfo, SubjectDescription, SubjectThumbnail FROM Subject WHERE SubjectId = ?";
-        
+        String sql = "SELECT TOP 1 SubjectId, SubjectTitle, SubjectTagLine, SubjectBriefInfo, SubjectDescription, SubjectThumbnail, SubjectCategoryId FROM Subject WHERE SubjectId = ?";
+
         PreparedStatement pre;
         try {
             pre = connection.prepareStatement(sql);
             pre.setInt(1, id);
             ResultSet rs = pre.executeQuery();
             if (rs.next()) {
-                Out = new Subject(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6));
+                Out = new Subject(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getInt(7));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return Out;
+    }
+
+    public List<SubjectCategory> getSubjectCategoryLineById(int id) {
+        List<SubjectCategory> Out = new ArrayList<>();
+        String sql = "SELECT TOP 1 SubjectCategoryId, SubjectCategoryName, SubjectParentCategory from SubjectCategory where SubjectCategoryId = ?";
+
+        PreparedStatement pre;
+        try {
+            int parentId = id, emergencyExit = 12; //just in case
+            while (parentId > 0 && emergencyExit-- > 0) {
+                pre = connection.prepareStatement(sql);
+                pre.setInt(1, parentId);
+                ResultSet rs = pre.executeQuery();
+                if (rs.next()) {
+                    parentId = rs.getInt(3);
+                    Out.add(new SubjectCategory(rs.getInt(1), rs.getString(2), parentId));
+                    
+                }
+                else break;
             }
         } catch (SQLException ex) {
             Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
@@ -388,10 +412,43 @@ public class DAOSubject extends DBContext {
         return Out;
     }
     
+    public List<SubjectCategory> getAllSubjectCategories() {
+        List<SubjectCategory> Out = new ArrayList<>();
+        String sql = "SELECT SubjectCategoryId, SubjectCategoryName, SubjectParentCategory from SubjectCategory";
+
+        PreparedStatement pre;
+        try {
+            pre = connection.prepareStatement(sql);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                Out.add(new SubjectCategory(rs.getInt(1), rs.getString(2), rs.getInt(3)));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return Out;
+    }
+    
+    public int addSubject(Subject sub) {
+        String sql = "INSERT INTO [Subject] VALUES('US / United States History', 33, 1, 1, 0, '2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','https://higheredprofessor.com/wp-content/uploads/2015/05/How-many-courses-do-university-faculty-teach1.jpg');";
+
+        PreparedStatement pre;
+        try {
+            pre = connection.prepareStatement(sql);
+            pre.setString(1, sub.getSubjectName());
+            pre.setInt(2, sub.getCategoryId());
+            //pre.setInt(2, sub.get);
+            return pre.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
+    }
+
     public List<Subject> getFeaturedSubjects(int ammoutOfSubjects) {
         List<Subject> Out = new ArrayList<>();
         String sql = "SELECT TOP (?) s.SubjectId, s.SubjectTitle, s.SubjectTagLine, s.SubjectThumbnail FROM Subject s WHERE s.IsFeaturedSubject = 1";
-        
+
         PreparedStatement pre;
         try {
             pre = connection.prepareStatement(sql);
@@ -414,8 +471,10 @@ public class DAOSubject extends DBContext {
     
     public static void main(String[] args) {
         DAOSubject test = new DAOSubject();
-        System.out.println(test.getAllSubject());
-        System.out.println(test.getFeaturedSubjects(5).size());
+        System.out.println(test.getSubjectCategoryLineById(23));
+        System.out.println(test.getNewSubject()
+                .stream().map(a -> a.getSubjectId()).anyMatch(s -> s == 14));
+                //.reduce((a, b) -> a + "," + b));
     }
     
     /**

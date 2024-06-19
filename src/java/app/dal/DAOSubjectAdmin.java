@@ -20,7 +20,7 @@ public class DAOSubjectAdmin extends DBContext {
         int count = 0;
 
         try {
-            String sql = "SELECT SubjectId, SubjectTitle, SubjectTagLine, SubjectBriefInfo, SubjectDescription, SubjectThumbnail FROM Subject";
+            String sql = "SELECT SubjectId, SubjectTitle, SubjectTagLine, SubjectBriefInfo, SubjectDescription, SubjectThumbnail, SubjectCategoryId FROM Subject";
 
 
             QueryBuilder query = new QueryBuilder(sql);
@@ -41,7 +41,8 @@ public class DAOSubjectAdmin extends DBContext {
                         rs.getString(3), 
                         rs.getString(4), 
                         rs.getString(5), 
-                        rs.getString(6)
+                        rs.getString(6),
+                        rs.getInt(7)
                 );
                 
                 ret.add(sub);

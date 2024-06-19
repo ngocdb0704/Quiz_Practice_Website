@@ -20,7 +20,7 @@ CREATE TABLE [dbo].[Gender](
 	[GenderName] [varchar](50))
 
 GO
-
+ 
 CREATE TABLE [dbo].[Role](
 	[RoleId] [int] IDENTITY(1,1) primary key,
 	[RoleName] [varchar](50))
@@ -75,6 +75,7 @@ CREATE TABLE [dbo].[Subject](
 	[SubjectBriefInfo] [varchar](300),
 	[SubjectDescription] [ntext],
 	[SubjectThumbnail] [varchar](255))
+	[SubjectOwnerId] [int] foreign key references [dbo].[User](UserId)
 GO
 
 CREATE TABLE [dbo].[Package](
@@ -173,7 +174,7 @@ INSERT INTO [SubjectLevel] VALUES('Beginner');
 INSERT INTO [SubjectLevel] VALUES('Intermediate');
 INSERT INTO [SubjectLevel] VALUES('Advanced');
 
-INSERT INTO [Subject] VALUES('College Algebra with the Math Sorcerer', 7, 1, 1, 1, '2004-05-01','2004-05-01','nice', 'Mock brief info', '##Coursera style description
+INSERT INTO [Subject] VALUES('College Algebra with the Math Sorcerer', 7, 1, 1, 1, '2004-05-01','2004-05-01','The Math Sorcerer wants to know your location', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque convallis interdum tristique. Aenean arcu eros, varius nec augue a, ultrices congue ex. Donec eu elementum lectus, sit amet posuere lorem.', '##Coursera style description
 		Sample
 		The subject description part of the subject details page will parse the description of a subject and display it similar to how Coursera display their subject info
 		Note: This section will not be displayed
@@ -223,9 +224,101 @@ INSERT INTO [Subject] VALUES('College Algebra with the Math Sorcerer', 7, 1, 1, 
 		<h3>27 hours to complete</h3>
 		<h4>3 weeks at 9 hours a week</h4>
 	##End', 'https://thumbs.comidoc.net/750/webp/2463616_13ef_3.webp');
-INSERT INTO [Subject] VALUES('Become an Algebra Master', 7, 1, 1, 1, '2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','https://www.tangolearn.com/wp-content/uploads/2022/03/best-online-algebra-courses-1.jpg');
+INSERT INTO [Subject] VALUES('Become an Algebra Master', 7, 1, 1, 1, '2004-05-01','2004-05-01','Lorem ipsum dolor sit amet, consectetur adipisci.', 'Quisque convallis interdum tristique. Aenean arcu eros, varius nec augue a, ultrices congue ex. Donec eu elementum lectus, sit amet posuere lorem.', '##Coursera style description
+	##About
+		<h3>What you''ll learn:</h3>
+		<ul>
+		<li>Ut luctus lacus id sollicitudin semper.</li>
+		<li>Quisque eget lorem a arcu posuere venenatis.</li>
+		<li>Fusce posuere ultricies suscipit.</li>
+		<li>Donec eget cursus diam.</li>
+		</ul>
+		<h3>Details to know</h3>
+		<span>Assessments: 16 Assessments</span>
+	##Outcome
+		<h3>Advance your subject-matter expertise
+		<ul>
+		<li>learn in-demand skills from university and industry experts</li>
+		<li>master a subject or tool with hands-on projects</li>
+		<li>develop a deep understanding of key concepts</li>
+		<li>earn a career certificate from imperial college london</li>
+		</ul>
+		<h3>Shareable certificate</h3>
+	##Lessons
+		<h3>There are 3 modules in this course</h3>
+
+		<h4>Module 1</h4>
+		<ul>
+		<li>L1</li>
+		<li>L2</li>
+		<li>L3</li>
+		</ul>
+
+		<h4>Module 2</h4>
+		<ul>
+		<li>L1</li>
+		<li>L2</li>
+		<li>L3</li>
+		</ul>
+
+		<h4>Module 3</h4>
+		<ul>
+		<li>L1</li>
+		<li>L2</li>
+		<li>L3</li>
+		</ul>
+	##Duration
+		<h3>27 hours to complete</h3>
+		<h4>3 weeks at 9 hours a week</h4>
+	##End','https://www.tangolearn.com/wp-content/uploads/2022/03/best-online-algebra-courses-1.jpg');
 INSERT INTO [Subject] VALUES('US / United States History', 33, 1, 1, 0, '2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','https://higheredprofessor.com/wp-content/uploads/2015/05/How-many-courses-do-university-faculty-teach1.jpg');
-INSERT INTO [Subject] VALUES('C Fundamental', 29, 1, 1, 1, '2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','https://www.bostontechmom.com/wp-content/uploads/2019/03/Computer-Science-Class.jpg');
+INSERT INTO [Subject] VALUES('C Fundamental', 29, 1, 1, 1, '2004-05-01','2004-05-01','Maecenas ex nulla, tempor vel metus quis.', 'Vestibulum volutpat lacus id mauris hendrerit, et sagittis ligula ultricies. Donec eu elementum lectus, sit amet posuere lorem.', '##Coursera style description
+	##About
+		<h3>What you''ll learn:</h3>
+		<ul>
+		<li>Sed cursus ac felis a pharetra. Integer vulputate sagittis venenatis.</li>
+		<li> In blandit hendrerit augue, at placerat nisi.</li>
+		<li>Fusce at ante vel eros lobortis rhoncus quis quis neque.</li>
+		<li>Pellentesque interdum dolor justo, sodales pharetra tortor tristique a.</li>
+		</ul>
+		<h3>Details to know</h3>
+		<span>Assessments: 16 Assessments</span>
+	##Outcome
+		<h3>Advance your subject-matter expertise
+		<ul>
+		<li>learn in-demand skills from university and industry experts</li>
+		<li>master a subject or tool with hands-on projects</li>
+		<li>develop a deep understanding of key concepts</li>
+		<li>earn a career certificate from imperial college london</li>
+		</ul>
+		<h3>Shareable certificate</h3>
+	##Lessons
+		<h3>There are 3 modules in this course</h3>
+
+		<h4>Module 1</h4>
+		<ul>
+		<li>L1</li>
+		<li>L2</li>
+		<li>L3</li>
+		</ul>
+
+		<h4>Module 2</h4>
+		<ul>
+		<li>L1</li>
+		<li>L2</li>
+		<li>L3</li>
+		</ul>
+
+		<h4>Module 3</h4>
+		<ul>
+		<li>L1</li>
+		<li>L2</li>
+		<li>L3</li>
+		</ul>
+	##Duration
+		<h3>27 hours to complete</h3>
+		<h4>3 weeks at 9 hours a week</h4>
+	##End','https://www.bostontechmom.com/wp-content/uploads/2019/03/Computer-Science-Class.jpg');
 INSERT INTO [Subject] VALUES('The Geography of Globalization', 34, 1, 1, 1,'2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','https://img77.uenicdn.com/image/upload/v1654265992/business/93f45720-1374-4925-8f1a-c50dd53034f4.jpg');
 INSERT INTO [Subject] VALUES('Pointers & Advanced C Language',29,1, 3,1,'2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','https://i.ytimg.com/vi/0zuolvgpAaY/maxresdefault.jpg');
 INSERT INTO [Subject] VALUES('Geometry Basics to Advanced',8,1, 3, 1,'2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','https://www.venturelessons.com/wp-content/uploads/2020/09/geometry-1128x635.jpg');
