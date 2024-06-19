@@ -65,7 +65,7 @@
 
                             <div class="col-4">
                                 <div id="img-div">
-                                    <img id="subject-thumbnail" style="width: 100%; height: 100%; object-fit: cover" src="https://thumbs.comidoc.net/750/webp/2463616_13ef_3.webp" alt="Subject Thumbnail"/>
+                                    <img id="subject-thumbnail" src="public/images/image-break.png" onerror="imgError()" alt="Subject Thumbnail"/>
                                 </div>
                             </div>
 
@@ -76,10 +76,10 @@
                             <div class="col-4">
                                 <!--label for="image-upload" class="form-label">Upload image</label>
                                 <input class="form-control" type="file" id="image-upload"-->
-                                <p class="mb-0 mt-2">Add link to subject thumbnail:</p>
+                                <p  id="imgsetter-text" class="mb-0 mt-2">Link to thumbnail image:</p>
                                 <div class="input-group mb-3">
-                                    <input type="text" id="thumbnail-url" name="thumbnailUrl" class="form-control" placeholder="" aria-label="Subject thumbnail" aria-describedby="thumbnail-preview-btn">
-                                    <button class="btn btn-outline-secondary" type="button" id="thumbnail-preview-btn" onclick="setPreviewImg()">Preview</button>
+                                    <input type="text" id="thumbnail-url" name="thumbnailUrl" class="form-control" placeholder="" aria-label="Subject thumbnail" aria-describedby="thumbnail-preview-btn" oninput="changeSetter()">
+                                    <!--button class="btn btn-outline-secondary" type="button" id="thumbnail-preview-btn" onclick="setPreviewImg()">Preview</button-->
                                 </div>
                             </div>
                         </div>

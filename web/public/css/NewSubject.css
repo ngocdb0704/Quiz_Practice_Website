@@ -12,3 +12,10 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     background-color: white;
     height: 100%;
 }
+
+#subject-thumbnail {
+    display: none;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
