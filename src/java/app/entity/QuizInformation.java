@@ -33,7 +33,7 @@ public class QuizInformation {
         this.published = rs.getBoolean("IsPublished");
         this.updatedTime = rs.getTimestamp("UpdatedTime");
         this.questionCount = rs.getInt("QuestionCount");
-        this.numberOfAttempts = this.questionCount > 0 ? new Random().nextInt(3) : 0;
+        this.numberOfAttempts = this.questionCount > 0 ? (this.quizId + 8) % 22 : 0;
     }
 
     public int getQuizId() {

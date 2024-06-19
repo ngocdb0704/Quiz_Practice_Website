@@ -7,6 +7,7 @@ package app.dal;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -42,43 +43,103 @@ public class DAOPackage extends DBContext{
         return vector;
     }
 
-    public void createPackage(int subjectId, Package pack) {
-        String query = "INSERT INTO [dbo].[Package] (SubjectId, PackageName, PackageDuration, ListPrice, SalePrice, Status) VALUES (?, ?, ?, ?, ?, ?)";
+    // horrible code due to time constraints
+    // the database used is temporary and will be changed in the next iteration
+    public boolean createPackage(int subjectId, Package pack) {
+        String base = "INSERT INTO [dbo].[Package] (SubjectId, PackageName, PackageDuration, ListPrice, SalePrice, Status) VALUES (?, ?, ?, ?, ?, ?)";
+        
+        String desc = "INSERT INTO [dbo].[PricePackageDesc] (PackageId, [Desc]) VALUES (?, ?)";
 
         try {
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.setInt(1, subjectId);
-            statement.setString(2, pack.getPackageName());
-            statement.setInt(3, pack.getDuration());
-            statement.setFloat(4, pack.getListPrice());
-            statement.setFloat(5, pack.getSalePrice());
-            statement.setBoolean(6, pack.isActive());
-            statement.executeUpdate();
+            PreparedStatement baseStmt = connection.prepareStatement(base, Statement.RETURN_GENERATED_KEYS);
+            baseStmt.setInt(1, subjectId);
+            baseStmt.setString(2, pack.getPackageName());
+            baseStmt.setInt(3, pack.getDuration());
+            baseStmt.setFloat(4, pack.getListPrice());
+            baseStmt.setFloat(5, pack.getSalePrice());
+            baseStmt.setBoolean(6, pack.isActive());
+            int n = baseStmt.executeUpdate();
+            if (n != 1) return false;
+            
+            ResultSet rs = baseStmt.getGeneratedKeys();
+            if (!rs.next()) return false;
+            
+            PreparedStatement descStmt = connection.prepareStatement(desc);
+            descStmt.setLong(1, rs.getLong(1));
+            descStmt.setString(2, pack.getDescription());
+            n = descStmt.executeUpdate();
+            if (n != 1) return false;
+            
+            return true;
         } catch (SQLException ex) {
             Logger.getLogger(DAOPackage.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        return false;
     }
 
-    public void modifyPackage(Package pack) {
-        String query = "UPDATE [dbo].[Package] SET PackageName = ?, PackageDuration = ?, ListPrice = ?, SalePrice = ?, Status = ? WHERE PackageId = ?";
+    public boolean modifyPackage(Package pack) {
+        String base = "UPDATE [dbo].[Package] SET PackageName = ?, PackageDuration = ?, ListPrice = ?, SalePrice = ?, Status = ? WHERE PackageId = ?";
+        String descUpdate = "UPDATE [dbo].[PricePackageDesc] SET [Desc] = ? WHERE PackageId = ?";
+        String descInsert = "INSERT INTO [dbo].[PricePackageDesc] (PackageId, [Desc]) VALUES (?, ?)";
 
         try {
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.setString(1, pack.getPackageName());
-            statement.setInt(2, pack.getDuration());
-            statement.setFloat(3, pack.getListPrice());
-            statement.setFloat(4, pack.getSalePrice());
-            statement.setBoolean(5, pack.isActive());
-            statement.setInt(6, pack.getPackageId());
-            statement.executeUpdate();
+            connection.setAutoCommit(false);
+            
+            PreparedStatement baseStmt = connection.prepareStatement(base);
+            baseStmt.setString(1, pack.getPackageName());
+            baseStmt.setInt(2, pack.getDuration());
+            baseStmt.setFloat(3, pack.getListPrice());
+            baseStmt.setFloat(4, pack.getSalePrice());
+            baseStmt.setBoolean(5, pack.isActive());
+            baseStmt.setInt(6, pack.getPackageId());
+            int n = baseStmt.executeUpdate();
+            if (n != 1) {
+                connection.rollback();
+                return false;
+            }
+
+            PreparedStatement descStmt = connection.prepareStatement(descUpdate);
+            descStmt.setString(1, pack.getDescription());
+            descStmt.setInt(2, pack.getPackageId());
+            n = descStmt.executeUpdate();
+
+            if (n == 0) {
+                descStmt = connection.prepareStatement(descInsert);
+                descStmt.setInt(1, pack.getPackageId());
+                descStmt.setString(2, pack.getDescription());
+                n = descStmt.executeUpdate();
+                if (n != 1) {
+                    connection.rollback();
+                    return false;
+                }
+            }
+
+            connection.commit();
+            return true;
         } catch (SQLException ex) {
+            try {
+                connection.rollback();
+            } catch (SQLException rollbackEx) {
+                Logger.getLogger(DAOPackage.class.getName()).log(Level.SEVERE, "Rollback failed", rollbackEx);
+            }
             Logger.getLogger(DAOPackage.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                connection.setAutoCommit(true);
+            } catch (SQLException ex) {
+                Logger.getLogger(DAOPackage.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
+
+        return false;
     }
+
 
     public Package getPricePackageByPackageId(int packageId) {
         String sql = """
-                    select p.PackageId, p.PackageName, p.PackageDuration, p.ListPrice, p.SalePrice, p.Status from Package p
+                    select p.PackageId, p.PackageName, p.PackageDuration, p.ListPrice, p.SalePrice, p.Status, pd.[Desc] from Package p
+                    left join [PricePackageDesc] pd on p.PackageId = pd.PackageId
                     where p.PackageId = ?
                     """;
         try {
@@ -93,6 +154,7 @@ public class DAOPackage extends DBContext{
                 pack.setListPrice(rs.getFloat(4));
                 pack.setSalePrice(rs.getFloat(5));
                 pack.setActive(rs.getBoolean(6));
+                pack.setDescription(rs.getString(7));
                 return pack;
             }
         } catch (SQLException ex) {

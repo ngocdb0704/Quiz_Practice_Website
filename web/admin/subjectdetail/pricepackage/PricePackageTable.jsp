@@ -41,17 +41,7 @@
                             >Activate</button>
                         </c:otherwise>
                     </c:choose>
-                    <button
-                        data-bs-toggle="modal"
-                        data-bs-target="#createModal"
-                        data-id="${pkg.getPackageId()}"
-                        data-name="${pkg.getPackageName()}"
-                        data-duration="${pkg.getDuration()}"
-                        data-list-price="${pkg.getListPriceVND()}"
-                        data-sale-percentage="${pkg.getSalePercent()}"
-                        @click="editPackage"
-                        class="btn btn-outline-dark"
-                    >Edit</button>
+                    <a href="admin/subjectdetail/pricepackage?action=edit&id=${pkg.getPackageId()}&subjectId=${param.subjectId}" class="btn btn-outline-dark">Edit</button>
                 </td>
             </tr>
         </c:forEach>

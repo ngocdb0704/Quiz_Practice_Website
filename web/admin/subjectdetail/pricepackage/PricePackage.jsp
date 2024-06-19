@@ -46,15 +46,10 @@
                             <div class="d-flex gap-2">
                                 <div class="flex-grow-1"></div>
 
-                                <button
-                                    data-bs-target="#createModal"
-                                    data-bs-toggle="modal"
-                                    class="btn btn-primary"
-                                    @click="addPackage"
-                                >
+                                <a href="admin/subjectdetail/pricepackage?action=add&subjectId=${param.subjectId}" class="btn btn-primary">
                                     <i class="bi bi-plus-circle"></i>
                                     Add New Package
-                                </button>
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -66,9 +61,9 @@
         </div>
 
 
-        <script src="admin/subjectdetail/pricepackage/PricePackage.js"></script>
         <script src="public/js/sortable/sortable.min.js"></script>
         <script src="public/js/alpine/core.min.js"></script>
+        <%@include file="/admin/common/notyf.jsp" %>
     </body>
 </html>
 

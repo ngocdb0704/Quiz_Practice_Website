@@ -29,8 +29,6 @@ class State {
                     }, {});
                     
                     
-            console.log(deletable);
-                    
             this.filteredMaps.publishable = publishable;
             this.filteredMaps.deletable = deletable;
             

@@ -15,6 +15,7 @@ public class Package {
     private float salePrice;
     private int duration;
     private boolean active;
+    private String description = "";
 
     public Package() {
     }
@@ -105,13 +106,30 @@ public class Package {
     public void setActive(boolean active) {
         this.active = active;
     }
-
+    
     public int getDuration() {
         return duration;
     }
 
     public void setDuration(int duration) {
         if (duration < 1) duration = 1;
+        if (duration > 48) duration = 48;
         this.duration = duration;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description == null ? "" : description;
+    }
+    
+    public boolean isValid() {
+        boolean nameValid = this.packageName != null && !this.packageName.isBlank();
+        boolean durationValid = this.duration >= 1 && this.duration <= 48;
+        boolean listPriceValid = this.listPrice >= 1 && this.listPrice <= 2000;
+        boolean salePriceValid = this.salePrice <= this.listPrice;
+        return nameValid && durationValid && listPriceValid && salePriceValid;
     }
 }
