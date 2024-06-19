@@ -390,7 +390,7 @@ public class DAOSubject extends DBContext {
 
     public List<SubjectCategory> getSubjectCategoryLineById(int id) {
         List<SubjectCategory> Out = new ArrayList<>();
-        String sql = "SELECT TOP 1 * from SubjectCategory where SubjectCategoryId = ?";
+        String sql = "SELECT TOP 1 SubjectCategoryId, SubjectCategoryName, SubjectParentCategory from SubjectCategory where SubjectCategoryId = ?";
 
         PreparedStatement pre;
         try {
@@ -410,6 +410,39 @@ public class DAOSubject extends DBContext {
             Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
         }
         return Out;
+    }
+    
+    public List<SubjectCategory> getAllSubjectCategories() {
+        List<SubjectCategory> Out = new ArrayList<>();
+        String sql = "SELECT SubjectCategoryId, SubjectCategoryName, SubjectParentCategory from SubjectCategory";
+
+        PreparedStatement pre;
+        try {
+            pre = connection.prepareStatement(sql);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                Out.add(new SubjectCategory(rs.getInt(1), rs.getString(2), rs.getInt(3)));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return Out;
+    }
+    
+    public int addSubject(Subject sub) {
+        String sql = "INSERT INTO [Subject] VALUES('US / United States History', 33, 1, 1, 0, '2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','https://higheredprofessor.com/wp-content/uploads/2015/05/How-many-courses-do-university-faculty-teach1.jpg');";
+
+        PreparedStatement pre;
+        try {
+            pre = connection.prepareStatement(sql);
+            pre.setString(1, sub.getSubjectName());
+            pre.setInt(2, sub.getCategoryId());
+            //pre.setInt(2, sub.get);
+            return pre.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
     }
 
     public List<Subject> getFeaturedSubjects(int ammoutOfSubjects) {

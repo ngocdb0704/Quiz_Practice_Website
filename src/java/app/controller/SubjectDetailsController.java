@@ -56,7 +56,6 @@ public class SubjectDetailsController extends HttpServlet {
 
             session.setAttribute("subjectDetailsCategoryLine", categoryLine);
 
-            //TODO: Optimise this mess
             Vector<Subject> newSubjectList = (Vector<Subject>) request.getAttribute("dataNewSubject");
             if (request.getAttribute("dataNewSubject") == null) {
                 newSubjectList = daoSubject.getNewSubject();

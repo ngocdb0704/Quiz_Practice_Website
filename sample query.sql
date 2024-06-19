@@ -20,7 +20,7 @@ CREATE TABLE [dbo].[Gender](
 	[GenderName] [varchar](50))
 
 GO
-
+ 
 CREATE TABLE [dbo].[Role](
 	[RoleId] [int] IDENTITY(1,1) primary key,
 	[RoleName] [varchar](50))
@@ -75,6 +75,7 @@ CREATE TABLE [dbo].[Subject](
 	[SubjectBriefInfo] [varchar](300),
 	[SubjectDescription] [ntext],
 	[SubjectThumbnail] [varchar](255))
+	[SubjectOwnerId] [int] foreign key references [dbo].[User](UserId)
 GO
 
 CREATE TABLE [dbo].[Package](
