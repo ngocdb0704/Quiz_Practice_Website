@@ -6,25 +6,27 @@ package app.entity;
 
 /**
  *
- * @author nguye
+ * @author OwO
  */
 public class Slide {
     private Integer slideId;
     private String title;
-    private byte[] image;
-    private String imageRef;
+    private String imageRef; // Use String for image reference
+    private byte[] image; // Keep byte[] for byte data if needed
     private String backlink;
-    private String status;
+    private String status; // Use String for status
+    private Integer userId;
 
     public Slide() {
     }
-    
-    public Slide(Integer sildeId, String title, byte[] image, String backlink, String status) {
-        this.slideId = sildeId;
+
+    public Slide(Integer slideId, String title, String imageRef, String backlink, String status, Integer userId) {
+        this.slideId = slideId;
         this.title = title;
-        this.image = image;
+        this.imageRef = imageRef;
         this.backlink = backlink;
         this.status = status;
+        this.userId = userId;
     }
 
     public Slide(Integer slideId, String title, String imageRef, String backlink, String status) {
@@ -51,6 +53,14 @@ public class Slide {
         this.title = title;
     }
 
+    public String getImageRef() {
+        return imageRef;
+    }
+
+    public void setImageRef(String imageRef) {
+        this.imageRef = imageRef;
+    }
+
     public byte[] getImage() {
         return image;
     }
@@ -75,16 +85,13 @@ public class Slide {
         this.status = status;
     }
 
-    public String getImageRef() {
-        return imageRef;
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setImageRef(String imageRef) {
-        this.imageRef = imageRef;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
-    @Override
-    public String toString() {
-        return "Slide{" + "slideId=" + slideId + ", title=" + title + ", image=" + image + ", imageRef=" + imageRef + ", backlink=" + backlink + ", status=" + status + '}';
-    }
+    
 }

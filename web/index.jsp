@@ -13,6 +13,6 @@
     </head>
     <body>
         <h1>You probably shouldn't be here. Redirecting you to the homepage...</h1>
-        <jsp:forward page="/Hompage"/>
+        <jsp:forward page="/Homepage"/>
     </body>
 </html>
