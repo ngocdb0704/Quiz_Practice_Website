@@ -6,6 +6,7 @@ package app.dal;
 
 import java.util.Vector;
 import app.dal.DBContext;
+import app.entity.OrganizationRegistration;
 import app.entity.Registration;
 import app.utils.FormatData;
 import java.sql.PreparedStatement;
@@ -300,6 +301,80 @@ public class DAORegistration extends DBContext {
         return vector;
     }
 
+    public Vector<OrganizationRegistration> getOrgRegistrations(String email,
+            int[] parentTier1, int[] parentTier2,
+            int[] parentTier3, String inputKey) {
+        int flagAND = 0;
+        String sql = """
+                     with CategoryHierarchy as 
+                                         (select SubjectCategoryId,
+                                         SubjectCategoryName,
+                                         SubjectParentCategory from SubjectCategory 
+                                         where SubjectParentCategory = 0
+                                         union all
+                                         select sc.SubjectCategoryId,
+                                         sc.SubjectCategoryName,
+                                         sc.SubjectParentCategory from SubjectCategory sc
+                                         inner join CategoryHierarchy ch 
+                                         on ch.SubjectCategoryId = sc.SubjectParentCategory
+                                         )
+                     select op.PackageName, s.SubjectId, s.SubjectTitle, s.SubjectThumbnail,
+                     l.ValidFrom, l.ValidTo
+                     from [OrganizationPackage] op
+                     join [License] l on l.OrganizationPackageId = op.OrganizationPackageId
+                     join [OrganizationMember] om on om.OrganizationId = l.OrganizationId
+                     join [User] u on u.UserId = om.MemberId
+                     join [OrganizationPackageSubject] ops on ops.OrganizationPackageId = l.OrganizationPackageId
+                     join [Subject] s on ops.SubjectId = s.SubjectId
+                     join [SubjectCategory] sc on sc.SubjectCategoryId = s.SubjectCategoryId
+                     left join CategoryHierarchy ch on ch.SubjectCategoryId = sc.SubjectParentCategory
+                     where l.Status = 1 and op.Status = 1 and u.Email = ?""";
+        Vector<OrganizationRegistration> vector = new Vector<>();
+        if (inputKey != null) {
+            inputKey = inputKey.replace("!", "!!")
+                    .replace("%", "!%")
+                    .replace("_", "!_")
+                    .replace("[", "![");
+            sql += " and s.SubjectTitle like ? ESCAPE '!' ";
+        }
+        if (parentTier3 != null) {
+            sql += addTierToSQL(parentTier3, 3, flagAND);
+            if (sql.contains("and")) {
+                flagAND = 1;
+            }
+        }
+        if (parentTier2 != null) {
+            sql += addTierToSQL(parentTier2, 2, flagAND);
+            if (sql.contains("and")) {
+                flagAND = 1;
+            }
+        }
+        if (parentTier1 != null) {
+            sql += addTierToSQL(parentTier1, 1, flagAND);
+        }
+        try {
+            PreparedStatement pre = connection.prepareStatement(sql);
+            pre.setString(1, email);
+            if (inputKey != null) {
+                pre.setString(2, "%" + inputKey + "%");
+            }
+            ResultSet rs = pre.executeQuery();
+            while(rs.next()){
+                OrganizationRegistration oR = new OrganizationRegistration();
+                oR.setOrgPackageName(rs.getString(1));
+                oR.setSubjectId(rs.getInt(2));
+                oR.setSubjectTitle(rs.getString(3));
+                oR.setSubjectThumbnail(rs.getString(4));
+                oR.setValidFrom(rs.getDate(5));
+                oR.setValidTo(rs.getDate(6));
+                vector.add(oR);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DAORegistration.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return vector;
+    }
+
     public int removeRegistration(int registrationId) {
         int n = 0;
         String sqlRemove = "DELETE FROM [dbo].[Registration] WHERE RegistrationId =?";
@@ -388,8 +463,9 @@ public class DAORegistration extends DBContext {
         }
         return n;
     }
+
     public static void main(String[] args) {
         DAORegistration dao = new DAORegistration();
-        System.out.println(dao.getStatusId());
+        System.out.println(dao.getOrgRegistrations("ngocdbhe182383@fpt.edu.vn", null, null, null, "o").size());
     }
 }

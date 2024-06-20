@@ -32,7 +32,7 @@
                             <a
                                 class="nav-link ${param.published eq '0' ? 'active' : ''}"
                                 href="admin/quizzeslist?published=0"
-                            >Draft</a>
+                            >Archived</a>
                         </li>
                     </ul>
 
@@ -75,7 +75,7 @@
                                     <c:when test="${empty param.published or param.published eq '1'}">
                                         <button data-bs-target="#markDraftModal" data-bs-toggle="modal" class="btn btn-warning" :disabled="length === 0">
                                             <i class="bi bi-recycle"></i>
-                                            Mark Draft
+                                            Mark Archived
                                             <span x-show="length > 0">
                                                 (<span x-text="length"></span>)
                                             </span>
@@ -136,10 +136,10 @@
             </main>
         </div>
 
-        <script src="admin/quizzes/QuizzesList.js"></script>
+        <script src="admin/quizzeslist/QuizzesList.js"></script>
         <script src="public/js/sortable/sortable.min.js"></script>
-        <script src="public/js/alpine/persist.min.js"></script>
         <script src="public/js/alpine/core.min.js"></script>
+        <%@include file="/admin/common/notyf.jsp" %>
     </body>
 </html>
 

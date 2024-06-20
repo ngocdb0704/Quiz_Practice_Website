@@ -32,7 +32,7 @@
         <input type="hidden" name="action" value="markDraft">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Draft these items?</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Archive these items?</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body d-flex flex-column gap-2">
@@ -50,7 +50,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button @click="sessionStorage.clear()" type="submit" class="btn btn-warning">Draft</button>
+                <button @click="sessionStorage.clear()" type="submit" class="btn btn-warning">Archive</button>
             </div>
         </div>
     </form>

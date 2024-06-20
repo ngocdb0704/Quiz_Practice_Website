@@ -3,6 +3,7 @@ package app.controller;
 import app.dal.DAOQuiz;
 import app.dal.QueryResult;
 import app.entity.QuizType;
+import app.entity.Subject;
 import app.utils.Config;
 import app.utils.Parsers;
 import app.utils.URLUtils;
@@ -13,6 +14,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -36,16 +38,19 @@ public class QuizzesListController extends HttpServlet {
             return;
         }
         
-        int type = Parsers.parseIntOrDefault(request.getParameter("quizTypes"), -1);
         String subject = request.getParameter("subjectIds");
         String quizName = request.getParameter("quizName");
-
+        String quizTypes = request.getParameter("quizTypes");
+        
+        int type = Parsers.parseIntOrDefault(quizTypes, -1);
+        int subjectId = Parsers.parseIntOrDefault(subject, -1);
         boolean isPublished = Parsers.parseIntOrDefault(published, 1) == 1 ? true : false;
         QuizType quizType = QuizType.fromInt(type);
 
         QueryResult result = daoQuiz.search(
                 quizName,
                 isPublished,
+                subjectId,
                 quizType,
                 page, pageSize
         );
@@ -58,7 +63,10 @@ public class QuizzesListController extends HttpServlet {
             params = params.replace("page=" + page, "page=" + result.getTotalPages());
             response.sendRedirect("quizzeslist?" + params);
         }
+        
+        List<Subject> subjects = daoQuiz.getSubjectsWithQuiz();
 
+        request.setAttribute("subjects", subjects);
         request.setAttribute("result", result);
 
         request.getRequestDispatcher(PAGE_NAME).forward(request, response);
@@ -71,14 +79,42 @@ public class QuizzesListController extends HttpServlet {
         String action = request.getParameter("action");
         Integer[] ids = Parsers.parseInts(values);
         DAOQuiz daoQuiz = new DAOQuiz();
-
+        
+        
         if (ids.length > 0) {
+            HttpSession session = request.getSession(true);
+            
             switch (action) {
-                case "markDraft" -> daoQuiz.markDraft(ids);
-                case "publish" -> daoQuiz.publish(ids);
-                case "delete" -> daoQuiz.delete(ids);
+                case "markDraft" -> {
+                    int n = daoQuiz.markDraft(ids);
+                    
+                    if (n == ids.length) {
+                        session.setAttribute("notyfSuccessMessage", "Archived " + n + " items");
+                    } else {
+                        session.setAttribute("notyfErrorMessage", "Some of your items cannot be archived");
+                    }
+                }
+                case "publish" -> {
+                    int n = daoQuiz.publish(ids);
+                    
+                    if (n == ids.length) {
+                        session.setAttribute("notyfSuccessMessage", "Published " + n + " items");
+                    } else {
+                        session.setAttribute("notyfErrorMessage", "Some of your items cannot be published");
+                    }
+                }
+                case "delete" -> {
+                    int n = daoQuiz.delete(ids);
+
+                    if (n == ids.length) {
+                        session.setAttribute("notyfSuccessMessage", "Deleted " + n + " items");
+                    } else {
+                        session.setAttribute("notyfErrorMessage", "Some of your items cannot be deleted");
+                    }
+                }
                 default -> System.out.println(action);
             }
+            
         }
 
         String redirectUrl = String.format(

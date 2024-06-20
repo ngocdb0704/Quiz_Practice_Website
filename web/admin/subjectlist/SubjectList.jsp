@@ -76,7 +76,7 @@
                                 <img src="${subject.getThumbnail()}" alt="Subject Image">
                                 <h2 class="mt-2">${subject.getSubjectName()}</h2>
                                 <div class="text-end">
-                                    <a href="#" class="btn">
+                                    <a href="admin/subjectdetail/pricepackage?subjectId=${subject.getSubjectId()}" class="btn">
                                         Go to course <i class="bi bi-arrow-right-circle ms-1"></i>
                                     </a>
                                 </div>

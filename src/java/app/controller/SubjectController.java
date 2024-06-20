@@ -5,8 +5,10 @@
 package app.controller;
 
 import app.dal.DAOSubject;
+import app.entity.Organization;
 import app.entity.Subject;
 import app.entity.SubjectCategory;
+import app.entity.Package;
 import app.utils.Config;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
@@ -17,6 +19,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.util.HashMap;
 import java.util.Vector;
 
 /**
@@ -44,23 +47,26 @@ public class SubjectController extends HttpServlet {
         int numPerCarousel = cfg.getIntOrDefault("subjectList.carousel.size", 3);
         String service = request.getParameter("service");
         String goToPara = request.getParameter("goToPos");
-        String userEmail = "";
+        String userEmail;
         String redirectTo;
         int i;
         int page;
         int start, end;
         int goToPosOnWeb = 0;
-        int numPerPage = cfg.getIntOrDefault("subjectList.pagination.size", 4);
+        int numPerPageIndividual = 8;
+        int numPerPageBusiness = 6;
         Vector<Subject> newSubjectList = daoSubject.getNewSubject();
         Vector<Subject> saleSubjectList = daoSubject.getBigSaleSubject();
         Vector<Subject> featuredSubjectList = daoSubject.getFeaturedSubject();
         Vector<SubjectCategory> listOfCategory = daoSubject.getFilterList();
         Vector<SubjectCategory> listOfLevel = daoSubject.getLevelList();
+        Vector<Organization> listOfOrg = daoSubject.getOrgList();
         //list of checked categories from form on jsp
         String[] parentTier1Raw = request.getParameterValues("idTier1");
         String[] parentTier2Raw = request.getParameterValues("idTier2");
         String[] parentTier3Raw = request.getParameterValues("idTier3");
         String[] levelRaw = request.getParameterValues("level");
+        String[] orgRaw = request.getParameterValues("org");
         String inputKey = request.getParameter("key");
         String inputOrder = request.getParameter("orderList");
         int order = 1;
@@ -71,12 +77,15 @@ public class SubjectController extends HttpServlet {
         int[] parentTier2 = null;
         int[] parentTier3 = null;
         int[] level = null;
+        int[] org = null;
         parentTier1 = cookRawIngredient(parentTier1Raw, parentTier1);
         parentTier2 = cookRawIngredient(parentTier2Raw, parentTier2);
         parentTier3 = cookRawIngredient(parentTier3Raw, parentTier3);
         level = cookRawIngredient(levelRaw, level);
+        org = cookRawIngredient(orgRaw, org);
         boolean[] checkId = new boolean[listOfCategory.size()];
         boolean[] checkLevel = new boolean[listOfLevel.size()];
+        boolean[] checkOrg = new boolean[listOfOrg.size()];
         //check which category check box is ticked 
         for (i = 0; i < checkId.length; i++) {
             checkId[i] = isCheck(listOfCategory.get(i).getCateId(), parentTier1)
@@ -87,26 +96,52 @@ public class SubjectController extends HttpServlet {
         for (i = 0; i < checkLevel.length; i++) {
             checkLevel[i] = isCheck(listOfLevel.get(i).getCateId(), level);
         }
+        for (i = 0; i < checkOrg.length; i++) {
+            checkOrg[i] = isCheck(listOfOrg.get(i).getOrgId(), org);
+        }
         if (service == null) {
-            service = "listAll";
+            service = "individual";
         }
         if (goToPara != null) {
             goToPosOnWeb = Integer.parseInt(goToPara);
         }
-        if (service.equals("listAll")) {
-            String sendFilter = sendFilter(parentTier1, parentTier2, parentTier3, level);
+        String sendFilter = sendFilter(parentTier1, parentTier2, parentTier3, level, org);
+        String listOfIdNew = listOfAnyThing(newSubjectList);
+        String listOfIdSale = listOfAnyThing(saleSubjectList);
+        String listOfIdFeat = listOfAnyThing(featuredSubjectList);
+        request.setAttribute("listOfIdNew", listOfIdNew);
+        request.setAttribute("listOfIdSale", listOfIdSale);
+        request.setAttribute("listOfIdFeat", listOfIdFeat);
+        request.setAttribute("sendFilter", sendFilter);
+        request.setAttribute("check", checkId);
+        request.setAttribute("checkLevel", checkLevel);
+        request.setAttribute("checkOrg", checkOrg);
+        request.setAttribute("list", listOfCategory);
+        request.setAttribute("levels", listOfLevel);
+        request.setAttribute("org", listOfOrg);
+        request.setAttribute("key", inputKey);
+        request.setAttribute("goTo", goToPosOnWeb);
+        request.setAttribute("order", order);
+        Vector<Subject> subjectListForIndividual
+                = daoSubject.getForIndividual(parentTier1, parentTier2,
+                        parentTier3, inputKey, order, level);
+        if (service.equals("individual")) {
+            if (session.getAttribute("userEmail") != null) {
+                userEmail = session.getAttribute("userEmail").toString();
+                Vector<Subject> registeredSubjects = daoSubject.getRegisteredSubjects(userEmail);
+                String listOfRegistrations = listOfAnyThing(registeredSubjects);
+                HashMap<Integer, String> getSponsor = daoSubject.getSponsor(userEmail);
+                request.setAttribute("sponsor", getSponsor);
+                request.setAttribute("listOfIdRegist", listOfRegistrations);
+            }
             int sizeOfNewCarousel = newSubjectList.size();
             int sizeOfSaleCarousel = saleSubjectList.size();
             int sizeOfFeaturedCarousel = featuredSubjectList.size();
             int numOfCarouselNew = sizeOfNewCarousel / numPerCarousel;
             int numOfCarouselSale = sizeOfSaleCarousel / numPerCarousel;
             int numOfCarouselFeatured = sizeOfFeaturedCarousel / numPerCarousel;
-            String listOfIdNew = listOfAnyThing(newSubjectList);
-            String listOfIdSale = listOfAnyThing(saleSubjectList);
-            String listOfIdFeat = listOfAnyThing(featuredSubjectList);
-            Vector<Subject> allSubjectList = daoSubject.getWithToken(parentTier1, parentTier2, parentTier3, inputKey, order, level);
-            int sizeOfAllSubjects = allSubjectList.size();
-            int numOfAllSubjects = (sizeOfAllSubjects % numPerPage == 0 ? (sizeOfAllSubjects / numPerPage) : ((sizeOfAllSubjects / numPerPage) + 1));
+            int sizeOfAllSubjects = subjectListForIndividual.size();
+            int numOfAllSubjects = (sizeOfAllSubjects % numPerPageIndividual == 0 ? (sizeOfAllSubjects / numPerPageIndividual) : ((sizeOfAllSubjects / numPerPageIndividual) + 1));
             String xpage = request.getParameter("page");
             //get currently requested page
             //if null, show first page
@@ -116,26 +151,9 @@ public class SubjectController extends HttpServlet {
                 page = Integer.parseInt(xpage);
             }
             //pagination
-            start = (page - 1) * numPerPage;
-            end = Math.min(page * numPerPage, sizeOfAllSubjects);
-            Vector<Subject> responseVector = daoSubject.getVectorByPage(allSubjectList, start, end);
-            if (session.getAttribute("userEmail") != null) {
-                userEmail = session.getAttribute("userEmail").toString();
-                Vector<Subject> registeredSubjects = daoSubject.getRegisteredSubjects(userEmail);
-                String bankCode = cfg.getStringOrDefault("bankcode", null);
-                String ownerBankAccount = cfg.getStringOrDefault("owner.bankaccount", null);
-                String listOfRegistrations = listOfAnyThing(registeredSubjects);
-                request.setAttribute("listOfIdRegist", listOfRegistrations);
-                request.setAttribute("bankCode", bankCode);
-                request.setAttribute("ownerAccount", ownerBankAccount);
-            }
-            request.setAttribute("check", checkId);
-            request.setAttribute("checkLevel", checkLevel);
-            request.setAttribute("list", listOfCategory);
-            request.setAttribute("levels", listOfLevel);
-            request.setAttribute("listOfIdNew", listOfIdNew);
-            request.setAttribute("listOfIdSale", listOfIdSale);
-            request.setAttribute("listOfIdFeat", listOfIdFeat);
+            start = (page - 1) * numPerPageIndividual;
+            end = Math.min(page * numPerPageIndividual, sizeOfAllSubjects);
+            Vector<Subject> responseVector = daoSubject.getVectorByPage(subjectListForIndividual, start, end);
             request.setAttribute("numPerCarousel", numPerCarousel);
             request.setAttribute("numOfCarouselNew", numOfCarouselNew);
             request.setAttribute("numOfCarouselSale", numOfCarouselSale);
@@ -145,12 +163,33 @@ public class SubjectController extends HttpServlet {
             request.setAttribute("dataNewSubject", newSubjectList);
             request.setAttribute("dataFeaturedSubject", featuredSubjectList);
             request.setAttribute("dataAllSubject", responseVector);
-            request.setAttribute("sendFilter", sendFilter);
             request.setAttribute("page", page);
-            request.setAttribute("key", inputKey);
-            request.setAttribute("goTo", goToPosOnWeb);
-            request.setAttribute("order", order);
-            redirectTo = "/SubjectList.jsp";
+            redirectTo = "/SubjectListForIndividual.jsp";
+            dispath(request, response, redirectTo);
+        }
+        if (service.equals("business")) {
+            Vector<Subject> subjectListForBusiness = daoSubject.getForBusiness(parentTier1, parentTier2, parentTier3, inputKey, order, level, org);
+            int sizeOfAllSubjects = subjectListForBusiness.size();
+            int numOfAllSubjects = (sizeOfAllSubjects % numPerPageBusiness == 0 ? (sizeOfAllSubjects / numPerPageBusiness) : ((sizeOfAllSubjects / numPerPageBusiness) + 1));
+            String xpage = request.getParameter("page");
+            //get currently requested page
+            //if null, show first page
+            if (xpage == null) {
+                page = 1;
+            } else {
+                page = Integer.parseInt(xpage);
+            }
+            //pagination
+            start = (page - 1) * numPerPageBusiness;
+            end = Math.min(page * numPerPageBusiness, sizeOfAllSubjects);
+            Vector<Subject> responseVector = daoSubject.getVectorByPage(subjectListForBusiness, start, end);
+            Vector<Package> plansList = daoSubject.getPlans();
+            request.setAttribute("dataFeaturedSubject", featuredSubjectList);
+            request.setAttribute("numOfAllSubjects", numOfAllSubjects);
+            request.setAttribute("dataAllSubject", responseVector);
+            request.setAttribute("plans", plansList);
+            request.setAttribute("page", page);
+            redirectTo = "/SubjectListForBusiness.jsp";
             dispath(request, response, redirectTo);
         }
     }
@@ -224,7 +263,8 @@ public class SubjectController extends HttpServlet {
         }
     }
 
-    private String sendFilter(int[] parentTier1, int[] parentTier2, int[] parentTier3, int[] level) {
+    private String sendFilter(int[] parentTier1, int[] parentTier2,
+            int[] parentTier3, int[] level, int[] org) {
         String url = "";
         int i;
         if (parentTier1 != null) {
@@ -245,6 +285,11 @@ public class SubjectController extends HttpServlet {
         if (level != null) {
             for (i = 0; i < level.length; i++) {
                 url += "level=" + level[i] + "&";
+            }
+        }
+        if (org != null) {
+            for (i = 0; i < org.length; i++) {
+                url += "org=" + org[i] + "&";
             }
         }
         return url;

@@ -118,187 +118,102 @@ SET QUOTED_IDENTIFIER ON
 Go
 
 CREATE TABLE [dbo].[Gender](
-
 	[GenderId] [int] IDENTITY(1,1) primary key ,
-
 	[GenderName] [varchar](50))
-
-
-
 GO
 
  
 
 CREATE TABLE [dbo].[Role](
-
 	[RoleId] [int] IDENTITY(1,1) primary key,
-
 	[RoleName] [varchar](50))
-
-
-
 GO
 
 
 
 CREATE TABLE [dbo].[User](
-
 	[UserId] [int] IDENTITY(1,1) primary key,
-
 	[Email] [varchar](50) UNIQUE,
-
 	[Password] [varchar](50),
-
 	[RoleId] [int]  foreign key references [dbo].[Role](RoleId),
-
 	[FullName] [nvarchar](50),
-
 	[GenderId] [int] foreign key references [dbo].[Gender](GenderId),
-
 	[Mobile] [varchar](50) UNIQUE,
-
 	[IsActive] [bit])
-
-
-
 GO
 
 
 
 CREATE TABLE [dbo].[ProfilePicture](
-
 	[UserId] [int] primary key foreign key references [dbo].[User](UserId),
-
 	[Image] [varbinary](max))
-
-
-
 GO
 
 CREATE TABLE [dbo].[ResetToken](
-
 	[UserId] [int] primary key foreign key references [dbo].[User](UserId),
-
 	[Token] [varchar](255),
-
 	[ValidTo] [datetime])
-
-
-
 GO
 
 
 
 CREATE TABLE [dbo].[SubjectCategory](
-
 	[SubjectCategoryId] [int] IDENTITY(1,1) primary key,
-
 	[SubjectCategoryName] [varchar](50),
-
 	[SubjectParentCategory] int
-
 	)
-
+GO
 
 
 CREATE TABLE [dbo].[SubjectLevel](
-
 	[SubjectLevelId] [int] IDENTITY(1,1) primary key,
-
 	[SubjectLevelName] [varchar](50))
-
-
-
 GO
 
 CREATE TABLE [dbo].[Organization](
-
 	[OrganizationId] [int] IDENTITY(1,1) primary key,
-
 	[OrganizationName] [varchar](50),
-
 	[OrganizationEmail] [varchar](50) UNIQUE,
-
 	[OrganizationSize] [int],
-
 	[OrganizationCountry] [varchar] (50),
-
 	[IsNonprofit] [bit])
-
 GO
 
 CREATE TABLE [dbo].[OrganizationMember](
-
 	[Id] [int] IDENTITY(1,1) primary key,
-
 	[OrganizationId] [int]  foreign key references [dbo].[Organization](OrganizationId),
-
 	[MemberId] [int] foreign key references  [dbo].[User](UserId),
-
 	[JobTitle] [varchar](50),
-
 	[IsActive] [bit])
-
-
-
-
-
 GO
 
 
-
 CREATE TABLE [dbo].[Subject](
-
 	[SubjectId] [int] IDENTITY(1,1) primary key,
-
 	[SubjectTitle] [varchar](50),
-
 	[SubjectProviderId] [int] foreign key references [dbo].[Organization](OrganizationId),
-
 	[SubjectCategoryId] [int] foreign key references [dbo].[SubjectCategory](SubjectCategoryId),
-
 	[SubjectStatus] [bit],
-
 	[SubjectLevelId] [int] foreign key references [dbo].[SubjectLevel](SubjectLevelId),
-
 	[IsFeaturedSubject] [bit],
-
 	[SubjectCreatedDate] [date],
-
 	[SubjectUpdatedDate] [date],
-
 	[SubjectTagLine] [varchar](50),
-
 	[SubjectBriefInfo] [varchar](300),
-
 	[SubjectDescription] [ntext],
-
 	[SubjectThumbnail] [varchar](255))
-
-
-
 GO
 
 
 
 CREATE TABLE [dbo].[Package](
-
 	[PackageId] [int] IDENTITY(1,1) primary key,
-
 	[SubjectId] [int] foreign key references [dbo].[Subject](SubjectId),
-
 	[PackageName] [nvarchar](50),
-
 	[PackageDuration] [int],
-
 	[ListPrice] [float],
-
 	[SalePrice] [float],
-
 	[Status] [bit])
-
-
-
 GO
 
 --To prevent breaking old code, i added a new table instead
@@ -309,154 +224,86 @@ CREATE TABLE [dbo].[PricePackageDesc] (
 GO
 
 CREATE TABLE [dbo].[OrganizationPackage](
-
 	[OrganizationPackageId] [int] IDENTITY(1,1) primary key,
-
 	[PackageName] [nvarchar](50),
-
 	[PackageDuration] [int],
-
 	[RetailPriceEach] [float],
-
 	[WholesalePriceEach] [float],
-
 	[NonprofitPriceEach] [float],
-
 	[Status] [bit])
-
-
-
 GO
 
 CREATE TABLE [dbo].[License](
-
 	[LicenseId] [int] IDENTITY(1,1) primary key,
-
 	[OrganizationId] [int] foreign key references [dbo].[Organization](OrganizationId),
-
 	[OrganizationPackageId] [int] foreign key references [dbo].[OrganizationPackage] (OrganizationPackageId),
-
 	[SalePrice] [float],
-
 	[ValidFrom] [date],
-
 	[ValidTo] [date],
-
 	[Size] [int],
-
 	[Status] [bit])
-
 GO
 
 CREATE TABLE [dbo].[OrganizationPackageSubject](
-
 	[Id] [int] IDENTITY(1,1) primary key,
-
 	[OrganizationPackageId] [int] foreign key references [dbo].[OrganizationPackage] (OrganizationPackageId),
-
 	[SubjectId] [int] foreign key references [dbo].[Subject](SubjectId)
-
 )
-
 GO
 
 
 
 CREATE TABLE [dbo].[RegistrationStatus](
-
 	[RegistrationStatusId] [int] IDENTITY(1,1) primary key,
-
 	[RegistrationStatusName] [varchar](50))
-
-
-
 GO
 
 CREATE TABLE [dbo].[Registration](
-
 	[RegistrationId] [int] IDENTITY(1,1) primary key,
-
 	[UserId] [int] foreign key references [dbo].[User](UserId),
-
 	[RegistrationTime] [date],
-
 	[PackageId] [int] foreign key references [dbo].[Package](PackageId),
-
 	[RegistrationStatusId] [int] foreign key references [dbo].[RegistrationStatus](RegistrationStatusId),
-
 	[ValidFrom] [date],
-
 	[ValidTo] [date],
-
 	[TransactionContent] [varchar](255),
-
 	[TransactionCode] [varchar](255),
-
 	[TransactionAccount] [varchar](255))
-
 Go
 
 CREATE TABLE [dbo].[BlogCategory](
-
 	[BlogCategoryId] [int] IDENTITY(1,1) primary key,
-
 	[BlogCategoryName] [varchar](50))
-
-
-
 Go
 
 CREATE TABLE [dbo].[Blog](
-
 	[BlogId] [int] IDENTITY(1,1) primary key,
-
 	[UserId] [int] foreign key references [dbo].[User](UserId),
-
 	[BlogCategoryId] [int] foreign key references [dbo].[BlogCategory](BlogCategoryId),
-
 	[BlogTitle] [nvarchar](512),
-
 	[UpdatedTime] [datetime],
-
 	[PostBrief] [nvarchar](2048),
-
 	[PostText] [ntext])
-
-
-
 GO
 
 CREATE TABLE [dbo].[Question](
-
 	[QuestionID] [int] IDENTITY(1,1) primary key,
-
 	[QuestionText] [text],
-
 	[Explanation] [text],
-
 	[Level] [int],
-
 	[SubjectID] [int] foreign key references [dbo].[Subject](SubjectId),
-
 	[LessonID] [int],
-
 	[Status] bit
-
 )
-
 GO
 
 CREATE TABLE [dbo].[Answer](
-
 	[AnswerID] [int] IDENTITY(1,1) primary key,
-
 	[QuestionID] [int] foreign key references [dbo].[Question](QuestionID),
-
 	[AnswerName] [text],
-
 	[IsCorrect] [bit])
 
-GO
+	GO
 CREATE TABLE [dbo].[slide](
 	[slide_id] [int] IDENTITY(1,1) NOT NULL,
 	[title] [nvarchar](50) NULL,
@@ -469,35 +316,20 @@ CREATE TABLE [dbo].[slide](
 	GO
 
 CREATE TABLE [dbo].[Quiz] (
-
 	[QuizId] [int] IDENTITY(1, 1) primary key,
-
 	[SubjectId] [int] not null foreign key references [dbo].[Subject](SubjectId),
-
 	[QuizName] nvarchar(255) default(N''),
-
 	[Level] char(10) check([Level] in (0, 1, 2)) default(0), --easy, medium, hard
-
 	[DurationInMinutes] int check([DurationInMinutes] > 0) default(60),
-
 	[PassRate] int check(0 <= [PassRate] and [PassRate] <= 100) default(50),
-
 	[QuizType] char(10) check([QuizType] in (0, 1)) default(0), --simulation, lesson-quiz
-
 	[IsPublished] bit,
-
 	[UpdatedTime] [datetime] default(CURRENT_TIMESTAMP)
-
 )
-
 GO
 
 CREATE TABLE [dbo].[QuizQuestion] (
-
 	[QuizId] [int] foreign key references [dbo].[Quiz]([QuizId]) on delete cascade,
-
 	[QuestionId] [int] foreign key references [dbo].[Question]([QuestionId])
-
 	PRIMARY KEY([QuizId], [QuestionId])
-
 )

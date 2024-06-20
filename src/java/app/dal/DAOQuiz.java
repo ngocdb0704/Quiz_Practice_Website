@@ -5,6 +5,7 @@ import static app.dal.QueryBuilder.OrderDirection;
 import app.entity.BlogInformation;
 import app.entity.QuizInformation;
 import app.entity.QuizType;
+import app.entity.Subject;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,9 +27,9 @@ public class DAOQuiz extends DBContext {
             "select count(*) from [Quiz] q\n"
             + "inner join [Subject] s on q.SubjectId = s.SubjectId";
 
-    public void markDraft(Integer[] ids) {
+    public int markDraft(Integer[] ids) {
         try {
-            new QueryBuilder("update [Quiz] set IsPublished = 0, "
+            return new QueryBuilder("update [Quiz] set IsPublished = 0, "
                     + "UpdatedTime = CURRENT_TIMESTAMP")
                 .whereAnd("QuizId", Operator.IN, ids)
                 .toPreparedStatement(connection)
@@ -36,11 +37,13 @@ public class DAOQuiz extends DBContext {
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
+        
+        return 0;
     }
 
-    public void publish(Integer[] ids) {
+    public int publish(Integer[] ids) {
         try {
-            new QueryBuilder("update [Quiz] set IsPublished = 1, "
+            return new QueryBuilder("update [Quiz] set IsPublished = 1, "
                     + "UpdatedTime = CURRENT_TIMESTAMP")
                 .whereAnd("QuizId", Operator.IN, ids)
                 .toPreparedStatement(connection)
@@ -48,17 +51,44 @@ public class DAOQuiz extends DBContext {
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
+        
+        return 0;
     }
 
-    public void delete(Integer[] ids) {
+    public int delete(Integer[] ids) {
         try {
-            new QueryBuilder("delete from [Quiz]")
+            return new QueryBuilder("delete from [Quiz]")
                 .whereAnd("QuizId", Operator.IN, ids)
                 .toPreparedStatement(connection)
                 .executeUpdate();
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
+        
+        return 0;
+    }
+    
+    public List<Subject> getSubjectsWithQuiz() {
+        List<Subject> ret = new ArrayList<>();
+        
+        try {
+            ResultSet rs = new QueryBuilder("""
+                select distinct s.SubjectId, SubjectTitle from [Subject] s
+                inner join Quiz q on s.SubjectId = q.SubjectId
+            """
+            ).toPreparedStatement(connection).executeQuery();
+            
+            while (rs.next()) {
+                Subject s = new Subject();
+                s.setSubjectId(rs.getInt("SubjectId"));
+                s.setSubjectName(rs.getString("SubjectTitle"));
+                ret.add(s);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        
+        return ret;
     }
 
     public QuizInformation getQuizById(Integer id) {
@@ -125,6 +155,7 @@ public class DAOQuiz extends DBContext {
     public QueryResult search(
             String quizName,
             boolean published,
+            int subjectId,
             QuizType type,
             int page, int pageSize
     ) {
@@ -144,6 +175,10 @@ public class DAOQuiz extends DBContext {
 
             if (type != null) {
                 query.whereAnd("QuizType", Operator.EQUALS, type.toInt());
+            }
+            
+            if (subjectId != -1) {
+                query.whereAnd("q.SubjectId", Operator.EQUALS, subjectId);
             }
 
             ResultSet rs = new QueryBuilder(COUNT_LISTING_QUERY, query)
@@ -169,16 +204,16 @@ public class DAOQuiz extends DBContext {
         return new QueryResult(count, pageSize, ret);
     }
     
-//    public static void main(String[] args) throws SQLException {
-//        DAOQuiz qq = new DAOQuiz();
-//        
-//        ResultSet rs = new QueryBuilder("select QuizId from [Quiz]")
-//                .toPreparedStatement(qq.connection)
-//                .executeQuery();
-//        
-//        while (rs.next()) {
-//            int id = rs.getInt(1);
-//            qq.randomizeForQuiz(id, 50);
-//        }
-//    }
+    public static void main(String[] args) throws SQLException {
+        DAOQuiz qq = new DAOQuiz();
+        
+        ResultSet rs = new QueryBuilder("select QuizId from [Quiz]")
+                .toPreparedStatement(qq.connection)
+                .executeQuery();
+        
+        while (rs.next()) {
+            int id = rs.getInt(1);
+            qq.randomizeForQuiz(id, 50);
+        }
+    }
 }
