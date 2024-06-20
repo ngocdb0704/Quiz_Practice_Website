@@ -301,7 +301,12 @@ CREATE TABLE [dbo].[Package](
 
 GO
 
-
+--To prevent breaking old code, i added a new table instead
+CREATE TABLE [dbo].[PricePackageDesc] (
+	[PackageId] [int] foreign key references [dbo].[Package]([PackageId]) on delete cascade,
+	[Desc] [nvarchar](2048)
+)
+GO
 
 CREATE TABLE [dbo].[OrganizationPackage](
 
