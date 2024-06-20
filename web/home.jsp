@@ -60,7 +60,7 @@
                     <% int count = 1; %>
                     <c:forEach var="slider" items="${homeSliders}">
                         <div class="carousel-item <%=(count == 1)? "active" : ""%>">
-                            <a href="${slider.getBacklink()}"><img id="slide_<%=count++%>" class="d-block w-100" src="${slider.getImageRef()}" alt="${slider.getTitle()}" ></a>
+                            <a href="${slider.getBacklink()}"><img id="slide_<%=count++%>" class="d-block w-100" src="${slider.getImage()}" alt="${slider.getTitle()}" ></a>
                         </div>
                     </c:forEach>
 

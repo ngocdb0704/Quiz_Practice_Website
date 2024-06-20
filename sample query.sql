@@ -75,7 +75,8 @@ CREATE TABLE [dbo].[Subject](
 	[SubjectTagLine] [varchar](50),
 	[SubjectBriefInfo] [varchar](300),
 	[SubjectDescription] [ntext],
-	[SubjectThumbnail] [varchar](255))
+	[SubjectThumbnail] [varchar](255),
+	[SubjectDimension] [varchar](255))
 GO
 
 CREATE TABLE [dbo].[Package](

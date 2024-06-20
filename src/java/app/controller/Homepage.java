@@ -99,7 +99,7 @@ public class Homepage extends HttpServlet {
 
         if (session.getAttribute("homeSliders") == null) {
             DAOSlide daoSlide = new DAOSlide(); 
-            List<Slide> sliders = daoSlide.getSliderList();
+            List<Slide> sliders = daoSlide.getAllSlide();
             session.setAttribute("homeSliders", sliders);
         }
 

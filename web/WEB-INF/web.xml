@@ -16,6 +16,10 @@
         <servlet-name>SliderServiceServlet</servlet-name>
         <servlet-class>app.controller.SliderServiceServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>SettingsServlet</servlet-name>
+        <servlet-class>app.controller.SettingsServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Homepage</servlet-name>
         <url-pattern>/Homepage</url-pattern>
@@ -99,5 +103,9 @@
     <servlet-mapping>
         <servlet-name>SubjectController</servlet-name>
         <url-pattern>/public/SubjectsList</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SettingsServlet</servlet-name>
+        <url-pattern>/SettingsServlet</url-pattern>
     </servlet-mapping>
 </web-app>

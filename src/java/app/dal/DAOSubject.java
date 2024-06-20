@@ -5,6 +5,7 @@
 package app.dal;
 
 import app.dal.DBContext;
+import app.dto.SubjectDTO;
 import app.entity.Subject;
 import app.entity.SubjectCategory;
 import java.sql.PreparedStatement;
@@ -332,6 +333,82 @@ with CategoryHierarchy as
             Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
         }
         return Out;
+    }
+    
+    public boolean updateSubject(Subject subject) {
+        boolean isUpdated = false;
+        String sql = "UPDATE Subject SET SubjectTitle = ?, SubjectTagLine = ?, SubjectThumbnail = ? WHERE SubjectId = ?";
+        try {
+            PreparedStatement pre = connection.prepareStatement(sql);
+            pre.setString(1, subject.getSubjectName());
+            pre.setString(2, subject.getTagLine());
+            pre.setString(3, subject.getThumbnail());
+            pre.setInt(4, subject.getSubjectId());
+
+            int rowsAffected = pre.executeUpdate();
+            isUpdated = rowsAffected > 0;
+        } catch (SQLException ex) {
+            Logger.getLogger(DAOSubject.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return isUpdated;
+    }
+
+    public SubjectDTO getSubjectById(int subjectId) {
+        SubjectDTO subject = null;
+        String sql = "SELECT [SubjectId], [SubjectTitle], [SubjectCategoryId], [SubjectStatus], "
+                + "[SubjectLevelId], [IsFeaturedSubject], [SubjectCreatedDate], [SubjectUpdatedDate], "
+                + "[SubjectTagLine], [SubjectBriefInfo], [SubjectDescription], [SubjectThumbnail] "
+                + "FROM [dbo].[Subject] WHERE SubjectId = ?";
+        try {
+            PreparedStatement pstmt = connection.prepareStatement(sql);
+            pstmt.setInt(1, subjectId);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                subject = new SubjectDTO();
+                subject.setSubjectId(rs.getInt("SubjectId"));
+                subject.setSubjectTitle(rs.getString("SubjectTitle"));
+                subject.setSubjectCategoryId(rs.getInt("SubjectCategoryId"));
+                subject.setSubjectStatus(rs.getInt("SubjectStatus"));
+                subject.setSubjectLevelId(rs.getInt("SubjectLevelId"));
+                subject.setIsFeaturedSubject(rs.getBoolean("IsFeaturedSubject"));
+                subject.setSubjectCreatedDate(rs.getTimestamp("SubjectCreatedDate"));
+                subject.setSubjectUpdatedDate(rs.getTimestamp("SubjectUpdatedDate"));
+                subject.setSubjectTagLine(rs.getString("SubjectTagLine"));
+                subject.setSubjectBriefInfo(rs.getString("SubjectBriefInfo"));
+                subject.setSubjectDescription(rs.getString("SubjectDescription"));
+                subject.setSubjectThumbnail(rs.getString("SubjectThumbnail"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return subject;
+    }
+
+    public boolean updateSubject(SubjectDTO subject) {
+        String sql = "UPDATE dbo.Subject SET "
+                + "SubjectTitle = ?, SubjectCategoryId = ?, SubjectStatus = ?, "
+                + "SubjectLevelId = ?, IsFeaturedSubject = ?, SubjectBriefInfo = ?, "
+                + "SubjectDescription = ?, SubjectThumbnail = ? "
+                + "WHERE SubjectId = ?";
+        try{
+            PreparedStatement pstmt = connection.prepareStatement(sql);
+            pstmt.setString(1, subject.getSubjectTitle());
+            pstmt.setInt(2, subject.getSubjectCategoryId());
+            pstmt.setInt(3, subject.getSubjectStatus());
+            pstmt.setInt(4, subject.getSubjectLevelId());
+            pstmt.setBoolean(5, subject.isIsFeaturedSubject());
+            pstmt.setString(6, subject.getSubjectBriefInfo());
+            pstmt.setString(7, subject.getSubjectDescription());
+            pstmt.setString(8, subject.getSubjectThumbnail());
+            pstmt.setInt(9, subject.getSubjectId());
+
+            int updated = pstmt.executeUpdate();
+            return updated > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public static void main(String[] args) {

@@ -13,124 +13,110 @@ import app.entity.Slide;
 import app.entity.User;
 
 public class DAOSlide extends DBContext {
-    
-    private List<Slide> hardCoded;
 
-    public DAOSlide() {
-        hardCoded = new ArrayList<>();
-        hardCoded.add(new Slide(0, "Test Slide 1", "public/images/placeHolderSlideImg.png", "https://duckduckgo.com/?q=placeholder&t=vivaldi&ia=web", "Active"));
-        hardCoded.add(new Slide(0, "Test Slide 2", "public/images/placeHolderSlideImg2.png", "https://dictionary.cambridge.org/dictionary/english/placeholder", "Active"));
-        hardCoded.add(new Slide(0, "Test Slide 3", "public/images/placeHolderSlideImg3.png", "https://www.google.com/search?q=placeholder", "Active"));
-        hardCoded.add(new Slide(0, "Test Slide 4", "public/images/placeHolderSlideImg4.png", "https://www.bing.com/search?q=placeholder", "Active"));
-    }
-    
-    public List<Slide> getSliderList() {
-        return hardCoded;
-    }
-
-
-    // Method to get active sliders for non-marketing users
-    public List<Slide> getActiveSlidesForNonMarketing() {
-        List<Slide> slides = new ArrayList<>();
-
-        String sql = "SELECT * FROM [dbo].[Slide] WHERE Status = 1"; // Assuming 1 means active, adjust as per your database schema
-
-        try (PreparedStatement pstmt = connection.prepareStatement(sql); ResultSet rs = pstmt.executeQuery()) {
-
+    public ArrayList<Slide> getAllSlide() {
+        ArrayList<Slide> bloList = new ArrayList<>();
+        try {
+            String sql = "select top 4 title,img,description,backlink from slide  where [active] =1";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            ResultSet rs = stm.executeQuery();
             while (rs.next()) {
-                int sliderId = rs.getInt("SliderId");
-                String title = rs.getString("Title");
-                String imageRef = rs.getString("ImageRef"); // Assuming you have a column for image reference
-                String backlink = rs.getString("Backlink");
-                String status = rs.getBoolean("Status") ? "active" : "inactive"; // Convert boolean to string
-                int userId = rs.getInt("UserId");
-
-                Slide slide = new Slide(sliderId, title, imageRef, backlink, status, userId);
-                slides.add(slide);
+                Slide b = new Slide(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4));
+                bloList.add(b);
             }
-
-        } catch (SQLException ex) {
-            Logger.getLogger(DAOSlide.class.getName()).log(Level.SEVERE, "Error fetching active slides for non-marketing users", ex);
+        } catch (SQLException e) {
         }
-
-        return slides;
+        return bloList;
     }
 
-    // Method to get all sliders for marketing users
-    public List<Slide> getAllSlidesForMarketing() {
-        List<Slide> slides = new ArrayList<>();
-
-        String sql = "SELECT * FROM [dbo].[Slide]"; // Get all sliders
-
-        try (PreparedStatement pstmt = connection.prepareStatement(sql); ResultSet rs = pstmt.executeQuery()) {
-
+    public int getNumberSlide() {
+        int number = 0;
+        try {
+            String sql = "select count(*) from slide";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            ResultSet rs = stm.executeQuery();
             while (rs.next()) {
-                int sliderId = rs.getInt("SliderId");
-                String title = rs.getString("Title");
-                String imageRef = rs.getString("ImageRef"); // Assuming you have a column for image reference
-                String backlink = rs.getString("Backlink");
-                String status = rs.getBoolean("Status") ? "active" : "inactive"; // Convert boolean to string
-                int userId = rs.getInt("UserId");
-
-                Slide slide = new Slide(sliderId, title, imageRef, backlink, status, userId);
-                slides.add(slide);
+                return number;
             }
-
-        } catch (SQLException ex) {
-            Logger.getLogger(DAOSlide.class.getName()).log(Level.SEVERE, "Error fetching all slides for marketing users", ex);
+        } catch (SQLException e) {
         }
-
-        return slides;
+        return 0;
     }
 
-    // Method to update slide status
-    public boolean updateSlideStatus(int sliderId, boolean newStatus) {
-        String sql = "UPDATE [dbo].[Slide] SET Status = ? WHERE SliderId = ?";
-        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-            pstmt.setBoolean(1, newStatus);
-            pstmt.setInt(2, sliderId);
-            int rowsUpdated = pstmt.executeUpdate();
-            return rowsUpdated > 0;
-        } catch (SQLException ex) {
-            Logger.getLogger(DAOSlide.class.getName()).log(Level.SEVERE, "Error updating slide status", ex);
-        }
-        return false;
-    }
-
-    // Method to update slide image
-    public boolean updateSlideImage(int sliderId, InputStream newImage) {
-        String sql = "UPDATE [dbo].[Slide] SET Image = ? WHERE SliderId = ?";
-        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-            pstmt.setBlob(1, newImage);
-            pstmt.setInt(2, sliderId);
-            int rowsUpdated = pstmt.executeUpdate();
-            return rowsUpdated > 0;
-        } catch (SQLException ex) {
-            Logger.getLogger(DAOSlide.class.getName()).log(Level.SEVERE, "Error updating slide image", ex);
-        }
-        return false;
-    }
-    
-    // Method to get a slide by its ID
-    public Slide getSlideById(int sliderId) {
-        Slide slide = null;
-        String sql = "SELECT * FROM [dbo].[Slide] WHERE SliderId = ?";
-        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-            pstmt.setInt(1, sliderId);
-            try (ResultSet rs = pstmt.executeQuery()) {
-                if (rs.next()) {
-                    String title = rs.getString("Title");
-                    String imageRef = rs.getString("ImageRef"); // Assuming you have a column for image reference
-                    String backlink = rs.getString("Backlink");
-                    String status = rs.getBoolean("Status") ? "active" : "inactive"; // Convert boolean to string
-                    int userId = rs.getInt("UserId");
-
-                    slide = new Slide(sliderId, title, imageRef, backlink, status, userId);
-                }
+    public ArrayList<Slide> getAllSlideWithCondition(String status, String title, String backlink, int index) {
+        ArrayList<Slide> slist = new ArrayList<>();
+        try {
+            String sql = "  select * from slide  where active like ?  \n"
+                    + "  and title like ? and backlink like ?\n"
+                    + "  order by [slide_id] asc OFFSET ? ROWS FETCH NEXT 9  ROWS ONLY";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, "%" + status + "%");
+            stm.setString(2, "%" + title + "%");
+            stm.setString(3, "%" + backlink + "%");
+            stm.setInt(4, (index - 1) * 9);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                Slide b = new Slide(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5), rs.getString(6), rs.getBoolean(7));
+                slist.add(b);
             }
-        } catch (SQLException ex) {
-            Logger.getLogger(DAOSlide.class.getName()).log(Level.SEVERE, "Error fetching slide by ID", ex);
+        } catch (SQLException e) {
         }
-        return slide;
+        return slist;
     }
+
+    public int getNumberSlideWithCondition(String status, String title, String backlink) {
+        try {
+            String sql = "  select COUNT(*) from slide  where active like ?  \n"
+                    + "  and title like ? and backlink like ?\n";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, "%" + status + "%");
+            stm.setString(2, "%" + title + "%");
+            stm.setString(3, "%" + backlink + "%");
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+        }
+        return 0;
+    }
+
+    public void updateSlide(String title, String img, String backlink, int authorId, String descrip, int active, int slideid) {
+        try {
+            String sql = "update slide set [title]=?,  [img] = ? ,[backlink] = ? ,[author_id] = ? ,[description]  = ? ,[active] = ? where [slide_id] = ?";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, title);
+            stm.setString(2, img);
+            stm.setString(3, backlink);
+            stm.setInt(4, authorId);
+            stm.setString(5, descrip);
+            stm.setInt(6, active);
+            stm.setInt(7, slideid);
+            stm.executeUpdate();
+        } catch (SQLException e) {
+        }
+    }
+
+    public void switchStatus(int sid, int sstatus) {
+        try {
+            String sql = " update slide set [active] = ? where [slide_id] = ?";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setInt(1, sstatus);
+            stm.setInt(2, sid);
+            stm.executeUpdate();
+        } catch (SQLException e) {
+        }
+    }
+
+    public void deleteSlide(int sid) {
+        try {
+            String sql = " delete from slide where slide_id = ?";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setInt(1, sid);
+            stm.executeUpdate();
+        } catch (SQLException e) {
+        }
+    }
+
+
 }
