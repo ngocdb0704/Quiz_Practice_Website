@@ -214,6 +214,20 @@ CREATE TABLE [dbo].[Package](
 	[ListPrice] [float],
 	[SalePrice] [float],
 	[Status] [bit])
+
+GO
+
+
+
+CREATE TABLE [dbo].[Dimension](
+	[DimensionId] [int] IDENTITY(1,1) primary key,
+	[SubjectId] [int] foreign key references [dbo].[Subject](SubjectId),
+	[DimensionType] [nvarchar](50),
+	[DimensionName] [nvarchar](50),
+	[DimensionDescription] [nvarchar](100))
+
+
+
 GO
 
 --To prevent breaking old code, i added a new table instead
