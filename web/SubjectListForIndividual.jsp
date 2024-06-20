@@ -61,14 +61,14 @@
             <c:set var="key" value="${requestScope.key}"/>
             <c:set var="order" value="${requestScope.order}"/>
             <c:set var="listRegistered" value="${requestScope.listOfIdRegist}"/>
+            <c:set var="sponsor" value="${requestScope.sponsor}"/>
             <div>
                 <h1>
                     Subjects List
                 </h1>
                 <nav class="nav nav-pills" style="background-color: #e3f2fd;">
-                    <a class="nav-link active disabled" href="public/SubjectsList">For Individual</a>
-                    <a class="nav-link" href="#">For University</a>
-                    <a class="nav-link" href="#">For Business</a>
+                    <a class="nav-link active" href="public/SubjectsList?service=individual">For Individual</a>
+                    <a class="nav-link" href="public/SubjectsList?service=business">For Organization</a>
                 </nav>
             </div>
             <section>
@@ -111,7 +111,9 @@
                                                          style="width: 18rem; height: 10rem">
                                                     <div class="card-body">
                                                         <h5 class="card-title">
-                                                            ${listNewSubject.get(indexCarNewItem).getSubjectName()}
+                                                            <a id="subjectLink" href="SubjectDetails?subjectId=${listNewSubject.get(indexCarNewItem).getSubjectId()}">
+                                                                ${listNewSubject.get(indexCarNewItem).getSubjectName()}
+                                                            </a>
                                                         </h5>
                                                         <c:if test="${listNewSubject.get(indexCarNewItem).getSubjectName().length()<=22}">
                                                             <br>
@@ -176,11 +178,32 @@
                                                                 %
                                                             </span>
                                                         </p>
-                                                        <button type="button" class="btn btn-info" 
-                                                                data-bs-toggle="modal" 
-                                                                data-bs-target=".modalRegister${listNewSubject.get(indexCarNewItem).getSubjectId()}">
-                                                            Register
-                                                        </button>
+                                                        <p>
+                                                            <button type="button" class="btn btn-info" 
+                                                                    data-bs-toggle="modal" 
+                                                                    data-bs-target=".modalRegister${listNewSubject.get(indexCarNewItem).getSubjectId()}"
+                                                                    ${listRegistered.contains(listNewSubject.get(indexCarNewItem).getSubjectName())?"disabled":""}
+                                                                    >
+                                                                Register
+                                                            </button>
+                                                            <a class="btn text-bg-success disabled ${listRegistered == null ? "disabled":""}" 
+                                                               href="GiftCenter.jsp"
+                                                               style="text-decoration: none;"
+                                                               >
+                                                                Gift
+                                                            </a>
+                                                            <br>
+                                                            <span>
+                                                                <c:choose>
+                                                                    <c:when test="${sponsor.containsKey(listNewSubject.get(indexCarNewItem).getSubjectId())}">
+                                                                        @${sponsor.get(listNewSubject.get(indexCarNewItem).getSubjectId())} sponsored
+                                                                    </c:when>
+                                                                    <c:otherwise>
+                                                                        <br>
+                                                                    </c:otherwise>
+                                                                </c:choose>
+                                                            </span>
+                                                        </p>
                                                         <!-- Modal Register -->
                                                         <div class="modal fade modalRegister${listNewSubject.get(indexCarNewItem).getSubjectId()} "
                                                              tabindex="-1"
@@ -242,7 +265,7 @@
                 <h3>Big Sale</h3>
                 <c:if test="${numOfCarouselSale == 0}">
                     <div>
-                        <h3>There isn't any new subject at this time!</h3>
+                        <h3>There isn't any sale off subject at this time!</h3>
                     </div>
                 </c:if>
                 <c:if test="${numOfCarouselSale != 0}">
@@ -278,7 +301,9 @@
                                                          style="width: 18rem; height: 10rem">
                                                     <div class="card-body">
                                                         <h5 class="card-title">
-                                                            ${listSaleSubject.get(indexCarSaleItem).getSubjectName()}
+                                                            <a id="subjectLink" href="SubjectDetails?subjectId=${listSaleSubject.get(indexCarSaleItem).getSubjectId()}">
+                                                                ${listSaleSubject.get(indexCarSaleItem).getSubjectName()}
+                                                            </a>
                                                         </h5>
                                                         <c:if test="${listSaleSubject.get(indexCarSaleItem).getSubjectName().length()<=22}">
                                                             <br>
@@ -343,11 +368,31 @@
                                                                 %
                                                             </span>
                                                         </p>
-                                                        <button type="button" class="btn btn-info" 
-                                                                data-bs-toggle="modal" 
-                                                                data-bs-target=".modalRegister${listSaleSubject.get(indexCarSaleItem).getSubjectId()}">
-                                                            Register
-                                                        </button>
+                                                        <p>
+                                                            <button type="button" class="btn btn-info" 
+                                                                    data-bs-toggle="modal" 
+                                                                    data-bs-target=".modalRegister${listSaleSubject.get(indexCarSaleItem).getSubjectId()}"
+                                                                    ${listRegistered.contains(listSaleSubject.get(indexCarSaleItem).getSubjectName())?"disabled":""}>
+                                                                Register
+                                                            </button>
+                                                            <a class="btn text-bg-success disabled ${listRegistered == null ? "disabled":""}" 
+                                                               href="GiftCenter.jsp"
+                                                               style="text-decoration: none;"
+                                                               >
+                                                                Gift
+                                                            </a>
+                                                            <br>
+                                                            <span>
+                                                                <c:choose>
+                                                                    <c:when test="${sponsor.containsKey(listSaleSubject.get(indexCarSaleItem).getSubjectId())}">
+                                                                        @${sponsor.get(listSaleSubject.get(indexCarSaleItem).getSubjectId())} sponsored
+                                                                    </c:when>
+                                                                    <c:otherwise>
+                                                                        <br>
+                                                                    </c:otherwise>
+                                                                </c:choose>
+                                                            </span>
+                                                        </p>
                                                         <!-- Modal Register -->
                                                         <div class="modal fade modalRegister${listSaleSubject.get(indexCarSaleItem).getSubjectId()} "
                                                              tabindex="-1"
@@ -409,7 +454,7 @@
                 <h3>Featured Subjects</h3>
                 <c:if test="${numOfCarouselFeatured == 0}">
                     <div>
-                        <h3>There isn't any new subject at this time!</h3>
+                        <h3>There isn't any featured subject at this time!</h3>
                     </div>
                 </c:if>
                 <c:if test="${numOfCarouselFeatured != 0}">
@@ -445,7 +490,9 @@
                                                          style="width: 18rem; height: 10rem">
                                                     <div class="card-body">
                                                         <h5 class="card-title">
-                                                            ${listFeaturedSubject.get(indexCarFeatItem).getSubjectName()}
+                                                            <a id="subjectLink" href="SubjectDetails?subjectId=${listFeaturedSubject.get(indexCarFeatItem).getSubjectId()}">
+                                                                ${listFeaturedSubject.get(indexCarFeatItem).getSubjectName()}
+                                                            </a>
                                                         </h5>
                                                         <c:if test="${listFeaturedSubject.get(indexCarFeatItem).getSubjectName().length()<=22}">
                                                             <br>
@@ -510,11 +557,31 @@
                                                                 %
                                                             </span>
                                                         </p>
-                                                        <button type="button" class="btn btn-info" 
-                                                                data-bs-toggle="modal" 
-                                                                data-bs-target=".modalRegister${listFeaturedSubject.get(indexCarFeatItem).getSubjectId()}">
-                                                            Register
-                                                        </button>
+                                                        <p>
+                                                            <button type="button" class="btn btn-info" 
+                                                                    data-bs-toggle="modal" 
+                                                                    data-bs-target=".modalRegister${listFeaturedSubject.get(indexCarFeatItem).getSubjectId()}"
+                                                                    ${listRegistered.contains(listFeaturedSubject.get(indexCarFeatItem).getSubjectName())?"disabled":""}>
+                                                                Register
+                                                            </button>
+                                                            <a class="btn text-bg-success disabled ${listRegistered == null ? "disabled":""}" 
+                                                               href="GiftCenter.jsp"
+                                                               style="text-decoration: none;"
+                                                               >
+                                                                Gift
+                                                            </a>
+                                                            <br>
+                                                            <span>
+                                                                <c:choose>
+                                                                    <c:when test="${sponsor.containsKey(listFeaturedSubject.get(indexCarFeatItem).getSubjectId())}">
+                                                                        @${sponsor.get(listFeaturedSubject.get(indexCarFeatItem).getSubjectId())} sponsored
+                                                                    </c:when>
+                                                                    <c:otherwise>
+                                                                        <br>
+                                                                    </c:otherwise>
+                                                                </c:choose>
+                                                            </span>
+                                                        </p>
                                                         <!-- Modal Register -->
                                                         <div class="modal fade modalRegister${listFeaturedSubject.get(indexCarFeatItem).getSubjectId()} "
                                                              tabindex="-1"
@@ -573,14 +640,14 @@
             </section>
             <br>
             <section>
-                <c:set var="posToGo" value="${2035}"/>
+                <c:set var="posToGo" value="${2140}"/>
                 <h1>
                     Subjects List
                 </h1>
                 <div class="row">
                     <aside class="col-4 sbar">
                         <div class="row mb-3">
-                            <form action="public/SubjectsList" method="get">
+                            <form action="public/SubjectsList" method="post">
                                 <div class="mb-3">
                                     <div class="row card-body container justify-content-center">
                                         <label for="searchKey">Subject Search Box</label>
@@ -590,6 +657,7 @@
                                                name="key" 
                                                placeholder="Search Subject by Title">
                                         <input type="hidden" value="${posToGo}" name="goToPos">
+                                        <input type="hidden" value="individual" name="service">
                                         <button class="col-3" onclick="this.form.submit()">
                                             <i class="bi bi-search"></i>
                                         </button>
@@ -604,6 +672,21 @@
                                     <div class="accordion-item">
                                         <h2 class="accordion-header">
                                             <button class="accordion-button collapsed" 
+                                                    type="button" data-bs-toggle="collapse" 
+                                                    data-bs-target="#flush-collapseZero" 
+                                                    aria-expanded="false" 
+                                                    aria-controls="flush-collapseZero">
+                                                Hide filters
+                                            </button>
+                                        </h2>
+                                        <div id="flush-collapseZero" 
+                                             class="accordion-collapse collapse" 
+                                             data-bs-parent="#accordionFlushSiderFilter">
+                                        </div>
+                                    </div>
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header">
+                                            <button class="accordion-button collapsed" 
                                                     type="button" 
                                                     data-bs-toggle="collapse" 
                                                     data-bs-target="#flush-collapseOne" 
@@ -613,7 +696,7 @@
                                             </button>
                                         </h2>
                                         <div id="flush-collapseOne" 
-                                             class="accordion-collapse collapse" 
+                                             class="accordion-collapse collapse show" 
                                              data-bs-parent="#accordionFlushSiderFilter">
                                             <div class="accordion-body">
                                                 <ul class="list-group list-group-flush">
@@ -681,7 +764,8 @@
                                                     type="button" data-bs-toggle="collapse" 
                                                     data-bs-target="#flush-collapseTwo" 
                                                     aria-expanded="false" 
-                                                    aria-controls="flush-collapseTwo">
+                                                    aria-controls="flush-collapseTwo"
+                                                    onclick="scrollToTopCategory()">
                                                 Levels
                                             </button>
                                         </h2>
@@ -723,13 +807,13 @@
                                             </button>
                                         </h2>
                                         <div id="flush-collapseThree" 
-                                             class="accordion-collapse collapse" 
+                                             class="accordion-collapse collapse show" 
                                              data-bs-parent="#featuredAccordion">
                                             <div class="accordion-body">
                                                 <ul>
                                                     <c:forEach begin="0" end="${listFeaturedSubject.size()-1}" var="iFeat">
                                                         <li>
-                                                            <a class="btn btn-link" href="">
+                                                            <a class="btn btn-link" href="SubjectDetails?subjectId=${listFeaturedSubject.get(iFeat).getSubjectId()}">
                                                                 ${listFeaturedSubject.get(iFeat).getSubjectName()}
                                                             </a>
                                                         </li>
@@ -755,14 +839,14 @@
                                 <ul class="pagination col-8">
                                     <li class="page-item">
                                         <a class="page-link ${page==1?"disabled":""}" 
-                                           href="public/SubjectsList?${filter}page=${page-1}&goToPos=${posToGo}&orderList=${order}">Previous</a>
+                                           href="public/SubjectsList?${filter}page=${page-1}&goToPos=${posToGo}&orderList=${order}&service=individual">Previous</a>
                                     </li>
                                     <!-- get all pages -->
                                     <c:if test="${numOfAllSubjects > 6}">
                                         <c:forEach begin="${1}" end="${2}" var="i">
                                             <li class="page-item">
                                                 <a class="page-link ${i==page?"active":""}" 
-                                                   href="public/SubjectsList?${filter}page=${i}&goToPos=${posToGo}&orderList=${order}">${i}</a>
+                                                   href="public/SubjectsList?${filter}page=${i}&goToPos=${posToGo}&orderList=${order}&service=individual">${i}</a>
                                             </li>
                                         </c:forEach>
                                         <li class="page-item">
@@ -771,7 +855,7 @@
                                         <c:if test="${page > 2 && page < numOfAllSubjects-1}">
                                             <li class="page-item">
                                                 <a class="page-link active" 
-                                                   href="public/SubjectsList?${filter}page=${page}&goToPos=${posToGo}&orderList=${order}">${page}</a>
+                                                   href="public/SubjectsList?${filter}page=${page}&goToPos=${posToGo}&orderList=${order}&service=individual">${page}</a>
                                             </li>
                                             <li class="page-item">
                                                 <a class="page-link disabled">...</a>
@@ -780,7 +864,7 @@
                                         <c:forEach begin="${numOfAllSubjects-1}" end="${numOfAllSubjects}" var="i">
                                             <li class="page-item">
                                                 <a class="page-link ${i==page?"active":""}" 
-                                                   href="public/SubjectsList?${filter}page=${i}&goToPos=${posToGo}&orderList=${order}">${i}</a>
+                                                   href="public/SubjectsList?${filter}page=${i}&goToPos=${posToGo}&orderList=${order}&service=individual">${i}</a>
                                             </li>
                                         </c:forEach>
                                     </c:if>
@@ -788,13 +872,13 @@
                                         <c:forEach begin="${1}" end="${numOfAllSubjects}" var="i">
                                             <li class="page-item">
                                                 <a class="page-link ${i==page?"active":""}" 
-                                                   href="public/SubjectsList?${filter}page=${i}&goToPos=${posToGo}&orderList=${order}">${i}</a>
+                                                   href="public/SubjectsList?${filter}page=${i}&goToPos=${posToGo}&orderList=${order}&service=individual">${i}</a>
                                             </li>
                                         </c:forEach>
                                     </c:if>        
                                     <li class="page-item">
                                         <a class="page-link ${page==numOfAllSubjects?"disabled":""}" 
-                                           href="public/SubjectsList?${filter}page=${page+1}&goToPos=${posToGo}&orderList=${order}">Next</a>
+                                           href="public/SubjectsList?${filter}page=${page+1}&goToPos=${posToGo}&orderList=${order}&service=individual">Next</a>
                                     </li>
                                 </ul>
                                 <div class="col-4">
@@ -802,14 +886,14 @@
                                     <ul class="pagination">
                                         <li class="page-item">
                                             <a class=" page-link ${order==1?"active":""}" 
-                                               href="public/SubjectsList?${filter}page=${page}&goToPos=${posToGo}&orderList=1">
+                                               href="public/SubjectsList?${filter}page=${page}&goToPos=${posToGo}&orderList=1&service=individual">
                                                 Latest
                                             </a>
 
                                         </li>
                                         <li class="page-item">
                                             <a class=" page-link ${order==0?"active":""}" 
-                                               href="public/SubjectsList?${filter}page=${page}&goToPos=${posToGo}&orderList=0">
+                                               href="public/SubjectsList?${filter}page=${page}&goToPos=${posToGo}&orderList=0&service=individual">
                                                 Oldest
                                             </a>
                                         </li>
@@ -834,7 +918,7 @@
                                     </span>
                                     <span>
                                         <a class="btn btn-primary"
-                                           href="public/SubjectsList?goToPos=1850">All Subjects</a>
+                                           href="public/SubjectsList?goToPos=2035&service=individual">All Subjects</a>
                                     </span>
                                 </h3>
                             </div>
@@ -913,7 +997,7 @@
                                                 <h6>
                                                     <span class="fw-light badge rounded-pill text-bg-light" 
                                                           style=" text-decoration-line: line-through;"> 
-                                                        ${Integer.valueOf(listNewSubject.get(indexCarNewItem).getPackageListPrice()*1000)} vnd
+                                                        ${Integer.valueOf(p.getPackageListPrice()*1000)} vnd
                                                     </span>
                                                     <span class="badge rounded-pill text-bg-danger">
                                                         - ${Integer.valueOf(
@@ -929,7 +1013,8 @@
                                                         <!-- Button buy trigger modal -->
                                                         <button type="button" class="btn btn-primary" 
                                                                 data-bs-toggle="modal" 
-                                                                data-bs-target=".modalRegister${p.getSubjectId()}">
+                                                                data-bs-target=".modalRegister${p.getSubjectId()}"
+                                                                ${listRegistered.contains(p.getSubjectName())?"disabled":""}>
                                                             Register
                                                         </button>
                                                         <!-- Modal Register -->
@@ -958,7 +1043,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="col-xl-4">
-                                                        <a class="btn text-bg-success ${listRegistered == null ? "disabled":""}" 
+                                                        <a class="btn text-bg-success disabled ${listRegistered == null ? "disabled":""}" 
                                                            href="GiftCenter.jsp"
                                                            style="text-decoration: none;"
                                                            >
@@ -966,6 +1051,16 @@
                                                         </a>
                                                     </div>
                                                 </diV>
+                                                <div class="row">
+                                                    <c:choose>
+                                                        <c:when test="${sponsor.containsKey(p.getSubjectId())}">
+                                                            @${sponsor.get(p.getSubjectId())} sponsored
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <br>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -977,14 +1072,14 @@
                                 <ul class="pagination col-8">
                                     <li class="page-item">
                                         <a class="page-link ${page==1?"disabled":""}" 
-                                           href="public/SubjectsList?${filter}page=${page-1}&goToPos=${posToGo}&orderList=${order}">Previous</a>
+                                           href="public/SubjectsList?${filter}page=${page-1}&goToPos=${posToGo}&orderList=${order}&service=individual">Previous</a>
                                     </li>
                                     <!-- get all pages -->
                                     <c:if test="${numOfAllSubjects > 6}">
                                         <c:forEach begin="${1}" end="${2}" var="i">
                                             <li class="page-item">
                                                 <a class="page-link ${i==page?"active":""}" 
-                                                   href="public/SubjectsList?${filter}page=${i}&goToPos=${posToGo}&orderList=${order}">${i}</a>
+                                                   href="public/SubjectsList?${filter}page=${i}&goToPos=${posToGo}&orderList=${order}&service=individual">${i}</a>
                                             </li>
                                         </c:forEach>
                                         <li class="page-item">
@@ -993,7 +1088,7 @@
                                         <c:if test="${page > 2 && page < numOfAllSubjects-1}">
                                             <li class="page-item">
                                                 <a class="page-link active" 
-                                                   href="public/SubjectsList?${filter}page=${page}&goToPos=${posToGo}&orderList=${order}">${page}</a>
+                                                   href="public/SubjectsList?${filter}page=${page}&goToPos=${posToGo}&orderList=${order}&service=individual">${page}</a>
                                             </li>
                                             <li class="page-item">
                                                 <a class="page-link disabled">...</a>
@@ -1002,7 +1097,7 @@
                                         <c:forEach begin="${numOfAllSubjects-1}" end="${numOfAllSubjects}" var="i">
                                             <li class="page-item">
                                                 <a class="page-link ${i==page?"active":""}" 
-                                                   href="public/SubjectsList?${filter}page=${i}&goToPos=${posToGo}&orderList=${order}">${i}</a>
+                                                   href="public/SubjectsList?${filter}page=${i}&goToPos=${posToGo}&orderList=${order}&service=individual">${i}</a>
                                             </li>
                                         </c:forEach>
                                     </c:if>
@@ -1010,13 +1105,13 @@
                                         <c:forEach begin="${1}" end="${numOfAllSubjects}" var="i">
                                             <li class="page-item">
                                                 <a class="page-link ${i==page?"active":""}" 
-                                                   href="public/SubjectsList?${filter}page=${i}&goToPos=${posToGo}&orderList=${order}">${i}</a>
+                                                   href="public/SubjectsList?${filter}page=${i}&goToPos=${posToGo}&orderList=${order}&service=individual">${i}</a>
                                             </li>
                                         </c:forEach>
                                     </c:if>        
                                     <li class="page-item">
                                         <a class="page-link ${page==numOfAllSubjects?"disabled":""}" 
-                                           href="public/SubjectsList?${filter}page=${page+1}&goToPos=${posToGo}&orderList=${order}">Next</a>
+                                           href="public/SubjectsList?${filter}page=${page+1}&goToPos=${posToGo}&orderList=${order}&service=individual">Next</a>
                                     </li>
                                 </ul>
                             </nav>

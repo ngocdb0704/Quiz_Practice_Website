@@ -4,17 +4,23 @@ DROP TABLE [dbo].[Blog];
 DROP TABLE [dbo].[BlogCategory];
 DROP TABLE [dbo].[Registration];
 DROP TABLE [dbo].[RegistrationStatus];
+DROP TABLE [dbo].[License];
+DROP TABLE [dbo].[OrganizationPackageSubject]
 DROP TABLE [dbo].[Package];
+DROP TABLE [dbo].[OrganizationPackage];
 DROP TABLE [dbo].[Subject];
 DROP TABLE [dbo].[SubjectCategory];
 DROP TABLE [dbo].[SubjectLevel];
 DROP TABLE [dbo].[ResetToken];
 DROP TABLE [dbo].[ProfilePicture];
+DROP TABLE [dbo].[OrganizationMember];
+DROP TABLE [dbo].[Organization];
 DROP TABLE [dbo].[User];
 DROP TABLE [dbo].[Role];
 DROP TABLE [dbo].[Gender];
 
 
+Go
 CREATE TABLE [dbo].[Gender](
 	[GenderId] [int] IDENTITY(1,1) primary key ,
 	[GenderName] [varchar](50))
@@ -55,16 +61,38 @@ CREATE TABLE [dbo].[SubjectCategory](
 	[SubjectCategoryId] [int] IDENTITY(1,1) primary key,
 	[SubjectCategoryName] [varchar](50),
 	[SubjectParentCategory] int
-	)
+)
+
+
+	GO
 
 CREATE TABLE [dbo].[SubjectLevel](
 	[SubjectLevelId] [int] IDENTITY(1,1) primary key,
 	[SubjectLevelName] [varchar](50))
+
+GO
+CREATE TABLE [dbo].[Organization](
+	[OrganizationId] [int] IDENTITY(1,1) primary key,
+	[OrganizationName] [varchar](50),
+	[OrganizationEmail] [varchar](50) UNIQUE,
+	[OrganizationSize] [int],
+	[OrganizationCountry] [varchar] (50),
+	[IsNonprofit] [bit])
+GO
+CREATE TABLE [dbo].[OrganizationMember](
+	[Id] [int] IDENTITY(1,1) primary key,
+	[OrganizationId] [int]  foreign key references [dbo].[Organization](OrganizationId),
+	[MemberId] [int] foreign key references  [dbo].[User](UserId),
+	[JobTitle] [varchar](50),
+	[IsActive] [bit])
+
+
 GO
 
 CREATE TABLE [dbo].[Subject](
 	[SubjectId] [int] IDENTITY(1,1) primary key,
 	[SubjectTitle] [varchar](50),
+	[SubjectProviderId] [int] foreign key references [dbo].[Organization](OrganizationId),
 	[SubjectCategoryId] [int] foreign key references [dbo].[SubjectCategory](SubjectCategoryId),
 	[SubjectStatus] [bit],
 	[SubjectLevelId] [int] foreign key references [dbo].[SubjectLevel](SubjectLevelId),
@@ -75,6 +103,7 @@ CREATE TABLE [dbo].[Subject](
 	[SubjectBriefInfo] [varchar](300),
 	[SubjectDescription] [ntext],
 	[SubjectThumbnail] [varchar](255))
+
 GO
 
 CREATE TABLE [dbo].[Package](
@@ -86,6 +115,33 @@ CREATE TABLE [dbo].[Package](
 	[SalePrice] [float],
 	[Status] [bit])
 
+GO
+
+CREATE TABLE [dbo].[OrganizationPackage](
+	[OrganizationPackageId] [int] IDENTITY(1,1) primary key,
+	[PackageName] [nvarchar](50),
+	[PackageDuration] [int],
+	[RetailPriceEach] [float],
+	[WholesalePriceEach] [float],
+	[NonprofitPriceEach] [float],
+	[Status] [bit])
+
+GO
+CREATE TABLE [dbo].[License](
+	[LicenseId] [int] IDENTITY(1,1) primary key,
+	[OrganizationId] [int] foreign key references [dbo].[Organization](OrganizationId),
+	[OrganizationPackageId] [int] foreign key references [dbo].[OrganizationPackage] (OrganizationPackageId),
+	[SalePrice] [float],
+	[ValidFrom] [date],
+	[ValidTo] [date],
+	[Size] [int],
+	[Status] [bit])
+GO
+CREATE TABLE [dbo].[OrganizationPackageSubject](
+	[Id] [int] IDENTITY(1,1) primary key,
+	[OrganizationPackageId] [int] foreign key references [dbo].[OrganizationPackage] (OrganizationPackageId),
+	[SubjectId] [int] foreign key references [dbo].[Subject](SubjectId)
+)
 GO
 
 CREATE TABLE [dbo].[RegistrationStatus](
@@ -117,8 +173,8 @@ CREATE TABLE [dbo].[Blog](
 	[BlogTitle] [nvarchar](512),
 	[UpdatedTime] [datetime],
 	[PostBrief] [nvarchar](2048),
-	[PostText] [ntext]
-)
+	[PostText] [ntext])
+
 GO
 CREATE TABLE [dbo].[Question](
 	[QuestionID] [int] IDENTITY(1,1) primary key,
@@ -134,6 +190,7 @@ CREATE TABLE [dbo].[Answer](
 	[QuestionID] [int] foreign key references [dbo].[Question](QuestionID),
 	[AnswerName] [text],
 	[IsCorrect] [bit])
+
 INSERT INTO [SubjectCategory] VALUES('Natural Science', 0);
 INSERT INTO [SubjectCategory] VALUES('Social Science', 0);
 INSERT INTO [SubjectCategory] VALUES('Technology & IT', 0);
@@ -169,11 +226,21 @@ INSERT INTO [SubjectCategory] VALUES('Geography', 2);
 INSERT INTO [SubjectCategory] VALUES('World History', 31);
 INSERT INTO [SubjectCategory] VALUES('Development Geography', 32);
 
+INSERT INTO [Organization] values ('SWPG6', 'inspireme62@gmail.com', 100, 'VietNam', 1)
+INSERT INTO [Organization] values ('TrustMeBro', 'trustmebro@gmail.com', 100, 'VietNam', 1)
+INSERT INTO [Organization] values ('AbsolutelyNotFPT', 'absoluteNotFPT@gmail.com', 100, 'VietNam', 1)
+INSERT INTO [Organization] values ('ApparentlyNotVTIGroup', 'apparentlyNotVTI@gmail.com', 100, 'VietNam', 1)
+INSERT INTO [Organization] values ('TrustWorthyCompany', 'trustWorthyCompany@gmail.com', 100, 'VietNam', 1)
+INSERT INTO [Organization] values ('Leona', 'leona@gmail.com', 100, 'USA', 1)
+INSERT INTO [Organization] values ('Guugla', 'guugla@gmail.com', 100, 'USA', 1)
+INSERT INTO [Organization] values ('IPM', 'ipm@gmail.com', 100, 'USA', 1)
+INSERT INTO [Organization] values ('NotMeta', 'notMeta@gmail.com', 100, 'USA', 1)
+
 INSERT INTO [SubjectLevel] VALUES('Beginner');
 INSERT INTO [SubjectLevel] VALUES('Intermediate');
 INSERT INTO [SubjectLevel] VALUES('Advanced');
 
-INSERT INTO [Subject] VALUES('College Algebra with the Math Sorcerer', 7, 1, 1, 1, '2004-05-01','2004-05-01','nice', 'Mock brief info', '##Coursera style description
+INSERT INTO [Subject] VALUES('College Algebra with the Math Sorcerer',2, 7, 1, 1, 1, '2004-05-01','2004-05-01','nice', 'Mock brief info', '##Coursera style description
 		Sample
 		The subject description part of the subject details page will parse the description of a subject and display it similar to how Coursera display their subject info
 		Note: This section will not be displayed
@@ -223,58 +290,55 @@ INSERT INTO [Subject] VALUES('College Algebra with the Math Sorcerer', 7, 1, 1, 
 		<h3>27 hours to complete</h3>
 		<h4>3 weeks at 9 hours a week</h4>
 	##End', 'https://thumbs.comidoc.net/750/webp/2463616_13ef_3.webp');
-INSERT INTO [Subject] VALUES('Become an Algebra Master', 7, 1, 1, 1, '2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','https://www.tangolearn.com/wp-content/uploads/2022/03/best-online-algebra-courses-1.jpg');
-INSERT INTO [Subject] VALUES('US / United States History', 33, 1, 1, 0, '2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','https://higheredprofessor.com/wp-content/uploads/2015/05/How-many-courses-do-university-faculty-teach1.jpg');
-INSERT INTO [Subject] VALUES('C Fundamental', 29, 1, 1, 1, '2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','https://www.bostontechmom.com/wp-content/uploads/2019/03/Computer-Science-Class.jpg');
-INSERT INTO [Subject] VALUES('The Geography of Globalization', 34, 1, 1, 1,'2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','https://img77.uenicdn.com/image/upload/v1654265992/business/93f45720-1374-4925-8f1a-c50dd53034f4.jpg');
-INSERT INTO [Subject] VALUES('Pointers & Advanced C Language',29,1, 3,1,'2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','https://i.ytimg.com/vi/0zuolvgpAaY/maxresdefault.jpg');
-INSERT INTO [Subject] VALUES('Geometry Basics to Advanced',8,1, 3, 1,'2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','https://www.venturelessons.com/wp-content/uploads/2020/09/geometry-1128x635.jpg');
-INSERT INTO [Subject] VALUES('Probability and Statistics',9,1, 1, 1,'2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','https://cdn01.alison-static.net/courses/1818/alison_courseware_intro_1818.jpg');
-INSERT INTO [Subject] VALUES('Linear Algebra',10,1,1,1,'2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','https://i.ytimg.com/vi/bHwB0icYErw/maxresdefault.jpg');
-INSERT INTO [Subject] VALUES('React 18 Course 2024 - Learn React JS',23,1,1,1,'2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','https://i.ytimg.com/vi/CXa0f4-dWi4/maxresdefault.jpg');
-INSERT INTO [Subject] VALUES('Spring Boot 3, Spring 6 & Hibernate',24,1,1,0,'2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','https://crunchify.com/wp-content/uploads/2018/04/Spring-Boot-Tutorial-by-Crunchify-LLC.jpg');
-INSERT INTO [Subject] VALUES('Learn JAVA Programming',27,1,1,0,'2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','https://i.ytimg.com/vi/ZYwHJ1LiKZY/maxresdefault.jpg');
-INSERT INTO [Subject] VALUES('The Complete Python Bootcamp',28,1,2,0,'2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','https://i.ytimg.com/vi/wHXWMChMVds/maxresdefault.jpg');
-INSERT INTO [Subject] VALUES('New Subject',28,1,2,0,'2024-06-7','2024-06-7','This is nice', 'Mock brief info', 'Mock description','https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
-INSERT INTO [Subject] VALUES('Somehow',29,1,3,0,'2024-06-6','2024-06-7','This is awsome', 'Mock brief info', 'Mock description','https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
-INSERT INTO [Subject] VALUES('Night Call',30,1,3,0,'2024-06-5','2024-06-7','This is incredible', 'Mock brief info', 'Mock description','https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
-INSERT INTO [Subject] VALUES('Inspiration',9,1,2,0,'2024-06-4','2024-06-7','This is amazing', 'Mock brief info', 'Mock description','https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
-
-
-
-INSERT INTO [Subject] VALUES('iWork', 24, 1,2, 0, '2023-08-21', '2024-04-24', 'target plug-and-play e-tailers', 'Mock brief info', 'Mock description', 'https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
-INSERT INTO [Subject] VALUES('Customer Relationships', 24, 1,2, 0, '2024-06-07', '2024-06-07', 'visualize robust niches', 'Mock brief info', 'Mock description', 'https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
-INSERT INTO [Subject] VALUES('iSCSI', 23, 1,2, 0, '2023-07-10', '2024-05-29', 'redefine e-markets', 'Mock brief info', 'Mock description', 'https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
-INSERT INTO [Subject] VALUES('EOI', 24, 1,3, 0, '2023-09-03', '2024-04-02', 'utilize killer web services', 'Mock brief info', 'Mock description', 'https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
-INSERT INTO [Subject] VALUES('Sports Marketing', 25, 1,1, 0, '2023-06-26', '2023-06-23', 'redefine sticky vortals', 'Mock brief info', 'Mock description', 'https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
-INSERT INTO [Subject] VALUES('SAP EWM', 28, 1,3, 0, '2023-06-18', '2023-07-06', 'aggregate communities', 'Mock brief info', 'Mock description', 'https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
-INSERT INTO [Subject] VALUES('FPGA prototyping', 33, 1,2, 0, '2024-02-15', '2023-11-08', 'matrix action-items', 'Mock brief info', 'Mock description', 'https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
-INSERT INTO [Subject] VALUES('DNS Administration', 8, 1,2, 0, '2023-08-30', '2023-08-20', 'incubate wireless markets', 'Mock brief info', 'Mock description', 'https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
-INSERT INTO [Subject] VALUES('BMI', 9, 1,3, 0, '2024-04-27', '2024-04-07', 'empower e-services', 'Mock brief info', 'Mock description', 'https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
-INSERT INTO [Subject] VALUES('DDI Certified', 30, 1,3, 0, '2023-06-24', '2023-12-23', 'envisioneer 24/7 niches', 'Mock brief info', 'Mock description', 'https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
-INSERT INTO [Subject] VALUES('GIS Modeling', 27, 1,3, 0, '2024-05-03', '2024-05-31', 'incubate granular solutions', 'Mock brief info', 'Mock description', 'https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
-INSERT INTO [Subject] VALUES('XSS', 28, 1,1, 0, '2024-04-09', '2023-09-21', 'target experiences', 'Mock brief info', 'Mock description', 'https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
-INSERT INTO [Subject] VALUES('VAT', 27, 1,1, 0, '2023-09-20', '2024-05-15', 'grow infomediaries', 'Mock brief info', 'Mock description', 'https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
-INSERT INTO [Subject] VALUES('QNXT', 28, 1,1, 0, '2023-09-30', '2023-09-15', 'productize action-items', 'Mock brief info', 'Mock description', 'https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
-INSERT INTO [Subject] VALUES('EEOC', 23, 1,1, 0, '2023-08-01', '2024-04-22', 'reinvent e-tailers', 'Mock brief info', 'Mock description', 'https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
-INSERT INTO [Subject] VALUES('Packaging', 30, 1,1, 0, '2024-03-12', '2024-04-20', 'monetize interfaces', 'Mock brief info', 'Mock description', 'https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
-INSERT INTO [Subject] VALUES('Medical Equipment', 33, 1,3, 0, '2023-06-21', '2024-04-05', 'embrace infrastructures', 'Mock brief info', 'Mock description', 'https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
-INSERT INTO [Subject] VALUES('CTIOS', 29, 1,2, 0, '2023-09-03', '2024-05-26', 'optimize metrics', 'Mock brief info', 'Mock description', 'https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
-INSERT INTO [Subject] VALUES('Therapists', 26, 1,2, 0, '2023-09-05', '2024-01-12', 'whiteboard architectures', 'Mock brief info', 'Mock description', 'https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
-INSERT INTO [Subject] VALUES('PVM', 24, 1,2, 0, '2024-05-10', '2023-06-21', 'innovatevconvergence', 'Mock brief info', 'Mock description', 'https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
-INSERT INTO [Subject] VALUES('ECDL Certification', 23, 1,2, 0, '2024-01-09', '2023-11-19', 'integrate viral e-markets', 'Mock brief info', 'Mock description', 'https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
-INSERT INTO [Subject] VALUES('Evidence', 25, 1,2, 0, '2023-11-08', '2024-04-18', 'grow infomediaries', 'Mock brief info', 'Mock description', 'https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
-INSERT INTO [Subject] VALUES('HBase', 23, 1,2, 0, '2023-08-29', '2023-10-08', 'matrix ynergies', 'Mock brief info', 'Mock description', 'https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
-INSERT INTO [Subject] VALUES('Subversion', 24, 1,2, 0, '2024-01-15', '2023-07-02', 'repurpose eyeballs', 'Mock brief info', 'Mock description', 'https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
-INSERT INTO [Subject] VALUES('FCE', 25, 1,2, 0, '2024-03-05', '2024-05-21', 'cultivate supply-chains', 'Mock brief info', 'Mock description', 'https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
-INSERT INTO [Subject] VALUES('Design Patterns', 26, 1,1, 0, '2024-01-19', '2024-04-20', 'innovate scalable content', 'Mock brief info', 'Mock description', 'https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
-INSERT INTO [Subject] VALUES('AutoCAD Civil 3D', 27, 1,1, 0, '2023-11-22', '2024-06-05', 'morph world-class systems', 'Mock brief info', 'Mock description', 'https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
-INSERT INTO [Subject] VALUES('Front-end', 28, 1,2, 0, '2023-06-17', '2023-12-19', 'synthesize models', 'Mock brief info', 'Mock description', 'https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
-INSERT INTO [Subject] VALUES('HP Blade', 29, 1,3, 0, '2023-11-24', '2024-04-04', 'reintermediate web-readiness', 'Mock brief info', 'Mock description', 'https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
-INSERT INTO [Subject] VALUES('NCover', 30, 1,2, 0, '2024-05-24', '2024-05-17', 'utilize robust convergence', 'Mock brief info', 'Mock description', 'https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
-INSERT INTO [Subject] VALUES('FMA', 29, 1,1, 0, '2024-02-21', '2023-12-20', 'utilize user-centric e-markets', 'Mock brief info', 'Mock description', 'https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
-INSERT INTO [Subject] VALUES('CQ5', 30, 1,1, 0, '2024-04-21', '2024-03-25', 'repurpose e-markets', 'Mock brief info', 'Mock description', 'https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
-INSERT INTO [Subject] VALUES('Euphonium', 33, 1,2, 0, '2024-2-10', '2024-02-10', 'transform interactive deliverables', 'Mock brief info', 'Mock description', 'https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
+INSERT INTO [Subject] VALUES('Become an Algebra Master',3, 7, 1, 1, 1, '2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','https://www.tangolearn.com/wp-content/uploads/2022/03/best-online-algebra-courses-1.jpg');
+INSERT INTO [Subject] VALUES('US / United States History',4, 33, 1, 1, 0, '2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','https://higheredprofessor.com/wp-content/uploads/2015/05/How-many-courses-do-university-faculty-teach1.jpg');
+INSERT INTO [Subject] VALUES('C Fundamental',5, 29, 1, 1, 1, '2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','https://www.bostontechmom.com/wp-content/uploads/2019/03/Computer-Science-Class.jpg');
+INSERT INTO [Subject] VALUES('The Geography of Globalization',6, 34, 1, 1, 1,'2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','https://img77.uenicdn.com/image/upload/v1654265992/business/93f45720-1374-4925-8f1a-c50dd53034f4.jpg');
+INSERT INTO [Subject] VALUES('Pointers & Advanced C Language',7,29,1, 3,1,'2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','https://i.ytimg.com/vi/0zuolvgpAaY/maxresdefault.jpg');
+INSERT INTO [Subject] VALUES('Geometry Basics to Advanced',8,8,1, 3, 1,'2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','https://www.venturelessons.com/wp-content/uploads/2020/09/geometry-1128x635.jpg');
+INSERT INTO [Subject] VALUES('Probability and Statistics',9,9,1, 1, 1,'2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','https://cdn01.alison-static.net/courses/1818/alison_courseware_intro_1818.jpg');
+INSERT INTO [Subject] VALUES('Linear Algebra',9,10,1,1,1,'2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','https://i.ytimg.com/vi/bHwB0icYErw/maxresdefault.jpg');
+INSERT INTO [Subject] VALUES('React 18 Course 2024 - Learn React JS',8,23,1,1,1,'2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','https://i.ytimg.com/vi/CXa0f4-dWi4/maxresdefault.jpg');
+INSERT INTO [Subject] VALUES('Spring Boot 3, Spring 6 & Hibernate',7,24,1,1,0,'2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','https://crunchify.com/wp-content/uploads/2018/04/Spring-Boot-Tutorial-by-Crunchify-LLC.jpg');
+INSERT INTO [Subject] VALUES('Learn JAVA Programming',6,27,1,1,0,'2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','https://i.ytimg.com/vi/ZYwHJ1LiKZY/maxresdefault.jpg');
+INSERT INTO [Subject] VALUES('The Complete Python Bootcamp',5,28,1,2,0,'2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','https://i.ytimg.com/vi/wHXWMChMVds/maxresdefault.jpg');
+INSERT INTO [Subject] VALUES('New Subject',4,28,1,2,0,'2024-06-7','2024-06-7','This is nice', 'Mock brief info', 'Mock description','https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
+INSERT INTO [Subject] VALUES('Somehow',3,29,1,3,0,'2024-06-6','2024-06-7','This is awsome', 'Mock brief info', 'Mock description','https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
+INSERT INTO [Subject] VALUES('Night Call',2,30,1,3,0,'2024-06-5','2024-06-7','This is incredible', 'Mock brief info', 'Mock description','https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
+INSERT INTO [Subject] VALUES('Inspiration',2,9,1,2,0,'2024-06-4','2024-06-7','This is amazing', 'Mock brief info', 'Mock description','https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
+INSERT INTO [Subject] VALUES('iWork',3, 24, 1,2, 0, '2023-08-21', '2024-04-24', 'target plug-and-play e-tailers', 'Mock brief info', 'Mock description', 'https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
+INSERT INTO [Subject] VALUES('Customer Relationships',4, 24, 1,2, 0, '2024-06-07', '2024-06-07', 'visualize robust niches', 'Mock brief info', 'Mock description', 'https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
+INSERT INTO [Subject] VALUES('iSCSI',5, 23, 1,2, 0, '2023-07-10', '2024-05-29', 'redefine e-markets', 'Mock brief info', 'Mock description', 'https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
+INSERT INTO [Subject] VALUES('EOI',6, 24, 1,3, 0, '2023-09-03', '2024-04-02', 'utilize killer web services', 'Mock brief info', 'Mock description', 'https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
+INSERT INTO [Subject] VALUES('Sports Marketing',7, 25, 1,1, 0, '2023-06-26', '2023-06-23', 'redefine sticky vortals', 'Mock brief info', 'Mock description', 'https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
+INSERT INTO [Subject] VALUES('SAP EWM',8, 28, 1,3, 0, '2023-06-18', '2023-07-06', 'aggregate communities', 'Mock brief info', 'Mock description', 'https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
+INSERT INTO [Subject] VALUES('FPGA prototyping',9, 33, 1,2, 0, '2024-02-15', '2023-11-08', 'matrix action-items', 'Mock brief info', 'Mock description', 'https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
+INSERT INTO [Subject] VALUES('DNS Administration',8, 8, 1,2, 0, '2023-08-30', '2023-08-20', 'incubate wireless markets', 'Mock brief info', 'Mock description', 'https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
+INSERT INTO [Subject] VALUES('BMI',7, 9, 1,3, 0, '2024-04-27', '2024-04-07', 'empower e-services', 'Mock brief info', 'Mock description', 'https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
+INSERT INTO [Subject] VALUES('DDI Certified',6, 30, 1,3, 0, '2023-06-24', '2023-12-23', 'envisioneer 24/7 niches', 'Mock brief info', 'Mock description', 'https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
+INSERT INTO [Subject] VALUES('GIS Modeling',5, 27, 1,3, 1, '2024-05-03', '2024-05-31', 'incubate granular solutions', 'Mock brief info', 'Mock description', 'https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
+INSERT INTO [Subject] VALUES('XSS',4, 28, 1,1, 0, '2024-04-09', '2023-09-21', 'target experiences', 'Mock brief info', 'Mock description', 'https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
+INSERT INTO [Subject] VALUES('VAT',3, 27, 1,1, 0, '2023-09-20', '2024-05-15', 'grow infomediaries', 'Mock brief info', 'Mock description', 'https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
+INSERT INTO [Subject] VALUES('QNXT',2, 28, 1,1, 0, '2023-09-30', '2023-09-15', 'productize action-items', 'Mock brief info', 'Mock description', 'https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
+INSERT INTO [Subject] VALUES('EEOC',3, 23, 1,1, 0, '2023-08-01', '2024-04-22', 'reinvent e-tailers', 'Mock brief info', 'Mock description', 'https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
+INSERT INTO [Subject] VALUES('Packaging',4, 30, 1,1, 0, '2024-03-12', '2024-04-20', 'monetize interfaces', 'Mock brief info', 'Mock description', 'https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
+INSERT INTO [Subject] VALUES('Medical Equipment',5, 33, 1,3, 1, '2023-06-21', '2024-04-05', 'embrace infrastructures', 'Mock brief info', 'Mock description', 'https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
+INSERT INTO [Subject] VALUES('CTIOS',6, 29, 1,2, 1, '2023-09-03', '2024-05-26', 'optimize metrics', 'Mock brief info', 'Mock description', 'https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
+INSERT INTO [Subject] VALUES('Therapists',7, 26, 1,2, 0, '2023-09-05', '2024-01-12', 'whiteboard architectures', 'Mock brief info', 'Mock description', 'https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
+INSERT INTO [Subject] VALUES('PVM',8, 24, 1,2, 0, '2024-05-10', '2023-06-21', 'innovatevconvergence', 'Mock brief info', 'Mock description', 'https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
+INSERT INTO [Subject] VALUES('ECDL Certification',9, 23, 1,2, 0, '2024-01-09', '2023-11-19', 'integrate viral e-markets', 'Mock brief info', 'Mock description', 'https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
+INSERT INTO [Subject] VALUES('Evidence',8, 25, 1,2, 0, '2023-11-08', '2024-04-18', 'grow infomediaries', 'Mock brief info', 'Mock description', 'https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
+INSERT INTO [Subject] VALUES('HBase',7, 23, 1,2, 0, '2023-08-29', '2023-10-08', 'matrix ynergies', 'Mock brief info', 'Mock description', 'https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
+INSERT INTO [Subject] VALUES('Subversion',6, 24, 1,2, 0, '2024-01-15', '2023-07-02', 'repurpose eyeballs', 'Mock brief info', 'Mock description', 'https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
+INSERT INTO [Subject] VALUES('FCE',5, 25, 1,2, 1, '2024-03-05', '2024-05-21', 'cultivate supply-chains', 'Mock brief info', 'Mock description', 'https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
+INSERT INTO [Subject] VALUES('Design Patterns',4, 26, 1,1, 0, '2024-01-19', '2024-04-20', 'innovate scalable content', 'Mock brief info', 'Mock description', 'https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
+INSERT INTO [Subject] VALUES('AutoCAD Civil 3D',3, 27, 1,1, 0, '2023-11-22', '2024-06-05', 'morph world-class systems', 'Mock brief info', 'Mock description', 'https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
+INSERT INTO [Subject] VALUES('Front-end',2, 28, 1,2, 1, '2023-06-17', '2023-12-19', 'synthesize models', 'Mock brief info', 'Mock description', 'https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
+INSERT INTO [Subject] VALUES('HP Blade',3, 29, 1,3, 1, '2023-11-24', '2024-04-04', 'reintermediate web-readiness', 'Mock brief info', 'Mock description', 'https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
+INSERT INTO [Subject] VALUES('NCover',2, 30, 1,2, 1, '2024-05-24', '2024-05-17', 'utilize robust convergence', 'Mock brief info', 'Mock description', 'https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
+INSERT INTO [Subject] VALUES('FMA',4, 29, 1,1, 0, '2024-02-21', '2023-12-20', 'utilize user-centric e-markets', 'Mock brief info', 'Mock description', 'https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
+INSERT INTO [Subject] VALUES('CQ5',6, 30, 1,1, 0, '2024-04-21', '2024-03-25', 'repurpose e-markets', 'Mock brief info', 'Mock description', 'https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
+INSERT INTO [Subject] VALUES('Euphonium',7, 33, 1,2, 0, '2024-2-10', '2024-02-10', 'transform interactive deliverables', 'Mock brief info', 'Mock description', 'https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
 
 
 INSERT INTO [Package] VALUES(1, '6 Month Premium', 6, 20, 5, 1);
@@ -435,12 +499,47 @@ INSERT INTO [Gender] values ('Prefer not to say');
 INSERT INTO [Role] values ('Customer');
 INSERT INTO [Role] values ('Admin');
 
+INSERT INTO [OrganizationPackage] values ('Team', 4, 80, 70, 25, 1)
+INSERT INTO [OrganizationPackage] values ('Team', 8, 155, 135, 45, 1)
+INSERT INTO [OrganizationPackage] values ('Team', 12, 225, 195, 60, 1)
+INSERT INTO [OrganizationPackage] values ('Enterprise', 4, 100, 90, 40, 1)
+INSERT INTO [OrganizationPackage] values ('Enterprise', 8, 190, 170, 75, 1)
+INSERT INTO [OrganizationPackage] values ('Enterprise', 12, 270, 240, 105, 1)
+
+INSERT INTO [License] values(1, 1, 100, '2024-05-10', '2024-08-10', 5, 1)
+
+INSERT INTO [OrganizationPackageSubject] values(1, 1), (1,2), (1,3), (1,4), 
+(1,5), (1,6), (1,7), (1,8), (1,9), (1,10), (1,11), (1,12), (1,13), (1,14), 
+(1,15), (1,16), (1,17), (1,18), (1,19), (1,20), (1,21), (1,22), (1,23), (1,24), 
+(1,25), (1,26), (1,27), (1,28), (1,29), (1,30), (2,1), (2,2), (2,3), (2,4), (2,5), 
+(2,6), (2,7), (2,8), (2,9), (2,10), (2,11), (2,12), (2,13), (2,14), (2,15), (2,16), 
+(2,17), (2,18), (2,19), (2,20), (2,21), (2,22), (2,23), (2,24), (2,25), (2,26), 
+(2,27), (2,28), (2,29), (2,30), (3,1), (3,2), (3,3), (3,4), (3,5), (3,6), (3,7),
+(3,8), (3,9), (3,10), (3,11), (3,12), (3,13), (3,14), (3,15), (3,16), (3,17), (3,18),
+(3,19), (3,20), (3,21), (3,22), (3,23), (3,24), (3,25), (3,26), (3,27), (3,28),
+(3,29), (3,30), (4,1), (4,2), (4,3), (4,4), (4,5), (4,6), (4,7), (4,8), (4,9),
+(4,10), (4,11), (4,12), (4,13), (4,14), (4,15), (4,16), (4,17), (4,18), (4,19),
+(4,20), (4,21), (4,22), (4,23), (4,24), (4,25), (4,26), (4,27), (4,28), (4,29),
+(4,30), (4,31), (4,32), (4,33), (4,34), (4,35), (4,36), (4,37), (4,38), (4,39),
+(4,40), (4,41), (4,42), (4,43), (4,44), (4,45), (4,46), (4,47), (4,48), (4,49),
+(4,50), (5,1), (5,2), (5,3), (5,4), (5,5), (5,6), (5,7), (5,8), (5,9), (5,10),
+(5,11), (5,12), (5,13), (5,14), (5,15), (5,16), (5,17), (5,18), (5,19), (5,20),
+(5,21), (5,22), (5,23), (5,24), (5,25), (5,26), (5,27), (5,28), (5,29), (5,30),
+(5,31), (5,32), (5,33), (5,34), (5,35), (5,36), (5,37), (5,38), (5,39), (5,40),
+(5,41), (5,42), (5,43), (5,44), (5,45), (5,46), (5,47), (5,48), (5,49), (5,50),
+(6,1), (6,2), (6,3), (6,4), (6,5), (6,6), (6,7), (6,8), (6,9), (6,10), (6,11),
+(6,12), (6,13), (6,14), (6,15), (6,16), (6,17), (6,18), (6,19), (6,20), (6,21),
+(6,22), (6,23), (6,24), (6,25), (6,26), (6,27), (6,28), (6,29), (6,30), (6,31),
+(6,32), (6,33), (6,34), (6,35), (6,36), (6,37), (6,38), (6,39), (6,40), (6,41),
+(6,42), (6,43), (6,44), (6,45), (6,46), (6,47), (6,48), (6,49), (6,50)
+
+
 insert into [User] values ('ngocdbhe182383@fpt.edu.vn', '123', 1, 'ngoc', 1, '123', 1);
 insert into [User] values ('dunglhhe181276@fpt.edu.vn','12345',1,'lehungdung',1,'0963634669',1)
-insert into [User] values ('quannm@fpt.edu.vn','1234',1,'nguyenminhquan',1,'0916712381',1)
-insert into [User] values ('anlt@fpt.edu.vn','1234u505',1,'lethanhan',1,'0902532029',0)
-insert into [User] values ('huynq@fpt.edu.vn','1234',1,'nguyenquochuy',1,'0906166329',0)
-
+insert into [User] values ('quannmhe182223@fpt.edu.vn','1234',1,'nguyenminhquan',1,'0916712381',1)
+insert into [User] values ('anlthe182228@fpt.edu.vn','1234u505',1,'lethanhan',1,'0902532029',0)
+insert into [User] values ('huynqhe186861@fpt.edu.vn','1234',1,'nguyenquochuy',1,'0906166329',0)
+insert into [User] values ('hoapmhe173343@fpt.edu.vn','1234',1,'minhhoa',1,'0906156329',0)
 INSERT INTO [User] values ('fauvism@gmail.com', '123', 1, 'hoactzines bowdlerizer', 1, '09346016649', 1);
 INSERT INTO [User] values ('fishponds@gmail.com', '123', 1, 'imp kookiest', 1, '09058897252', 1);
 INSERT INTO [User] values ('rifest@gmail.com', '123', 1, 'shalom teleman', 1, '09316548064', 1);
@@ -456,6 +555,12 @@ INSERT INTO [User] values ('day@gmail.com', '123', 2, 'glacier cosmogonists', 2,
 INSERT INTO [User] values ('dendrologist@gmail.com', '123', 2, 'actorly metrorrhagia', 1, '09415105791', 1);
 INSERT INTO [User] values ('cheerful@gmail.com', '123', 2, 'schmoose handling', 1, '09250500126', 1);
 
+INSERT INTO [OrganizationMember] values(1,1,'Owner', 1);
+INSERT INTO [OrganizationMember] values(1,2,'Member', 0);
+INSERT INTO [OrganizationMember] values(1,3,'Member', 1);
+INSERT INTO [OrganizationMember] values(1,4,'Member', 1);
+INSERT INTO [OrganizationMember] values(1,5,'Member', 1);
+INSERT INTO [OrganizationMember] values(1,6,'Member', 1);
 insert into [RegistrationStatus] values('Submitted');
 insert into [RegistrationStatus] values('Pending Approval');
 insert into [RegistrationStatus] values('Active');

@@ -150,22 +150,39 @@ CREATE TABLE [dbo].[ResetToken](
 	[Token] [varchar](255),
 	[ValidTo] [datetime])
 
-GO
-
 CREATE TABLE [dbo].[SubjectCategory](
 	[SubjectCategoryId] [int] IDENTITY(1,1) primary key,
-	[SubjectCategoryName] [varchar](50))
-
+	[SubjectCategoryName] [varchar](50),
+	[SubjectParentCategory] int
+)
 	GO
 
 CREATE TABLE [dbo].[SubjectLevel](
 	[SubjectLevelId] [int] IDENTITY(1,1) primary key,
 	[SubjectLevelName] [varchar](50))
+
+GO
+CREATE TABLE [dbo].[Organization](
+	[OrganizationId] [int] IDENTITY(1,1) primary key,
+	[OrganizationName] [varchar](50) UNIQUE,
+	[OrganizationEmail] [varchar](50),
+	[OrganizationSize] [int],
+	[OrganizationCountry] [varchar] (50),
+	[IsNonprofit] [bit])
+GO
+CREATE TABLE [dbo].[OrganizationMember](
+	[Id] [int] IDENTITY(1,1) primary key,
+	[OrganizationId] [int]  foreign key references [dbo].[Organization](OrganizationId),
+	[MemberId] [int] foreign key references  [dbo].[User](UserId),
+	[JobTitle] [varchar](50),
+	[IsActive] [bit])
+
 GO
 
 CREATE TABLE [dbo].[Subject](
 	[SubjectId] [int] IDENTITY(1,1) primary key,
 	[SubjectTitle] [varchar](50),
+	[SubjectProviderId] [int] foreign key references [dbo].[Organization](OrganizationId),
 	[SubjectCategoryId] [int] foreign key references [dbo].[SubjectCategory](SubjectCategoryId),
 	[SubjectStatus] [bit],
 	[SubjectLevelId] [int] foreign key references [dbo].[SubjectLevel](SubjectLevelId),
@@ -188,6 +205,33 @@ CREATE TABLE [dbo].[Package](
 	[SalePrice] [float],
 	[Status] [bit])
 
+GO
+
+CREATE TABLE [dbo].[OrganizationPackage](
+	[OrganizationPackageId] [int] IDENTITY(1,1) primary key,
+	[PackageName] [nvarchar](50),
+	[PackageDuration] [int],
+	[RetailPriceEach] [float],
+	[WholesalePriceEach] [float],
+	[NonprofitPriceEach] [float],
+	[Status] [bit])
+
+GO
+CREATE TABLE [dbo].[License](
+	[LicenseId] [int] IDENTITY(1,1) primary key,
+	[OrganizationId] [int] foreign key references [dbo].[Organization](OrganizationId),
+	[OrganizationPackageId] [int] foreign key references [dbo].[OrganizationPackage] (OrganizationPackageId),
+	[SalePrice] [float],
+	[ValidFrom] [date],
+	[ValidTo] [date],
+	[Size] [int],
+	[Status] [bit])
+GO
+CREATE TABLE [dbo].[OrganizationPackageSubject](
+	[Id] [int] IDENTITY(1,1) primary key,
+	[OrganizationPackageId] [int] foreign key references [dbo].[OrganizationPackage] (OrganizationPackageId),
+	[SubjectId] [int] foreign key references [dbo].[Subject](SubjectId)
+)
 GO
 
 CREATE TABLE [dbo].[RegistrationStatus](

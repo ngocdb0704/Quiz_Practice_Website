@@ -17,31 +17,31 @@ public class Subject {
     private String subjectDescription;
     private String thumbnail;
     private String lowestPackageName;
+    private int categoryId;
     private float packageListPrice;
     private float packageSalePrice;
+    private String level;
+    private String provider;
+    private String sponsorer;
 
     public Subject() {
     }
 
-    public Subject(int subjectId, String subjectName, String tagLine, String thumbnail, String lowestPackageName, float packageListPrice, float packageSalePrice) {
-        this.subjectId = subjectId;
-        this.subjectName = subjectName;
-        this.tagLine = tagLine;
-        this.thumbnail = thumbnail;
-        this.lowestPackageName = lowestPackageName;
-        this.packageListPrice = packageListPrice;
-        this.packageSalePrice = packageSalePrice;
-    }
-
-    public Subject(int subjectId, String subjectName, String tagLine, String briefInfo, String subjectDescription, String thumbnail) {
+    public Subject(int subjectId, String subjectName, String tagLine, String briefInfo, String subjectDescription, String thumbnail, String lowestPackageName, int categoryId, float packageListPrice, float packageSalePrice, String level, String provider, String sponsorer) {
         this.subjectId = subjectId;
         this.subjectName = subjectName;
         this.tagLine = tagLine;
         this.briefInfo = briefInfo;
         this.subjectDescription = subjectDescription;
         this.thumbnail = thumbnail;
+        this.lowestPackageName = lowestPackageName;
+        this.categoryId = categoryId;
+        this.packageListPrice = packageListPrice;
+        this.packageSalePrice = packageSalePrice;
+        this.level = level;
+        this.provider = provider;
+        this.sponsorer = sponsorer;
     }
-
 
     public int getSubjectId() {
         return subjectId;
@@ -55,6 +55,14 @@ public class Subject {
         return tagLine;
     }
 
+    public String getBriefInfo() {
+        return briefInfo;
+    }
+
+    public String getSubjectDescription() {
+        return subjectDescription;
+    }
+
     public String getThumbnail() {
         return thumbnail;
     }
@@ -63,12 +71,28 @@ public class Subject {
         return lowestPackageName;
     }
 
+    public int getCategoryId() {
+        return categoryId;
+    }
+
     public float getPackageListPrice() {
         return packageListPrice;
     }
 
     public float getPackageSalePrice() {
         return packageSalePrice;
+    }
+
+    public String getLevel() {
+        return level;
+    }
+
+    public String getProvider() {
+        return provider;
+    }
+
+    public String getSponsorer() {
+        return sponsorer;
     }
 
     public void setSubjectId(int subjectId) {
@@ -83,12 +107,24 @@ public class Subject {
         this.tagLine = tagLine;
     }
 
+    public void setBriefInfo(String briefInfo) {
+        this.briefInfo = briefInfo;
+    }
+
+    public void setSubjectDescription(String subjectDescription) {
+        this.subjectDescription = subjectDescription;
+    }
+
     public void setThumbnail(String thumbnail) {
         this.thumbnail = thumbnail;
     }
 
     public void setLowestPackageName(String lowestPackageName) {
         this.lowestPackageName = lowestPackageName;
+    }
+
+    public void setCategoryId(int categoryId) {
+        this.categoryId = categoryId;
     }
 
     public void setPackageListPrice(float packageListPrice) {
@@ -99,20 +135,16 @@ public class Subject {
         this.packageSalePrice = packageSalePrice;
     }
 
-    public String getBriefInfo() {
-        return briefInfo;
+    public void setLevel(String level) {
+        this.level = level;
     }
 
-    public void setBriefInfo(String briefInfo) {
-        this.briefInfo = briefInfo;
+    public void setProvider(String provider) {
+        this.provider = provider;
     }
 
-    public String getSubjectDescription() {
-        return subjectDescription;
+    public void setSponsorer(String sponsorer) {
+        this.sponsorer = sponsorer;
     }
 
-    public void setSubjectDescription(String subjectDescription) {
-        this.subjectDescription = subjectDescription;
-    }
-    
 }
