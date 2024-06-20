@@ -848,7 +848,20 @@ INSERT [dbo].[Answer] ([QuestionID], [AnswerName], [IsCorrect]) VALUES (45, N'3.
 INSERT [dbo].[Answer] ([QuestionID], [AnswerName], [IsCorrect]) VALUES (45, N'4.0', 0)
 
 
-INSERT INTO [dbo].[Slide] VALUES (N'Sample Slide', N'0101011001', N'https://www.youtube.com/watch?v=dQw4w9WgXcQ', 1,N'abc', 1);
+INSERT INTO [dbo].[Slide] VALUES (N'Sample Slide', N'0101010101',N'https://example.com/slide100', 1,N'abc', 1);
 INSERT INTO [dbo].[Slide] VALUES (N'Slide 1', N'0101011001', N'https://example.com/slide1', 1,N'abc', 1);
 INSERT INTO [dbo].[Slide] VALUES (N'Slide 2', N'0101011001', N'https://example.com/slide2', 1,N'abc', 1);
 INSERT INTO [dbo].[Slide] VALUES (N'Slide 3', N'0101011001', N'https://example.com/slide3', 1,N'abc', 0);
+INSERT INTO [dbo].[Slide] VALUES (N'Slide 4', N'0101011001', N'https://example.com/slide4', 1,N'abc', 0);
+INSERT INTO [dbo].[Slide] VALUES (N'Slide 5', N'0101011001', N'https://example.com/slide5', 1,N'abc', 0);
+INSERT INTO [dbo].[Slide] VALUES (N'Slide 6', N'0101011001', N'https://example.com/slide6', 1,N'abc', 0);
+INSERT INTO [dbo].[Slide] VALUES (N'Slide 7', N'0101011001', N'https://example.com/slide7', 1,N'abc', 0);
+INSERT INTO [dbo].[Slide] VALUES (N'Slide 8', N'0101011001', N'https://example.com/slide8', 1,N'abc', 0);
+INSERT INTO [dbo].[Slide] VALUES (N'Slide 9', N'0101011001', N'https://example.com/slide9', 1,N'abc', 0);
+INSERT INTO [dbo].[Slide] VALUES (N'Slide 10', N'0101011001', N'https://example.com/slide10', 1,N'abc', 0);
+INSERT INTO [dbo].[Slide] VALUES (N'Slide 11', N'0101011001', N'https://example.com/slide11', 1,N'abc', 0);
+INSERT INTO [dbo].[Slide] VALUES (N'Slide 12', N'0101011001', N'https://example.com/slide12', 1,N'abc', 0);
+INSERT INTO [dbo].[Slide] VALUES (N'Slide 13', N'0101011001', N'https://example.com/slide13', 1,N'abc', 0);
+INSERT INTO [dbo].[Slide] VALUES (N'Slide 14', N'0101011001', N'https://example.com/slide14', 1,N'abc', 0);
+INSERT INTO [dbo].[Slide] VALUES (N'Slide 15', N'0101011001', N'https://example.com/slide15', 1,N'abc', 0);
+INSERT INTO [dbo].[Slide] VALUES (N'Slide 16', N'0101011001', N'https://example.com/slide16', 1,N'abc', 0);
