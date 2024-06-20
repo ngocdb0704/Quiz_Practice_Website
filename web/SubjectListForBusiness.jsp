@@ -438,10 +438,37 @@
                                             <div class="accordion-body">
                                                 <ul>
                                                     <c:forEach begin="0" end="${listFeaturedSubject.size()-1}" var="iFeat">
-                                                        <li>
-                                                            <a class="btn btn-link" href="SubjectDetails?subjectId=${listFeaturedSubject.get(iFeat).getSubjectId()}">
-                                                                ${listFeaturedSubject.get(iFeat).getSubjectName()}
-                                                            </a>
+                                                        <li class="w3tooltip" style="width: 350px">
+                                                            <div class="my-2 ps-1 border border-1 rounded-1">
+                                                                <div>
+                                                                    ${listFeaturedSubject.get(iFeat).getSubjectName()} 
+                                                                    <div class="w3tooltiptext card" style="width: 18rem;">
+                                                                        <img src="${listFeaturedSubject.get(iFeat).getThumbnail()}" 
+                                                                             class="card-img-top img-thumbnail" alt="...">
+                                                                        <div class="card-body">
+                                                                            <h5 class="card-title">
+                                                                                ${listFeaturedSubject.get(iFeat).getSubjectName()} 
+                                                                            </h5>
+                                                                            <p class="card-text">
+                                                                                ${listFeaturedSubject.get(iFeat).getTagLine()}
+                                                                                <br>From: <span class="text-danger">${listFeaturedSubject.get(iFeat).getProvider()}</span> 
+                                                                                <br>
+                                                                                <span class="star">
+                                                                                    &#9733; &#9733; &#9733; &#9733; &#9734;
+                                                                                </span>
+                                                                                <span>(99k subject reviews)</span>
+                                                                                <br> ${listFeaturedSubject.get(iFeat).getLevel()}
+                                                                                <br>
+                                                                                <a>
+                                                                                    <button class="btn btn-dark ">
+                                                                                        Contact Our Sales
+                                                                                    </button>
+                                                                                </a>
+                                                                            </p>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>  
+                                                            </div>
                                                         </li>
                                                     </c:forEach>
                                                 </ul>
