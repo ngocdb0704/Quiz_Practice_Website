@@ -41,6 +41,24 @@ public class DAOPackage extends DBContext{
         }
         return vector;
     }
+    
+    public Package getLowestPackageBySubjectId(int subjectId) {
+        String sql = "select top 1 PackageId, PackageName, ListPrice, SalePrice from package where SubjectId = ? and Status = 1 order by SalePrice";
+        
+        PreparedStatement pre;
+        try {
+            pre = connection.prepareStatement(sql);
+            pre.setInt(1, subjectId);
+            ResultSet rs = pre.executeQuery();
+            if (rs.next()) {
+                return new Package(rs.getInt(1), rs.getString(2), rs.getFloat(3), rs.getFloat(4));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+        
     public Package getByPackageNameSubjectName(String packageName, String subjectName){
         FormatData fd = new FormatData();
         packageName = fd.stringSqlFormat(packageName);

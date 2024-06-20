@@ -2,21 +2,6 @@
     Created on : Jun 5, 2024, 11:17:33 AM
     Author     : Hoapmhe173343
 */
-label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 5px;
-    color: #333;
-}
-
-.form-control {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-}
-
 .btn-primary:hover {
     background-color: #0056b3;
 }
@@ -29,25 +14,9 @@ label {
     background-color: #218838;
 }
 
-.container {
-    max-width: 500px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
 h1, h2, h3, h4, h5, h6 {
     color: #333;
 }
 
-.message {
-    background-color: #007bff; 
-    color: white; 
-    border: 1px solid #0056b3; 
-    border-radius: 5px; 
-    padding: 10px; 
-    margin-top: 10px; 
-    text-align: center;
-}
 
 

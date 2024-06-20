@@ -73,4 +73,9 @@ public class BlogInformation {
     public void setPostBrief(String postBrief) {
         this.postBrief = postBrief;
     }
+
+    @Override
+    public String toString() {
+        return "BlogInformation{" + "blogId=" + blogId + ", authorId=" + authorId + ", authorName=" + authorName + ", categoryId=" + categoryId + ", categoryName=" + categoryName + ", blogTitle=" + blogTitle + ", updatedTime=" + updatedTime + ", postBrief=" + postBrief + '}';
+    }
 }

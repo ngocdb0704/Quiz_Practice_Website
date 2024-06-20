@@ -29,7 +29,7 @@ public class UpdateSubjectController extends HttpServlet {
             throws ServletException, IOException {
         int subjectId = Integer.parseInt(request.getParameter("subjectId"));
         DAOSubject daoSubject = new DAOSubject();
-        SubjectDTO subject = daoSubject.getSubjectById(subjectId);
+        SubjectDTO subject = daoSubject.getSubjectByDTOId(subjectId);
         String mess = request.getParameter("mess");
         request.setAttribute("mess", mess);
         if (subject != null) {
@@ -52,7 +52,7 @@ public class UpdateSubjectController extends HttpServlet {
             String subjectThumbnail = request.getParameter("subjectThumbnail");
 
             DAOSubject subjectDAO = new DAOSubject();
-            SubjectDTO subject = subjectDAO.getSubjectById(subjectId);
+            SubjectDTO subject = subjectDAO.getSubjectByDTOId(subjectId);
             if (subject == null) {
                 response.sendRedirect("/admin/subjectDimension?mess=not_found&subjectId=" + subjectId);
                 return;

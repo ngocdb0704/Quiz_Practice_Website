@@ -175,7 +175,9 @@ CREATE TABLE [dbo].[Subject](
 	[SubjectTagLine] [varchar](50),
 	[SubjectBriefInfo] [varchar](300),
 	[SubjectDescription] [ntext],
-	[SubjectThumbnail] [varchar](255))
+	[SubjectThumbnail] [varchar](255),
+	[SubjectOwnerId] [int] foreign key references [dbo].[User](UserId))
+
 
 GO
 
@@ -206,12 +208,12 @@ CREATE TABLE [dbo].[Registration](
 	[TransactionContent] [varchar](255),
 	[TransactionCode] [varchar](255),
 	[TransactionAccount] [varchar](255))
-Go
+GO
 CREATE TABLE [dbo].[BlogCategory](
 	[BlogCategoryId] [int] IDENTITY(1,1) primary key,
 	[BlogCategoryName] [varchar](50))
 
-Go
+GO
 CREATE TABLE [dbo].[Blog](
 	[BlogId] [int] IDENTITY(1,1) primary key,
 	[UserId] [int] foreign key references [dbo].[User](UserId),
@@ -220,7 +222,7 @@ CREATE TABLE [dbo].[Blog](
 	[UpdatedTime] [datetime],
 	[PostBrief] [nvarchar](2048),
 	[PostText] [ntext])
-Go
+
 
 GO
 CREATE TABLE [dbo].[Question](
@@ -229,8 +231,9 @@ CREATE TABLE [dbo].[Question](
 	[Explanation] [text],
 	[Level] [int],
 	[SubjectID] [int] foreign key references [dbo].[Subject](SubjectId),
-	[LessonID] [int])
-
+	[LessonID] [int],
+	[Status] bit
+)
 GO
 CREATE TABLE [dbo].[Answer](
 	[AnswerID] [int] IDENTITY(1,1) primary key,
@@ -238,13 +241,33 @@ CREATE TABLE [dbo].[Answer](
 	[AnswerName] [text],
 	[IsCorrect] [bit])
 
+
 Go
 CREATE TABLE [dbo].[Slide] (
-    [SliderId] INT PRIMARY KEY AUTO_INCREMENT,
+    [SliderId] INT IDENTITY(1,1) PRIMARY KEY,
     [Title] VARCHAR(255) NOT NULL,
-    [Image] BLOB NOT NULL,
+    [Image] VARBINARY(MAX) NOT NULL,
     [Backlink] VARCHAR(255) NOT NULL,
-    [Status] ENUM('active', 'inactive') NOT NULL DEFAULT 'inactive',
+    [Status] BIT NOT NULL DEFAULT 0,
     [UserId] INT,
-    FOREIGN KEY ([UserId]) REFERENCES User([UserId])
-);
+    FOREIGN KEY ([UserId]) REFERENCES [User]([UserId]))
+
+GO
+CREATE TABLE [dbo].[Quiz] (
+	[QuizId] [int] IDENTITY(1, 1) primary key,
+	[SubjectId] [int] not null foreign key references [dbo].[Subject](SubjectId),
+	[QuizName] nvarchar(255) default(N''),
+	[Level] char(10) check([Level] in (0, 1, 2)) default(0), --easy, medium, hard
+	[DurationInMinutes] int check([DurationInMinutes] > 0) default(60),
+	[PassRate] int check(0 <= [PassRate] and [PassRate] <= 100) default(50),
+	[QuizType] char(10) check([QuizType] in (0, 1)) default(0), --simulation, lesson-quiz
+	[IsPublished] bit,
+	[UpdatedTime] [datetime] default(CURRENT_TIMESTAMP)
+)
+GO
+CREATE TABLE [dbo].[QuizQuestion] (
+	[QuizId] [int] foreign key references [dbo].[Quiz]([QuizId]) on delete cascade,
+	[QuestionId] [int] foreign key references [dbo].[Question]([QuestionId])
+	PRIMARY KEY([QuizId], [QuestionId])
+)
+

@@ -65,7 +65,7 @@ public class DAOUser extends DBContext {
             Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     public boolean isEmailRegistered(String email) {
         boolean isRegistered = false;
         String sql = "SELECT COUNT(*) FROM [dbo].[User] WHERE email = ?";
@@ -81,8 +81,6 @@ public class DAOUser extends DBContext {
         }
         return isRegistered;
     }
-
-
 
     private Vector<User> getFull(String sql) {
         Vector<User> Out = new Vector<User>();
@@ -252,6 +250,27 @@ public class DAOUser extends DBContext {
     }
 
     public static void main(String[] args) {
-        
+    }
+
+    /**
+     *
+     * @author hoapmhe173343
+     */
+    public int getRoleUser(String email, String pass) {
+        String sql = "SELECT RoleId FROM [User] "
+                + "WHERE Email = ? AND password = ? ";
+        int role = -1;
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, email);
+            ps.setString(2, pass);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                role = rs.getInt("roleId");
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return role;
     }
 }
