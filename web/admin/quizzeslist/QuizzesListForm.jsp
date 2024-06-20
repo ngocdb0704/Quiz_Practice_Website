@@ -19,14 +19,14 @@
                 </div>
             </div>
             <div class="form-group col-md-4">
-                <label class="form-label" for="subjectIds">Subjects</label>
+                <label class="form-label" for="subjectIds">Assigned Subject</label>
                 <select id="subjectIds" name="subjectIds" class="form-control">
                     <option ${param.subjectIds eq '-1' ? 'selected' : ''} value="-1">
                         All
                     </option>
                     <c:forEach items="${subjects}" var="subject">
-                        <option ${subject.getId().toString() eq param.subjectIds ? 'selected' : ''} value="${subject.getId()}">
-                            ${subject.getSubjetName()}
+                        <option ${subject.getSubjectId().toString() eq param.subjectIds ? 'selected' : ''} value="${subject.getSubjectId()}">
+                            ${subject.getSubjectName()}
                         </option>
                     </c:forEach>
                 </select>

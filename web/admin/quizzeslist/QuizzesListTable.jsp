@@ -67,7 +67,7 @@
                 <td>${quiz.getType().toString()}</td>
                 <td>
                     <span class="badge w-100 text-bg-${quiz.isPublished() ? 'primary' : 'secondary'}">
-                        ${quiz.isPublished() ? 'Published' : 'Draft'}
+                        ${quiz.isPublished() ? 'Published' : 'Archived'}
                     </span>
                 </td>
                 <td>

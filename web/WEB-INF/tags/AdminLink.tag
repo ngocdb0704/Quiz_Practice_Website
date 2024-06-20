@@ -5,7 +5,9 @@
 <%@attribute name="href" type="java.lang.String" required="true" %>
 <%@attribute name="icon" type="java.lang.String" required="false" %>
 
-<c:set var="match" value="${urlPattern.contains(href)}" />
+<c:set var="regex" value="\\?.*$" />
+<c:set var="hrefSanitized" value="${href.replaceAll(regex, '')}" />
+<c:set var="match" value="${urlPattern.contains(hrefSanitized)}" />
 
 <a href="${href}" class="btn admin-aside-link ${match ? 'active' : ''}" data-title="${title}">
     <i class="bi ${icon}"></i>

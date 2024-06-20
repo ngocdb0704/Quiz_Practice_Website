@@ -15,7 +15,7 @@ DROP TABLE [dbo].[ProfilePicture];
 DROP TABLE [dbo].[User];
 DROP TABLE [dbo].[Role];
 DROP TABLE [dbo].[Gender];
-
+DROP TABLE [dbo].[PricePackageDesc];
 
 CREATE TABLE [dbo].[Gender](
 	[GenderId] [int] IDENTITY(1,1) primary key ,
@@ -87,7 +87,13 @@ CREATE TABLE [dbo].[Package](
 	[ListPrice] [float],
 	[SalePrice] [float],
 	[Status] [bit])
+GO
 
+--To prevent breaking old code, i added a new table instead
+CREATE TABLE [dbo].[PricePackageDesc] (
+	[PackageId] [int] foreign key references [dbo].[Package]([PackageId]) on delete cascade,
+	[Desc] [nvarchar](2048)
+)
 GO
 
 CREATE TABLE [dbo].[RegistrationStatus](
