@@ -5,6 +5,9 @@
 package app.controller;
 
 import app.dal.DAOSubject;
+import app.dal.DAOUser;
+import app.entity.User;
+import app.entity.Subject;
 import app.entity.SubjectCategory;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -40,8 +43,10 @@ public class NewSubjectController extends HttpServlet {
 
         String service = request.getParameter("service");
         
+        DAOSubject daoSubject = new DAOSubject();
+        
         if(service == null || service.equals("view")) {
-            DAOSubject daoSubject = new DAOSubject();
+            
             List<SubjectCategory> categoryList = (List<SubjectCategory>) request.getAttribute("subjectCategoryList");
             if (request.getAttribute("dataNewSubject") == null) {
                 categoryList = daoSubject.getAllSubjectCategories();
@@ -50,13 +55,25 @@ public class NewSubjectController extends HttpServlet {
         }
         else if (service.equals("add")) {
             try (PrintWriter out = response.getWriter()){
-                out.print(request.getParameter("subjectTitle") + ",");
-                out.print(request.getParameter("subjectCategory") + ",");
-                out.print(request.getParameter("featured") + ",");
-                out.print(request.getParameter("subjectStatus") + ",");
-                out.print(request.getParameter("expertEmail") + ",");
-                out.print(request.getParameter("thumbnailUrl") + ",");
-                out.print(request.getParameter("subjectDescription"));
+                DAOUser daoUser = new DAOUser();
+                
+                String subjectTitle = request.getParameter("subjectTitle");
+                int subjectCategory = Integer.parseInt(request.getParameter("subjectCategory"));
+                int featured = (request.getParameter("featured") == null)? 0 : 1;
+                int subjectStatus = Integer.parseInt(request.getParameter("subjectStatus"));
+                String expertEmail = request.getParameter("expertEmail");
+                User owner = daoUser.getUserByEmail(expertEmail);
+                String thumbnailUrl = request.getParameter("thumbnailUrl");
+                String subjectTagline = request.getParameter("subjectTagline");
+                String subjectBrief = request.getParameter("subjectBrief");
+                String subjectDescription = request.getParameter("subjectDescription");
+                
+                if (owner != null && owner.getRoleId() == 4) {
+                    out.print(daoSubject.addSubject(new Subject(0, subjectTitle, subjectTagline, subjectBrief, subjectDescription, thumbnailUrl, subjectCategory), owner.getUserId(), subjectStatus, featured));
+                }
+                else {
+                    out.print("User was not an Expert");
+                }
             }
         }
             

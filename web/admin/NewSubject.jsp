@@ -21,14 +21,15 @@
             <%@include file="/admin/common/admin-header.jsp" %>
             <%@include file="/admin/common/admin-sidebar.jsp" %>
             <main class="admin-main">
-                <form class="container" id='new-subject-form' action="admin/newsubject?service=add">
+                <form class="container" id='new-subject-form' action="admin/newsubject?service=add" onreset="formReset()">
                     <div class="row bg-light border border-1 p-3">
                         <h1>Add a new subject</h1>
                         <div class="row">
                             <div class="col-8">
                                 <div class="form-group pb-3">
-                                    <label for="subject-title">Title</label>
-                                    <input type="text" class="form-control" id="subject-title" name="subjectTitle" placeholder="">
+                                    <label for="subject-title">Title</label><br>
+                                    <small id='title-warning' style="color: red; display: none;">The maximum amount of characters for subject title is 50!</small>
+                                    <input type="text" class="form-control" id="subject-title" name="subjectTitle" placeholder="" oninput="validateTitle(this.value)">
                                 </div>
 
                                 <div class="form-group">
@@ -84,9 +85,19 @@
                             </div>
                         </div>
 
-
-
+                        <div class="form-group pb-3">
+                            <label for="subject-tagline">Tagline</label><br>
+                            <small id='tagline-warning'>A short sentence (<50 characters) that describes this subject.</small>
+                            <input type="text" class="form-control" id="subject-tagline" name="subjectTagline" placeholder="" oninput="validateTagline(this.value)">
+                        </div>
+                        
                         <div class="form-group">
+                            <label for="subject-brief">Brief Info</label><br>
+                            <small id='brief-warning'">Write a short paragraph (<300 characters) that describes this subject.</small>
+                            <textarea class="form-control" id="subject-brief" rows="3" name="subjectBrief" oninput="validateBrief(this.value)"></textarea>
+                        </div>
+
+                        <div class="form-group mt-5">
                             <label for="subject-description">Description</label>
                             <textarea class="form-control" id="subject-description" rows="3" name="subjectDescription"></textarea>
                         </div>
@@ -94,17 +105,21 @@
 
                     <div class="row mt-3">
                         <div class="col-6">
-                            <input class="btn btn-primary" type="submit" value="Create">
-                            <input class="btn btn-secondary" type="reset" value="Reset">
+                            <input id="submitButton" class="btn btn-primary" type="submit" value="Create">
+                            <input id="clearButton" class="btn btn-secondary" type="reset" value="Reset">
                         </div>
                         <div class="col-6 border border-1  py-3">
-                            <h3>Assigned expert</h3>
+                            <h3>Owner</h3>
 
                             <div id="subject-search" class="input-group">
-                                <input type="email" name="expertEmail" class="form-control" placeholder="Enter expert's email">
+                                <input type="email" name="expertEmail" class="form-control" placeholder="Enter an expert's email">
                                 <span class="input-group-text" >
                                     <i class="bi bi-search"></i>
                                 </span>
+                            </div>
+
+                            <div style="position: relative">
+                                <div style="position: relative" class="bg-dark"></div>
                             </div>
                         </div>
                     </div>
@@ -113,6 +128,6 @@
                 </form>
             </main>
         </div>
-    <script src="public/js/NewSubject.js"></script>
+        <script src="public/js/NewSubject.js"></script>
     </body>
 </html>
