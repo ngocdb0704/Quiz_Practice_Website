@@ -11,6 +11,7 @@
         <myTags:AdminLink icon="bi-patch-question-fill" href="admin/questionlist" title="Question List" />
         <myTags:AdminLink icon="bi-clipboard-check-fill" href="admin/quizzeslist" title="Quizzes List" />
         <myTags:AdminLink icon="bi bi-arrow-through-heart-fill" href="admin/subjectDimension?subjectId=1" title="Subject Dimension" />
+        <myTags:AdminLink icon="bi bi-arrow-through-heart-fill" href="admin/sliderlist.jsp" title="Slider List" />
     </div>
     <h5 class="admin-aside-title" data-title="Users Management">
         <i class="bi bi-people"></i> 

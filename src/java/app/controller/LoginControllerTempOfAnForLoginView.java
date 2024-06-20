@@ -45,7 +45,7 @@ public class LoginControllerTempOfAnForLoginView extends HttpServlet {
                 session.setAttribute("userEmail", username);
                 session.setAttribute("userRoleId", user.getRoleId()); //new
                 
-                if (user.getRoleId() == 2 || user.getRoleId() == 3) { //new
+                if (user.getRoleId() == 2 || user.getRoleId() == 3 || user.getRoleId() == 4) { //new
                     String ctxPath = request.getServletContext().getContextPath(); //new
                     response.sendRedirect(ctxPath + "/admin/questionlist"); //new
                     return;

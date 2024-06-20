@@ -50,18 +50,25 @@ public class DAOSlide extends DBContext {
                     + "  and title like ? and backlink like ?\n"
                     + "  order by [slide_id] asc OFFSET ? ROWS FETCH NEXT 9  ROWS ONLY";
             PreparedStatement stm = connection.prepareStatement(sql);
+            System.out.println(sql);
             stm.setString(1, "%" + status + "%");
             stm.setString(2, "%" + title + "%");
             stm.setString(3, "%" + backlink + "%");
             stm.setInt(4, (index - 1) * 9);
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
-                Slide b = new Slide(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5), rs.getString(6), rs.getBoolean(7));
+                Slide b = new Slide(rs.getInt(1), rs.getString(2), rs.getString(3), 
+                        rs.getString(4), rs.getInt(5), rs.getString(6), rs.getBoolean(7));
                 slist.add(b);
             }
         } catch (SQLException e) {
+            e.printStackTrace();
         }
         return slist;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(new DAOSlide().getAllSlideWithCondition("", "", "", 1));
     }
 
     public int getNumberSlideWithCondition(String status, String title, String backlink) {
@@ -77,6 +84,7 @@ public class DAOSlide extends DBContext {
                 return rs.getInt(1);
             }
         } catch (SQLException e) {
+            e.printStackTrace();
         }
         return 0;
     }
@@ -117,6 +125,5 @@ public class DAOSlide extends DBContext {
         } catch (SQLException e) {
         }
     }
-
 
 }

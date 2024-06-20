@@ -169,16 +169,16 @@ public class DAOQuiz extends DBContext {
         return new QueryResult(count, pageSize, ret);
     }
     
-    public static void main(String[] args) throws SQLException {
-        DAOQuiz qq = new DAOQuiz();
-        
-        ResultSet rs = new QueryBuilder("select QuizId from [Quiz]")
-                .toPreparedStatement(qq.connection)
-                .executeQuery();
-        
-        while (rs.next()) {
-            int id = rs.getInt(1);
-            qq.randomizeForQuiz(id, 50);
-        }
-    }
+//    public static void main(String[] args) throws SQLException {
+//        DAOQuiz qq = new DAOQuiz();
+//        
+//        ResultSet rs = new QueryBuilder("select QuizId from [Quiz]")
+//                .toPreparedStatement(qq.connection)
+//                .executeQuery();
+//        
+//        while (rs.next()) {
+//            int id = rs.getInt(1);
+//            qq.randomizeForQuiz(id, 50);
+//        }
+//    }
 }
