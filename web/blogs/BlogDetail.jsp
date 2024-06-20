@@ -88,7 +88,7 @@
                                     <li>Instant feedback</li>
                                     <li>Cheap</li>
                                 </ul>
-                                <a href="." class="btn btn-primary">Checkout our Courses!</a>
+                                <a href="public/SubjectsList" class="btn btn-primary">Checkout our Courses!</a>
                             </div>
                         </div>
                     </div>

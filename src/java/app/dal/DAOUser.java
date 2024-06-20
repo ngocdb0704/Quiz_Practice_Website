@@ -66,7 +66,21 @@ public class DAOUser extends DBContext {
         }
     }
 
-
+    public boolean isEmailRegistered(String email) {
+        boolean isRegistered = false;
+        String sql = "SELECT COUNT(*) FROM [dbo].[User] WHERE email = ?";
+        try {
+            PreparedStatement pre = connection.prepareStatement(sql);
+            pre.setString(1, email);
+            ResultSet resultSet = pre.executeQuery();
+            if (resultSet.next()) {
+                isRegistered = resultSet.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return isRegistered;
+    }
 
     private Vector<User> getFull(String sql) {
         Vector<User> Out = new Vector<User>();
@@ -236,5 +250,27 @@ public class DAOUser extends DBContext {
     }
 
     public static void main(String[] args) {
+    }
+
+    /**
+     *
+     * @author hoapmhe173343
+     */
+    public int getRoleUser(String email, String pass) {
+        String sql = "SELECT RoleId FROM [User] "
+                + "WHERE Email = ? AND password = ? ";
+        int role = -1;
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, email);
+            ps.setString(2, pass);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                role = rs.getInt("roleId");
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return role;
     }
 }

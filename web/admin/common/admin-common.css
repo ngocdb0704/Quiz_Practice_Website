@@ -39,7 +39,7 @@
 .admin-aside {
     grid-area: sidebar;
     background: red;
-    width: 400px;
+    width: 250px;
     color: white;
     transition: width 400ms;
     overflow: hidden;
@@ -48,11 +48,6 @@
 
 .admin-aside.hide {
     width: 65px;
-}
-
-.admin-aside-fixed-container {
-    width: 400px;
-    padding: 20px;
 }
 
 .admin-aside-title {
@@ -137,4 +132,51 @@
 .demo-img {
     width: 100%;
     margin-top: 30px;
+}
+
+
+/*quesion list */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+th {
+    background-color: #f2f2f2;
+}
+.filters {
+    margin-bottom: 20px;
+}
+
+.admin-table .checkbox-big {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.admin-table th {
+    white-space: nowrap;
+}
+
+.admin-table td {
+    white-space: nowrap;
+}
+
+.admin-table th::after {
+    float: none !important;
+    margin: 0 !important;
+    vertical-align: middle !important;
+    position: relative;
+    left: 4px;
+}
+
+.admin-table th[data-sorted-direction="ascending"]::after {
+    top: -3px;
+}
+
+.admin-table th[data-sorted-direction="descending"]::after {
+    top: 3px;
 }

@@ -14,33 +14,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import app.dal.QueryBuilder.Operator;
+import app.dal.QueryBuilder.OrderDirection;
 
 public class DAOBlog extends DBContext {
-
-    public class QueryResult {
-
-        private int totalItems;
-        private int pageSize;
-        private List<BlogInformation> results;
-
-        public QueryResult(int total, int pageSize, List<BlogInformation> results) {
-            this.totalItems = total;
-            this.pageSize = pageSize;
-            this.results = results;
-        }
-
-        public List<BlogInformation> getResults() {
-            return results;
-        }
-
-        public int getTotalPages() {
-            if (pageSize > 0) {
-                return (int) (Math.ceil((double) totalItems / pageSize));
-            }
-
-            return 0;
-        }
-    }
 
     private static final String LISTING_QUERY = "select\n"
             + "b.BlogId,\n"
@@ -57,16 +34,7 @@ public class DAOBlog extends DBContext {
 
     private static final String COUNT_LISTING_QUERY = "select count(b.BlogId)\n"
             + "from [Blog] b\n"
-            + "inner join [BlogCategory] c on b.BlogCategoryId = c.BlogCategoryId\n"
-            + "where (? is NULL or b.[BlogTitle] LIKE ?) and\n"
-            + "(? = -1 or c.[BlogCategoryId] = ?) and \n"
-            + "((? is NULL or ? is NULL) or (b.[UpdatedTime] between ? and ?))";
-
-    private static final String FILTERED_QUERY = LISTING_QUERY
-            + "where (? is NULL or b.[BlogTitle] LIKE ?) and\n"
-            + "(? = -1 or c.[BlogCategoryId] = ?) and \n"
-            + "((? is NULL or ? is NULL) or (b.[UpdatedTime] between ? and ?))\n"
-            + "order by b.[UpdatedTime] desc\n";
+            + "inner join [BlogCategory] c on b.BlogCategoryId = c.BlogCategoryId\n";
 
     public MarkdownDocument getPostTextById(int id) {
         String sql = "select PostText from [Blog] where BlogId = ?";
@@ -131,61 +99,42 @@ public class DAOBlog extends DBContext {
             LocalDate startDate, LocalDate endDate,
             int page, int pageSize
     ) {
-        if (page < 1) {
-            page = 1;
-        }
-        if (pageSize < 1) {
-            pageSize = 1;
-        }
-
-        String sql = FILTERED_QUERY
-                + "offset ? rows fetch next ? rows only";
-
-        String likeStatement = (query == null) ? null : "%" + query + "%";
-
         try {
-            PreparedStatement queryStmt = connection.prepareStatement(sql);
+            QueryBuilder searchQuery = new QueryBuilder(LISTING_QUERY);
+            searchQuery.setLoggingEnabled(true);
 
-            //because we define page to start at one however sql server expects 0 offset
-            int offset = (page - 1) * pageSize;
+            if (categoryId != -1) {
+                searchQuery.whereAnd("b.BlogCategoryId", Operator.EQUALS, categoryId);
+            }
 
-            Timestamp startTimestamp = null;
-            Timestamp endTimestamp = null;
+            if (query != null && !query.isBlank()) {
+                searchQuery.whereAnd("b.BlogTitle", Operator.LIKE, "%" + query + "%");
+            }
 
             if (startDate != null && endDate != null) {
                 LocalDateTime s = startDate.atTime(0, 0, 0);
                 LocalDateTime e = endDate.atTime(23, 59, 59);
-                startTimestamp = Timestamp.from(s.toInstant(ZoneOffset.UTC));
-                endTimestamp = Timestamp.from(e.toInstant(ZoneOffset.UTC));
+                Timestamp startTimestamp = Timestamp.from(s.toInstant(ZoneOffset.UTC));
+                Timestamp endTimestamp = Timestamp.from(e.toInstant(ZoneOffset.UTC));
+
+                searchQuery.whereAnd("b.UpdatedTime", Operator.BETWEEN, startTimestamp, endTimestamp);
             }
 
-            queryStmt.setString(1, likeStatement);
-            queryStmt.setString(2, likeStatement);
-            queryStmt.setInt(3, categoryId);
-            queryStmt.setInt(4, categoryId);
-            queryStmt.setTimestamp(5, startTimestamp);
-            queryStmt.setTimestamp(6, endTimestamp);
-            queryStmt.setTimestamp(7, startTimestamp);
-            queryStmt.setTimestamp(8, endTimestamp);
-            queryStmt.setInt(9, offset);
-            queryStmt.setInt(10, pageSize);
-            ResultSet rs = queryStmt.executeQuery();
+            searchQuery
+                    .orderBy("b.UpdatedTime", OrderDirection.DESC)
+                    .page(page, pageSize);
+
+            ResultSet rs = searchQuery.toPreparedStatement(connection).executeQuery();
 
             List<BlogInformation> blogs = new ArrayList<>();
             while (rs.next()) {
                 blogs.add(new BlogInformation(rs));
             }
 
-            PreparedStatement countStmt = connection.prepareStatement(COUNT_LISTING_QUERY);
-            countStmt.setString(1, likeStatement);
-            countStmt.setString(2, likeStatement);
-            countStmt.setInt(3, categoryId);
-            countStmt.setInt(4, categoryId);
-            countStmt.setTimestamp(5, startTimestamp);
-            countStmt.setTimestamp(6, endTimestamp);
-            countStmt.setTimestamp(7, startTimestamp);
-            countStmt.setTimestamp(8, endTimestamp);
-            ResultSet countRs = countStmt.executeQuery();
+            QueryBuilder countQuery = new QueryBuilder(COUNT_LISTING_QUERY, searchQuery);
+            countQuery.setLoggingEnabled(true);
+
+            ResultSet countRs = countQuery.toPreparedStatement(connection).executeQuery();
 
             int count = 0;
             if (countRs.next()) {
@@ -193,7 +142,7 @@ public class DAOBlog extends DBContext {
             }
 
             return new QueryResult(count, pageSize, blogs);
-        } catch (SQLException ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
 

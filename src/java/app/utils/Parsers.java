@@ -3,6 +3,7 @@ package app.utils;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.Arrays;
 
 public class Parsers {
     public static int parseIntOrDefault(String value, int defaultValue) {
@@ -17,6 +18,24 @@ public class Parsers {
         }
                 
         return ret;
+    }
+
+    public static Integer[] parseInts(String[] values) {
+        if (values == null) return new Integer[0];
+
+        int i = 0;
+        Integer[] temp = new Integer[values.length];
+
+        for (String val : values) {
+            try {
+                int num = Integer.parseInt(val);
+                temp[i++] = num;
+            } catch (NumberFormatException ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        return Arrays.copyOfRange(temp, 0, i);
     }
     
     public static LocalDate parseDateOrDefault(String value, String format, LocalDate defaultValue) {

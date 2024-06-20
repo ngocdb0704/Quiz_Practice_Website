@@ -5,25 +5,29 @@
 package app.dal;
 
 import app.dal.DBContext;
+import app.entity.Organization;
+import app.dto.SubjectDTO;
 import app.entity.Subject;
+import app.entity.Package;
 import app.entity.SubjectCategory;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.sql.Date;
 
 /**
  *
  * @author admin
  */
 public class DAOSubject extends DBContext {
-    
+
     public Vector<Subject> getRegisteredSubjects(String email) {
         Vector<Subject> vec = new Vector<>();
         String sql = """
@@ -53,7 +57,7 @@ public class DAOSubject extends DBContext {
         }
         return vec;
     }
-    
+
     public Vector<Subject> getVectorByPage(Vector<Subject> vec,
             int start, int end) {
         Vector<Subject> outputVec = new Vector<>();
@@ -62,8 +66,8 @@ public class DAOSubject extends DBContext {
         }
         return outputVec;
     }
-    
-    public String addTierToSQL(int[] parent, int tier, int flag) {
+
+    public String addTierToSQLForIndividual(int[] parent, int tier, int flag) {
         String sql = "";
         if (flag == 0) {
             sql += " and( ";
@@ -94,8 +98,145 @@ public class DAOSubject extends DBContext {
         sql += ")";
         return sql;
     }
-    
-    public Vector<Subject> getWithToken(int[] parentTier1, int[] parentTier2,
+
+    public String addTierToSQLForBusiness(int[] parent, int tier, int flag) {
+        String sql = "";
+        if (flag == 0) {
+            sql += " and( ";
+        } else {
+            sql += " or ";
+        }
+        switch (tier) {
+            case 3: {
+                sql += "sc.SubjectCategoryId in (";
+                break;
+            }
+            case 2: {
+                sql += "sc.SubjectParentCategory in (";
+                break;
+            }
+            case 1: {
+                sql += "ch.SubjectParentCategory in (";
+                break;
+            }
+            default:
+        }
+        for (int i = 0; i < parent.length; i++) {
+            sql += parent[i] + ",";
+        }
+        if (sql.endsWith(",")) {
+            sql = sql.substring(0, sql.length() - 1);
+        }
+        sql += ")";
+        return sql;
+    }
+
+    public Vector<Subject> getForBusiness(int[] parentTier1, int[] parentTier2,
+            int[] parentTier3, String inputKey, int order, int[] level, int[] org) {
+        Vector<Subject> vec = new Vector<>();
+        int flagAND = 0;
+        String sql = """
+                    with CategoryHierarchy as 
+                    (select SubjectCategoryId,SubjectCategoryName,
+                    SubjectParentCategory from SubjectCategory
+                    where SubjectParentCategory = 0
+                    union all
+                    select sc.SubjectCategoryId,sc.SubjectCategoryName,sc.SubjectParentCategory 
+                    from SubjectCategory sc
+                    inner join CategoryHierarchy ch 
+                    on ch.SubjectCategoryId = sc.SubjectParentCategory)
+                    select s.SubjectId, s.SubjectTitle, s.SubjectTagLine,s.SubjectThumbnail,
+                    sl.SubjectLevelName, o.OrganizationName              
+                    from [Subject] s
+                    join [SubjectCategory] sc on sc.SubjectCategoryId = s.SubjectCategoryId
+                    join [SubjectLevel] sl on sl.SubjectLevelId = s.SubjectLevelId
+                    join [Organization] o on o.OrganizationId = s.SubjectProviderId
+                    left join CategoryHierarchy ch on ch.SubjectCategoryId = sc.SubjectParentCategory 
+                    where 1=1 
+                              """;
+        if (parentTier3 != null) {
+            sql += addTierToSQLForBusiness(parentTier3, 3, flagAND);
+            if (sql.contains("and(")) {
+                flagAND = 1;
+            }
+        }
+        if (parentTier2 != null) {
+            sql += addTierToSQLForBusiness(parentTier2, 2, flagAND);
+            if (sql.contains("and(")) {
+                flagAND = 1;
+            }
+        }
+        if (parentTier1 != null) {
+            sql += addTierToSQLForBusiness(parentTier1, 1, flagAND);
+            if (sql.contains("and(")) {
+                flagAND = 1;
+            }
+        }
+        if (flagAND == 1) {
+            sql += ")";
+        }
+        if (level != null) {
+            sql += " and s.SubjectLevelId in(";
+            for (int i = 0; i < level.length; i++) {
+                sql += level[i] + ",";
+            }
+            if (sql.endsWith(",")) {
+                sql = sql.substring(0, sql.length() - 1);
+            }
+            sql += ")";
+        }
+        if (org != null) {
+            sql += " and o.OrganizationId in(";
+            for (int i = 0; i < org.length; i++) {
+                sql += org[i] + ",";
+            }
+            if (sql.endsWith(",")) {
+                sql = sql.substring(0, sql.length() - 1);
+            }
+            sql += ")";
+        }
+        if (inputKey != null) {
+            inputKey = inputKey.replace("!", "!!")
+                    .replace("%", "!%")
+                    .replace("_", "!_")
+                    .replace("[", "![");
+            sql += " and s.SubjectTitle like ? ESCAPE '!' ";
+        }
+        switch (order) {
+            //order by updated date from oldest to newest
+            case 0:
+                sql += " order by s.SubjectUpdatedDate asc";
+                break;
+            //order by updated date from newest to oldest
+            case 1:
+                sql += "order by s.SubjectUpdatedDate desc";
+                break;
+            default:
+                break;
+        }
+        try {
+            PreparedStatement pre = connection.prepareStatement(sql);
+            if (inputKey != null) {
+                pre.setString(1, "%" + inputKey + "%");
+            }
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                Subject sub = new Subject();
+                sub.setSubjectId(rs.getInt(1));
+                sub.setSubjectName(rs.getString(2));
+                sub.setTagLine(rs.getString(3));
+                sub.setThumbnail(rs.getString(4));
+                sub.setLevel(rs.getString(5));
+                sub.setProvider(rs.getString(6));
+                vec.add(sub);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DAOSubject.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return vec;
+    }
+
+    public Vector<Subject> getForIndividual(int[] parentTier1, int[] parentTier2,
             int[] parentTier3, String inputKey, int order, int[] level) {
         Vector<Subject> vec = new Vector<>();
         int flagAND = 0;
@@ -132,19 +273,19 @@ public class DAOSubject extends DBContext {
                      where tableLowest.SalePrice = tableSubject.SalePrice 
                               """;
         if (parentTier3 != null) {
-            sql += addTierToSQL(parentTier3, 3, flagAND);
+            sql += addTierToSQLForIndividual(parentTier3, 3, flagAND);
             if (sql.contains("and(")) {
                 flagAND = 1;
             }
         }
         if (parentTier2 != null) {
-            sql += addTierToSQL(parentTier2, 2, flagAND);
+            sql += addTierToSQLForIndividual(parentTier2, 2, flagAND);
             if (sql.contains("and(")) {
                 flagAND = 1;
             }
         }
         if (parentTier1 != null) {
-            sql += addTierToSQL(parentTier1, 1, flagAND);
+            sql += addTierToSQLForIndividual(parentTier1, 1, flagAND);
             if (sql.contains("and(")) {
                 flagAND = 1;
             }
@@ -203,7 +344,7 @@ public class DAOSubject extends DBContext {
         }
         return vec;
     }
-    
+
     public Vector<Subject> getFeaturedSubject() {
         Vector<Subject> vec = new Vector<>();
         try {
@@ -240,7 +381,7 @@ public class DAOSubject extends DBContext {
         }
         return vec;
     }
-    
+
     public Vector<Subject> getBigSaleSubject() {
         Vector<Subject> vec = new Vector<>();
         try {
@@ -277,7 +418,7 @@ public class DAOSubject extends DBContext {
         }
         return vec;
     }
-    
+
     public Vector<Subject> getNewSubject() {
         Vector<Subject> vec = new Vector<>();
         try {
@@ -316,7 +457,7 @@ public class DAOSubject extends DBContext {
         }
         return vec;
     }
-    
+
     public Vector<SubjectCategory> getLevelList() {
         Vector<SubjectCategory> vec = new Vector<>();
         try {
@@ -337,7 +478,97 @@ public class DAOSubject extends DBContext {
         }
         return vec;
     }
-    
+
+    public Vector<Organization> getOrgList() {
+        Vector<Organization> vec = new Vector<>();
+        try {
+            Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            //change query due to database script's change
+            ResultSet rs
+                    = statement.executeQuery("select o.OrganizationId, o.OrganizationName from [Organization] o");
+            while (rs.next()) {
+                Organization o = new Organization();
+                o.setOrgId(rs.getInt(1));
+                o.setOrgName(rs.getString(2));
+                vec.add(o);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DAOSubject.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return vec;
+    }
+
+    public Vector<Organization> getOrgListOfUser(String email) {
+        Vector<Organization> vec = new Vector<>();
+        String sql = """
+                    select o.OrganizationId, o.OrganizationName from [Organization] o
+                    join [OrganizationMember] om on om.MemberId = o.OrganizationId
+                    join [User] u on u.UserId = om.MemberId
+                    where u.Email = """;
+        try {
+            PreparedStatement pre = connection.prepareStatement(sql);
+            //change query due to database script's change
+            pre.setString(1, email);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                Organization o = new Organization();
+                o.setOrgId(rs.getInt(1));
+                o.setOrgName(rs.getString(2));
+                vec.add(o);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DAOSubject.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return vec;
+    }
+    public HashMap<Integer, String> getSponsor (String email){
+        HashMap<Integer, String> map = new HashMap<>();
+        String sql = """
+                     select ops.SubjectId, o.OrganizationName from [Organization] o
+                     join [OrganizationMember] om on om.MemberId = o.OrganizationId
+                     join [User] u on u.UserId = om.MemberId
+                     join [License] l on l.OrganizationId = o.OrganizationId
+                     join [OrganizationPackageSubject] ops on ops.OrganizationPackageId = l.OrganizationPackageId
+                     where u.Email = ?""";
+        try {
+            PreparedStatement pre = connection.prepareStatement(sql);
+            //change query due to database script's change
+            pre.setString(1, email);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                int subjectId = rs.getInt(1);
+                String org = rs.getString(2);
+                map.put(subjectId, org);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DAOSubject.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return map;
+    }
+    public Vector<Package> getPlans() {
+        Vector<Package> vec = new Vector<>();
+        try {
+            Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            //change query due to database script's change
+            ResultSet rs
+                    = statement.executeQuery("""
+                                             select o.OrganizationPackageId, o.PackageName, 
+                                             o.RetailPriceEach, o.NonprofitPriceEach from [OrganizationPackage] o
+                                             where o.PackageDuration = 4""");
+            while (rs.next()) {
+                Package p = new Package();
+                p.setPackageId(rs.getInt(1));
+                p.setPackageName(rs.getString(2));
+                p.setListPrice(rs.getFloat(3));
+                p.setSalePrice(rs.getFloat(4));
+                vec.add(p);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DAOSubject.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return vec;
+    }
+
     public Vector<SubjectCategory> getFilterList() {
         Vector<SubjectCategory> vec = new Vector<>();
         try {
@@ -369,18 +600,43 @@ public class DAOSubject extends DBContext {
         }
         return vec;
     }
-    
+
+
     public Subject getSubjectById(int id) {
         Subject Out = null;
-        String sql = "SELECT TOP 1 SubjectId, SubjectTitle, SubjectTagLine, SubjectBriefInfo, SubjectDescription, SubjectThumbnail FROM Subject WHERE SubjectId = ?";
-        
+        String sql = "SELECT TOP 1 SubjectId, SubjectTitle, SubjectTagLine, SubjectBriefInfo, SubjectDescription, SubjectThumbnail, SubjectCategoryId FROM Subject WHERE SubjectId = ?";
+
         PreparedStatement pre;
         try {
             pre = connection.prepareStatement(sql);
             pre.setInt(1, id);
             ResultSet rs = pre.executeQuery();
             if (rs.next()) {
-                Out = new Subject(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6));
+                Out = new Subject(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getInt(7));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return Out;
+    }
+
+    public List<SubjectCategory> getSubjectCategoryLineById(int id) {
+        List<SubjectCategory> Out = new ArrayList<>();
+        String sql = "SELECT TOP 1 SubjectCategoryId, SubjectCategoryName, SubjectParentCategory from SubjectCategory where SubjectCategoryId = ?";
+
+        PreparedStatement pre;
+        try {
+            int parentId = id, emergencyExit = 12; //just in case
+            while (parentId > 0 && emergencyExit-- > 0) {
+                pre = connection.prepareStatement(sql);
+                pre.setInt(1, parentId);
+                ResultSet rs = pre.executeQuery();
+                if (rs.next()) {
+                    parentId = rs.getInt(3);
+                    Out.add(new SubjectCategory(rs.getInt(1), rs.getString(2), parentId));
+                    
+                }
+                else break;
             }
         } catch (SQLException ex) {
             Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
@@ -388,10 +644,43 @@ public class DAOSubject extends DBContext {
         return Out;
     }
     
+    public List<SubjectCategory> getAllSubjectCategories() {
+        List<SubjectCategory> Out = new ArrayList<>();
+        String sql = "SELECT SubjectCategoryId, SubjectCategoryName, SubjectParentCategory from SubjectCategory";
+
+        PreparedStatement pre;
+        try {
+            pre = connection.prepareStatement(sql);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                Out.add(new SubjectCategory(rs.getInt(1), rs.getString(2), rs.getInt(3)));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return Out;
+    }
+    
+    public int addSubject(Subject sub) {
+        String sql = "INSERT INTO [Subject] VALUES('US / United States History', 33, 1, 1, 0, '2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','https://higheredprofessor.com/wp-content/uploads/2015/05/How-many-courses-do-university-faculty-teach1.jpg');";
+
+        PreparedStatement pre;
+        try {
+            pre = connection.prepareStatement(sql);
+            pre.setString(1, sub.getSubjectName());
+            pre.setInt(2, sub.getCategoryId());
+            //pre.setInt(2, sub.get);
+            return pre.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
+    }
+
     public List<Subject> getFeaturedSubjects(int ammoutOfSubjects) {
         List<Subject> Out = new ArrayList<>();
         String sql = "SELECT TOP (?) s.SubjectId, s.SubjectTitle, s.SubjectTagLine, s.SubjectThumbnail FROM Subject s WHERE s.IsFeaturedSubject = 1";
-        
+
         PreparedStatement pre;
         try {
             pre = connection.prepareStatement(sql);
@@ -412,8 +701,112 @@ public class DAOSubject extends DBContext {
         return Out;
     }
     
-    public static void main(String[] args) {
-        DAOSubject test = new DAOSubject();
-        System.out.println(test.getRegisteredSubjects("ngocdb").size());
+    public boolean updateSubject(Subject subject) {
+        boolean isUpdated = false;
+        String sql = "UPDATE Subject SET SubjectTitle = ?, SubjectTagLine = ?, SubjectThumbnail = ? WHERE SubjectId = ?";
+        try {
+            PreparedStatement pre = connection.prepareStatement(sql);
+            pre.setString(1, subject.getSubjectName());
+            pre.setString(2, subject.getTagLine());
+            pre.setString(3, subject.getThumbnail());
+            pre.setInt(4, subject.getSubjectId());
+
+            int rowsAffected = pre.executeUpdate();
+            isUpdated = rowsAffected > 0;
+        } catch (SQLException ex) {
+            Logger.getLogger(DAOSubject.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return isUpdated;
+    }
+
+    public SubjectDTO getSubjectByDTOId(int subjectId) {
+        SubjectDTO subject = null;
+        String sql = "SELECT [SubjectId], [SubjectTitle], [SubjectCategoryId], [SubjectStatus], "
+                + "[SubjectLevelId], [IsFeaturedSubject], [SubjectCreatedDate], [SubjectUpdatedDate], "
+                + "[SubjectTagLine], [SubjectBriefInfo], [SubjectDescription], [SubjectThumbnail] "
+                + "FROM [dbo].[Subject] WHERE SubjectId = ?";
+        try {
+            PreparedStatement pstmt = connection.prepareStatement(sql);
+            pstmt.setInt(1, subjectId);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                subject = new SubjectDTO();
+                subject.setSubjectId(rs.getInt("SubjectId"));
+                subject.setSubjectTitle(rs.getString("SubjectTitle"));
+                subject.setSubjectCategoryId(rs.getInt("SubjectCategoryId"));
+                subject.setSubjectStatus(rs.getInt("SubjectStatus"));
+                subject.setSubjectLevelId(rs.getInt("SubjectLevelId"));
+                subject.setIsFeaturedSubject(rs.getBoolean("IsFeaturedSubject"));
+                subject.setSubjectCreatedDate(rs.getTimestamp("SubjectCreatedDate"));
+                subject.setSubjectUpdatedDate(rs.getTimestamp("SubjectUpdatedDate"));
+                subject.setSubjectTagLine(rs.getString("SubjectTagLine"));
+                subject.setSubjectBriefInfo(rs.getString("SubjectBriefInfo"));
+                subject.setSubjectDescription(rs.getString("SubjectDescription"));
+                subject.setSubjectThumbnail(rs.getString("SubjectThumbnail"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return subject;
+    }
+
+    public boolean updateSubject(SubjectDTO subject) {
+        String sql = "UPDATE dbo.Subject SET "
+                + "SubjectTitle = ?, SubjectCategoryId = ?, SubjectStatus = ?, "
+                + "SubjectLevelId = ?, IsFeaturedSubject = ?, SubjectBriefInfo = ?, "
+                + "SubjectDescription = ?, SubjectThumbnail = ? "
+                + "WHERE SubjectId = ?";
+        try{
+            PreparedStatement pstmt = connection.prepareStatement(sql);
+            pstmt.setString(1, subject.getSubjectTitle());
+            pstmt.setInt(2, subject.getSubjectCategoryId());
+            pstmt.setInt(3, subject.getSubjectStatus());
+            pstmt.setInt(4, subject.getSubjectLevelId());
+            pstmt.setBoolean(5, subject.isIsFeaturedSubject());
+            pstmt.setString(6, subject.getSubjectBriefInfo());
+            pstmt.setString(7, subject.getSubjectDescription());
+            pstmt.setString(8, subject.getSubjectThumbnail());
+            pstmt.setInt(9, subject.getSubjectId());
+
+            int updated = pstmt.executeUpdate();
+            return updated > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    
+    public List<Subject> getAllSubject(){
+        List<Subject> listSubject = new ArrayList();
+        String sql = "SELECT *\n" +
+                    "  FROM [dbo].[Subject]";
+        try{
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                listSubject.add(new Subject(rs.getInt("subjectId"), 
+                        rs.getString("subjectTitle")));
+            }
+        }catch(Exception e){
+            System.out.println(e);
+        }
+        return listSubject;
+    }
+    
+    public int countQuestion() {
+        String sql = "SELECT COUNT(*) FROM Question";
+        int totalItem = 0;
+
+        try (PreparedStatement ps = connection.prepareStatement(sql); 
+                ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                totalItem = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+        }
+
+        return totalItem;
     }
 }

@@ -5,15 +5,16 @@
 package app.controller;
 
 import java.util.List;
-import java.util.ArrayList; 
+import java.util.ArrayList;
 import app.entity.Slide;
 import app.dal.DAOSlide;
-import app.entity.Subject; 
-import app.dal.DAOSubject; 
-import app.dal.DAOBlog; 
+import app.entity.Subject;
+import app.dal.DAOSubject;
+import app.dal.DAOBlog;
 import app.dal.DAOBlogCategory;
-import app.entity.Blog; 
+import app.entity.Blog;
 import app.dal.DAOUser;
+import app.entity.User;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -44,11 +45,11 @@ public class Homepage extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        
+
         HttpSession session = request.getSession();
-        
+
         String service = request.getParameter("service");
-        
+
         if (service != null) {
             if (service.equals("hotposts")) {
                 int offSet = 0;
@@ -110,19 +111,20 @@ public class Homepage extends HttpServlet {
                 return;
             }
         }
-        
+
+
         if (session.getAttribute("homeSliders") == null) {
             DAOSlide daoSlide = new DAOSlide(); 
-            List<Slide> sliders = daoSlide.getSliderList();
+            List<Slide> sliders = daoSlide.getAllSlide();
             session.setAttribute("homeSliders", sliders);
         }
-        
+
         if (session.getAttribute("featuredSubjects") == null) {
             DAOSubject daoSubject = new DAOSubject();
             List<Subject> featuredSubjects = daoSubject.getFeaturedSubjects(10);
             if (!featuredSubjects.isEmpty()) session.setAttribute("featuredSubjects", featuredSubjects);
         }
-        
+
         request.getRequestDispatcher("home.jsp").forward(request, response);
     }
 
