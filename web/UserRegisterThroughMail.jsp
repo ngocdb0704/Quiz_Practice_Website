@@ -1,7 +1,3 @@
-<!--@author OwO-->
-
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <div class="modal fade" id="registrationModal" tabindex="-1" aria-labelledby="registrationModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -68,39 +64,63 @@
 
     function sendVerificationCode() {
         var email = $("input[name='email']").val();
+        var button = document.querySelector("#sendCodeButton");
+
+        // Clear any previous error messages
+        $("#error-message").hide();
+
+        disableInputs(true);  // Disable inputs immediately
+        button.textContent = "Sending...";
+        button.disabled = true;
+
         if (email) {
             $.ajax({
                 url: "SendVerificationCode",
                 type: "POST",
                 data: { email: email },
                 success: function(response) {
+                    button.textContent = "Sent";
                     alert("Verification code sent to your email.");
                     startCountdown();
                 },
-                error: function() {
-                    alert("Failed to send verification code. Please check the email address and try again.");
+                error: function(xhr) {
+                    if (xhr.status === 409) { // 409 Conflict
+                        $("#error-message").text("Email already existed!").show();
+                    } else {
+                        alert("Failed to send verification code. Please check the email address and try again.");
+                    }
+                    button.textContent = "Send Code";
+                    button.disabled = false;
+                    disableInputs(false);  // Re-enable inputs on error
                 }
             });
         } else {
             alert("Please enter your email.");
+            button.textContent = "Send Code";
+            button.disabled = false;
+            disableInputs(false);  // Re-enable inputs if email is empty
         }
     }
 
     function startCountdown() {
         var countdown = 60;
         var button = document.querySelector("#sendCodeButton");
-        button.disabled = true; // Disable button during countdown
 
-        var countdownInterval = setInterval(function() {
+        countdownTimer = setInterval(function() {
             if (countdown > 0) {
                 button.textContent = "Resend: " + countdown + "s";
                 countdown--;
             } else {
-                clearInterval(countdownInterval);
+                clearInterval(countdownTimer);
                 button.textContent = "Send Code";
                 button.disabled = false; // Enable button after countdown
+                disableInputs(false); // Re-enable inputs after countdown
             }
         }, 1000);
+    }
+
+    function disableInputs(disable) {
+        $("input[name='email']").prop('disabled', disable);
     }
 
     function registerUser(event) {
@@ -117,6 +137,7 @@
                     if (response === "Expired code") {
                         clearInterval(countdownTimer);
                         $("#sendCodeButton").prop('disabled', false).text('Send Code');
+                        disableInputs(false); // Re-enable inputs if code expired
                     }
                 }
             },
