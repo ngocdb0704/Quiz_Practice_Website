@@ -26,9 +26,6 @@ public class DBContext implements AutoCloseable {
             ex.printStackTrace();
         }
     }
-    public static void main(String[] args) {
-        new DBContext();
-    }
 
     @Override
     public void close() {
