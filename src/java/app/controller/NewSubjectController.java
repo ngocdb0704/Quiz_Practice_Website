@@ -18,6 +18,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  *
@@ -42,41 +43,50 @@ public class NewSubjectController extends HttpServlet {
         HttpSession session = request.getSession();
 
         String service = request.getParameter("service");
-        
+
         DAOSubject daoSubject = new DAOSubject();
-        
-        if(service == null || service.equals("view")) {
-            
+        DAOUser daoUser = new DAOUser();
+
+        if (service == null || service.equals("view")) {
+
             List<SubjectCategory> categoryList = (List<SubjectCategory>) request.getAttribute("subjectCategoryList");
             if (request.getAttribute("dataNewSubject") == null) {
                 categoryList = daoSubject.getAllSubjectCategories();
                 request.setAttribute("subjectCategoryList", categoryList);
             }
-        }
-        else if (service.equals("add")) {
-            try (PrintWriter out = response.getWriter()){
-                DAOUser daoUser = new DAOUser();
-                
-                String subjectTitle = request.getParameter("subjectTitle");
-                int subjectCategory = Integer.parseInt(request.getParameter("subjectCategory"));
-                int featured = (request.getParameter("featured") == null)? 0 : 1;
-                int subjectStatus = Integer.parseInt(request.getParameter("subjectStatus"));
-                String expertEmail = request.getParameter("expertEmail");
-                User owner = daoUser.getUserByEmail(expertEmail);
-                String thumbnailUrl = request.getParameter("thumbnailUrl");
-                String subjectTagline = request.getParameter("subjectTagline");
-                String subjectBrief = request.getParameter("subjectBrief");
-                String subjectDescription = request.getParameter("subjectDescription");
-                
-                if (owner != null && owner.getRoleId() == 4) {
-                    out.print(daoSubject.addSubject(new Subject(0, subjectTitle, subjectTagline, subjectBrief, subjectDescription, thumbnailUrl, subjectCategory), owner.getUserId(), subjectStatus, featured));
-                }
-                else {
-                    out.print("User was not an Expert");
-                }
+
+            ConcurrentHashMap<String, String> expertList = (ConcurrentHashMap) request.getAttribute("expertList");
+            if (request.getAttribute("expertList") == null) {
+                expertList = daoUser.ExpertsEmailNameMap();
+
+                String jsonMap = (expertList.size() > 0) ? expertList
+                        .reduce(0, (key, val) -> String.format("{\"email\": \"%s\", \"name\": \"%s\"}", key, val), (obj, obj1) -> obj + ", " + obj1).toString()
+                        : "";
+                System.out.println(jsonMap);
+                request.setAttribute("expertList", "[" + jsonMap + "]");
+            }
+        } else if (service.equals("add")) {
+            String subjectTitle = request.getParameter("subjectTitle");
+            int subjectCategory = Integer.parseInt(request.getParameter("subjectCategory"));
+            int featured = (request.getParameter("featured") == null) ? 0 : 1;
+            int subjectStatus = Integer.parseInt(request.getParameter("subjectStatus"));
+            String expertEmail = request.getParameter("expertEmail");
+            User owner = daoUser.getUserByEmail(expertEmail);
+            String thumbnailUrl = request.getParameter("thumbnailUrl");
+            String subjectTagline = request.getParameter("subjectTagline");
+            String subjectBrief = request.getParameter("subjectBrief");
+            String subjectDescription = request.getParameter("subjectDescription");
+
+            if (owner != null && owner.getRoleId() == 4) {
+                if (daoSubject.addSubject(new Subject(0, subjectTitle, subjectTagline, subjectBrief, subjectDescription, thumbnailUrl, subjectCategory), owner.getUserId(), subjectStatus, featured) == 1)
+                    session.setAttribute("notification", "<p>Subject created succefully!</p>");
+            } else {
+                //out.print("User was not an Expert");
+                session.setAttribute("notification", "<p style='color: red'>Error: The user email submitted was not of an Expert</p>");
+                System.out.println("User was not an Expert");
             }
         }
-            
+        
         request.getRequestDispatcher("NewSubject.jsp").forward(request, response);
     }
 
