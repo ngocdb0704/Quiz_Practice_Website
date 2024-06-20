@@ -373,7 +373,7 @@
                                                         <p>
                                                             <button type="button" class="btn btn-info" 
                                                                     data-bs-toggle="modal" 
-                                                                    data-bs-target=".modalRegister${listSaleSubject.get(indexCarSaleItem).getSubjectId()}"
+                                                                    data-bs-target=".modalRegisterSale${listSaleSubject.get(indexCarSaleItem).getSubjectId()}"
                                                                     ${listRegistered.contains(listSaleSubject.get(indexCarSaleItem).getSubjectName())?"disabled":""}>
                                                                 Register
                                                             </button>
@@ -398,7 +398,7 @@
                                                             </span>
                                                         </p>
                                                         <!-- Modal Register -->
-                                                        <div class="modal fade modalRegister${listSaleSubject.get(indexCarSaleItem).getSubjectId()} "
+                                                        <div class="modal fade modalRegisterSale${listSaleSubject.get(indexCarSaleItem).getSubjectId()}"
                                                              tabindex="-1"
                                                              role="dialog" >
                                                             <div class="modal-dialog modal-dialog-centered" 
@@ -564,7 +564,7 @@
                                                         <p>
                                                             <button type="button" class="btn btn-info" 
                                                                     data-bs-toggle="modal" 
-                                                                    data-bs-target=".modalRegister${listFeaturedSubject.get(indexCarFeatItem).getSubjectId()}"
+                                                                    data-bs-target=".modalRegisterCarou${listFeaturedSubject.get(indexCarFeatItem).getSubjectId()}"
                                                                     ${listRegistered.contains(listFeaturedSubject.get(indexCarFeatItem).getSubjectName())?"disabled":""}>
                                                                 Register
                                                             </button>
@@ -588,26 +588,26 @@
                                                                 </c:choose>
                                                             </span>
                                                         </p>
-                                                        <!-- Modal Register -->
-                                                        <div class="modal fade modalRegister${listFeaturedSubject.get(indexCarFeatItem).getSubjectId()} "
-                                                             tabindex="-1"
-                                                             role="dialog" >
-                                                            <div class="modal-dialog modal-dialog-centered" 
-                                                                 role="document">
-                                                                <div class="modal-content">
-                                                                    <div class="modal-header text-bg-primary">
-                                                                        <h4>Subject Register</h4>
-                                                                        <button type="button" 
-                                                                                class="btn-close" 
-                                                                                data-bs-dismiss="modal" 
-                                                                                aria-label="Close">
-                                                                        </button>
-                                                                    </div>
-                                                                    <div class="modal-body">
-                                                                        <jsp:include page="/SubjectRegisterPopUp.jsp">
-                                                                            <jsp:param name="registId" value="${listFeaturedSubject.get(indexCarFeatItem).getSubjectId()}"/>
-                                                                        </jsp:include>
-                                                                    </div>
+                                                    </div>
+                                                    <!-- Modal Register -->
+                                                    <div class="modal fade modalRegisterCarou${listFeaturedSubject.get(indexCarFeatItem).getSubjectId()} "
+                                                         tabindex="-1"
+                                                         role="dialog" >
+                                                        <div class="modal-dialog modal-dialog-centered" 
+                                                             role="document">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header text-bg-primary">
+                                                                    <h4>Subject Register</h4>
+                                                                    <button type="button" 
+                                                                            class="btn-close" 
+                                                                            data-bs-dismiss="modal" 
+                                                                            aria-label="Close">
+                                                                    </button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <jsp:include page="/SubjectRegisterPopUp.jsp">
+                                                                        <jsp:param name="registId" value="${listFeaturedSubject.get(indexCarFeatItem).getSubjectId()}"/>
+                                                                    </jsp:include>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -818,10 +818,129 @@
                                             <div class="accordion-body">
                                                 <ul>
                                                     <c:forEach begin="0" end="${listFeaturedSubject.size()-1}" var="iFeat">
-                                                        <li>
-                                                            <a class="btn btn-link" href="SubjectDetails?subjectId=${listFeaturedSubject.get(iFeat).getSubjectId()}">
-                                                                ${listFeaturedSubject.get(iFeat).getSubjectName()}
-                                                            </a>
+                                                        <li class="w3tooltip" style="width: 350px">
+                                                            <div class="my-2 ps-1 border border-1 rounded-1">
+                                                                <div>
+                                                                    <span class="atLink">${listFeaturedSubject.get(iFeat).getSubjectName()}</span> 
+                                                                    <div class="w3tooltiptext card" style="width: 18rem;">
+                                                                        <img src="${listFeaturedSubject.get(iFeat).getThumbnail()}" 
+                                                                             class="card-img-top img-thumbnail" alt="...">
+                                                                        <div class="card-body">
+                                                                            <h5 class="card-title">
+                                                                                <a class="btn btn-link"
+                                                                                   href="SubjectDetails?subjectId=${listFeaturedSubject.get(iFeat).getSubjectId()}">
+                                                                                    ${listFeaturedSubject.get(iFeat).getSubjectName()} 
+                                                                                </a>
+                                                                            </h5>
+                                                                            <p class="card-text">
+                                                                                ${listFeaturedSubject.get(iFeat).getTagLine()}
+                                                                                <br>
+                                                                                Package: ${listFeaturedSubject.get(iFeat).getLowestPackageName()}
+                                                                                <br>
+                                                                            </p>
+                                                                            <p>
+                                                                                <c:if test="${checkNewSubject.contains(listFeaturedSubject.get(iFeat).getSubjectName())}">
+                                                                                    <button type="button" 
+                                                                                            onclick="scrollToNew()"
+                                                                                            class="badge text-bg-success">
+                                                                                        New
+                                                                                    </button>
+                                                                                </c:if>
+                                                                                <c:if test="${checkSaleSubject.contains(listFeaturedSubject.get(iFeat).getSubjectName())}">
+                                                                                    <button type="button" 
+                                                                                            onclick="scrollToBigSale()"
+                                                                                            class="badge text-bg-warning">
+                                                                                        Big Sale
+                                                                                    </button>
+                                                                                </c:if>
+                                                                                <c:if test="${checkFeatSubject.contains(listFeaturedSubject.get(iFeat).getSubjectName())}">
+                                                                                    <button type="button" 
+                                                                                            onclick="scrollToFeatured()"
+                                                                                            class="badge text-bg-primary">
+                                                                                        Featured
+                                                                                    </button>
+                                                                                </c:if>
+                                                                            </p>
+                                                                            <p>
+                                                                                <c:if test="${listRegistered.contains(listFeaturedSubject.get(iFeat).getSubjectName())}">
+                                                                                    <a class="badge text-bg-dark" 
+                                                                                       href="user/MyRegistrations?key=${listFeaturedSubject.get(iFeat).getSubjectName()}"
+                                                                                       style="text-decoration: none;">
+                                                                                        In My Registrations
+                                                                                    </a>
+                                                                                </c:if>
+                                                                            </p>
+                                                                            <p> 
+                                                                                <span>
+                                                                                    Sale price:
+                                                                                </span>
+                                                                                <span class="badge rounded-pill text-bg-light">
+                                                                                    ${Integer.valueOf(listFeaturedSubject.get(iFeat).getPackageSalePrice()*1000)} vnd
+                                                                                </span>
+                                                                                <span class="fw-light badge rounded-pill text-bg-light" 
+                                                                                      style=" text-decoration-line: line-through;"> 
+                                                                                    ${Integer.valueOf(listFeaturedSubject.get(iFeat).getPackageListPrice()*1000)} vnd
+                                                                                </span>
+                                                                                <span class="badge rounded-pill text-bg-danger">
+                                                                                    - ${Integer.valueOf(
+                                                                                        (1-(listFeaturedSubject.get(iFeat).getPackageSalePrice()/listFeaturedSubject.get(iFeat).getPackageListPrice()))*100)}
+                                                                                    %
+                                                                                </span>
+                                                                            </p>
+                                                                            <p>
+                                                                                <button type="button" class="btn btn-info" 
+                                                                                        data-bs-toggle="modal" 
+                                                                                        data-bs-target=".modalRegisterFeat${listFeaturedSubject.get(iFeat).getSubjectId()}"
+                                                                                        ${listRegistered.contains(listFeaturedSubject.get(iFeat).getSubjectName())?"disabled":""}>
+                                                                                    Register
+                                                                                </button>
+                                                                                <c:if test="${sessionScope.userEmail != null}">
+                                                                                    <a class="btn text-bg-success disabled ${listRegistered == null ? "disabled":""}" 
+                                                                                       href="GiftCenter.jsp"
+                                                                                       style="text-decoration: none;"
+                                                                                       >
+                                                                                        Gift
+                                                                                    </a>
+                                                                                </c:if>
+                                                                                <br>
+                                                                                <span>
+                                                                                    <c:choose>
+                                                                                        <c:when test="${sponsor.containsKey(listFeaturedSubject.get(iFeat).getSubjectId())}">
+                                                                                            @${sponsor.get(listFeaturedSubject.get(iFeat).getSubjectId())} sponsored
+                                                                                        </c:when>
+                                                                                        <c:otherwise>
+                                                                                            <br>
+                                                                                        </c:otherwise>
+                                                                                    </c:choose>
+                                                                                </span>
+                                                                            </p>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>  
+                                                            </div>
+                                                            <!-- Modal Register -->
+                                                            <div class="modal fade modalRegisterFeat${listFeaturedSubject.get(iFeat).getSubjectId()} "
+                                                                 tabindex="-1"
+                                                                 role="dialog" >
+                                                                <div class="modal-dialog modal-dialog-centered" 
+                                                                     role="document">
+                                                                    <div class="modal-content">
+                                                                        <div class="modal-header text-bg-primary">
+                                                                            <h4>Subject Register</h4>
+                                                                            <button type="button" 
+                                                                                    class="btn-close" 
+                                                                                    data-bs-dismiss="modal" 
+                                                                                    aria-label="Close">
+                                                                            </button>
+                                                                        </div>
+                                                                        <div class="modal-body">
+                                                                            <jsp:include page="/SubjectRegisterPopUp.jsp">
+                                                                                <jsp:param name="registId" value="${listFeaturedSubject.get(indexCarFeatItem).getSubjectId()}"/>
+                                                                            </jsp:include>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
                                                         </li>
                                                     </c:forEach>
                                                 </ul>
@@ -1019,44 +1138,20 @@
                                                         <!-- Button buy trigger modal -->
                                                         <button type="button" class="btn btn-primary" 
                                                                 data-bs-toggle="modal" 
-                                                                data-bs-target=".modalRegister${p.getSubjectId()}"
+                                                                data-bs-target=".modalRegisterList${p.getSubjectId()}"
                                                                 ${listRegistered.contains(p.getSubjectName())?"disabled":""}>
                                                             Register
                                                         </button>
-                                                        <!-- Modal Register -->
-                                                        <div class="modal fade modalRegister${p.getSubjectId()} "
-                                                             tabindex="-1"
-                                                             role="dialog" >
-                                                            <div class="modal-dialog modal-dialog-centered" 
-                                                                 role="document">
-                                                                <div class="modal-content">
-                                                                    <div class="modal-header text-bg-primary">
-                                                                        <h4>Subject Register</h4>
-                                                                        <button type="button" 
-                                                                                class="btn-close" 
-                                                                                data-bs-dismiss="modal" 
-                                                                                aria-label="Close">
-                                                                        </button>
-                                                                    </div>
-                                                                    <div class="modal-body">
-                                                                        <jsp:include page="/SubjectRegisterPopUp.jsp">
-                                                                            <jsp:param name="registId" value="${p.getSubjectId()}"/>
-                                                                        </jsp:include>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                        </div>
                                                     </div>
                                                     <div class="col-xl-4">
                                                         <c:if test="${sessionScope.userEmail != null}">
-                                                                <a class="btn text-bg-success disabled ${listRegistered == null ? "disabled":""}" 
-                                                                   href="GiftCenter.jsp"
-                                                                   style="text-decoration: none;"
-                                                                   >
-                                                                    Gift
-                                                                </a>
-                                                            </c:if>
+                                                            <a class="btn text-bg-success disabled ${listRegistered == null ? "disabled":""}" 
+                                                               href="GiftCenter.jsp"
+                                                               style="text-decoration: none;"
+                                                               >
+                                                                Gift
+                                                            </a>
+                                                        </c:if>
                                                     </div>
                                                 </diV>
                                                 <div class="row">
@@ -1068,6 +1163,29 @@
                                                             <br>
                                                         </c:otherwise>
                                                     </c:choose>
+                                                </div>
+                                            </div>
+                                            <!-- Modal Register -->
+                                            <div class="modal fade modalRegisterList${p.getSubjectId()} "
+                                                 tabindex="-1"
+                                                 role="dialog" >
+                                                <div class="modal-dialog modal-dialog-centered" 
+                                                     role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header text-bg-primary">
+                                                            <h4>Subject Register</h4>
+                                                            <button type="button" 
+                                                                    class="btn-close" 
+                                                                    data-bs-dismiss="modal" 
+                                                                    aria-label="Close">
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <jsp:include page="/SubjectRegisterPopUp.jsp">
+                                                                <jsp:param name="registId" value="${p.getSubjectId()}"/>
+                                                            </jsp:include>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>

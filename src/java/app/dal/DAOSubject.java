@@ -152,7 +152,7 @@ public class DAOSubject extends DBContext {
                     join [SubjectLevel] sl on sl.SubjectLevelId = s.SubjectLevelId
                     join [Organization] o on o.OrganizationId = s.SubjectProviderId
                     left join CategoryHierarchy ch on ch.SubjectCategoryId = sc.SubjectParentCategory 
-                    where 1=1 
+                    where s.SubjectStatus = 1 
                               """;
         if (parentTier3 != null) {
             sql += addTierToSQLForBusiness(parentTier3, 3, flagAND);
@@ -263,14 +263,15 @@ public class DAOSubject extends DBContext {
                      (select s.SubjectId, s.SubjectTitle, s.SubjectTagLine,s.SubjectThumbnail,
                      p.PackageName, p.ListPrice, p.SalePrice, sc.SubjectCategoryId as 'ParentTier3',
                      sc.SubjectParentCategory as 'ParentTier2', ch.SubjectParentCategory as 'ParentTier1'
-                     ,s.SubjectUpdatedDate, sl.SubjectLevelName, sl.SubjectLevelId                     
+                     ,s.SubjectUpdatedDate, sl.SubjectLevelName, sl.SubjectLevelId, s.SubjectStatus                       
                      from [Subject] s
                      join [Package] p on p.SubjectId = s.SubjectId
                      join [SubjectCategory] sc on sc.SubjectCategoryId = s.SubjectCategoryId
                      join [SubjectLevel] sl on sl.SubjectLevelId = s.SubjectLevelId
                      left join CategoryHierarchy ch on ch.SubjectCategoryId = sc.SubjectParentCategory) tableSubject
                      on tableLowest.SubjectId = tableSubject.SubjectId
-                     where tableLowest.SalePrice = tableSubject.SalePrice 
+                     where tableLowest.SalePrice = tableSubject.SalePrice
+                     and tableSubject.SubjectStatus = 1
                               """;
         if (parentTier3 != null) {
             sql += addTierToSQLForIndividual(parentTier3, 3, flagAND);
@@ -351,19 +352,40 @@ public class DAOSubject extends DBContext {
             Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
             ResultSet rs
                     = statement.executeQuery("""
-                    select tableSubject.SubjectId, tableSubject.SubjectTitle, tableSubject.SubjectTagLine,
-                    tableSubject.SubjectThumbnail, tablePackage.PackageName, tablePackage.ListPrice, tableLowest.SalePrice
-                    from (select s.SubjectId, s.SubjectTitle, s.SubjectTagLine, s.SubjectThumbnail, s.SubjectUpdatedDate from Subject s
-                    where  s.SubjectStatus = 1 and s.IsFeaturedSubject = 1) tableSubject 
-                    left join 
+                    with CategoryHierarchy as 
+                    (select SubjectCategoryId,SubjectCategoryName,
+                    SubjectParentCategory from SubjectCategory
+                    where SubjectParentCategory = 0
+                    union all
+                    select sc.SubjectCategoryId,sc.SubjectCategoryName,sc.SubjectParentCategory 
+                    from SubjectCategory sc
+                    inner join CategoryHierarchy ch 
+                    on ch.SubjectCategoryId = sc.SubjectParentCategory)					
+                    select tableLowest.SubjectId, tableSubject.SubjectTitle,
+                    tableSubject.SubjectTagLine, tableSubject.SubjectThumbnail,
+                    tableSubject.PackageName, tableSubject.ListPrice,
+                    tableSubject.SalePrice, tableSubject.ParentTier3,
+                    tableSubject.ParentTier2, tableSubject.ParentTier1,
+                    tableSubject.SubjectLevelName, tableSubject.OrganizationName from 
                     (select s.SubjectId, MIN(p.SalePrice) as 'SalePrice' from Package p
                     join Subject s on s.SubjectId = p.SubjectId
-                    GROUP BY s.SubjectId) tableLowest on tableLowest.SubjectId = tableSubject.SubjectId
+                    GROUP BY s.SubjectId ) tableLowest
                     left join 
-                    (select p.SubjectId, p.PackageName, p.ListPrice, p.SalePrice from Package p
-                    join Subject s on s.SubjectId = p.SubjectId) tablePackage on tablePackage.SubjectId= tableSubject.SubjectId
-                    where tablePackage.SalePrice = tableLowest.SalePrice
-                    order by tableSubject.SubjectUpdatedDate desc                     
+                    (select s.SubjectId, s.SubjectTitle, s.SubjectTagLine,s.SubjectThumbnail,
+                    p.PackageName, p.ListPrice, p.SalePrice, sc.SubjectCategoryId as 'ParentTier3',
+                    sc.SubjectParentCategory as 'ParentTier2', ch.SubjectParentCategory as 'ParentTier1'
+                    ,s.SubjectUpdatedDate, sl.SubjectLevelName, sl.SubjectLevelId, o.OrganizationName, s.SubjectStatus                     
+                    from [Subject] s
+                    join [Package] p on p.SubjectId = s.SubjectId
+                    join [SubjectCategory] sc on sc.SubjectCategoryId = s.SubjectCategoryId
+                    join [SubjectLevel] sl on sl.SubjectLevelId = s.SubjectLevelId
+                    left join CategoryHierarchy ch on ch.SubjectCategoryId = sc.SubjectParentCategory
+                    left join [Organization] o on o.OrganizationId = s.SubjectProviderId
+                    where s.IsFeaturedSubject = 1) tableSubject
+                    on tableLowest.SubjectId = tableSubject.SubjectId
+                    where tableLowest.SalePrice = tableSubject.SalePrice
+                    and tableSubject.SubjectStatus = 1                         
+                    order by tableSubject.SubjectUpdatedDate desc                    
                     """);
             while (rs.next()) {
                 Subject sub = new Subject();
@@ -374,6 +396,8 @@ public class DAOSubject extends DBContext {
                 sub.setLowestPackageName(rs.getString(5));
                 sub.setPackageListPrice(rs.getFloat(6));
                 sub.setPackageSalePrice(rs.getFloat(7));
+                sub.setLevel(rs.getString(11));
+                sub.setProvider(rs.getString(12));
                 vec.add(sub);
             }
         } catch (SQLException ex) {

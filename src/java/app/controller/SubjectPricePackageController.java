@@ -1,4 +1,3 @@
-
 package app.controller;
 
 import app.dal.DAOPackage;
@@ -58,7 +57,7 @@ public class SubjectPricePackageController extends HttpServlet {
                 int id = Parsers.parseIntOrDefault(request.getParameter("id"), -1);
                 
                 if (id == -1) {
-                    session.setAttribute("notyfErrorMessage", "Invalid id");
+                    session.setAttribute("notyfErrorMessage", "Invalid package ID provided for editing.");
                     return false;
                 }
                 
@@ -66,12 +65,16 @@ public class SubjectPricePackageController extends HttpServlet {
                 Package pkg = dpkg.getPricePackageByPackageId(id);
                 
                 if (pkg == null) {
-                    session.setAttribute("notyfErrorMessage", "Could not find that package");
+                    session.setAttribute("notyfErrorMessage", "No package found with the provided ID.");
                     return false;
                 }
 
                 request.setAttribute("pkg", pkg);
                 request.getRequestDispatcher(EDIT_PRICE_PACKAGE).forward(request, response);
+            }
+            default -> {
+                session.setAttribute("notyfErrorMessage", "Unknown action: " + action);
+                return false;
             }
         };
         
@@ -108,12 +111,20 @@ public class SubjectPricePackageController extends HttpServlet {
         pkg.applySale(Math.max(0, Math.min(100, percentage)));
         pkg.setDescription(req.getParameter("description"));
         
-        if (!pkg.isValid()) return false;
+        
+        if (!pkg.isValid()) {
+            req.getSession().setAttribute("notyfErrorMessage", "Invalid package details provided.");
+            return false;
+        }
+        if (dpkg.isDurationDuplicated(subjectId, pkg)) {
+            req.getSession().setAttribute("notyfErrorMessage", "Duplicate duration found for the same subject.");
+            return false;
+        }
         
         return dpkg.createPackage(subjectId, pkg);
     }
     
-    private boolean editPackage(int packageId, HttpServletRequest req) {
+    private boolean editPackage(int packageId, int subjectId, HttpServletRequest req) {
         if (packageId == -1) return false;
         
         DAOPackage dpkg = new DAOPackage();
@@ -132,7 +143,14 @@ public class SubjectPricePackageController extends HttpServlet {
         pkg.applySale(Math.max(0, Math.min(100, percentage)));
         pkg.setDescription(req.getParameter("description"));
         
-        if (!pkg.isValid()) return false;
+        if (!pkg.isValid()) {
+            req.getSession().setAttribute("notyfErrorMessage", "Invalid package details provided.");
+            return false;
+        }
+        if (dpkg.isDurationDuplicated(subjectId, pkg)) {
+            req.getSession().setAttribute("notyfErrorMessage", "Duplicate duration found for the same subject.");
+            return false;
+        }
         
         return dpkg.modifyPackage(pkg);
     }
@@ -145,35 +163,35 @@ public class SubjectPricePackageController extends HttpServlet {
         int subjectId = Parsers.parseIntOrDefault(request.getParameter("subjectId"), -1);
         
         HttpSession session = request.getSession();
+        DAOPackage dpkg = new DAOPackage();
         
         switch (action) {
             case "activate" -> {
                 if (switchPackage(id, true)) {
-                    session.setAttribute("notyfSuccessMessage", "Activated package ID " + id);
+                    session.setAttribute("notyfSuccessMessage", "Successfully activated package ID " + id);
                 } else {
-                    session.setAttribute("notyfErrorMessage", "An error occured while activating package ID " + id);
+                    session.setAttribute("notyfErrorMessage", "Failed to activate package ID " + id + ". Please check the package ID and try again.");
                 }
             }
             case "deactivate" -> {
                 if (switchPackage(id, false)) {
-                    session.setAttribute("notyfSuccessMessage", "Deactivated package ID " + id);
+                    session.setAttribute("notyfSuccessMessage", "Successfully deactivated package ID " + id);
                 } else {
-                    session.setAttribute("notyfErrorMessage", "An error occured while deactivating package ID " + id);
+                    session.setAttribute("notyfErrorMessage", "Failed to deactivate package ID " + id + ". Please check the package ID and try again.");
                 }
             }
             case "add" -> {
                 if (addPackage(subjectId, request)) {
-                    session.setAttribute("notyfSuccessMessage", "Added new package for subject ID " + subjectId);
-                } else {
-                    session.setAttribute("notyfErrorMessage", "An error occured while adding new package for subject ID " + subjectId);
+                    session.setAttribute("notyfSuccessMessage", "Successfully added a new package for subject ID " + subjectId);
                 }
             }
             case "edit" -> {
-                if (editPackage(id, request)) {
-                    session.setAttribute("notyfSuccessMessage", "Edited package ID " + id);
-                } else {
-                    session.setAttribute("notyfErrorMessage", "An error occured while editing package ID " + id);
+                if (editPackage(id, subjectId, request)) {
+                    session.setAttribute("notyfSuccessMessage", "Successfully edited package ID " + id);
                 }
+            }
+            default -> {
+                session.setAttribute("notyfErrorMessage", "Unknown action: " + action);
             }
         }
 
