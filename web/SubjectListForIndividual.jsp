@@ -186,12 +186,14 @@
                                                                     >
                                                                 Register
                                                             </button>
-                                                            <a class="btn text-bg-success disabled ${listRegistered == null ? "disabled":""}" 
-                                                               href="GiftCenter.jsp"
-                                                               style="text-decoration: none;"
-                                                               >
-                                                                Gift
-                                                            </a>
+                                                            <c:if test="${sessionScope.userEmail != null}">
+                                                                <a class="btn text-bg-success disabled ${listRegistered == null ? "disabled":""}" 
+                                                                   href="GiftCenter.jsp"
+                                                                   style="text-decoration: none;"
+                                                                   >
+                                                                    Gift
+                                                                </a>
+                                                            </c:if>
                                                             <br>
                                                             <span>
                                                                 <c:choose>
@@ -375,12 +377,14 @@
                                                                     ${listRegistered.contains(listSaleSubject.get(indexCarSaleItem).getSubjectName())?"disabled":""}>
                                                                 Register
                                                             </button>
-                                                            <a class="btn text-bg-success disabled ${listRegistered == null ? "disabled":""}" 
-                                                               href="GiftCenter.jsp"
-                                                               style="text-decoration: none;"
-                                                               >
-                                                                Gift
-                                                            </a>
+                                                            <c:if test="${sessionScope.userEmail != null}">
+                                                                <a class="btn text-bg-success disabled ${listRegistered == null ? "disabled":""}" 
+                                                                   href="GiftCenter.jsp"
+                                                                   style="text-decoration: none;"
+                                                                   >
+                                                                    Gift
+                                                                </a>
+                                                            </c:if>
                                                             <br>
                                                             <span>
                                                                 <c:choose>
@@ -564,12 +568,14 @@
                                                                     ${listRegistered.contains(listFeaturedSubject.get(indexCarFeatItem).getSubjectName())?"disabled":""}>
                                                                 Register
                                                             </button>
-                                                            <a class="btn text-bg-success disabled ${listRegistered == null ? "disabled":""}" 
-                                                               href="GiftCenter.jsp"
-                                                               style="text-decoration: none;"
-                                                               >
-                                                                Gift
-                                                            </a>
+                                                            <c:if test="${sessionScope.userEmail != null}">
+                                                                <a class="btn text-bg-success disabled ${listRegistered == null ? "disabled":""}" 
+                                                                   href="GiftCenter.jsp"
+                                                                   style="text-decoration: none;"
+                                                                   >
+                                                                    Gift
+                                                                </a>
+                                                            </c:if>
                                                             <br>
                                                             <span>
                                                                 <c:choose>
@@ -1043,12 +1049,14 @@
                                                         </div>
                                                     </div>
                                                     <div class="col-xl-4">
-                                                        <a class="btn text-bg-success disabled ${listRegistered == null ? "disabled":""}" 
-                                                           href="GiftCenter.jsp"
-                                                           style="text-decoration: none;"
-                                                           >
-                                                            Gift
-                                                        </a>
+                                                        <c:if test="${sessionScope.userEmail != null}">
+                                                                <a class="btn text-bg-success disabled ${listRegistered == null ? "disabled":""}" 
+                                                                   href="GiftCenter.jsp"
+                                                                   style="text-decoration: none;"
+                                                                   >
+                                                                    Gift
+                                                                </a>
+                                                            </c:if>
                                                     </div>
                                                 </diV>
                                                 <div class="row">
