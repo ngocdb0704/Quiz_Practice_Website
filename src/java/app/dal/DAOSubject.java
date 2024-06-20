@@ -6,6 +6,7 @@ package app.dal;
 
 import app.dal.DBContext;
 import app.entity.Organization;
+import app.dto.SubjectDTO;
 import app.entity.Subject;
 import app.entity.Package;
 import app.entity.SubjectCategory;
@@ -19,6 +20,7 @@ import java.util.List;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.sql.Date;
 
 /**
  *
@@ -599,9 +601,10 @@ public class DAOSubject extends DBContext {
         return vec;
     }
 
+
     public Subject getSubjectById(int id) {
         Subject Out = null;
-        String sql = "SELECT TOP 1 SubjectId, SubjectTitle, SubjectTagLine, SubjectBriefInfo, SubjectDescription, SubjectThumbnail FROM Subject WHERE SubjectId = ?";
+        String sql = "SELECT TOP 1 SubjectId, SubjectTitle, SubjectTagLine, SubjectBriefInfo, SubjectDescription, SubjectThumbnail, SubjectCategoryId FROM Subject WHERE SubjectId = ?";
 
         PreparedStatement pre;
         try {
@@ -609,18 +612,69 @@ public class DAOSubject extends DBContext {
             pre.setInt(1, id);
             ResultSet rs = pre.executeQuery();
             if (rs.next()) {
-                Out = new Subject();
-                Out.setSubjectId(rs.getInt(1));
-                Out.setSubjectName(rs.getString(2));
-                Out.setTagLine(rs.getString(3));
-                Out.setBriefInfo(rs.getString(4));
-                Out.setSubjectDescription(rs.getString(5));
-                Out.setThumbnail(rs.getString(6));
+                Out = new Subject(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getInt(7));
             }
         } catch (SQLException ex) {
             Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
         }
         return Out;
+    }
+
+    public List<SubjectCategory> getSubjectCategoryLineById(int id) {
+        List<SubjectCategory> Out = new ArrayList<>();
+        String sql = "SELECT TOP 1 SubjectCategoryId, SubjectCategoryName, SubjectParentCategory from SubjectCategory where SubjectCategoryId = ?";
+
+        PreparedStatement pre;
+        try {
+            int parentId = id, emergencyExit = 12; //just in case
+            while (parentId > 0 && emergencyExit-- > 0) {
+                pre = connection.prepareStatement(sql);
+                pre.setInt(1, parentId);
+                ResultSet rs = pre.executeQuery();
+                if (rs.next()) {
+                    parentId = rs.getInt(3);
+                    Out.add(new SubjectCategory(rs.getInt(1), rs.getString(2), parentId));
+                    
+                }
+                else break;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return Out;
+    }
+    
+    public List<SubjectCategory> getAllSubjectCategories() {
+        List<SubjectCategory> Out = new ArrayList<>();
+        String sql = "SELECT SubjectCategoryId, SubjectCategoryName, SubjectParentCategory from SubjectCategory";
+
+        PreparedStatement pre;
+        try {
+            pre = connection.prepareStatement(sql);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                Out.add(new SubjectCategory(rs.getInt(1), rs.getString(2), rs.getInt(3)));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return Out;
+    }
+    
+    public int addSubject(Subject sub) {
+        String sql = "INSERT INTO [Subject] VALUES('US / United States History', 33, 1, 1, 0, '2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','https://higheredprofessor.com/wp-content/uploads/2015/05/How-many-courses-do-university-faculty-teach1.jpg');";
+
+        PreparedStatement pre;
+        try {
+            pre = connection.prepareStatement(sql);
+            pre.setString(1, sub.getSubjectName());
+            pre.setInt(2, sub.getCategoryId());
+            //pre.setInt(2, sub.get);
+            return pre.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
     }
 
     public List<Subject> getFeaturedSubjects(int ammoutOfSubjects) {
@@ -646,10 +700,113 @@ public class DAOSubject extends DBContext {
         }
         return Out;
     }
+    
+    public boolean updateSubject(Subject subject) {
+        boolean isUpdated = false;
+        String sql = "UPDATE Subject SET SubjectTitle = ?, SubjectTagLine = ?, SubjectThumbnail = ? WHERE SubjectId = ?";
+        try {
+            PreparedStatement pre = connection.prepareStatement(sql);
+            pre.setString(1, subject.getSubjectName());
+            pre.setString(2, subject.getTagLine());
+            pre.setString(3, subject.getThumbnail());
+            pre.setInt(4, subject.getSubjectId());
 
-    public static void main(String[] args) {
-        DAOSubject test = new DAOSubject();
-        HashMap<Integer, String> map = test.getSponsor("ngocdbhe182383@fpt.edu.vn");
-        System.out.println(map.size());
+            int rowsAffected = pre.executeUpdate();
+            isUpdated = rowsAffected > 0;
+        } catch (SQLException ex) {
+            Logger.getLogger(DAOSubject.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return isUpdated;
+    }
+
+    public SubjectDTO getSubjectByDTOId(int subjectId) {
+        SubjectDTO subject = null;
+        String sql = "SELECT [SubjectId], [SubjectTitle], [SubjectCategoryId], [SubjectStatus], "
+                + "[SubjectLevelId], [IsFeaturedSubject], [SubjectCreatedDate], [SubjectUpdatedDate], "
+                + "[SubjectTagLine], [SubjectBriefInfo], [SubjectDescription], [SubjectThumbnail] "
+                + "FROM [dbo].[Subject] WHERE SubjectId = ?";
+        try {
+            PreparedStatement pstmt = connection.prepareStatement(sql);
+            pstmt.setInt(1, subjectId);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                subject = new SubjectDTO();
+                subject.setSubjectId(rs.getInt("SubjectId"));
+                subject.setSubjectTitle(rs.getString("SubjectTitle"));
+                subject.setSubjectCategoryId(rs.getInt("SubjectCategoryId"));
+                subject.setSubjectStatus(rs.getInt("SubjectStatus"));
+                subject.setSubjectLevelId(rs.getInt("SubjectLevelId"));
+                subject.setIsFeaturedSubject(rs.getBoolean("IsFeaturedSubject"));
+                subject.setSubjectCreatedDate(rs.getTimestamp("SubjectCreatedDate"));
+                subject.setSubjectUpdatedDate(rs.getTimestamp("SubjectUpdatedDate"));
+                subject.setSubjectTagLine(rs.getString("SubjectTagLine"));
+                subject.setSubjectBriefInfo(rs.getString("SubjectBriefInfo"));
+                subject.setSubjectDescription(rs.getString("SubjectDescription"));
+                subject.setSubjectThumbnail(rs.getString("SubjectThumbnail"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return subject;
+    }
+
+    public boolean updateSubject(SubjectDTO subject) {
+        String sql = "UPDATE dbo.Subject SET "
+                + "SubjectTitle = ?, SubjectCategoryId = ?, SubjectStatus = ?, "
+                + "SubjectLevelId = ?, IsFeaturedSubject = ?, SubjectBriefInfo = ?, "
+                + "SubjectDescription = ?, SubjectThumbnail = ? "
+                + "WHERE SubjectId = ?";
+        try{
+            PreparedStatement pstmt = connection.prepareStatement(sql);
+            pstmt.setString(1, subject.getSubjectTitle());
+            pstmt.setInt(2, subject.getSubjectCategoryId());
+            pstmt.setInt(3, subject.getSubjectStatus());
+            pstmt.setInt(4, subject.getSubjectLevelId());
+            pstmt.setBoolean(5, subject.isIsFeaturedSubject());
+            pstmt.setString(6, subject.getSubjectBriefInfo());
+            pstmt.setString(7, subject.getSubjectDescription());
+            pstmt.setString(8, subject.getSubjectThumbnail());
+            pstmt.setInt(9, subject.getSubjectId());
+
+            int updated = pstmt.executeUpdate();
+            return updated > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    
+    public List<Subject> getAllSubject(){
+        List<Subject> listSubject = new ArrayList();
+        String sql = "SELECT *\n" +
+                    "  FROM [dbo].[Subject]";
+        try{
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                listSubject.add(new Subject(rs.getInt("subjectId"), 
+                        rs.getString("subjectTitle")));
+            }
+        }catch(Exception e){
+            System.out.println(e);
+        }
+        return listSubject;
+    }
+    
+    public int countQuestion() {
+        String sql = "SELECT COUNT(*) FROM Question";
+        int totalItem = 0;
+
+        try (PreparedStatement ps = connection.prepareStatement(sql); 
+                ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                totalItem = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+        }
+
+        return totalItem;
     }
 }

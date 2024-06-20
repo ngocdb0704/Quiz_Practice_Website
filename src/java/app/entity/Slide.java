@@ -6,41 +6,50 @@ package app.entity;
 
 /**
  *
- * @author nguye
+ * @author OwO
  */
 public class Slide {
-    private Integer slideId;
+    
+    private int silde_id;
     private String title;
-    private byte[] image;
-    private String imageRef;
+    private String image;
     private String backlink;
-    private String status;
+    private int authot_id;
+    private String description;
+    private boolean active;
 
     public Slide() {
     }
-    
-    public Slide(Integer sildeId, String title, byte[] image, String backlink, String status) {
-        this.slideId = sildeId;
+
+    public Slide(int silde_id, String title, String image, String backlink, int authot_id, String description, boolean active) {
+        this.silde_id = silde_id;
         this.title = title;
         this.image = image;
         this.backlink = backlink;
-        this.status = status;
+        this.authot_id = authot_id;
+        this.description = description;
+        this.active = active;
     }
 
-    public Slide(Integer slideId, String title, String imageRef, String backlink, String status) {
-        this.slideId = slideId;
+    public Slide(String title, String image) {
         this.title = title;
-        this.imageRef = imageRef;
+        this.image = image;
+    }
+
+    public Slide(String title, String image, String description, String backlink) {
+        this.title = title;
+        this.image = image;
+        this.description = description;
         this.backlink = backlink;
-        this.status = status;
+
     }
 
-    public Integer getSlideId() {
-        return slideId;
+    public int getSilde_id() {
+        return silde_id;
     }
 
-    public void setSlideId(Integer slideId) {
-        this.slideId = slideId;
+    public void setSilde_id(int silde_id) {
+        this.silde_id = silde_id;
     }
 
     public String getTitle() {
@@ -51,11 +60,11 @@ public class Slide {
         this.title = title;
     }
 
-    public byte[] getImage() {
+    public String getImage() {
         return image;
     }
 
-    public void setImage(byte[] image) {
+    public void setImage(String image) {
         this.image = image;
     }
 
@@ -67,24 +76,30 @@ public class Slide {
         this.backlink = backlink;
     }
 
-    public String getStatus() {
-        return status;
+    public int getAuthot_id() {
+        return authot_id;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setAuthot_id(int authot_id) {
+        this.authot_id = authot_id;
     }
 
-    public String getImageRef() {
-        return imageRef;
+    public String getDescription() {
+        return description;
     }
 
-    public void setImageRef(String imageRef) {
-        this.imageRef = imageRef;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    @Override
-    public String toString() {
-        return "Slide{" + "slideId=" + slideId + ", title=" + title + ", image=" + image + ", imageRef=" + imageRef + ", backlink=" + backlink + ", status=" + status + '}';
+    public boolean isActive() {
+        return active;
     }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+
+    
 }

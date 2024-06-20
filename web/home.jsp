@@ -1,5 +1,9 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
+<%@ page import="app.dal.DAOUser" %>
+<%@ page import="app.dal.DAOSlide" %>
+<%@ page import="app.entity.User" %>
+<%@ page import="java.util.List" %>
+<%@ page import="app.entity.Slide" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -43,34 +47,34 @@
          if (successMessage && successMessage !== "null" && successMessage.length > 0) {
             showNotification(successMessage);
             <% session.removeAttribute("successMessage"); %>
-        }
-    };
-</script>
-</head>
-<body>
-    <%@include file="/common/header.jsp" %>
-    <%@include file="/common/sidebar.jsp" %>
-    
-    <main class="container">
-        <div id="sliders" class="slider carousel slide mh-75" data-bs-ride="carousel">
-            <div class="carousel-inner">
-                <% int count = 1; %>
-                <c:forEach var="slider" items="${homeSliders}">
-                    <div class="carousel-item <%=(count == 1)? "active" : ""%>">
-                        <a href="${slider.getBacklink()}"><img id="slide_<%=count++%>" class="d-block w-100" src="${slider.getImageRef()}" alt="${slider.getTitle()}" ></a>
-                    </div>
-                </c:forEach>
+                }
+            };
+        </script>
+    </head>
+    <body>
+        <%@include file="/common/header.jsp" %>
+        <%@include file="/common/sidebar.jsp" %>
 
+        <main class="container">
+            <div id="sliders" class="slider carousel slide mh-75" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    <% int count = 1; %>
+                    <c:forEach var="slider" items="${homeSliders}">
+                        <div class="carousel-item <%=(count == 1)? "active" : ""%>">
+                            <a href="${slider.getBacklink()}"><img id="slide_<%=count++%>" class="d-block w-100" src="${slider.getImage()}" alt="${slider.getTitle()}" ></a>
+                        </div>
+                    </c:forEach>
+
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#sliders" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#sliders" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
             </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#sliders" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#sliders" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
-            </button>
-        </div>
 
         <c:if test="${not empty featuredSubjects}">
             <div class="featured-subject">
@@ -108,8 +112,10 @@
         </div>
         
         <script src="./public/js/HomeDisplayPosts.js"></script>
+
         
     </main>
     <%@include file="/common/footer.jsp" %>
 </body>
+
 </html>

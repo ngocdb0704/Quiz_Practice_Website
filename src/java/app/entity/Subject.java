@@ -26,7 +26,19 @@ public class Subject {
 
     public Subject() {
     }
-
+    public Subject(int subjectId, String subjectName){
+        this.subjectId = subjectId;
+        this.subjectName = subjectName;
+    }
+    public Subject(int subjectId, String subjectName, String tagLine, String briefInfo, String subjectDescription, String thumbnail, int categoryId) {
+        this.subjectId = subjectId;
+        this.subjectName = subjectName;
+        this.tagLine = tagLine;
+        this.briefInfo = briefInfo;
+        this.subjectDescription = subjectDescription;
+        this.thumbnail = thumbnail;
+        this.categoryId = categoryId;
+    }
     public Subject(int subjectId, String subjectName, String tagLine, String briefInfo, String subjectDescription, String thumbnail, String lowestPackageName, int categoryId, float packageListPrice, float packageSalePrice, String level, String provider, String sponsorer) {
         this.subjectId = subjectId;
         this.subjectName = subjectName;
@@ -34,13 +46,6 @@ public class Subject {
         this.briefInfo = briefInfo;
         this.subjectDescription = subjectDescription;
         this.thumbnail = thumbnail;
-        this.lowestPackageName = lowestPackageName;
-        this.categoryId = categoryId;
-        this.packageListPrice = packageListPrice;
-        this.packageSalePrice = packageSalePrice;
-        this.level = level;
-        this.provider = provider;
-        this.sponsorer = sponsorer;
     }
 
     public int getSubjectId() {
@@ -146,5 +151,5 @@ public class Subject {
     public void setSponsorer(String sponsorer) {
         this.sponsorer = sponsorer;
     }
-
+    
 }

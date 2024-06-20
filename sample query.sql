@@ -18,6 +18,7 @@ DROP TABLE [dbo].[Organization];
 DROP TABLE [dbo].[User];
 DROP TABLE [dbo].[Role];
 DROP TABLE [dbo].[Gender];
+DROP TABLE [dbo].[Slide];
 
 
 Go
@@ -26,7 +27,7 @@ CREATE TABLE [dbo].[Gender](
 	[GenderName] [varchar](50))
 
 GO
-
+ 
 CREATE TABLE [dbo].[Role](
 	[RoleId] [int] IDENTITY(1,1) primary key,
 	[RoleName] [varchar](50))
@@ -191,6 +192,16 @@ CREATE TABLE [dbo].[Answer](
 	[AnswerName] [text],
 	[IsCorrect] [bit])
 
+Go
+CREATE TABLE [dbo].[Slide] (
+    [SliderId] INT IDENTITY(1,1) PRIMARY KEY,
+    [Title] VARCHAR(255) NOT NULL,
+    [Image] VARBINARY(MAX) NOT NULL,
+    [Backlink] VARCHAR(255) NOT NULL,
+    [Status] BIT NOT NULL DEFAULT 0,
+    [UserId] INT,
+    FOREIGN KEY ([UserId]) REFERENCES [User]([UserId]))
+
 INSERT INTO [SubjectCategory] VALUES('Natural Science', 0);
 INSERT INTO [SubjectCategory] VALUES('Social Science', 0);
 INSERT INTO [SubjectCategory] VALUES('Technology & IT', 0);
@@ -240,7 +251,7 @@ INSERT INTO [SubjectLevel] VALUES('Beginner');
 INSERT INTO [SubjectLevel] VALUES('Intermediate');
 INSERT INTO [SubjectLevel] VALUES('Advanced');
 
-INSERT INTO [Subject] VALUES('College Algebra with the Math Sorcerer',2, 7, 1, 1, 1, '2004-05-01','2004-05-01','nice', 'Mock brief info', '##Coursera style description
+INSERT INTO [Subject] VALUES('College Algebra with the Math Sorcerer'2,, 7, 1, 1, 1, '2004-05-01','2004-05-01','The Math Sorcerer wants to know your location', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque convallis interdum tristique. Aenean arcu eros, varius nec augue a, ultrices congue ex. Donec eu elementum lectus, sit amet posuere lorem.', '##Coursera style description
 		Sample
 		The subject description part of the subject details page will parse the description of a subject and display it similar to how Coursera display their subject info
 		Note: This section will not be displayed
@@ -290,9 +301,53 @@ INSERT INTO [Subject] VALUES('College Algebra with the Math Sorcerer',2, 7, 1, 1
 		<h3>27 hours to complete</h3>
 		<h4>3 weeks at 9 hours a week</h4>
 	##End', 'https://thumbs.comidoc.net/750/webp/2463616_13ef_3.webp');
-INSERT INTO [Subject] VALUES('Become an Algebra Master',3, 7, 1, 1, 1, '2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','https://www.tangolearn.com/wp-content/uploads/2022/03/best-online-algebra-courses-1.jpg');
-INSERT INTO [Subject] VALUES('US / United States History',4, 33, 1, 1, 0, '2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','https://higheredprofessor.com/wp-content/uploads/2015/05/How-many-courses-do-university-faculty-teach1.jpg');
-INSERT INTO [Subject] VALUES('C Fundamental',5, 29, 1, 1, 1, '2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','https://www.bostontechmom.com/wp-content/uploads/2019/03/Computer-Science-Class.jpg');
+INSERT INTO [Subject] VALUES('Become an Algebra Master',3, 7, 1, 1, 1, '2004-05-01','2004-05-01','Lorem ipsum dolor sit amet, consectetur adipisci.', 'Quisque convallis interdum tristique. Aenean arcu eros, varius nec augue a, ultrices congue ex. Donec eu elementum lectus, sit amet posuere lorem.', '##Coursera style description
+	##About
+		<h3>What you''ll learn:</h3>
+		<ul>
+		<li>Ut luctus lacus id sollicitudin semper.</li>
+		<li>Quisque eget lorem a arcu posuere venenatis.</li>
+		<li>Fusce posuere ultricies suscipit.</li>
+		<li>Donec eget cursus diam.</li>
+		</ul>
+		<h3>Details to know</h3>
+		<span>Assessments: 16 Assessments</span>
+	##Outcome
+		<h3>Advance your subject-matter expertise
+		<ul>
+		<li>learn in-demand skills from university and industry experts</li>
+		<li>master a subject or tool with hands-on projects</li>
+		<li>develop a deep understanding of key concepts</li>
+		<li>earn a career certificate from imperial college london</li>
+		</ul>
+		<h3>Shareable certificate</h3>
+	##Lessons
+		<h3>There are 3 modules in this course</h3>
+
+		<h4>Module 1</h4>
+		<ul>
+		<li>L1</li>
+		<li>L2</li>
+		<li>L3</li>
+		</ul>
+
+		<h4>Module 2</h4>
+		<ul>
+		<li>L1</li>
+		<li>L2</li>
+		<li>L3</li>
+		</ul>
+
+		<h4>Module 3</h4>
+		<ul>
+		<li>L1</li>
+		<li>L2</li>
+		<li>L3</li>
+		</ul>
+	##Duration
+		<h3>27 hours to complete</h3>
+		<h4>3 weeks at 9 hours a week</h4>
+	##End','https://www.tangolearn.com/wp-content/uploads/2022/03/best-online-algebra-courses-1.jpg');
 INSERT INTO [Subject] VALUES('The Geography of Globalization',6, 34, 1, 1, 1,'2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','https://img77.uenicdn.com/image/upload/v1654265992/business/93f45720-1374-4925-8f1a-c50dd53034f4.jpg');
 INSERT INTO [Subject] VALUES('Pointers & Advanced C Language',7,29,1, 3,1,'2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','https://i.ytimg.com/vi/0zuolvgpAaY/maxresdefault.jpg');
 INSERT INTO [Subject] VALUES('Geometry Basics to Advanced',8,8,1, 3, 1,'2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','https://www.venturelessons.com/wp-content/uploads/2020/09/geometry-1128x635.jpg');
@@ -339,7 +394,6 @@ INSERT INTO [Subject] VALUES('NCover',2, 30, 1,2, 1, '2024-05-24', '2024-05-17',
 INSERT INTO [Subject] VALUES('FMA',4, 29, 1,1, 0, '2024-02-21', '2023-12-20', 'utilize user-centric e-markets', 'Mock brief info', 'Mock description', 'https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
 INSERT INTO [Subject] VALUES('CQ5',6, 30, 1,1, 0, '2024-04-21', '2024-03-25', 'repurpose e-markets', 'Mock brief info', 'Mock description', 'https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
 INSERT INTO [Subject] VALUES('Euphonium',7, 33, 1,2, 0, '2024-2-10', '2024-02-10', 'transform interactive deliverables', 'Mock brief info', 'Mock description', 'https://leverageedu.com/blog/wp-content/uploads/2019/11/Science-Stream-Subjects.png');
-
 
 INSERT INTO [Package] VALUES(1, '6 Month Premium', 6, 20, 5, 1);
 INSERT INTO [Package] VALUES(1, '9 Month Premium', 9, 30, 27, 1);
@@ -498,7 +552,7 @@ INSERT INTO [Gender] values ('Prefer not to say');
 
 INSERT INTO [Role] values ('Customer');
 INSERT INTO [Role] values ('Admin');
-
+INSERT INTO [Role] values ('Marketing');
 INSERT INTO [OrganizationPackage] values ('Team', 4, 80, 70, 25, 1)
 INSERT INTO [OrganizationPackage] values ('Team', 8, 155, 135, 45, 1)
 INSERT INTO [OrganizationPackage] values ('Team', 12, 225, 195, 60, 1)
@@ -532,7 +586,6 @@ INSERT INTO [OrganizationPackageSubject] values(1, 1), (1,2), (1,3), (1,4),
 (6,22), (6,23), (6,24), (6,25), (6,26), (6,27), (6,28), (6,29), (6,30), (6,31),
 (6,32), (6,33), (6,34), (6,35), (6,36), (6,37), (6,38), (6,39), (6,40), (6,41),
 (6,42), (6,43), (6,44), (6,45), (6,46), (6,47), (6,48), (6,49), (6,50)
-
 
 insert into [User] values ('ngocdbhe182383@fpt.edu.vn', '123', 1, 'ngoc', 1, '123', 1);
 insert into [User] values ('dunglhhe181276@fpt.edu.vn','12345',1,'lehungdung',1,'0963634669',1)
@@ -665,3 +718,8 @@ VALUES
 (1, 8, 'User Feedback: What Weve Improved', '2024-05-05', 'See how user feedback has shaped our recent improvements.', ''),
 (1, 8, 'Enhanced Security Features', '2024-05-10', 'Learn about the enhanced security features weve implemented.', ''),
 (1, 8, 'Faster Loading Times with Our Latest Update', '2024-05-15', 'Experience faster loading times with our latest update.', '');
+
+INSERT INTO [dbo].[Slide] VALUES ('Sample Slide', 0x89504E470D0A1A0A0000000D4948445200000, 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', 1, 3);
+INSERT INTO [dbo].[Slide] VALUES ('Slide 1', 0x0123456789ABCDEF, 'https://example.com/slide1', 1, 1);
+INSERT INTO [dbo].[Slide] VALUES ('Slide 2', 0xFEDCBA9876543210, 'https://example.com/slide2', 1, 1);
+INSERT INTO [dbo].[Slide] VALUES ('Slide 3', 0x13579BDF02468ACE, 'https://example.com/slide3', 0, 3);

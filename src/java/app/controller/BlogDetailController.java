@@ -2,8 +2,8 @@
 package app.controller;
 
 import app.dal.DAOBlog;
-import app.dal.DAOBlog.QueryResult;
 import app.dal.DAOBlogCategory;
+import app.dal.QueryResult;
 import app.entity.BlogCategory;
 import app.entity.BlogInformation;
 import app.entity.MarkdownDocument;
@@ -32,7 +32,8 @@ public class BlogDetailController extends HttpServlet {
                 BlogInformation information = daoBlog.getBlogInformationById(id);
                 MarkdownDocument document = daoBlog.getPostTextById(id);
 
-                QueryResult relatedPosts = daoBlog.getByCategory(information.getCategoryId(), 3);
+                QueryResult relatedPosts =
+                        daoBlog.getByCategory(information.getCategoryId(), 3);
 
                 request.setAttribute("related", relatedPosts.getResults());
                 request.setAttribute("information", information);

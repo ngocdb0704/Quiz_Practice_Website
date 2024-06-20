@@ -41,6 +41,9 @@
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#changePassModal">
                         Change Pass
                     </button>
+                    <a href="SettingsServlet" class="btn btn-secondary">
+                        Settings
+                    </a>
                 </c:if>
 
                 <c:if test="${empty sessionScope.userEmail}">
