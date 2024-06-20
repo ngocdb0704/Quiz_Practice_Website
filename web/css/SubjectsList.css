@@ -105,3 +105,41 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
 #subjectLink{
     text-decoration: none;
 }
+
+.containerAtHead {
+  position: relative;
+}
+
+.statTeam{
+  background-color: black;
+  color: white;
+}
+.statEnterprise{
+  background-color: black;
+  color: white;
+}
+.text-blockForTeam {
+  position: absolute;
+  top: 110px;
+  left: 20px;
+  background-color: white;
+  opacity: 0.8;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+.text-blockForEnterprise {
+  position: absolute;
+  top: 60px;
+  right: 20px;
+  background-color: white;
+  opacity: 0.8;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+.text-blockForTradition{
+  position: absolute;
+  top: 60px;
+  left: 30px;
+  padding-left: 20px;
+  padding-right: 20px;
+}

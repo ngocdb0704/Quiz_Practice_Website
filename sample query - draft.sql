@@ -885,3 +885,8 @@ INSERT [dbo].[Answer] ([QuestionID], [AnswerName], [IsCorrect]) VALUES (44, N'da
 INSERT [dbo].[Answer] ([QuestionID], [AnswerName], [IsCorrect]) VALUES (45, N'2.0', 1)
 INSERT [dbo].[Answer] ([QuestionID], [AnswerName], [IsCorrect]) VALUES (45, N'3.0', 0)
 INSERT [dbo].[Answer] ([QuestionID], [AnswerName], [IsCorrect]) VALUES (45, N'4.0', 0)
+
+INSERT INTO [dbo].[Slide] VALUES ('Sample Slide', 0x89504E470D0A1A0A0000000D4948445200000, 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', 1, 3);
+INSERT INTO [dbo].[Slide] VALUES ('Slide 1', 0x0123456789ABCDEF, 'https://example.com/slide1', 1, 1);
+INSERT INTO [dbo].[Slide] VALUES ('Slide 2', 0xFEDCBA9876543210, 'https://example.com/slide2', 1, 1);
+INSERT INTO [dbo].[Slide] VALUES ('Slide 3', 0x13579BDF02468ACE, 'https://example.com/slide3', 0, 3);

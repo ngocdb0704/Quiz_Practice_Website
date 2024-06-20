@@ -18,3 +18,6 @@ function scrollToBigSale() {
 function scrollToFeatured() {
     window.scrollTo(0, 1310);
 }
+function scrollToTopCategory(){
+    window.scrollTo(0, 2640);
+}
