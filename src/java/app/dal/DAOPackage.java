@@ -77,6 +77,28 @@ public class DAOPackage extends DBContext{
         
         return false;
     }
+    
+    public boolean isDurationDuplicated(int subjectId, Package pack) {
+        String query = "SELECT COUNT(*) FROM [dbo].[Package] WHERE SubjectId = ? AND PackageDuration = ? AND NOT PackageId = ?";
+
+        try {
+            PreparedStatement stmt = connection.prepareStatement(query);
+
+            stmt.setInt(1, subjectId);
+            stmt.setInt(2, pack.getDuration());
+            stmt.setInt(3, pack.getPackageId());
+
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                int count = rs.getInt(1);
+                return count > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        return false;
+    }
 
     public boolean modifyPackage(Package pack) {
         String base = "UPDATE [dbo].[Package] SET PackageName = ?, PackageDuration = ?, ListPrice = ?, SalePrice = ?, Status = ? WHERE PackageId = ?";
@@ -134,7 +156,6 @@ public class DAOPackage extends DBContext{
 
         return false;
     }
-
 
     public Package getPricePackageByPackageId(int packageId) {
         String sql = """
