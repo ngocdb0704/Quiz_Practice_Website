@@ -53,6 +53,7 @@ public class VerificationUserRegister extends HttpServlet {
                         // Registration logic (save user to database)
                         User user = new User(1, email, password, 1, fullName, genderID, mobile, true);
                         daoUser.addUser(user);
+
                         response.getWriter().write("success");
                         session.removeAttribute("verificationCode");
                         session.removeAttribute("verificationCodeTimestamp");
