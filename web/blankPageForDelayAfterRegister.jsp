@@ -37,7 +37,6 @@
                     clearInterval(countdownInterval);
                     countdownElement.style.display = "none";
                     redirectLink.style.display = "inline";
-            <%session.invalidate();%>
                     redirectToLogin();
                 }
             }

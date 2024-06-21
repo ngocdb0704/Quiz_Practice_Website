@@ -49,6 +49,18 @@ public class User {
         this.isActive = isActive;
     }
 
+    public User(String email, String password, int roleId, String fullName, int genderId, String mobile, boolean isActive) {
+        this.email = email;
+        this.password = password;
+        this.roleId = roleId;
+        this.fullName = fullName;
+        this.genderId = genderId;
+        this.mobile = mobile;
+        this.isActive = isActive;
+    }
+
+    
+    
     public int getUserId() {
         return userId;
     }
