@@ -119,9 +119,9 @@
         }, 1000);
     }
 
-    function disableInputs(disable) {
-        $("input[name='email']").prop('disabled', disable);
-    }
+    function disableInputs(readonly) {
+    $("input[name='email']").prop('readonly', readonly);
+}
 
     function registerUser(event) {
         event.preventDefault();
