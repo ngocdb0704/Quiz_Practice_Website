@@ -1,7 +1,7 @@
 <%-- 
-    Document   : questionlist
+    Document   : sliderlist
     Created on : Jun 11, 2024, 7:21:24 AM
-    Author     : hoapmhe173343
+    Author     : anlthe182228
 --%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -94,10 +94,10 @@
                                                         <td><image  src="${s.getImage()}" width="200px"></td>
                                                         <td>${s.getBacklink()}</td>
                                                         <c:if test="${s.isActive()}">
-                                                            <td><span class="label label-success" style="font-size: 15px">Acive</span></td>
+                                                            <td><span class="label label-success" style="font-size: 15px">Active</span></td>
                                                         </c:if>
                                                         <c:if test="${!s.isActive()}">
-                                                            <td><span class="label label-danger" style="font-size: 15px">Inacive</span></td>
+                                                            <td><span class="label label-danger" style="font-size: 15px">Inactive</span></td>
                                                         </c:if>
                                                         <td><a class="btn btn-primary"  data-toggle="modal" data-target="#EditModalUP${s.getSilde_id()}"><i class="fa-solid fa-pen-to-square"></i></a></td>
                                                         <td><a class="btn btn-danger" data-toggle="modal" data-target="#Delete${s.getSilde_id()}"><i class="fa-solid fa-trash"></i></a></td>
@@ -213,7 +213,7 @@
 
                                                                             <input class="form-control" id="img${s.getSilde_id()}" onchange="changeimg${s.getSilde_id()}()" name="image" value="${s.getImage()}" type="file" >
                                                                             <input name="slideimage" id="slideimage${s.getSilde_id()}" value="${s.getImage()}" type="hidden" >
-                                                                            <image  src="${s.getImage()}" id="demoimg${s.getSilde_id()}" style="margin-top: 5px;" width="100%">
+                                                                            <image src="${s.getImage()}" id="demoimg${s.getSilde_id()}" style="margin-top: 5px;" width="100%">
                                                                         </div>
                                                                     </div>
                                                                     <BR>

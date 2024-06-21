@@ -217,12 +217,33 @@ CREATE TABLE [dbo].[Package](
 	[Status] [bit])
 GO
 
+
+
+
 --To prevent breaking old code, i added a new table instead
 CREATE TABLE [dbo].[PricePackageDesc] (
 	[PackageId] [int] foreign key references [dbo].[Package]([PackageId]) on delete cascade,
 	[Desc] [nvarchar](2048)
 )
+
+
+
 GO
+CREATE TABLE [dbo].[Dimension](
+	[DimensionId] [int] IDENTITY(1,1) primary key,
+	[SubjectId] [int] foreign key references [dbo].[Subject](SubjectId),
+	[DimensionType] [nvarchar](50),
+	[DimensionName] [nvarchar](50),
+	[DimensionDescription] [nvarchar](100))
+
+
+
+
+
+
+GO
+
+
 
 CREATE TABLE [dbo].[OrganizationPackage](
 	[OrganizationPackageId] [int] IDENTITY(1,1) primary key,
@@ -303,16 +324,17 @@ CREATE TABLE [dbo].[Answer](
 	[QuestionID] [int] foreign key references [dbo].[Question](QuestionID),
 	[AnswerName] [text],
 	[IsCorrect] [bit])
-	Go
 
-CREATE TABLE [dbo].[Slide] (
-    [SliderId] INT IDENTITY(1,1) PRIMARY KEY,
-    [Title] VARCHAR(255) NOT NULL,
-    [Image] VARBINARY(MAX) NOT NULL,
-    [Backlink] VARCHAR(255) NOT NULL,
-    [Status] BIT NOT NULL DEFAULT 0,
-    [UserId] INT,
-    FOREIGN KEY ([UserId]) REFERENCES [User]([UserId]))
+	GO
+CREATE TABLE [dbo].[slide](
+	[slide_id] [int] IDENTITY(1,1) NOT NULL,
+	[title] [nvarchar](50) NULL,
+	[img] [ntext] NULL,
+	[backlink] [ntext] NULL,
+	[author_id] [int] NOT NULL,
+	[description] [ntext] NULL,
+	[active] [bit] NULL)
+
 	GO
 
 CREATE TABLE [dbo].[Quiz] (
