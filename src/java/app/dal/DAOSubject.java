@@ -685,15 +685,22 @@ public class DAOSubject extends DBContext {
         return Out;
     }
     
-    public int addSubject(Subject sub) {
-        String sql = "INSERT INTO [Subject] VALUES('US / United States History', 33, 1, 1, 0, '2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','https://higheredprofessor.com/wp-content/uploads/2015/05/How-many-courses-do-university-faculty-teach1.jpg');";
+    public int addSubject(Subject sub, int ownerId, int published, int featured) {
+        String sql = "INSERT INTO [Subject] VALUES(?, 1, ?, ?, 1, ?, CAST(GETDATE() as DATE), CAST(GETDATE() as DATE), ?, ?, ?, ?, ?);";
 
         PreparedStatement pre;
         try {
+            System.out.println("Adding" + sub.toString() + "oId=" + ownerId + "published=" + published + "featured=" + featured);
             pre = connection.prepareStatement(sql);
             pre.setString(1, sub.getSubjectName());
             pre.setInt(2, sub.getCategoryId());
-            //pre.setInt(2, sub.get);
+            pre.setInt(3, published);
+            pre.setInt(4, featured);
+            pre.setString(5, sub.getTagLine());
+            pre.setString(6, sub.getBriefInfo());
+            pre.setString(7, sub.getSubjectDescription());
+            pre.setString(8, sub.getThumbnail());
+            pre.setInt(9, ownerId);
             return pre.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
