@@ -69,7 +69,7 @@
         // Clear any previous error messages
         $("#error-message").hide();
 
-//        disableInputs(true);  // Disable inputs immediately
+        disableInputs(true);  // Disable inputs immediately
         button.textContent = "Sending...";
         button.disabled = true;
 
@@ -91,14 +91,14 @@
                     }
                     button.textContent = "Send Code";
                     button.disabled = false;
-//                    disableInputs(false);  // Re-enable inputs on error
+                    disableInputs(false);  // Re-enable inputs on error
                 }
             });
         } else {
             alert("Please enter your email.");
             button.textContent = "Send Code";
             button.disabled = false;
-//            disableInputs(false);  // Re-enable inputs if email is empty
+            disableInputs(false);  // Re-enable inputs if email is empty
         }
     }
 
@@ -114,14 +114,14 @@
                 clearInterval(countdownTimer);
                 button.textContent = "Send Code";
                 button.disabled = false; // Enable button after countdown
-//                disableInputs(false); // Re-enable inputs after countdown
+                disableInputs(false); // Re-enable inputs after countdown
             }
         }, 1000);
     }
 
-    function disableInputs(disable) {
-        $("input[name='email']").prop('disable', disable);
-    }
+    function disableInputs(readonly) {
+    $("input[name='email']").prop('readonly', readonly);
+}
 
     function registerUser(event) {
         event.preventDefault();
@@ -137,7 +137,7 @@
                     if (response === "Expired code") {
                         clearInterval(countdownTimer);
                         $("#sendCodeButton").prop('disabled', false).text('Send Code');
-//                        disableInputs(false); // Re-enable inputs if code expired
+                        disableInputs(false); // Re-enable inputs if code expired
                     }
                 }
             },
