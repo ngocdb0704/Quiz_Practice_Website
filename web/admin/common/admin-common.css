@@ -1,0 +1,182 @@
+.admin-layout {
+    display: grid;
+    grid-template-areas:
+        "header header"
+        "sidebar content";
+    height: 100vh;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: 60px 1fr;
+}
+
+.admin-header {
+    grid-area: header;
+    box-shadow: 0 0 30px 0 rgba(0, 0, 0, 0.5);
+}
+
+.admin-header-title {
+    color: white;
+    margin: 0;
+    position: relative;
+    margin-top: 11px;
+}
+
+.admin-header-title::before {
+    content: "Quiz Practice";
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: translateY(-100%);
+    font-size: 10px;
+    font-weight: bold;
+    color: rgba(255, 255, 255, 0.5);
+    text-transform: uppercase;
+}
+
+.hamburger-btn {
+    margin-right: 4px;
+}
+
+.admin-aside {
+    grid-area: sidebar;
+    background: red;
+    width: 250px;
+    color: white;
+    transition: width 400ms;
+    overflow: hidden;
+    padding: 10px;
+}
+
+.admin-aside.hide {
+    width: 65px;
+}
+
+.admin-aside-title {
+    font-weight: bold;
+    color: rgba(255, 255, 255, 0.5);
+    text-transform: uppercase;
+    padding-top: 10px;
+    font-size: 17px;
+    padding-bottom: 10px;
+    transition: transform 300ms;
+}
+
+.admin-aside-title::after {
+    position: absolute;
+    white-space: nowrap;
+    margin-left: 5px;
+    content: attr(data-title);
+    opacity: 1;
+    transition: opacity 300ms;
+}
+
+.admin-aside-title i {
+    margin-right: 5px;
+    font-size: 20px;
+}
+
+.admin-aside-links-container {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.admin-aside-link {
+    color: rgba(255, 255, 255, 0.5);
+    display: block;
+    text-align: left;
+    padding: 10px 0 10px 15px;
+}
+
+.admin-aside-link::after {
+    position: absolute;
+    margin-left: 5px;
+    content: attr(data-title);
+    opacity: 1;
+    transition: opacity 300ms;
+}
+
+
+.admin-aside.hide .admin-aside-link::after {
+    opacity: 0;
+}
+
+.admin-aside.hide .admin-aside-title::after {
+    opacity: 0;
+}
+
+.admin-aside.hide .admin-aside-title {
+    transform: translateX(13px);
+}
+
+.admin-aside-link.active {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    font-weight: bold;
+    border: 0;
+}
+
+.admin-aside-link:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.admin-header-container {
+    height: 100%;
+}
+
+.admin-main {
+    grid-area: content;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+.demo-img {
+    width: 100%;
+    margin-top: 30px;
+}
+
+
+/*quesion list */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+th {
+    background-color: #f2f2f2;
+}
+.filters {
+    margin-bottom: 20px;
+}
+
+.admin-table .checkbox-big {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.admin-table th {
+    white-space: nowrap;
+}
+
+.admin-table td {
+    white-space: nowrap;
+}
+
+.admin-table th::after {
+    float: none !important;
+    margin: 0 !important;
+    vertical-align: middle !important;
+    position: relative;
+    left: 4px;
+}
+
+.admin-table th[data-sorted-direction="ascending"]::after {
+    top: -3px;
+}
+
+.admin-table th[data-sorted-direction="descending"]::after {
+    top: 3px;
+}

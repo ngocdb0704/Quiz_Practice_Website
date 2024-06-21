@@ -12,29 +12,40 @@ public class Subject {
 
     private int subjectId;
     private String subjectName;
-    private String subjectCategory;
     private String tagLine;
+    private String briefInfo;
+    private String subjectDescription;
     private String thumbnail;
-    private String createdDate;
-    private String updatedDate;
     private String lowestPackageName;
+    private int categoryId;
     private float packageListPrice;
     private float packageSalePrice;
+    private String level;
+    private String provider;
+    private String sponsorer;
 
     public Subject() {
     }
-
-    public Subject(int subjectId, String subjectName, String subjectCategory, String tagLine, String thumbnail, String createdDate, String updatedDate, String lowestPackageName, float packageListPrice, float packageSalePrice) {
+    public Subject(int subjectId, String subjectName){
         this.subjectId = subjectId;
         this.subjectName = subjectName;
-        this.subjectCategory = subjectCategory;
+    }
+    public Subject(int subjectId, String subjectName, String tagLine, String briefInfo, String subjectDescription, String thumbnail, int categoryId) {
+        this.subjectId = subjectId;
+        this.subjectName = subjectName;
         this.tagLine = tagLine;
+        this.briefInfo = briefInfo;
+        this.subjectDescription = subjectDescription;
         this.thumbnail = thumbnail;
-        this.createdDate = createdDate;
-        this.updatedDate = updatedDate;
-        this.lowestPackageName = lowestPackageName;
-        this.packageListPrice = packageListPrice;
-        this.packageSalePrice = packageSalePrice;
+        this.categoryId = categoryId;
+    }
+    public Subject(int subjectId, String subjectName, String tagLine, String briefInfo, String subjectDescription, String thumbnail, String lowestPackageName, int categoryId, float packageListPrice, float packageSalePrice, String level, String provider, String sponsorer) {
+        this.subjectId = subjectId;
+        this.subjectName = subjectName;
+        this.tagLine = tagLine;
+        this.briefInfo = briefInfo;
+        this.subjectDescription = subjectDescription;
+        this.thumbnail = thumbnail;
     }
 
     public int getSubjectId() {
@@ -45,28 +56,28 @@ public class Subject {
         return subjectName;
     }
 
-    public String getSubjectCategory() {
-        return subjectCategory;
-    }
-
     public String getTagLine() {
         return tagLine;
+    }
+
+    public String getBriefInfo() {
+        return briefInfo;
+    }
+
+    public String getSubjectDescription() {
+        return subjectDescription;
     }
 
     public String getThumbnail() {
         return thumbnail;
     }
 
-    public String getCreatedDate() {
-        return createdDate;
-    }
-
-    public String getUpdatedDate() {
-        return updatedDate;
-    }
-
     public String getLowestPackageName() {
         return lowestPackageName;
+    }
+
+    public int getCategoryId() {
+        return categoryId;
     }
 
     public float getPackageListPrice() {
@@ -77,6 +88,18 @@ public class Subject {
         return packageSalePrice;
     }
 
+    public String getLevel() {
+        return level;
+    }
+
+    public String getProvider() {
+        return provider;
+    }
+
+    public String getSponsorer() {
+        return sponsorer;
+    }
+
     public void setSubjectId(int subjectId) {
         this.subjectId = subjectId;
     }
@@ -85,28 +108,28 @@ public class Subject {
         this.subjectName = subjectName;
     }
 
-    public void setSubjectCategory(String subjectCategory) {
-        this.subjectCategory = subjectCategory;
-    }
-
     public void setTagLine(String tagLine) {
         this.tagLine = tagLine;
+    }
+
+    public void setBriefInfo(String briefInfo) {
+        this.briefInfo = briefInfo;
+    }
+
+    public void setSubjectDescription(String subjectDescription) {
+        this.subjectDescription = subjectDescription;
     }
 
     public void setThumbnail(String thumbnail) {
         this.thumbnail = thumbnail;
     }
 
-    public void setCreatedDate(String createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public void setUpdatedDate(String updatedDate) {
-        this.updatedDate = updatedDate;
-    }
-
     public void setLowestPackageName(String lowestPackageName) {
         this.lowestPackageName = lowestPackageName;
+    }
+
+    public void setCategoryId(int categoryId) {
+        this.categoryId = categoryId;
     }
 
     public void setPackageListPrice(float packageListPrice) {
@@ -117,4 +140,20 @@ public class Subject {
         this.packageSalePrice = packageSalePrice;
     }
 
+    public void setLevel(String level) {
+        this.level = level;
+    }
+
+    public void setProvider(String provider) {
+        this.provider = provider;
+    }
+
+    public void setSponsorer(String sponsorer) {
+        this.sponsorer = sponsorer;
+    }
+
+    @Override
+    public String toString() {
+        return "Subject{" + "subjectId=" + subjectId + ", subjectName=" + subjectName + ", tagLine=" + tagLine + ", briefInfo=" + briefInfo + ", subjectDescription=" + subjectDescription + ", thumbnail=" + thumbnail + ", lowestPackageName=" + lowestPackageName + ", categoryId=" + categoryId + ", packageListPrice=" + packageListPrice + ", packageSalePrice=" + packageSalePrice + ", level=" + level + ", provider=" + provider + ", sponsorer=" + sponsorer + '}';
+    }
 }

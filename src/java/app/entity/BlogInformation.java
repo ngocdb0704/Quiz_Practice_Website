@@ -42,6 +42,10 @@ public class BlogInformation {
         return categoryName;
     }
 
+    public int getCategoryId() {
+        return this.categoryId;
+    }
+
     public void setCategoryId(int id) {
         this.categoryId = id;
     }
@@ -68,5 +72,10 @@ public class BlogInformation {
 
     public void setPostBrief(String postBrief) {
         this.postBrief = postBrief;
+    }
+
+    @Override
+    public String toString() {
+        return "BlogInformation{" + "blogId=" + blogId + ", authorId=" + authorId + ", authorName=" + authorName + ", categoryId=" + categoryId + ", categoryName=" + categoryName + ", blogTitle=" + blogTitle + ", updatedTime=" + updatedTime + ", postBrief=" + postBrief + '}';
     }
 }

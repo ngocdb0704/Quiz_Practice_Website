@@ -5,15 +5,16 @@
 package app.controller;
 
 import java.util.List;
-import java.util.ArrayList; 
+import java.util.ArrayList;
 import app.entity.Slide;
 import app.dal.DAOSlide;
-import app.entity.Subject; 
-import app.dal.DAOSubject; 
-import app.dal.DAOBlog; 
+import app.entity.Subject;
+import app.dal.DAOSubject;
+import app.dal.DAOBlog;
 import app.dal.DAOBlogCategory;
-import app.entity.Blog; 
+import app.entity.Blog;
 import app.dal.DAOUser;
+import app.entity.User;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -44,22 +45,30 @@ public class Homepage extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        
+
         HttpSession session = request.getSession();
-        
+
         String service = request.getParameter("service");
-        
+
         if (service != null) {
             if (service.equals("hotposts")) {
                 int offSet = 0;
-                try {
+                //Get session offset
+                if (request.getParameter("resetOffset") == null || !request.getParameter("resetOffset").equals("true")) try {
                     offSet = Integer.parseInt(session.getAttribute("hotpostOffset").toString());
                 }
                 catch (Exception e) {}
                 
-                DAOBlog daoBlog = new DAOBlog();
-                List<Blog> fetchPost = daoBlog.getEnoughToDisplay(5, offSet);
+                int ammount = 1;
+                try {
+                    ammount = Integer.parseInt(request.getParameter("ammount"));
+                }
+                catch (Exception e) {}
                 
+                DAOBlog daoBlog = new DAOBlog();
+                List<Blog> fetchPost = daoBlog.getHotpostsForDisplay(ammount, offSet);
+                
+                //Get category map, this is currently not used for anything
                 ConcurrentHashMap<Integer, String> catMap = null;
                 try {
                     catMap = (ConcurrentHashMap<Integer, String>)session.getAttribute("blogCategoryMap");
@@ -70,45 +79,52 @@ public class Homepage extends HttpServlet {
                     session.setAttribute("blogCategoryMap", catMap);
                 }
                 
+                //Get a map of user id -> user full name
                 DAOUser daoUser = new DAOUser();
                 final ConcurrentHashMap<Integer, String> fullNameMap = daoUser.idArrayToNameMap(
                         fetchPost.stream()
                                 .map((post) -> post.getUserId())
                                 .mapToInt(i -> i).toArray());
                 
+                //fullNameMap check null
                 if (!(fullNameMap == null || fullNameMap.isEmpty())) {
-                response.setContentType("application/json");
-                try( PrintWriter out = response.getWriter()){
-                    out.print(Arrays.stream(fetchPost.toArray())
-                        .map(obj -> (Blog)obj)
-                        .map(blog -> String.format("{\"BlogId\": %d, \"FullName\": \"%s\", \"BlogCategoryId\": %d, \"BlogTitle\": \"%s\", \"UpdatedTime\": \"%s\", \"PostText\": \"%s\"}"
-                                ,blog.getBlogId()
-                                , fullNameMap.get(blog.getUserId())
-                                , blog.getBlogCategoryId()
-                                , blog.getBlogTitle()
-                                , blog.getUpdatedTime()
-                                , blog.getPostText()
-                        ))
-                        .collect(Collectors.toList())
-                    );
-                }
+                    //increase hotpost offset by the ammount of posts that was returned by DAO
+                    session.setAttribute("hotpostOffset", offSet + fetchPost.size());
+                    //return fecthed posts in the form of json
+                    response.setContentType("application/json");
+                    try( PrintWriter out = response.getWriter()){
+                        out.print(Arrays.stream(fetchPost.toArray())
+                            .map(obj -> (Blog)obj)
+                            .map(blog -> String.format("{\"BlogId\": %d, \"UserId\": %d, \"FullName\": \"%s\", \"BlogCategoryId\": %d, \"BlogTitle\": \"%s\", \"UpdatedTime\": \"%s\", \"CardContent\": \"%s\"}"
+                                    ,blog.getBlogId()
+                                    , blog.getUserId()
+                                    , fullNameMap.get(blog.getUserId())
+                                    , blog.getBlogCategoryId()
+                                    , blog.getBlogTitle()
+                                    , blog.getUpdatedTime()
+                                    , blog.getPostBrief()
+                            ))
+                            .collect(Collectors.toList())
+                        );
+                    }
                 }
                 return;
             }
         }
-        
+
+
         if (session.getAttribute("homeSliders") == null) {
             DAOSlide daoSlide = new DAOSlide(); 
-            List<Slide> sliders = daoSlide.getSliderList();
+            List<Slide> sliders = daoSlide.getAllSlide();
             session.setAttribute("homeSliders", sliders);
         }
-        
+
         if (session.getAttribute("featuredSubjects") == null) {
             DAOSubject daoSubject = new DAOSubject();
-            List<Subject> featuredSubjects = daoSubject.getEnoughToDisplay(5);
-            if (featuredSubjects.size() > 0) session.setAttribute("featuredSubjects", featuredSubjects);
+            List<Subject> featuredSubjects = daoSubject.getFeaturedSubjects(10);
+            if (!featuredSubjects.isEmpty()) session.setAttribute("featuredSubjects", featuredSubjects);
         }
-        
+
         request.getRequestDispatcher("home.jsp").forward(request, response);
     }
 

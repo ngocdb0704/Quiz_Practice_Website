@@ -17,6 +17,7 @@
         <title>My Registration</title>
         <%@include file="/common/ImportBootstrap.jsp" %>
         <link rel="stylesheet" href="public/css/bootstrap/MyRegistration.css"/>
+        <link rel="stylesheet" href="common/ExtendBody.css"/>
         <script src="public/js/MyRegistration.js"></script>
         <!-- Script google reCaptcha -->
         <script src="https://www.google.com/recaptcha/api.js" async defer></script>
@@ -38,6 +39,7 @@
                         <c:set var="owner" value="${requestScope.ownerAccount}"/>
                         <c:set var="noti" value="${requestScope.noti}"/>
                         <c:set var="snoti" value="${requestScope.successNoti}"/>
+                        <c:set var="matchActive" value="Pending Approval Active"/>
                         <form action="user/MyRegistrations">
                             <div class="mb-3">
                                 <div class="row card-body container justify-content-center">
@@ -266,7 +268,7 @@
                                                 <!-- Button buy trigger modal -->
                                                 <div class="col-xl-4">
                                                     <button class="btn btn-success" 
-                                                            ${p.status.equals("Submitted")?"":"disabled"}
+                                                            ${!matchActive.contains(p.status)?"":"disabled"}
                                                             data-bs-toggle="modal" 
                                                             data-bs-target=".modalBuy${p.registrationId}"
                                                             >
@@ -338,7 +340,7 @@
                                                 <div class="col-xl-6">
                                                     <button type="button" class="btn btn-danger" 
                                                             data-bs-toggle="modal" 
-                                                            ${p.status.equals("Submitted")?"":"disabled"}
+                                                            ${!matchActive.contains(p.status)?"":"disabled"}
                                                             data-bs-target=".modalCancel${p.registrationId}">
                                                         Cancel
                                                     </button>
@@ -405,7 +407,7 @@
                                                     <!-- currently do nothing -->
                                                     <button type="button" class="btn btn-warning" 
                                                             data-bs-toggle="modal" 
-                                                            ${p.status.equals("Submitted")?"":"disabled"}
+                                                            ${!matchActive.contains(p.status)?"":"disabled"}
                                                             data-bs-target=".modalEdit${p.registrationId}">
                                                         Edit
                                                     </button>
@@ -438,7 +440,7 @@
                                                     <!-- currently do nothing -->
                                                     <button type="button" class="btn btn-primary" 
                                                             data-bs-toggle="modal" 
-                                                            ${p.status.equals("Submitted")?"":"disabled"}
+                                                            ${!matchActive.contains(p.status)?"":"disabled"}
                                                             data-bs-target=".modalReport${p.registrationId}">
                                                         Report
                                                     </button>

@@ -40,7 +40,17 @@ public class LoginControllerTempOfAnForLoginView extends HttpServlet {
            
             boolean flag = validateUser(username, password);
             if (flag) {
+                User user = daoUser.getUserByEmail(username); //new
+                
                 session.setAttribute("userEmail", username);
+                session.setAttribute("userRoleId", user.getRoleId()); //new
+                
+                if (user.getRoleId() == 2 || user.getRoleId() == 3 || user.getRoleId() == 4) { //new
+                    String ctxPath = request.getServletContext().getContextPath(); //new
+                    response.sendRedirect(ctxPath + "/admin/questionlist"); //new
+                    return;
+                }
+                
                 String message = "Hello " + username + ". You logged in successfully";
                 session.setAttribute("successMessage", message);
                 response.sendRedirect("index.jsp");

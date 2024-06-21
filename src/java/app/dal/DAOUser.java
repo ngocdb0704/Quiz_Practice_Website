@@ -31,6 +31,7 @@ public class DAOUser extends DBContext {
         return false;
     }
 
+    //==================================
     public void updatePassByUser(String user, String pass) {
         String sql = "UPDATE [User]\n"
                 + "   SET Password = ?\n"
@@ -46,7 +47,38 @@ public class DAOUser extends DBContext {
         }
     }
 
-    // =============================
+    public void addUser(User user) {
+        String sql = "INSERT INTO [dbo].[User] ([Email], [Password], [RoleId], [FullName], [GenderId], [Mobile], [isActive]) VALUES (?, ?, ?, ?, ?, ?, ?);";
+        try {
+            PreparedStatement pre = connection.prepareStatement(sql);
+            pre.setString(1, user.getEmail());
+            pre.setString(2, user.getPassword());
+            pre.setInt(3, user.getRoleId());
+            pre.setString(4, user.getFullName());
+            pre.setInt(5, user.getGenderId());
+            pre.setString(6, user.getMobile());
+            pre.setBoolean(7, true);
+            pre.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, "SQL Error: " + ex.getMessage(), ex);
+        }
+    }
+
+    public boolean isEmailRegistered(String email) {
+        boolean isRegistered = false;
+        String sql = "SELECT COUNT(*) FROM [dbo].[User] WHERE email = ?";
+        try {
+            PreparedStatement pre = connection.prepareStatement(sql);
+            pre.setString(1, email);
+            ResultSet resultSet = pre.executeQuery();
+            if (resultSet.next()) {
+                isRegistered = resultSet.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return isRegistered;
+    }
 
     private Vector<User> getFull(String sql) {
         Vector<User> Out = new Vector<User>();
@@ -214,9 +246,44 @@ public class DAOUser extends DBContext {
         }
         return Out;
     }
+    
+    public ConcurrentHashMap<String, String> ExpertsEmailNameMap() {
+        ConcurrentHashMap<String, String> Out = new ConcurrentHashMap<>();
+        String sql = "SELECT Email, FullName FROM [User] where RoleId = 4";
+        try {
+            Statement state = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = state.executeQuery(sql);
+            while (rs.next()) {
+                Out.put(rs.getString(1), rs.getString(2));
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return Out;
+    }
 
     public static void main(String[] args) {
-        System.out.println(new DAOUser().getAll());
-        System.out.println(new DAOUser().idToName(1));
+    }
+
+    /**
+     *
+     * @author hoapmhe173343
+     */
+    public int getRoleUser(String email, String pass) {
+        String sql = "SELECT RoleId FROM [User] "
+                + "WHERE Email = ? AND password = ? ";
+        int role = -1;
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, email);
+            ps.setString(2, pass);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                role = rs.getInt("roleId");
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return role;
     }
 }
