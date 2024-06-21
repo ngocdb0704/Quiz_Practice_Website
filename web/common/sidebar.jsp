@@ -16,10 +16,10 @@
                     <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                         <div class="accordion-body">
                             <ul>
-                                <li><a href="http://localhost:8080/QuizPractice/blogs/detail?id=20">Nutrition Tips to Reduce Exam Stress</a></li>
-                                <li><a href="http://localhost:8080/QuizPractice/blogs/detail?id=19">Building a Positive Mindset for Exam Success</a></li>
-                                <li><a href="http://localhost:8080/QuizPractice/blogs/detail?id=18">How to Overcome Negative Thoughts Before an Exam</a></li>
-                                <li><a href="http://localhost:8080/QuizPractice/blogs/detail?id=55">Faster Loading Times with Our Latest Update</a></li>
+                                <li><a href="blogs/detail?id=20">Nutrition Tips to Reduce Exam Stress</a></li>
+                                <li><a href="blogs/detail?id=19">Building a Positive Mindset for Exam Success</a></li>
+                                <li><a href="blogs/detail?id=18">How to Overcome Negative Thoughts Before an Exam</a></li>
+                                <li><a href="blogs/detail?id=55">Faster Loading Times with Our Latest Update</a></li>
                             </ul>
                         </div>
                     </div>
