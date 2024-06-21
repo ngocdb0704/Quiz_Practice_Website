@@ -219,6 +219,16 @@ GO
 
 
 
+
+--To prevent breaking old code, i added a new table instead
+CREATE TABLE [dbo].[PricePackageDesc] (
+	[PackageId] [int] foreign key references [dbo].[Package]([PackageId]) on delete cascade,
+	[Desc] [nvarchar](2048)
+)
+
+
+
+GO
 CREATE TABLE [dbo].[Dimension](
 	[DimensionId] [int] IDENTITY(1,1) primary key,
 	[SubjectId] [int] foreign key references [dbo].[Subject](SubjectId),
@@ -228,14 +238,12 @@ CREATE TABLE [dbo].[Dimension](
 
 
 
+
+
+
 GO
 
---To prevent breaking old code, i added a new table instead
-CREATE TABLE [dbo].[PricePackageDesc] (
-	[PackageId] [int] foreign key references [dbo].[Package]([PackageId]) on delete cascade,
-	[Desc] [nvarchar](2048)
-)
-GO
+
 
 CREATE TABLE [dbo].[OrganizationPackage](
 	[OrganizationPackageId] [int] IDENTITY(1,1) primary key,

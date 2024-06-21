@@ -29,7 +29,7 @@
                         <li class="nav-item">
                             <a
                                 class="nav-link"
-                                href="admin/subjectdetail/dimension?subjectId=${param.subjectId}"
+                                href="DimensionServlet?subjectId=${param.subjectId}"
                             >Dimension</a>
                         </li>
                         <li class="nav-item">
