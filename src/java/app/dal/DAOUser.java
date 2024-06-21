@@ -248,6 +248,21 @@ public class DAOUser extends DBContext {
         }
         return Out;
     }
+    
+    public ConcurrentHashMap<String, String> ExpertsEmailNameMap() {
+        ConcurrentHashMap<String, String> Out = new ConcurrentHashMap<>();
+        String sql = "SELECT Email, FullName FROM [User] where RoleId = 4";
+        try {
+            Statement state = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = state.executeQuery(sql);
+            while (rs.next()) {
+                Out.put(rs.getString(1), rs.getString(2));
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return Out;
+    }
 
     public static void main(String[] args) {
     }

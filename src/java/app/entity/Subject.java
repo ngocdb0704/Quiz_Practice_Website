@@ -151,5 +151,9 @@ public class Subject {
     public void setSponsorer(String sponsorer) {
         this.sponsorer = sponsorer;
     }
-    
+
+    @Override
+    public String toString() {
+        return "Subject{" + "subjectId=" + subjectId + ", subjectName=" + subjectName + ", tagLine=" + tagLine + ", briefInfo=" + briefInfo + ", subjectDescription=" + subjectDescription + ", thumbnail=" + thumbnail + ", lowestPackageName=" + lowestPackageName + ", categoryId=" + categoryId + ", packageListPrice=" + packageListPrice + ", packageSalePrice=" + packageSalePrice + ", level=" + level + ", provider=" + provider + ", sponsorer=" + sponsorer + '}';
+    }
 }
