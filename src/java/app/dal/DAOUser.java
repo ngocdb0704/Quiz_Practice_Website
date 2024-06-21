@@ -50,9 +50,6 @@ public class DAOUser extends DBContext {
     public void addUser(User user) {
         String sql = "INSERT INTO [dbo].[User] ([Email], [Password], [RoleId], [FullName], [GenderId], [Mobile], [isActive]) VALUES (?, ?, ?, ?, ?, ?, ?);";
         try {
-            System.out.println("Ngoc gay");
-            System.out.println(user);
-            System.out.println(user.getEmail());
             PreparedStatement pre = connection.prepareStatement(sql);
             pre.setString(1, user.getEmail());
             pre.setString(2, user.getPassword());
