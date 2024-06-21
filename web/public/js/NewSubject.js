@@ -120,7 +120,7 @@ let desc = document.getElementById("subject-description");
 function setTemplate(templateNum) {
     switch (templateNum) {
         case '1':
-            desc.innerHTML = "##Coursera style description\n" +
+            desc.value = "##Coursera style description\n" +
                     "Coursera-inspired description. It's divided into 4 sections and include a navbar.\n" +
                     "Note: This section will not be included in the output.\n" +
                     "##About\n" +
