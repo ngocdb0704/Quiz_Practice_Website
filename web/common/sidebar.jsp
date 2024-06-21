@@ -5,7 +5,7 @@
         <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body px-0">
-        <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-start" id="menu">
+        <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-start h-100" id="menu">
             <div class="accordion w-100" id="accordionExample">
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="headingOne">
@@ -15,14 +15,16 @@
                     </h2>
                     <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                         <div class="accordion-body">
-                            <div>Top post #1</div>
-                            <div>Top post #2</div>
-                            <div>Top post #3</div>
-                            <div>Top post #4</div> 
+                            <ul>
+                                <li><a href="blogs/detail?id=20">Nutrition Tips to Reduce Exam Stress</a></li>
+                                <li><a href="blogs/detail?id=19">Building a Positive Mindset for Exam Success</a></li>
+                                <li><a href="blogs/detail?id=18">How to Overcome Negative Thoughts Before an Exam</a></li>
+                                <li><a href="blogs/detail?id=55">Faster Loading Times with Our Latest Update</a></li>
+                            </ul>
                         </div>
                     </div>
                 </div>
-                <div class="accordion-item">
+                <!--div class="accordion-item">
                     <h2 class="accordion-header" id="headingTwo">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
                             Contacts
@@ -35,16 +37,17 @@
                             <div>Contact #3</div>
                             <div>Contact #4</div>   
                         </div>
-                    </div>
-                </div>
-                <%if(!(session.getAttribute("userEmail") == null)) {%>
-                <div>
-                    <form method="post" action="loginviewofAn">
-                        <button type="submit" class="btn">Logout</button>
-                        <input type="hidden" name="service" value="logout"/>
-                    </form>
-                </div>
-                <%}%>
+                </div-->
+            </div>
+            <div style="flex-grow: 1; width: 100%;"><c:if test="${userRoleId eq 2}"><a href="admin/subjectlist"><button class="btn btn-outline-secondary w-100 mt-3">To management console</button></a></c:if></div>
+            <%if(!(session.getAttribute("userEmail") == null)) {%>
+            <div>
+                <form method="post" action="loginviewofAn">
+                    <button type="submit" class="btn">Logout</button>
+                    <input type="hidden" name="service" value="logout"/>
+                </form>
+            </div>
+            <%}%>
         </ul>
     </div>
 </div>
