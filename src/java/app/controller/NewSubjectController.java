@@ -79,10 +79,12 @@ public class NewSubjectController extends HttpServlet {
 
             if (owner != null && owner.getRoleId() == 4) {
                 if (daoSubject.addSubject(new Subject(0, subjectTitle, subjectTagline, subjectBrief, subjectDescription, thumbnailUrl, subjectCategory), owner.getUserId(), subjectStatus, featured) == 1)
-                    session.setAttribute("notification", "<p>Subject created succefully!</p>");
+                    //session.setAttribute("notification", "<p>Subject created succefully!</p>");
+                    session.setAttribute("notification", "Subject created succefully!");
             } else {
                 //out.print("User was not an Expert");
-                session.setAttribute("notification", "<p style='color: red'>Error: The user email submitted was not of an Expert</p>");
+                //session.setAttribute("notification", "<p style='color: red'>Error: The user email submitted was not of an Expert</p>");
+                session.setAttribute("notification", "Error: The user email submitted was not of an Expert");
                 System.out.println("User was not an Expert");
             }
         }

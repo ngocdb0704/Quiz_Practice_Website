@@ -140,9 +140,10 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
         <c:if test="${not empty notification}">
         <script>
-                                    $(document).ready(function () {
-                                        $("#notify").modal('show');
-                                    });
+                                    //$(document).ready(function () {
+                                    //    $("#notify").modal('show');
+                                    //});
+                alert('${notification}');                   
         </script>
         </c:if>
 
@@ -169,7 +170,7 @@
     </div>
 </div>
 
-<div class="modal fade show" id="notify" tabindex="-1" role="dialog" >
+<!--div class="modal fade" id="notify" tabindex="-1" role="dialog" >
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -182,4 +183,4 @@
             </div>
         </div>
     </div>
-</div>
+</div-->

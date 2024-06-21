@@ -91,9 +91,7 @@ public class SubjectDetailsController extends HttpServlet {
 
             DAOPackage daoPackage = new DAOPackage();
             Package lowestPackage = daoPackage.getLowestPackageBySubjectId(id);
-            if (lowestPackage != null) {
-                session.setAttribute("lowestPackage", lowestPackage);
-            }
+            session.setAttribute("lowestPackage", lowestPackage);
         } catch (Exception e) {
             e.printStackTrace();
         }
