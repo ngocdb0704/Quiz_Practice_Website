@@ -11,6 +11,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/public/css/bootstrap/bootstrap.min.css"/>
         <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/importquestion.css"/>
+        <link rel="stylesheet" href="https://unpkg.com/nprogress@0.2.0/nprogress.css"/>
     </head>
     <body>
         <div>
@@ -19,7 +20,7 @@
                 <p>Select the excel file containing questions to add to the question bank.</p>
                 <form action="importquestion" method="post" class="d-flex" enctype="multipart/form-data">
                     <input type="file" name="file" class="flex-grow-1" accept=".xlsx" required/>
-                    <button class="btn btn-primary" type="submit">Upload</button>
+                    <button class="btn btn-primary" type="submit" onclick="btnUpload()">Upload</button>
                 </form>
                 <a href="${pageContext.request.contextPath}/public/template/question_template.xlsx" 
                    class="btn btn-info col-md-12 mt-3" download>Download the import question template</a>
@@ -28,7 +29,19 @@
 
 
         <script src="${pageContext.request.contextPath}/public/js/bootstrap/bootstrap.bundle.min.js"></script>
+        <script src="https://unpkg.com/nprogress@0.2.0/nprogress.js"></script>
+        
         <script>
+            function btnUpload() {
+                NProgress.start();
+            }
+
+            window.addEventListener('load', function() {
+                if (window.location.href.includes('importquestion')) {
+                    NProgress.done();
+                }
+            });
+
             const alertPlaceholder = document.getElementById('liveAlertPlaceholder');
             const appendAlert = (message, type) => {
                 const wrapper = document.createElement('div');
