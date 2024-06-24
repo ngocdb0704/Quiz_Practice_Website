@@ -120,7 +120,7 @@
                                     <c:if test="${question.status == 1}">Show</c:if>
                                     <c:if test="${question.status == 2}">Hide</c:if>
                                     </td>
-                                    <td><a href="#">Link</a></td>
+                                    <td><a href="admin/questionlist/details?qid=${question.questionID}">Link</a></td>
                                 </tr>
                         </c:forEach>
                     </tbody>
