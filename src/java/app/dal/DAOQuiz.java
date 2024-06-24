@@ -130,7 +130,6 @@ public class DAOQuiz extends DBContext {
             }
 
             if (questionIds.isEmpty()) {
-                markDraft(new Integer[] { id });
                 return;
             }
 
@@ -166,6 +165,7 @@ public class DAOQuiz extends DBContext {
             QueryBuilder query = new QueryBuilder(LISTING_QUERY)
                     .setLoggingEnabled(true)
                     .whereAnd("IsPublished", Operator.EQUALS, published)
+                    .orderBy("QuestionCount", OrderDirection.DESC)
                     .orderBy("q.UpdatedTime", OrderDirection.DESC)
                     .orderBy("q.SubjectId", OrderDirection.ASC);
 
