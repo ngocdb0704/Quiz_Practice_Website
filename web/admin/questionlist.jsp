@@ -42,7 +42,12 @@
 
                         <label for="lesson">Lesson:</label>
                         <select id="lesson" name="lesson">
-                            <!-- Add options dynamically or statically -->
+                            <option value="0">All Lesson</option>
+                            <c:forEach var="lesson" items="${lessonList}">
+                                <option value="${lesson}" 
+                                        <c:if test="${lesson == param.lesson}">selected</c:if>
+                                        >${lesson}</option>
+                            </c:forEach>
                         </select>
 
                         <label for="level">Level:</label>
@@ -121,7 +126,7 @@
                                     <c:if test="${question.status == 2}">Hide</c:if>
                                     </td>
                                     <td><a href="admin/questionlist/details?qid=${question.questionID}">Link</a></td>
-                                </tr>
+                            </tr>
                         </c:forEach>
                     </tbody>
                 </table>

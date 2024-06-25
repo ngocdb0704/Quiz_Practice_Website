@@ -138,6 +138,7 @@ public class QuestionDAO extends DBContext {
 
     public QueryResult filters(
             int subjectId,
+            int lesson,
             int level,
             int status,
             String searchContent,
@@ -155,6 +156,10 @@ public class QuestionDAO extends DBContext {
             //subject id
             if (subjectId != 0) {
                 query.whereAnd("SubjectID", Operator.EQUALS, subjectId);
+            }
+            
+            if(lesson != 0){
+                query.whereAnd("LessonID", Operator.EQUALS, lesson);
             }
             //search content
             if (searchContent != null && !searchContent.isBlank()) {
