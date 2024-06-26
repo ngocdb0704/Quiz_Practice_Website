@@ -25,27 +25,34 @@
             <main class="admin-main">
                 <h1>Question Details</h1>
                 <div class="question-details">
-                    <table class="table table-bordered">
-                        <tr>
-                            <th>Question Content:</th>
-                            <td>${question.questionName}</td>
-                        </tr>
-                        <tr>
-                            <th>Lesson:</th>
-                            <td>Lesson ${question.lessonID}</td>
-                        </tr>
-                        <tr>
-                            <th>Level:</th>
-                            <td>${question.level}</td>
-                        </tr>
-                        <tr>
-                            <th>Status:</th>
-                            <td>
-                                <c:if test="${question.status == 1}">Show</c:if>
-                                <c:if test="${question.status == 2}">Hide</c:if>
-                            </td>
-                        </tr>
-                    </table>
+                    <form action="admin/answeraction" method="post">
+                        <table class="table table-bordered">
+                            <tr>
+                                <th>Question Content:</th>
+                                <td>${question.questionName}</td>
+                            </tr>
+                            <tr>
+                                <th>Lesson:</th>
+                                <td>Lesson ${question.lessonID}</td>
+                            </tr>
+                            <tr>
+                                <th>Level:</th>
+                                <td>
+                                    <c:if test="${question.level == 1}">Easy</c:if>
+                                    <c:if test="${question.level == 2}">Medium</c:if>
+                                    <c:if test="${question.level == 3}">Hard</c:if>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Status:</th>
+                                    <td>
+                                        <input type="checkbox" 
+                                        <c:if test="${question.status == 1}">checked</c:if>
+                                        onchange="updateStatus(${question.questionID}, this.checked)"> Show/Hide
+                                </td>
+                            </tr>
+                        </table>
+                    </form>
                 </div>
 
                 <h2>Answer Options</h2>
@@ -55,10 +62,11 @@
                             <th>Option</th>
                             <th>Content</th>
                             <th>Correct</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                    <c:forEach var="answer" items="${question.answers}" varStatus="status">
+                        <c:forEach var="answer" items="${question.answers}" varStatus="status">
                             <tr>
                                 <td>${status.index + 1}</td>
                                 <td>${answer.answerName}</td>
@@ -70,12 +78,53 @@
                                         No
                                     </c:if>
                                 </td>
+                                <td>
+                                    <button type="button" class="btn btn-primary"
+                                            onclick="editProductModal(this)">
+                                        Edit
+                                    </button>
+                                    <button type="button" class="btn btn-danger" 
+                                            onclick="deleteProductModal(${p.id})">
+                                        Delete
+                                    </button>
+                                </td>
                             </tr>
                         </c:forEach>
                     </tbody>
                 </table>
 
-                <a href="${pageContext.request.contextPath}/admin/questionlist" class="btn btn-secondary">Back to List</a>
+                <!-- Flex container for buttons -->
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                    <div class="d-flex">
+                        <a href="${pageContext.request.contextPath}/admin/questionlist" class="btn btn-secondary me-2">Back to List</a>
+                        <p class="btn btn-info">Save change</p>
+                    </div>
+                    <!-- Add Answer Option Button as Icon -->
+                    <button class="btn btn-primary" onclick="showAddOptionForm()">
+                        <i class="bi bi-plus-square"> Add option</i>
+                    </button>
+                </div>
+
+                <!-- Add Answer Option Form -->
+                <div id="addOptionForm" style="display: none; margin-top: 20px;">
+                    <h3>Add New Answer Option</h3>
+                    <form action="admin/answeraction" method="post">
+                        <input type="hidden" name="questionID" value="${question.questionID}">
+                        <div class="mb-3">
+                            <label for="answerName" class="form-label">Answer Content:</label>
+                            <input type="text" class="form-control" id="answerName" name="answerName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="isCorrect" class="form-label">Correct:</label>
+                            <select class="form-control" id="isCorrect" name="isCorrect" required>
+                                <option value="1">Yes</option>
+                                <option value="0">No</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-success">Add</button>
+                        <button type="button" class="btn btn-secondary" onclick="hideAddOptionForm()">Cancel</button>
+                    </form>
+                </div>
             </main>
         </div>
     </body>
