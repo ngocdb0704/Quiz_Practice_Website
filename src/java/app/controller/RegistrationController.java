@@ -183,7 +183,7 @@ public class RegistrationController extends HttpServlet {
             int editId = Integer.valueOf(request.getParameter("registId"));
             int editPack = Integer.valueOf(request.getParameter("selectedPackage"));
             int n = daoRegistration.updateRegistrationPackage(editId, editPack);
-            String warningNoti = "Update registration id " + editId + " 's package successfully!";
+            String warningNoti = "Update registration (id: " + editId + ") 's package successfully!";
             session.setAttribute("warningNoti", warningNoti);
             service = listAll;
             response.sendRedirect(controller);
