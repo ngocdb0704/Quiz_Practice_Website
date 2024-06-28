@@ -9,6 +9,7 @@ import app.dal.DAORegistration;
 import app.dal.DAOSubject;
 import app.entity.Customer;
 import app.entity.Registration;
+import app.entity.Package;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
@@ -21,6 +22,8 @@ import app.entity.SubjectCategory;
 import app.entity.Transaction;
 import app.utils.Config;
 import jakarta.servlet.annotation.WebServlet;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  *
@@ -102,6 +105,7 @@ public class RegistrationController extends HttpServlet {
             Vector<Registration> registrationVector = daoRegistration.getById(
                     userEmail, parentTier1, parentTier2, parentTier3,
                     status, inputKey);
+            HashMap<Integer, ArrayList<Package>> map = daoSubject.getSubjectPackagesMap();
             Customer cus = daoCustomer.searchbyEmail(userEmail).get(0);
             int size = registrationVector.size();
             //number of pages for pagination, each page has 6 (or 4 if config failed getting registration pagination size) cards of registration
@@ -130,6 +134,12 @@ public class RegistrationController extends HttpServlet {
                 request.setAttribute("successNoti", successNoti);
                 session.removeAttribute("successNoti");
             }
+            String warningNoti = (String) session.getAttribute("warningNoti");
+            if (warningNoti != null) {
+                request.setAttribute("warningNoti", warningNoti);
+                session.removeAttribute("warningNoti");
+            }
+            request.setAttribute("map", map);
             request.setAttribute("data", responseVector);
             request.setAttribute("page", page);
             request.setAttribute("num", num);
@@ -169,7 +179,12 @@ public class RegistrationController extends HttpServlet {
             response.sendRedirect(controller);
         }
         // check service's value
-        if (service.equals("update")) {
+        if (service.equals("editRegist")) {
+            int editId = Integer.valueOf(request.getParameter("registId"));
+            int editPack = Integer.valueOf(request.getParameter("selectedPackage"));
+            int n = daoRegistration.updateRegistrationPackage(editId, editPack);
+            String warningNoti = "Update registration id " + editId + " 's package successfully!";
+            session.setAttribute("warningNoti", warningNoti);
             service = listAll;
             response.sendRedirect(controller);
         }

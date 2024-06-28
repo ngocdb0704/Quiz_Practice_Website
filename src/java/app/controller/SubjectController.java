@@ -134,12 +134,9 @@ public class SubjectController extends HttpServlet {
                 request.setAttribute("sponsor", getSponsor);
                 request.setAttribute("listOfIdRegist", listOfRegistrations);
             }
-            int sizeOfNewCarousel = newSubjectList.size();
-            int sizeOfSaleCarousel = saleSubjectList.size();
-            int sizeOfFeaturedCarousel = featuredSubjectList.size();
-            int numOfCarouselNew = sizeOfNewCarousel / numPerCarousel;
-            int numOfCarouselSale = sizeOfSaleCarousel / numPerCarousel;
-            int numOfCarouselFeatured = sizeOfFeaturedCarousel / numPerCarousel;
+            int sizeOfNewCarousel = newSubjectList.size()-1;
+            int sizeOfSaleCarousel = saleSubjectList.size()-1;
+            int sizeOfFeaturedCarousel = featuredSubjectList.size()-1;
             int sizeOfAllSubjects = subjectListForIndividual.size();
             int numOfAllSubjects = (sizeOfAllSubjects % numPerPageIndividual == 0 ? (sizeOfAllSubjects / numPerPageIndividual) : ((sizeOfAllSubjects / numPerPageIndividual) + 1));
             String xpage = request.getParameter("page");
@@ -155,9 +152,9 @@ public class SubjectController extends HttpServlet {
             end = Math.min(page * numPerPageIndividual, sizeOfAllSubjects);
             Vector<Subject> responseVector = daoSubject.getVectorByPage(subjectListForIndividual, start, end);
             request.setAttribute("numPerCarousel", numPerCarousel);
-            request.setAttribute("numOfCarouselNew", numOfCarouselNew);
-            request.setAttribute("numOfCarouselSale", numOfCarouselSale);
-            request.setAttribute("numOfCarouselFeatured", numOfCarouselFeatured);
+            request.setAttribute("numOfCarouselNew", sizeOfNewCarousel);
+            request.setAttribute("numOfCarouselSale", sizeOfSaleCarousel);
+            request.setAttribute("numOfCarouselFeatured", sizeOfFeaturedCarousel);
             request.setAttribute("numOfAllSubjects", numOfAllSubjects);
             request.setAttribute("dataSaleSubject", saleSubjectList);
             request.setAttribute("dataNewSubject", newSubjectList);

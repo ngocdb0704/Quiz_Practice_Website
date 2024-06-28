@@ -29,6 +29,7 @@
             <div class="row">
                 <aside class="col-3 sbar">
                     <div class="row mb-3">
+                        <c:set var="map" value="${requestScope.map}"/>
                         <c:set var="cat" value="${requestScope.list}"/>
                         <c:set var="check" value="${requestScope.check}"/>
                         <c:set var="key" value="${requestScope.key}"/>
@@ -40,6 +41,7 @@
                         <c:set var="noti" value="${requestScope.noti}"/>
                         <c:set var="snoti" value="${requestScope.successNoti}"/>
                         <c:set var="matchActive" value="Pending Approval Active"/>
+                        <c:set var="enoti" value="${requestScope.warningNoti}"/>
                         <form action="user/MyRegistrations">
                             <div class="mb-3">
                                 <div class="row card-body container justify-content-center">
@@ -171,6 +173,12 @@
                     <c:if test="${snoti != null}">
                         <div class="alert alert-success alert-dismissible fade show" role="alert">
                             <strong>Notification</strong> ${snoti}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    </c:if>
+                    <c:if test="${enoti != null}">
+                        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                            <strong>Notification</strong> ${enoti}
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                     </c:if>
@@ -427,9 +435,41 @@
                                                                     </button>
                                                                 </div>
                                                                 <div class="modal-body">
-                                                                    <jsp:include page="/SubjectRegisterPopUp.jsp">
-                                                                        <jsp:param name="registId" value="${p.registrationId}"/>
-                                                                    </jsp:include>
+                                                                    <div class="container">
+                                                                        <form action="user/MyRegistrations" >
+                                                                            <div class="card">
+                                                                                <img src="${p.getSubjectImg()}" class="card-img-top" alt="...">
+                                                                                <div class="card-body">
+                                                                                    <h5 class="card-title">${p.getSubjectName()}</h5>
+                                                                                    <h5>Select a package:</h5>
+                                                                                    <select class="form-select" name="selectedPackage">
+                                                                                        <c:forEach begin="0" end="${map.get(p.getSubjectId()).size()-1}" var="atP">
+                                                                                            <option ${map.get(p.getSubjectId()).get(atP).getPackageName().equals(p.packageName)? "selected":""}
+                                                                                                value="${map.get(p.getSubjectId()).get(atP).getPackageId()}">
+                                                                                                ${map.get(p.getSubjectId()).get(atP).getPackageName()} - 
+                                                                                                <c:if test="${atP!=0}">
+                                                                                                    save ${map.get(p.getSubjectId()).get(atP).getWorth()}% for only
+                                                                                                </c:if>
+                                                                                                ${Integer.valueOf(map.get(p.getSubjectId()).get(atP).getSalePrice()*1000)} VND
+                                                                                            </option>
+                                                                                        </c:forEach>
+                                                                                    </select>
+                                                                                    <br>
+                                                                                    <input type="hidden" name="registId" value="${p.registrationId}"/>
+                                                                                    <input type="hidden" name="service" value="editRegist"/>
+                                                                                    <div class="container text-end">
+                                                                                        <div class="row">
+                                                                                            <div class="col">
+                                                                                            </div>
+                                                                                            <div class="col">
+                                                                                                <button type="submit" class="btn btn-primary">Submit change</button>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </form>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -440,7 +480,6 @@
                                                     <!-- currently do nothing -->
                                                     <button type="button" class="btn btn-primary" 
                                                             data-bs-toggle="modal" 
-                                                            ${!matchActive.contains(p.status)?"":"disabled"}
                                                             data-bs-target=".modalReport${p.registrationId}">
                                                         Report
                                                     </button>

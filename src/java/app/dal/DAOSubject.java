@@ -21,6 +21,9 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.sql.Date;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  *
@@ -545,7 +548,8 @@ public class DAOSubject extends DBContext {
         }
         return vec;
     }
-    public HashMap<Integer, String> getSponsor (String email){
+
+    public HashMap<Integer, String> getSponsor(String email) {
         HashMap<Integer, String> map = new HashMap<>();
         String sql = """
                      select ops.SubjectId, o.OrganizationName from [Organization] o
@@ -569,6 +573,7 @@ public class DAOSubject extends DBContext {
         }
         return map;
     }
+
     public Vector<Package> getPlans() {
         Vector<Package> vec = new Vector<>();
         try {
@@ -625,7 +630,6 @@ public class DAOSubject extends DBContext {
         return vec;
     }
 
-
     public Subject getSubjectById(int id) {
         Subject Out = null;
         String sql = "SELECT TOP 1 SubjectId, SubjectTitle, SubjectTagLine, SubjectBriefInfo, SubjectDescription, SubjectThumbnail, SubjectCategoryId FROM Subject WHERE SubjectId = ?";
@@ -658,16 +662,17 @@ public class DAOSubject extends DBContext {
                 if (rs.next()) {
                     parentId = rs.getInt(3);
                     Out.add(new SubjectCategory(rs.getInt(1), rs.getString(2), parentId));
-                    
+
+                } else {
+                    break;
                 }
-                else break;
             }
         } catch (SQLException ex) {
             Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
         }
         return Out;
     }
-    
+
     public List<SubjectCategory> getAllSubjectCategories() {
         List<SubjectCategory> Out = new ArrayList<>();
         String sql = "SELECT SubjectCategoryId, SubjectCategoryName, SubjectParentCategory from SubjectCategory";
@@ -684,7 +689,7 @@ public class DAOSubject extends DBContext {
         }
         return Out;
     }
-    
+
     public int addSubject(Subject sub, int ownerId, int published, int featured) {
         String sql = "INSERT INTO [Subject] VALUES(?, 1, ?, ?, 1, ?, CAST(GETDATE() as DATE), CAST(GETDATE() as DATE), ?, ?, ?, ?, ?);";
 
@@ -731,7 +736,7 @@ public class DAOSubject extends DBContext {
         }
         return Out;
     }
-    
+
     public boolean updateSubject(Subject subject) {
         boolean isUpdated = false;
         String sql = "UPDATE Subject SET SubjectTitle = ?, SubjectTagLine = ?, SubjectThumbnail = ? WHERE SubjectId = ?";
@@ -788,7 +793,7 @@ public class DAOSubject extends DBContext {
                 + "SubjectLevelId = ?, IsFeaturedSubject = ?, SubjectBriefInfo = ?, "
                 + "SubjectDescription = ?, SubjectThumbnail = ? "
                 + "WHERE SubjectId = ?";
-        try{
+        try {
             PreparedStatement pstmt = connection.prepareStatement(sql);
             pstmt.setString(1, subject.getSubjectTitle());
             pstmt.setInt(2, subject.getSubjectCategoryId());
@@ -808,30 +813,28 @@ public class DAOSubject extends DBContext {
         }
     }
 
-    
-    public List<Subject> getAllSubject(){
+    public List<Subject> getAllSubject() {
         List<Subject> listSubject = new ArrayList();
-        String sql = "SELECT *\n" +
-                    "  FROM [dbo].[Subject]";
-        try{
+        String sql = "SELECT *\n"
+                + "  FROM [dbo].[Subject]";
+        try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
-            while(rs.next()){
-                listSubject.add(new Subject(rs.getInt("subjectId"), 
+            while (rs.next()) {
+                listSubject.add(new Subject(rs.getInt("subjectId"),
                         rs.getString("subjectTitle")));
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             System.out.println(e);
         }
         return listSubject;
     }
-    
+
     public int countQuestion() {
         String sql = "SELECT COUNT(*) FROM Question";
         int totalItem = 0;
 
-        try (PreparedStatement ps = connection.prepareStatement(sql); 
-                ResultSet rs = ps.executeQuery()) {
+        try (PreparedStatement ps = connection.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
             if (rs.next()) {
                 totalItem = rs.getInt(1);
             }
@@ -839,5 +842,60 @@ public class DAOSubject extends DBContext {
         }
 
         return totalItem;
+    }
+
+    public HashMap<Integer, ArrayList<Package>> getSubjectPackagesMap() {
+        HashMap<Integer, ArrayList<Package>> map = new HashMap<>();
+        String sqlGetSubjects = "select s.SubjectId from [Subject] s";
+        String sqlGetPackages = "select * from [Package] p where p.Status = 1 and p.SubjectId = ";
+        int key;
+
+        try {
+            Statement statementSubject = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            ResultSet rsSubjects
+                    = statementSubject.executeQuery(sqlGetSubjects);
+            while (rsSubjects.next()) {
+                key = rsSubjects.getInt(1);
+                ArrayList<Package> value = new ArrayList<>();
+                try {
+                    Statement statementPackage = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+                    ResultSet rsPackages
+                            = statementPackage.executeQuery(sqlGetPackages + key);
+                    while (rsPackages.next()) {
+                        Package p = new Package();
+                        p.setPackageId(rsPackages.getInt(1));
+                        p.setPackageName(rsPackages.getString(3));
+                        p.setDuration(rsPackages.getInt(4));
+                        p.setListPrice(rsPackages.getFloat(5));
+                        p.setSalePrice(rsPackages.getFloat(6));
+                        value.add(p);
+                    }
+                } catch (SQLException ex) {
+                    Logger.getLogger(DAOSubject.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                Collections.sort(value, new Comparator<Package>() {
+                    @Override
+                    public int compare(Package o1, Package o2) {
+                        return o1.getDuration() > o2.getDuration() ? 1 : -1;
+                    }
+                });
+                float baseWorth = value.get(0).getSalePrice()/value.get(0).getDuration();
+                value.get(0).setWorth(0);
+                for(int i=1; i<value.size(); i++){
+                    float packWorth = value.get(i).getSalePrice()/value.get(i).getDuration();
+                    int percentOfWorth = (int) ((packWorth/baseWorth-1)*100);
+                    value.get(i).setWorth(percentOfWorth);
+                }
+                map.put(key, value);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DAOSubject.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return map;
+    }
+
+    public static void main(String[] args) {
+        DAOSubject dao = new DAOSubject();
+        System.out.println(dao.getSubjectPackagesMap().get(1).get(2).getWorth());
     }
 }

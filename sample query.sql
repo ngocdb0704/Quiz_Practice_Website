@@ -162,19 +162,19 @@ INSERT INTO [Subject] VALUES('Euphonium',7, 33, 1,2, 0, '2024-2-10', '2024-02-10
 
 
 
-INSERT INTO [Package] VALUES(1, '6 Month Premium', 6, 20, 5, 1);
+INSERT INTO [Package] VALUES(1, '6 Month Premium', 6, 20, 19, 1);
 INSERT INTO [Package] VALUES(1, '9 Month Premium', 9, 30, 27, 1);
 INSERT INTO [Package] VALUES(1, '3 Month Premium', 3, 10, 7, 1);
-INSERT INTO [Package] VALUES(2, '6 Month Premium', 6, 20, 5, 1);
+INSERT INTO [Package] VALUES(2, '6 Month Premium', 6, 20, 19, 1);
 INSERT INTO [Package] VALUES(2, '9 Month Premium', 9, 30, 27, 1);
 INSERT INTO [Package] VALUES(2, '3 Month Premium', 3, 10, 7, 1);
-INSERT INTO [Package] VALUES(3, '6 Month Premium', 6, 20, 5, 1);
+INSERT INTO [Package] VALUES(3, '6 Month Premium', 6, 20, 19, 1);
 INSERT INTO [Package] VALUES(3, '9 Month Premium', 9, 30, 27, 1);
 INSERT INTO [Package] VALUES(3, '3 Month Premium', 3, 10, 7, 1);
 INSERT INTO [Package] VALUES(4, '6 Month Premium', 6, 20, 18, 1);
 INSERT INTO [Package] VALUES(4, '9 Month Premium', 9, 30, 27, 1);
 INSERT INTO [Package] VALUES(4, '3 Month Premium', 3, 10, 7, 1);
-INSERT INTO [Package] VALUES(5, '6 Month Premium', 6, 20, 5, 1);
+INSERT INTO [Package] VALUES(5, '6 Month Premium', 6, 20, 19, 1);
 INSERT INTO [Package] VALUES(5, '9 Month Premium', 9, 30, 27, 1);
 INSERT INTO [Package] VALUES(5, '3 Month Premium', 3, 10, 7, 1);
 INSERT INTO [Package] VALUES(6, '6 Month Premium', 6, 20, 18, 1);
@@ -183,13 +183,13 @@ INSERT INTO [Package] VALUES(6, '3 Month Premium', 3, 10, 7, 1);
 INSERT INTO [Package] VALUES(7, '6 Month Premium', 6, 20, 18, 1);
 INSERT INTO [Package] VALUES(7, '9 Month Premium', 9, 30, 27, 1);
 INSERT INTO [Package] VALUES(7, '3 Month Premium', 3, 5, 3, 1);
-INSERT INTO [Package] VALUES(8, '6 Month Premium', 6, 20, 5, 1);
+INSERT INTO [Package] VALUES(8, '6 Month Premium', 6, 20, 19, 1);
 INSERT INTO [Package] VALUES(8, '9 Month Premium', 9, 30, 27, 1);
 INSERT INTO [Package] VALUES(8, '3 Month Premium', 3, 5, 3, 1);
 INSERT INTO [Package] VALUES(9, '6 Month Premium', 6, 20, 18, 1);
 INSERT INTO [Package] VALUES(9, '9 Month Premium', 9, 30, 27, 1);
 INSERT INTO [Package] VALUES(9, '3 Month Premium', 3, 5, 3, 1);
-INSERT INTO [Package] VALUES(10, '6 Month Premium', 6, 20, 5, 1);
+INSERT INTO [Package] VALUES(10, '6 Month Premium', 6, 20, 19, 1);
 INSERT INTO [Package] VALUES(10, '9 Month Premium', 9, 30, 27, 1);
 INSERT INTO [Package] VALUES(10, '3 Month Premium', 3, 5, 3, 1);
 INSERT INTO [Package] VALUES(11, '6 Month Premium', 6, 20, 18, 1);

@@ -9,6 +9,7 @@ package app.entity;
  * @author admin
  */
 public class Package {
+
     private int packageId;
     private String packageName;
     private float listPrice;
@@ -16,6 +17,7 @@ public class Package {
     private int duration;
     private boolean active;
     private String description = "";
+    private int worth;
 
     public Package() {
     }
@@ -31,6 +33,16 @@ public class Package {
         this.packageName = packageName;
         this.listPrice = listPrice;
         this.salePrice = salePrice;
+    }
+
+    public Package(int packageId, String packageName, float listPrice, float salePrice, int duration, boolean active, int worth) {
+        this.packageId = packageId;
+        this.packageName = packageName;
+        this.listPrice = listPrice;
+        this.salePrice = salePrice;
+        this.duration = duration;
+        this.active = active;
+        this.worth = worth;
     }
 
     public int getPackageId() {
@@ -64,33 +76,36 @@ public class Package {
     public void setListPrice(float listPrice) {
         this.listPrice = listPrice;
     }
-    
+
     public int getSalePriceVND() {
-        return (int)(this.salePrice * 1000);
+        return (int) (this.salePrice * 1000);
     }
-    
+
     public int getListPriceVND() {
-        return (int)(this.listPrice * 1000);
+        return (int) (this.listPrice * 1000);
     }
-    
+
     public void setListPriceVND(int listPrice) {
-        this.listPrice = (float)listPrice / 1000;
+        this.listPrice = (float) listPrice / 1000;
     }
-    
+
     public void applySale(int percentage) {
-        if (percentage < 0) percentage = 0;
-        else if (percentage > 100) percentage = 100;
-        
+        if (percentage < 0) {
+            percentage = 0;
+        } else if (percentage > 100) {
+            percentage = 100;
+        }
+
         percentage = 100 - percentage;
-        
-        this.salePrice = ((float)percentage / 100) * this.listPrice;
+
+        this.salePrice = ((float) percentage / 100) * this.listPrice;
     }
-    
+
     public int getSalePercent() {
         if (listPrice == 0) {
             return 0;
         }
-        
+
         return Math.round((1 - (salePrice / listPrice)) * 100);
     }
 
@@ -106,14 +121,18 @@ public class Package {
     public void setActive(boolean active) {
         this.active = active;
     }
-    
+
     public int getDuration() {
         return duration;
     }
 
     public void setDuration(int duration) {
-        if (duration < 1) duration = 1;
-        if (duration > 48) duration = 48;
+        if (duration < 1) {
+            duration = 1;
+        }
+        if (duration > 48) {
+            duration = 48;
+        }
         this.duration = duration;
     }
 
@@ -124,7 +143,7 @@ public class Package {
     public void setDescription(String description) {
         this.description = description == null ? "" : description;
     }
-    
+
     public boolean isValid() {
         boolean nameValid = this.packageName != null && !this.packageName.isBlank();
         boolean durationValid = this.duration >= 1 && this.duration <= 48;
@@ -132,4 +151,13 @@ public class Package {
         boolean salePriceValid = this.salePrice <= this.listPrice;
         return nameValid && durationValid && listPriceValid && salePriceValid;
     }
+
+    public int getWorth() {
+        return worth;
+    }
+
+    public void setWorth(int worth) {
+        this.worth = worth;
+    }
+
 }
