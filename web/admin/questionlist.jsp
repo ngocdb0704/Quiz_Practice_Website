@@ -71,7 +71,7 @@
                         </select>
 
                         <label for="searchContent"></label>
-                        <input type="text" name="searchContent" placeholder="Search by Content"/>
+                        <input type="text" name="searchContent" placeholder="Search by Content" value="${param.searchContent}"/>
                         <button type="submit">Filter</button>
                     </form>
                 </div>
