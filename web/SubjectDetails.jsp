@@ -90,7 +90,7 @@
                 <div id="subject-brief" style="" class="container rounded-3 p-5">
                     <div style="height: 250px"></div>
 
-                    <img id='subject-thumbnail' src="${subjectDetails.getThumbnail()}" alt="alt"/>
+                    <img id='subject-thumbnail' src="public/thumbnails/${subjectDetails.getThumbnail()}" alt="alt"/>
 
                     <div id="info-div bg-white">
                         <h1>${subjectDetails.getSubjectName()}</h1>

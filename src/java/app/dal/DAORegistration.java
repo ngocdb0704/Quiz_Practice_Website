@@ -358,7 +358,7 @@ public class DAORegistration extends DBContext {
                 pre.setString(2, "%" + inputKey + "%");
             }
             ResultSet rs = pre.executeQuery();
-            while(rs.next()){
+            while (rs.next()) {
                 OrganizationRegistration oR = new OrganizationRegistration();
                 oR.setOrgPackageName(rs.getString(1));
                 oR.setSubjectId(rs.getInt(2));
@@ -403,7 +403,8 @@ public class DAORegistration extends DBContext {
         }
         return duration;
     }
-    public int updateRegistrationPackage(int registId, int packageId){
+
+    public int updateRegistrationPackage(int registId, int packageId) {
         int n = 0;
         String sql = """
                     UPDATE [dbo].[Registration]
@@ -419,6 +420,7 @@ public class DAORegistration extends DBContext {
         }
         return n;
     }
+
     //update registration after successful transaction
     public int updateRegistrationStatus(int registId, String code, String acc) {
         int n = 0;
@@ -478,8 +480,35 @@ public class DAORegistration extends DBContext {
         return n;
     }
 
+    public int addRegistration(int packId, int userId) {
+        int n = 0;
+        String sql = """
+                     INSERT INTO [dbo].[Registration]
+                                ([UserId]
+                                ,[RegistrationTime]
+                                ,[PackageId]
+                                ,[RegistrationStatusId]
+                                ,[ValidFrom]
+                                ,[ValidTo]
+                                ,[TransactionContent]
+                                ,[TransactionCode]
+                                ,[TransactionAccount])
+                          VALUES
+                                (?,null,?,1,null,null
+                                ,null,null,null)""";
+        try {
+            PreparedStatement pre = connection.prepareStatement(sql);
+            pre.setInt(1, userId);
+            pre.setInt(2, packId);
+            n = pre.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAORegistration.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return n;
+    }
+
     public static void main(String[] args) {
         DAORegistration dao = new DAORegistration();
-        
+
     }
 }

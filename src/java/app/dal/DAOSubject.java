@@ -417,17 +417,17 @@ public class DAOSubject extends DBContext {
                     = statement.executeQuery("""
                     select tableSubject.SubjectId, tableSubject.SubjectTitle, tableSubject.SubjectTagLine,
                     tableSubject.SubjectThumbnail, tablePackage.PackageName, tablePackage.ListPrice, tableLowest.SalePrice
-                    from (select s.SubjectId, s.SubjectTitle, s.SubjectTagLine, s.SubjectThumbnail, s.SubjectUpdatedDate from Subject s
-                    where  s.SubjectStatus = 1) tableSubject 
-                    left join 
-                    (select s.SubjectId, p.SalePrice, p.ListPrice from Package p
+                    from (select s.SubjectId, p.SalePrice, p.ListPrice from Package p
                     join Subject s on s.SubjectId = p.SubjectId
-                    where p.SalePrice <= p.ListPrice/10*5) tableLowest on tableLowest.SubjectId = tableSubject.SubjectId
+                    where p.SalePrice <= p.ListPrice/10*5) tableLowest 
+                    left join
+                    (select s.SubjectId, s.SubjectTitle, s.SubjectTagLine, s.SubjectThumbnail, s.SubjectUpdatedDate from Subject s
+                    where  s.SubjectStatus = 1) tableSubject on tableLowest.SubjectId = tableSubject.SubjectId
                     left join 
                     (select p.SubjectId, p.PackageName, p.ListPrice, p.SalePrice from Package p
-                    join Subject s on s.SubjectId = p.SubjectId) tablePackage on tablePackage.SubjectId= tableSubject.SubjectId
-                    where tablePackage.SalePrice = tableLowest.SalePrice
-                    order by tableSubject.SubjectUpdatedDate desc                        
+                    join Subject s on s.SubjectId = p.SubjectId) tablePackage on tablePackage.SubjectId= tableLowest.SubjectId
+                    where tablePackage.ListPrice = tableLowest.ListPrice
+                    order by tableSubject.SubjectUpdatedDate desc                          
                     """);
             while (rs.next()) {
                 Subject sub = new Subject();
@@ -879,11 +879,11 @@ public class DAOSubject extends DBContext {
                         return o1.getDuration() > o2.getDuration() ? 1 : -1;
                     }
                 });
-                float baseWorth = value.get(0).getSalePrice()/value.get(0).getDuration();
+                float baseWorth = value.get(0).getSalePrice() / value.get(0).getDuration();
                 value.get(0).setWorth(0);
-                for(int i=1; i<value.size(); i++){
-                    float packWorth = value.get(i).getSalePrice()/value.get(i).getDuration();
-                    int percentOfWorth = (int) ((packWorth/baseWorth-1)*100);
+                for (int i = 1; i < value.size(); i++) {
+                    float packWorth = value.get(i).getSalePrice() / value.get(i).getDuration();
+                    int percentOfWorth = (int) ((1 - packWorth / baseWorth) * 100);
                     value.get(i).setWorth(percentOfWorth);
                 }
                 map.put(key, value);

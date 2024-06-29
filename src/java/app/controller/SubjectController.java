@@ -5,10 +5,12 @@
 package app.controller;
 
 import app.dal.DAOSubject;
+import app.dal.DAOUser;
 import app.entity.Organization;
 import app.entity.Subject;
 import app.entity.SubjectCategory;
 import app.entity.Package;
+import app.entity.User;
 import app.utils.Config;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
@@ -19,6 +21,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Vector;
 
@@ -42,6 +45,7 @@ public class SubjectController extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         DAOSubject daoSubject = new DAOSubject();
+        DAOUser daoUser = new DAOUser();
         HttpSession session = request.getSession();
         Config cfg = new Config(getServletContext());
         int numPerCarousel = cfg.getIntOrDefault("subjectList.carousel.size", 3);
@@ -61,6 +65,7 @@ public class SubjectController extends HttpServlet {
         Vector<SubjectCategory> listOfCategory = daoSubject.getFilterList();
         Vector<SubjectCategory> listOfLevel = daoSubject.getLevelList();
         Vector<Organization> listOfOrg = daoSubject.getOrgList();
+        HashMap<Integer, ArrayList<Package>> map = daoSubject.getSubjectPackagesMap();
         //list of checked categories from form on jsp
         String[] parentTier1Raw = request.getParameterValues("idTier1");
         String[] parentTier2Raw = request.getParameterValues("idTier2");
@@ -109,6 +114,7 @@ public class SubjectController extends HttpServlet {
         String listOfIdNew = listOfAnyThing(newSubjectList);
         String listOfIdSale = listOfAnyThing(saleSubjectList);
         String listOfIdFeat = listOfAnyThing(featuredSubjectList);
+        request.setAttribute("map", map);
         request.setAttribute("listOfIdNew", listOfIdNew);
         request.setAttribute("listOfIdSale", listOfIdSale);
         request.setAttribute("listOfIdFeat", listOfIdFeat);
@@ -128,15 +134,19 @@ public class SubjectController extends HttpServlet {
         if (service.equals("individual")) {
             if (session.getAttribute("userEmail") != null) {
                 userEmail = session.getAttribute("userEmail").toString();
+                if (session.getAttribute("userId") == null) {
+                    User u = daoUser.getUserByEmail(userEmail);
+                    session.setAttribute("userId", u.getUserId());
+                }
                 Vector<Subject> registeredSubjects = daoSubject.getRegisteredSubjects(userEmail);
                 String listOfRegistrations = listOfAnyThing(registeredSubjects);
                 HashMap<Integer, String> getSponsor = daoSubject.getSponsor(userEmail);
                 request.setAttribute("sponsor", getSponsor);
                 request.setAttribute("listOfIdRegist", listOfRegistrations);
             }
-            int sizeOfNewCarousel = newSubjectList.size()-1;
-            int sizeOfSaleCarousel = saleSubjectList.size()-1;
-            int sizeOfFeaturedCarousel = featuredSubjectList.size()-1;
+            int sizeOfNewCarousel = newSubjectList.size() - 1;
+            int sizeOfSaleCarousel = saleSubjectList.size() - 1;
+            int sizeOfFeaturedCarousel = featuredSubjectList.size() - 1;
             int sizeOfAllSubjects = subjectListForIndividual.size();
             int numOfAllSubjects = (sizeOfAllSubjects % numPerPageIndividual == 0 ? (sizeOfAllSubjects / numPerPageIndividual) : ((sizeOfAllSubjects / numPerPageIndividual) + 1));
             String xpage = request.getParameter("page");

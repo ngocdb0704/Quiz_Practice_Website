@@ -188,6 +188,14 @@ public class RegistrationController extends HttpServlet {
             service = listAll;
             response.sendRedirect(controller);
         }
+        //register new subject 
+        if (service.equals("register")){
+            int userId = Integer.parseInt(session.getAttribute("userId").toString());
+            int packageId = Integer.parseInt(request.getParameter("selectedPackage"));
+            int n = daoRegistration.addRegistration(packageId, userId);
+            service = listAll;
+            response.sendRedirect(controller);
+        }
     }
 
     public void dispath(HttpServletRequest request, HttpServletResponse response, String url)
