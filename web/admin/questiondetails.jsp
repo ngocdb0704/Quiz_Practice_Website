@@ -17,7 +17,7 @@
         <%@include file="/admin/common/admin-header.jsp" %>
         <%@include file="/admin/common/admin-sidebar.jsp" %>
         <main class="admin-main">
-            <form action="admin/answeraction" method="post">
+            <form id="questionForm" action="admin/answeraction" method="post">
                 <h1>Question Details</h1>
                 <div class="question-details">
                     <table class="table table-bordered">
@@ -141,6 +141,5 @@
             </div>
         </main>
     </div>
-
 </body>
 </html>
