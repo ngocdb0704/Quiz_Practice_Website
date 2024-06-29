@@ -39,6 +39,10 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     border-radius: 10px;
 }
 
+.featured-subject-btn-filler {
+    height: 38px;
+}
+
 .post-list {
     & .card {
         width: 65%;
