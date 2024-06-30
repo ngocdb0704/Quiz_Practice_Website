@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import app.entity.Subject;
+import jakarta.servlet.http.HttpSession;
 import java.util.ArrayList;
 
 /**
@@ -29,6 +30,8 @@ public class QuestionListServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        
         String subjectIdParam = request.getParameter("subjectId");
         String levelParam = request.getParameter("level");
         String statusParam = request.getParameter("status");
@@ -83,10 +86,10 @@ public class QuestionListServlet extends HttpServlet {
             request.setAttribute("listQuestion", result.getResults());
         }
 
-        request.setAttribute("subjectMap", subjectMap);
-        request.setAttribute("levelMap", levelMap);
-        request.setAttribute("statusMap", statusMap);
-        request.setAttribute("lessonList", lessonList);
+        session.setAttribute("subjectMap", subjectMap);
+        session.setAttribute("levelMap", levelMap);
+        session.setAttribute("statusMap", statusMap);
+        session.setAttribute("lessonList", lessonList);
 
         request.getRequestDispatcher("/admin/questionlist.jsp").forward(request, response);
     }

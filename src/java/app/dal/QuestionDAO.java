@@ -136,14 +136,8 @@ public class QuestionDAO extends DBContext {
         }
     }
 
-    public QueryResult filters(
-            int subjectId,
-            int lesson,
-            int level,
-            int status,
-            String searchContent,
-            int page, int pageSize
-    ) {
+    public QueryResult filters(int subjectId, int lesson, int level, int status,
+            String searchContent, int page, int pageSize) {
         List<Question> ret = new ArrayList<>();
         int count = 0;
         String sql = "select * from Question";
@@ -157,8 +151,8 @@ public class QuestionDAO extends DBContext {
             if (subjectId != 0) {
                 query.whereAnd("SubjectID", Operator.EQUALS, subjectId);
             }
-            
-            if(lesson != 0){
+
+            if (lesson != 0) {
                 query.whereAnd("LessonID", Operator.EQUALS, lesson);
             }
             //search content
@@ -254,6 +248,41 @@ public class QuestionDAO extends DBContext {
 
     public static void main(String[] args) {
         QuestionDAO q = new QuestionDAO();
-        System.out.println(q.getQuestion(1));
+        boolean rs = q.deleteAnswer(5);
+        System.out.println(rs);
     }
+
+    public boolean isExistOptionAns(int questionId, String content) {
+        String sql = "SELECT * \n"
+                + "FROM Answer\n"
+                + "WHERE questionID = ? \n"
+                + "AND CAST(AnswerName AS VARCHAR(MAX)) = ?";
+
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, questionId);
+            ps.setString(2, content);
+
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return true; //exited
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return false;
+    }
+
+    public boolean deleteAnswer(int answerID) {
+        String sql = "DELETE FROM Answer WHERE AnswerID = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, answerID);
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
 }
