@@ -18,6 +18,7 @@
             <%@include file="/admin/common/admin-sidebar.jsp" %>
             <main class="admin-main">               
                 <form id="questionForm" action="admin/savechange" method="post">
+                    <input type="hidden" name="questionID" value="${question.questionID}">
                     <h1>Question Details</h1>
                     <div class="question-details">
                         <table class="table table-bordered">
@@ -91,11 +92,11 @@
                                 <tr>
                                     <td>${status.index + 1}</td>
                                     <td>
-                                        <input type="hidden" name="answerID${status.index}" value="${answer.answerID}">
-                                        <input name="answerName${status.index}" value="${answer.answerName}" style="width: 100%">
+                                        <input type="hidden" name="answerID" value="${answer.answerID}">
+                                        <input name="answerName" value="${answer.answerName}" style="width: 100%">
                                     </td>
                                     <td>
-                                        <select name="isCorrect${status.index}">
+                                        <select name="isCorrect">
                                             <option value="1" <c:if test="${answer.isCorrect == 1}">selected</c:if>>True</option>
                                             <option value="0" <c:if test="${answer.isCorrect == 0}">selected</c:if>>False</option>
                                         </select>

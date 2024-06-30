@@ -285,4 +285,32 @@ public class QuestionDAO extends DBContext {
         return false;
     }
 
+    public void updateQuestion(Question question) {
+        String sql = "UPDATE Question SET QuestionText = ?, SubjectID = ?, LessonID = ?, Level = ?, Explanation = ?, Status = ? WHERE QuestionID = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, question.getQuestionName());
+            ps.setInt(2, question.getSubjectID());
+            ps.setInt(3, question.getLessonID());
+            ps.setInt(4, question.getLevel());
+            ps.setString(5, question.getExplanation());
+            ps.setInt(6, question.getStatus());
+            ps.setInt(7, question.getQuestionID());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void updateAnswer(Answer answer) {
+        String sql = "UPDATE Answer SET AnswerName = ?, IsCorrect = ? WHERE AnswerID = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, answer.getAnswerName());
+            ps.setInt(2, answer.getIsCorrect());
+            ps.setInt(3, answer.getAnswerID());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

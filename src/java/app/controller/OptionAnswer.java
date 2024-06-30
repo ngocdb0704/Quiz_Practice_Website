@@ -55,7 +55,6 @@ public class OptionAnswer extends HttpServlet {
 
     private void handleDeleteOption(HttpServletRequest request, HttpServletResponse response) 
     throws ServletException, IOException {
-        int questionID = Integer.parseInt(request.getParameter("questionID"));
         int answerID = Integer.parseInt(request.getParameter("answerID"));
         boolean isDelete = quesDAO.deleteAnswer(answerID);
         
