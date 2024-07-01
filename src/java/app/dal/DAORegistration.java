@@ -76,18 +76,17 @@ public class DAORegistration extends DBContext {
         try {
             //for each result in result set
             while (rs.next()) {
-                int id = rs.getInt(1);
-                String subjectName = rs.getString(2);
-                Date registrationTime = rs.getDate(3);
-                String packageName = rs.getString(4);
-                float totalCost = rs.getFloat(5);
-                String status = rs.getString(6);
-                Date validFrom = rs.getDate(7);
-                Date validTo = rs.getDate(8);
-                String img = rs.getString(9);
-                Registration var = new Registration(id,
-                        subjectName, registrationTime, packageName,
-                        totalCost, status, validFrom, validTo, img);
+                Registration var = new Registration();
+                var.setRegistrationId(rs.getInt(1));
+                var.setSubjectName(rs.getString(2));
+                var.setRegistrationTime(rs.getDate(3));
+                var.setPackageName(rs.getString(4));
+                var.setTotalCost(rs.getFloat(5));
+                var.setStatus(rs.getString(6));
+                var.setValidFrom(rs.getDate(7));
+                var.setValidTo(rs.getDate(8));
+                var.setSubjectImg(rs.getString(9));
+                var.setSubjectId(rs.getInt(10));
                 vector.add(var);
             }
         } catch (SQLException ex) {
@@ -171,7 +170,7 @@ public class DAORegistration extends DBContext {
                     select r.RegistrationId, s.SubjectTitle,
                     r.RegistrationTime, p.PackageName, p.SalePrice,
                     rs.RegistrationStatusName,
-                    r.ValidFrom, r.ValidTo, s.SubjectThumbnail, sc.SubjectCategoryId as 'ParentTier3',
+                    r.ValidFrom, r.ValidTo, s.SubjectThumbnail, s.SubjectId, sc.SubjectCategoryId as 'ParentTier3',
                     sc.SubjectParentCategory as 'ParentTier2', ch.SubjectParentCategory as 'ParentTier1'
                     from Registration r
                     join [User] u on u.UserId = r.UserId
@@ -359,7 +358,7 @@ public class DAORegistration extends DBContext {
                 pre.setString(2, "%" + inputKey + "%");
             }
             ResultSet rs = pre.executeQuery();
-            while(rs.next()){
+            while (rs.next()) {
                 OrganizationRegistration oR = new OrganizationRegistration();
                 oR.setOrgPackageName(rs.getString(1));
                 oR.setSubjectId(rs.getInt(2));
@@ -403,6 +402,23 @@ public class DAORegistration extends DBContext {
             Logger.getLogger(DAORegistration.class.getName()).log(Level.SEVERE, null, ex);
         }
         return duration;
+    }
+
+    public int updateRegistrationPackage(int registId, int packageId) {
+        int n = 0;
+        String sql = """
+                    UPDATE [dbo].[Registration]
+                    SET [PackageId] = ?
+                    WHERE [RegistrationId] = ?""";
+        try {
+            PreparedStatement pre = connection.prepareStatement(sql);
+            pre.setInt(1, packageId);
+            pre.setInt(2, registId);
+            n = pre.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAORegistration.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return n;
     }
 
     //update registration after successful transaction
@@ -464,8 +480,35 @@ public class DAORegistration extends DBContext {
         return n;
     }
 
+    public int addRegistration(int packId, int userId) {
+        int n = 0;
+        String sql = """
+                     INSERT INTO [dbo].[Registration]
+                                ([UserId]
+                                ,[RegistrationTime]
+                                ,[PackageId]
+                                ,[RegistrationStatusId]
+                                ,[ValidFrom]
+                                ,[ValidTo]
+                                ,[TransactionContent]
+                                ,[TransactionCode]
+                                ,[TransactionAccount])
+                          VALUES
+                                (?,null,?,1,null,null
+                                ,null,null,null)""";
+        try {
+            PreparedStatement pre = connection.prepareStatement(sql);
+            pre.setInt(1, userId);
+            pre.setInt(2, packId);
+            n = pre.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAORegistration.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return n;
+    }
+
     public static void main(String[] args) {
         DAORegistration dao = new DAORegistration();
-        System.out.println(dao.getOrgRegistrations("ngocdbhe182383@fpt.edu.vn", null, null, null, "o").size());
+
     }
 }
