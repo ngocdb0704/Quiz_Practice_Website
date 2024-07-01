@@ -62,16 +62,24 @@ public class OptionAnswer extends HttpServlet {
     private void handleDeleteOption(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         int answerID = Integer.parseInt(request.getParameter("answerID"));
-        boolean isDelete = quesDAO.deleteAnswer(answerID);
-
+        
+        int questionID = Integer.parseInt(request.getParameter("questionID"));
+        //number option answer of question
+        int numberOfOptions = quesDAO.getNumberOfOptions(questionID);
+        
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
         try (PrintWriter out = response.getWriter()) {
-            if (isDelete) {
-                out.print("{\"message\": \"Option deleted successfully!\", \"success\": true}");
+            if (numberOfOptions <= 2) {
+                out.print("{\"message\": \"Cannot delete the option because there are only 2 options left!\", \"success\": false}");
             } else {
-                out.print("{\"message\": \"Failed to delete the option!\", \"success\": false}");
+                boolean isDelete = quesDAO.deleteAnswer(answerID);
+                if (isDelete) {
+                    out.print("{\"message\": \"Option deleted successfully!\", \"success\": true}");
+                } else {
+                    out.print("{\"message\": \"Failed to delete the option!\", \"success\": false}");
+                }
             }
             out.flush();
         }

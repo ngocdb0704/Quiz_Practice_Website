@@ -313,4 +313,20 @@ public class QuestionDAO extends DBContext {
         }
     }
 
+    public int getNumberOfOptions(int questionID) {
+        int count = 0;
+        String query = "SELECT COUNT(*) FROM Answer WHERE questionID = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, questionID);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    count = rs.getInt(1);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return count;
+    }
+    
 }
