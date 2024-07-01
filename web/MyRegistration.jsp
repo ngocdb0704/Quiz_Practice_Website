@@ -210,7 +210,7 @@
                                     <div class="row g-0">
                                         <div class="col-md-4">
                                             <img src="public/thumbnails/${p.subjectImg}"
-                                                 class="img-fluid rounded-start" 
+                                                 class="img-thumbnail rounded-start" 
                                                  width="300" height="180">
                                         </div>
                                         <div class="col-md-6">

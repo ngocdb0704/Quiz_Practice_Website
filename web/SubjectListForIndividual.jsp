@@ -634,7 +634,8 @@
                                                                     <span class="atLink">${listFeaturedSubject.get(iFeat).getSubjectName()}</span> 
                                                                     <div class="w3tooltiptext card" style="width: 18rem;">
                                                                         <img src="public/thumbnails/${listFeaturedSubject.get(iFeat).getThumbnail()}" 
-                                                                             class="card-img-top img-thumbnail" alt="...">
+                                                                             class="card-img-top img-thumbnail" alt="..."
+                                                                             style="height: 10rem;">
                                                                         <div class="card-body">
                                                                             <h5 class="card-title">
                                                                                 <a class="btn btn-link"
@@ -853,8 +854,8 @@
                                         <div class="row g-0">
                                             <div class="col-md-4">
                                                 <img src="public/thumbnails/${p.getThumbnail()}"
-                                                     class="img-fluid rounded-start" 
-                                                     width="300" height="180">
+                                                     class="img-thumbnail rounded-start" 
+                                                     style="width: 18rem; height: 14rem;">
                                             </div>
                                             <div class="col-md-5">
                                                 <div class="card-body">

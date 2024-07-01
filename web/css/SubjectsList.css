@@ -193,7 +193,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
 .w3tooltip .w3tooltiptext::after {
     content: " ";
     position: absolute;
-    top: 50%;
+    top: 255px;
     right: 287px; /* To the left of the tooltip */
     margin-top: -5px;
     border-width: 5px;
