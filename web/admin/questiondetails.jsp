@@ -125,9 +125,8 @@
                 <!-- Add Answer Option Form -->
                 <div id="addOptionForm" style="display: none; margin-top: 20px;">
                     <h3>Add New Answer Option</h3>
-                    <form action="admin/optionanswer" method="post">
+                    <div>
                         <input type="hidden" name="action" value="add">
-                        <input type="hidden" name="questionID" value="${question.questionID}">
                         <div class="mb-3">
                             <label for="answerName" class="form-label">Answer Content:</label>
                             <input type="text" class="form-control" id="answerName" name="answerName" required>
@@ -139,9 +138,10 @@
                                 <option value="1">Yes</option>
                             </select>
                         </div>
-                        <button type="submit" class="btn btn-success">Add</button>
+                        <button type="button" class="btn btn-success"
+                                onclick="addOption(${question.questionID})">Add</button>
                         <button type="button" class="btn btn-secondary" onclick="hideAddOptionForm()">Cancel</button>
-                    </form>
+                    </div>
                 </div>
             </main>
         </div>
