@@ -29,7 +29,7 @@
                 <h1>Question Management</h1>
                 <!-- Filters Section -->
                 <div class="filters">
-                    <form method="get" action="admin/questionlist">
+                    <form method="get" action="admin/questionlist" id="filterForm">
                         <label for="subject">Subject:</label>
                         <select name="subjectId">
                             <option value="0">All subjects</option>
@@ -42,7 +42,12 @@
 
                         <label for="lesson">Lesson:</label>
                         <select id="lesson" name="lesson">
-                            <!-- Add options dynamically or statically -->
+                            <option value="0">All Lesson</option>
+                            <c:forEach var="lesson" items="${lessonList}">
+                                <option value="${lesson}" 
+                                        <c:if test="${lesson == param.lesson}">selected</c:if>
+                                        >${lesson}</option>
+                            </c:forEach>
                         </select>
 
                         <label for="level">Level:</label>
@@ -66,8 +71,9 @@
                         </select>
 
                         <label for="searchContent"></label>
-                        <input type="text" name="searchContent" placeholder="Search by Content"/>
+                        <input type="text" name="searchContent" placeholder="Search by Content" value="${param.searchContent}"/>
                         <button type="submit">Filter</button>
+                        <button type="button" onclick="resetFilter()">Reset</button>
                     </form>
                 </div>
 
@@ -120,8 +126,8 @@
                                     <c:if test="${question.status == 1}">Show</c:if>
                                     <c:if test="${question.status == 2}">Hide</c:if>
                                     </td>
-                                    <td><a href="#">Link</a></td>
-                                </tr>
+                                    <td><a href="admin/questionlist/details?qid=${question.questionID}">Link</a></td>
+                            </tr>
                         </c:forEach>
                     </tbody>
                 </table>

@@ -96,7 +96,7 @@ public class Question {
 
     @Override
     public String toString() {
-        return "Question{" + "questionID=" + questionID + ", questionName=" + questionName + ", explanation=" + explanation + ", level=" + level + ", subjectID=" + subjectID + ", lessonID=" + lessonID + ", status=" + status + ", answers=" + answers + '}';
+        return "Question{" + "questionID=" + questionID + ", questionName=" + questionName + ", explanation=" + explanation + ", level=" + level + ", subjectID=" + subjectID + ", lessonID=" + lessonID + ", status=" + status + ", \nanswers=" + answers + '}';
     }
 
     

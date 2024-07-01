@@ -15,6 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import app.entity.Subject;
+import jakarta.servlet.http.HttpSession;
+import java.util.ArrayList;
 
 /**
  *
@@ -28,15 +30,19 @@ public class QuestionListServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        
         String subjectIdParam = request.getParameter("subjectId");
         String levelParam = request.getParameter("level");
         String statusParam = request.getParameter("status");
         String content = request.getParameter("searchContent");
-
+        String lessonParam = request.getParameter("lesson");
+        
         int subjectId = subjectIdParam != null ? Integer.parseInt(subjectIdParam) : 0;
         int level = levelParam != null ? Integer.parseInt(levelParam) : 0;
         int status = statusParam != null ? Integer.parseInt(statusParam) : 0;
-
+        int lesson = lessonParam != null ? Integer.parseInt(lessonParam) : 0;
+        
         String pageString = request.getParameter("page");
         int page;
         try {
@@ -63,7 +69,12 @@ public class QuestionListServlet extends HttpServlet {
         statusMap.put(1, "Show");
         statusMap.put(2, "Hide");
 
-        QueryResult<Question> result = quesDao.filters(subjectId, level, status, content, page, 10);
+        List<Integer> lessonList = new ArrayList<>();
+        for (int i = 1; i <= 5; i++) {
+            lessonList.add(i);
+        }
+        
+        QueryResult<Question> result = quesDao.filters(subjectId, lesson, level, status, content, page, 10);
         //no result
         if (result == null || result.getResults().isEmpty()) {
             request.setAttribute("totalPage", 0);
@@ -75,9 +86,10 @@ public class QuestionListServlet extends HttpServlet {
             request.setAttribute("listQuestion", result.getResults());
         }
 
-        request.setAttribute("subjectMap", subjectMap);
-        request.setAttribute("levelMap", levelMap);
-        request.setAttribute("statusMap", statusMap);
+        session.setAttribute("subjectMap", subjectMap);
+        session.setAttribute("levelMap", levelMap);
+        session.setAttribute("statusMap", statusMap);
+        session.setAttribute("lessonList", lessonList);
 
         request.getRequestDispatcher("/admin/questionlist.jsp").forward(request, response);
     }
