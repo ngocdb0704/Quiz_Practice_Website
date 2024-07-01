@@ -29,7 +29,7 @@
                 <h1>Question Management</h1>
                 <!-- Filters Section -->
                 <div class="filters">
-                    <form method="get" action="admin/questionlist">
+                    <form method="get" action="admin/questionlist" id="filterForm">
                         <label for="subject">Subject:</label>
                         <select name="subjectId">
                             <option value="0">All subjects</option>
@@ -73,6 +73,7 @@
                         <label for="searchContent"></label>
                         <input type="text" name="searchContent" placeholder="Search by Content" value="${param.searchContent}"/>
                         <button type="submit">Filter</button>
+                        <button type="button" onclick="resetFilter()">Reset</button>
                     </form>
                 </div>
 

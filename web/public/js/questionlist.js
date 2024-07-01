@@ -81,3 +81,13 @@ function saveChanges(event) {
         });
     }
 }
+
+function resetFilter() {
+    document.querySelector('select[name="subjectId"]').selectedIndex = 0;
+    document.querySelector('select[name="lesson"]').selectedIndex = 0;
+    document.querySelector('select[name="level"]').selectedIndex = 0;
+    document.querySelector('select[name="status"]').selectedIndex = 0;
+    document.querySelector('input[name="searchContent"]').value = '';
+
+    document.getElementById('filterForm').submit();
+}
