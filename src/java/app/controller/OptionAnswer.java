@@ -66,6 +66,8 @@ public class OptionAnswer extends HttpServlet {
         int questionID = Integer.parseInt(request.getParameter("questionID"));
         //number option answer of question
         int numberOfOptions = quesDAO.getNumberOfOptions(questionID);
+        //number option true of question
+        int numberOfCorrectOptions = quesDAO.getNumberOfCorrectOptions(questionID);
         
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
@@ -73,7 +75,9 @@ public class OptionAnswer extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
             if (numberOfOptions <= 2) {
                 out.print("{\"message\": \"Cannot delete the option because there are only 2 options left!\", \"success\": false}");
-            } else {
+            }else if (numberOfCorrectOptions <= 1 && quesDAO.isOptionCorrect(answerID)) {
+                out.print("{\"message\": \"Cannot delete the only correct option!\", \"success\": false}"); 
+            }else {
                 boolean isDelete = quesDAO.deleteAnswer(answerID);
                 if (isDelete) {
                     out.print("{\"message\": \"Option deleted successfully!\", \"success\": true}");

@@ -329,4 +329,36 @@ public class QuestionDAO extends DBContext {
         return count;
     }
     
+    public int getNumberOfCorrectOptions(int questionID) {
+        int count = 0;
+        String query = "SELECT COUNT(*) FROM Answer WHERE questionID = ? AND isCorrect = 1";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, questionID);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    count = rs.getInt(1);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return count;
+    }
+
+    public boolean isOptionCorrect(int answerID) {
+        boolean isCorrect = false;
+        String query = "SELECT isCorrect FROM Answer WHERE answerID = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, answerID);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    isCorrect = rs.getInt("isCorrect") == 1;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return isCorrect;
+    }
+    
 }
