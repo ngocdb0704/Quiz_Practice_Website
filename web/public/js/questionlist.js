@@ -27,13 +27,12 @@ function deleteOption(answerID, questionID) {
                     location.reload();
                 }
             },
-            error: function (xhr, status, error) {
+            error: function (error) {
                 alert("An error occurred while deleting the option: " + error);
             }
         });
     }
 }
-
 
 function addOption(questionID) {
     var answerName = document.getElementById("answerName").value;
@@ -43,8 +42,8 @@ function addOption(questionID) {
             url: 'admin/optionanswer',
             type: 'POST',
             data: {
-                action: 'add', 
-                questionID: questionID, 
+                action: 'add',
+                questionID: questionID,
                 answerName: answerName,
                 isCorrect: isCorrect},
             success: function (response) {
@@ -53,8 +52,31 @@ function addOption(questionID) {
                     location.reload();
                 }
             },
-            error: function (xhr, status, error) {
+            error: function (error) {
                 alert("An error occurred while adding the option: " + error);
+            }
+        });
+    }
+}
+
+function saveChanges(event) {
+    event.preventDefault();
+    if (confirm("Do you want to save these changes?")) {
+        $.ajax({
+            url: 'admin/savechange',
+            type: 'POST',
+            data: $('#questionForm').serialize(),
+            success: function (response) {
+                if (response.status === 'success') {
+                    alert('Save successful!');
+                } else if (response.status === 'error') {
+                    alert(response.message);
+                } else {
+                    alert('Save failed. Please try again.');
+                }
+            },
+            error: function (error) {
+                alert('An unexpected error occurred. Please try again.');
             }
         });
     }

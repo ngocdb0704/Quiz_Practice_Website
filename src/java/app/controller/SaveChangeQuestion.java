@@ -36,17 +36,32 @@ public class SaveChangeQuestion extends HttpServlet {
         int level = Integer.parseInt(request.getParameter("level"));
         String explanation = request.getParameter("explanation");
         int status = Integer.parseInt(request.getParameter("status"));
-        
-        System.out.println("get info question");
-        
+
         Question question = new Question(questionID, questionName, explanation, level, subjectID, lessonID, status, null);
         quesDAO.updateQuestion(question);
 
-        //update answer
+        // update answer
         List<Answer> answers = new ArrayList<>();
         String[] answerIDs = request.getParameterValues("answerID");
         String[] answerNames = request.getParameterValues("answerName");
         String[] isCorrects = request.getParameterValues("isCorrect");
+
+        boolean hasCorrectAnswer = false;
+        for (String isCorrectStr : isCorrects) {
+            if (Integer.parseInt(isCorrectStr) == 1) {
+                hasCorrectAnswer = true;
+                break;
+            }
+        }
+
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        
+        if (!hasCorrectAnswer) {
+            response.getWriter().print("{\"status\":\"error\", \"message\":\"At least one answer must be correct.\"}");
+            response.getWriter().flush();
+            return;
+        }
 
         for (int i = 0; i < answerIDs.length; i++) {
             int answerID = Integer.parseInt(answerIDs[i]);
@@ -57,11 +72,11 @@ public class SaveChangeQuestion extends HttpServlet {
             answers.add(answer);
             quesDAO.updateAnswer(answer);
         }
-        
-        System.out.println("set info answer");
-        
+
         question.setAnswers(answers);
-        response.sendRedirect(request.getContextPath() + "/admin/questionlist/details?qid=" + questionID);
+
+        response.getWriter().print("{\"status\":\"success\"}");
+        response.getWriter().flush();
     }
 
     @Override

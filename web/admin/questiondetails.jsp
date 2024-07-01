@@ -111,12 +111,14 @@
                             </c:forEach>
                         </tbody>
                     </table>
-
-                    <!-- Flex container for buttons -->
-                    <a href="${pageContext.request.contextPath}/admin/questionlist" class="btn btn-secondary me-2">Back to List</a>
-                    <input type="submit" value="Save change" class="btn btn-info">
-                    <button type="button" class="btn btn-warning ms-2" onclick="resetForm()">Reset</button>
                 </form>
+                <!-- Flex container for buttons -->
+                <div>
+                    <a href="${pageContext.request.contextPath}/admin/questionlist" class="btn btn-secondary me-2">Back to List</a>
+                    <input type="button" value="Save change" class="btn btn-info" onclick="saveChanges(event)">
+                    <button type="button" class="btn btn-warning ms-2" onclick="resetForm()">Reset</button>                
+                </div>
+                                
                 <!-- Add Answer Option Button as Icon -->
                 <button class="btn btn-primary mt-3" onclick="showAddOptionForm()">
                     <div class="bi bi-plus-square"> Add option</div>
