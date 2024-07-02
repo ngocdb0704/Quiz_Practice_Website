@@ -897,6 +897,6 @@ public class DAOSubject extends DBContext {
     public static void main(String[] args) {
         DAOSubject dao = new DAOSubject();
         HashMap<Integer, ArrayList<Package>> map = dao.getSubjectPackagesMap();
-        
+
     }
 }
