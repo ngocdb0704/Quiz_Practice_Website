@@ -18,6 +18,7 @@ public class Package {
     private boolean active;
     private String description = "";
     private int worth;
+    private int subjectId;
 
     public Package() {
     }
@@ -158,6 +159,14 @@ public class Package {
 
     public void setWorth(int worth) {
         this.worth = worth;
+    }
+
+    public int getSubjectId() {
+        return subjectId;
+    }
+
+    public void setSubjectId(int subjectId) {
+        this.subjectId = subjectId;
     }
 
 }
