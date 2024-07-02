@@ -59,6 +59,7 @@
             <c:set var="checkSaleSubject" value="${requestScope.listOfIdSale}"/>
             <c:set var="checkFeatSubject" value="${requestScope.listOfIdFeat}"/>
             <c:set var="cat" value="${requestScope.list}"/>
+            <c:set var="map" value="${requestScope.map}"/>
             <c:set var="check" value="${requestScope.check}"/>
             <c:set var="levels" value="${requestScope.levels}"/>
             <c:set var="checkLevel" value="${requestScope.checkLevel}"/>
@@ -1032,7 +1033,7 @@
         <%@include file="/common/footer.jsp" %>
         <c:forEach begin="0" end="${numOfCarouselNew}" var="indexCarNewItem">
             <!-- Modal Register New Subjects -->
-            <div class="modal modalRegisterNew${listNewSubject.get(indexCarNewItem).getSubjectId()} "
+            <div class="modal modalRegisterNew${listNewSubject.get(indexCarNewItem).getSubjectId()}"
                  tabindex="-1"
                  role="dialog" >
                 <div class="modal-dialog modal-dialog-centered" 
@@ -1047,47 +1048,21 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <c:if test="${sessionScope.userEmail != null && !sponsor.containsKey(listNewSubject.get(indexCarNewItem).getSubjectId())}">
-                                <div class="container">
-                                    <form action="user/MyRegistrations" method="post">
-                                        <div class="card">
-                                            <img src="public/thumbnails/${listNewSubject.get(indexCarNewItem).getThumbnail()}" 
-                                                 class="card-img-top" alt="...">
-                                            <div class="card-body">
-                                                <h5 class="card-title">
-                                                    ${listNewSubject.get(indexCarNewItem).getSubjectName()}
-                                                </h5>
-                                                <h6>
-                                                    ${listNewSubject.get(indexCarNewItem).getTagLine()}
-                                                </h6>
-                                                <h5>Select a package:</h5>
-                                                <select class="form-select" name="selectedPackage">
-                                                    <c:forEach begin="0" end="${map.get(listNewSubject.get(indexCarNewItem).getSubjectId()).size()-1}" var="atP">
-                                                        <option
-                                                            value="${map.get(listNewSubject.get(indexCarNewItem).getSubjectId()).get(atP).getPackageId()}">
-                                                            ${map.get(listNewSubject.get(indexCarNewItem).getSubjectId()).get(atP).getPackageName()} - 
-                                                            <c:if test="${atP!=0}">
-                                                                save ${map.get(listNewSubject.get(indexCarNewItem).getSubjectId()).get(atP).getWorth()}% for only
-                                                            </c:if>
-                                                            ${Integer.valueOf(map.get(listNewSubject.get(indexCarNewItem).getSubjectId()).get(atP).getSalePrice()*1000)} VND
-                                                        </option>
-                                                    </c:forEach>
-                                                </select>
-                                                <br>
-                                                <input type="hidden" name="service" value="register"/>
-                                                <div class="container text-end">
-                                                    <div class="row">
-                                                        <div class="col">
-                                                        </div>
-                                                        <div class="col">
-                                                            <button type="submit" class="btn btn-primary">Register</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
+                            <!-- It's Subject Register Popup baby - which costs me 13 working hrs -->
+                            <!-- now it is 13.5 working hours because of an anoying bug -->
+                            <!-- which is that the data isn't retrieved correctly  -->
+                            <!-- This bad boy is currently applied for logged in  -->
+                            <c:if test="${sessionScope.userEmail != null}">
+                                <c:import url="SubjectRegisterPopUp.jsp">
+                                    <c:param name="service" value="register"/>
+                                    <c:param name="subjectId" value="${listNewSubject.get(indexCarNewItem).getSubjectId()}"/>
+                                    <c:param name="thumbnail" value="${listNewSubject.get(indexCarNewItem).getThumbnail()}"/>
+                                    <c:param name="subjectName" value="${listNewSubject.get(indexCarNewItem).getSubjectName()}"/>
+                                    <c:param name="tagLine" value="${listNewSubject.get(indexCarNewItem).getTagLine()}"/>
+                                </c:import>
+                            </c:if>
+                            <c:if test="${sessionScope.userEmail == null}">
+
                             </c:if>
                         </div>
                     </div>
@@ -1111,47 +1086,21 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <c:if test="${sessionScope.userEmail != null && !sponsor.containsKey(listSaleSubject.get(indexCarSaleItem).getSubjectId())}">
-                                <div class="container">
-                                    <form action="user/MyRegistrations" method="post">
-                                        <div class="card">
-                                            <img src="public/thumbnails/${listSaleSubject.get(indexCarSaleItem).getThumbnail()}" 
-                                                 class="card-img-top" alt="...">
-                                            <div class="card-body">
-                                                <h5 class="card-title">
-                                                    ${listSaleSubject.get(indexCarSaleItem).getSubjectName()}
-                                                </h5>
-                                                <h6>
-                                                    ${listSaleSubject.get(indexCarSaleItem).getTagLine()}
-                                                </h6>
-                                                <h5>Select a package:</h5>
-                                                <select class="form-select" name="selectedPackage">
-                                                    <c:forEach begin="0" end="${map.get(listSaleSubject.get(indexCarSaleItem).getSubjectId()).size()-1}" var="atP">
-                                                        <option
-                                                            value="${map.get(listSaleSubject.get(indexCarSaleItem).getSubjectId()).get(atP).getPackageId()}">
-                                                            ${map.get(listSaleSubject.get(indexCarSaleItem).getSubjectId()).get(atP).getPackageName()} - 
-                                                            <c:if test="${atP!=0}">
-                                                                save ${map.get(listSaleSubject.get(indexCarSaleItem).getSubjectId()).get(atP).getWorth()}% for only
-                                                            </c:if>
-                                                            ${Integer.valueOf(map.get(listSaleSubject.get(indexCarSaleItem).getSubjectId()).get(atP).getSalePrice()*1000)} VND
-                                                        </option>
-                                                    </c:forEach>
-                                                </select>
-                                                <br>
-                                                <input type="hidden" name="service" value="register"/>
-                                                <div class="container text-end">
-                                                    <div class="row">
-                                                        <div class="col">
-                                                        </div>
-                                                        <div class="col">
-                                                            <button type="submit" class="btn btn-primary">Register</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
+                            <!-- It's Subject Register Popup baby - which costs me 13 working hrs -->
+                            <!-- now it is 13.5 working hours because of an anoying bug -->
+                            <!-- which is that the data isn't retrieved correctly  -->
+                            <!-- This bad boy is currently applied for logged in  -->
+                            <c:if test="${sessionScope.userEmail != null}">
+                                <c:import url="SubjectRegisterPopUp.jsp">
+                                    <c:param name="service" value="register"/>
+                                    <c:param name="subjectId" value="${listSaleSubject.get(indexCarSaleItem).getSubjectId()}"/>
+                                    <c:param name="thumbnail" value="${listSaleSubject.get(indexCarSaleItem).getThumbnail()}"/>
+                                    <c:param name="subjectName" value="${listSaleSubject.get(indexCarSaleItem).getSubjectName()}"/>
+                                    <c:param name="tagLine" value="${listSaleSubject.get(indexCarSaleItem).getTagLine()}"/>
+                                </c:import>
+                            </c:if>
+                            <c:if test="${sessionScope.userEmail == null}">
+
                             </c:if>
                         </div>
                     </div>
@@ -1175,47 +1124,21 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <c:if test="${sessionScope.userEmail != null && !sponsor.containsKey(listFeaturedSubject.get(indexCarFeatItem).getSubjectId())}">
-                                <div class="container">
-                                    <form action="user/MyRegistrations" method="post">
-                                        <div class="card">
-                                            <img src="public/thumbnails/${listFeaturedSubject.get(indexCarFeatItem).getThumbnail()}" 
-                                                 class="card-img-top" alt="...">
-                                            <div class="card-body">
-                                                <h5 class="card-title">
-                                                    ${listFeaturedSubject.get(indexCarFeatItem).getSubjectName()}
-                                                </h5>
-                                                <h6>
-                                                    ${listFeaturedSubject.get(indexCarFeatItem).getTagLine()}
-                                                </h6>
-                                                <h5>Select a package:</h5>
-                                                <select class="form-select" name="selectedPackage">
-                                                    <c:forEach begin="0" end="${map.get(listFeaturedSubject.get(indexCarFeatItem).getSubjectId()).size()-1}" var="atP">
-                                                        <option
-                                                            value="${map.get(listFeaturedSubject.get(indexCarFeatItem).getSubjectId()).get(atP).getPackageId()}">
-                                                            ${map.get(listFeaturedSubject.get(indexCarFeatItem).getSubjectId()).get(atP).getPackageName()} - 
-                                                            <c:if test="${atP!=0}">
-                                                                save ${map.get(listFeaturedSubject.get(indexCarFeatItem).getSubjectId()).get(atP).getWorth()}% for only
-                                                            </c:if>
-                                                            ${Integer.valueOf(map.get(listFeaturedSubject.get(indexCarFeatItem).getSubjectId()).get(atP).getSalePrice()*1000)} VND
-                                                        </option>
-                                                    </c:forEach>
-                                                </select>
-                                                <br>
-                                                <input type="hidden" name="service" value="register"/>
-                                                <div class="container text-end">
-                                                    <div class="row">
-                                                        <div class="col">
-                                                        </div>
-                                                        <div class="col">
-                                                            <button type="submit" class="btn btn-primary">Register</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
+                            <!-- It's Subject Register Popup baby - which costs me 13 working hrs -->
+                            <!-- now it is 13.5 working hours because of an anoying bug -->
+                            <!-- which is that the data isn't retrieved correctly  -->
+                            <!-- This bad boy is currently applied for logged in  -->
+                            <c:if test="${sessionScope.userEmail != null}">
+                                <c:import url="SubjectRegisterPopUp.jsp">
+                                    <c:param name="service" value="register"/>
+                                    <c:param name="subjectId" value="${listFeaturedSubject.get(indexCarFeatItem).getSubjectId()}"/>
+                                    <c:param name="thumbnail" value="${listFeaturedSubject.get(indexCarFeatItem).getThumbnail()}"/>
+                                    <c:param name="subjectName" value="${listFeaturedSubject.get(indexCarFeatItem).getSubjectName()}"/>
+                                    <c:param name="tagLine" value="${listFeaturedSubject.get(indexCarFeatItem).getTagLine()}"/>
+                                </c:import>
+                            </c:if>
+                            <c:if test="${sessionScope.userEmail == null}">
+
                             </c:if>
                         </div>
                     </div>
@@ -1239,47 +1162,21 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <c:if test="${sessionScope.userEmail != null && !sponsor.containsKey(listFeaturedSubject.get(iFeat).getSubjectId())}">
-                                <div class="container">
-                                    <form action="user/MyRegistrations" method="post">
-                                        <div class="card">
-                                            <img src="public/thumbnails/${listFeaturedSubject.get(iFeat).getThumbnail()}" 
-                                                 class="card-img-top" alt="...">
-                                            <div class="card-body">
-                                                <h5 class="card-title">
-                                                    ${listFeaturedSubject.get(iFeat).getSubjectName()}
-                                                </h5>
-                                                <h6>
-                                                    ${listFeaturedSubject.get(iFeat).getTagLine()}
-                                                </h6>
-                                                <h5>Select a package:</h5>
-                                                <select class="form-select" name="selectedPackage">
-                                                    <c:forEach begin="0" end="${map.get(listFeaturedSubject.get(iFeat).getSubjectId()).size()-1}" var="atP">
-                                                        <option
-                                                            value="${map.get(listFeaturedSubject.get(iFeat).getSubjectId()).get(atP).getPackageId()}">
-                                                            ${map.get(listFeaturedSubject.get(iFeat).getSubjectId()).get(atP).getPackageName()} - 
-                                                            <c:if test="${atP!=0}">
-                                                                save ${map.get(listFeaturedSubject.get(iFeat).getSubjectId()).get(atP).getWorth()}% for only
-                                                            </c:if>
-                                                            ${Integer.valueOf(map.get(listFeaturedSubject.get(iFeat).getSubjectId()).get(atP).getSalePrice()*1000)} VND
-                                                        </option>
-                                                    </c:forEach>
-                                                </select>
-                                                <br>
-                                                <input type="hidden" name="service" value="register"/>
-                                                <div class="container text-end">
-                                                    <div class="row">
-                                                        <div class="col">
-                                                        </div>
-                                                        <div class="col">
-                                                            <button type="submit" class="btn btn-primary">Register</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
+                            <!-- It's Subject Register Popup baby - which costs me 13 working hrs -->
+                            <!-- now it is 13.5 working hours because of an anoying bug -->
+                            <!-- which is that the data isn't retrieved correctly  -->
+                            <!-- This bad boy is currently applied for logged in  -->
+                            <c:if test="${sessionScope.userEmail != null}">
+                                <c:import url="SubjectRegisterPopUp.jsp">
+                                    <c:param name="service" value="register"/>
+                                    <c:param name="subjectId" value="${listFeaturedSubject.get(iFeat).getSubjectId()}"/>
+                                    <c:param name="thumbnail" value="${listFeaturedSubject.get(iFeat).getThumbnail()}"/>
+                                    <c:param name="subjectName" value="${listFeaturedSubject.get(iFeat).getSubjectName()}"/>
+                                    <c:param name="tagLine" value="${listFeaturedSubject.get(iFeat).getTagLine()}"/>
+                                </c:import>
+                            </c:if>
+                            <c:if test="${sessionScope.userEmail == null}">
+
                             </c:if>
                         </div>
                     </div>
@@ -1303,47 +1200,21 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <c:if test="${sessionScope.userEmail != null && !sponsor.containsKey(p.getSubjectId())}">
-                                <div class="container">
-                                    <form action="user/MyRegistrations" method="post">
-                                        <div class="card">
-                                            <img src="public/thumbnails/${p.getThumbnail()}" 
-                                                 class="card-img-top" alt="...">
-                                            <div class="card-body">
-                                                <h5 class="card-title">
-                                                    ${p.getSubjectName()}
-                                                </h5>
-                                                <h6>
-                                                    ${p.getTagLine()}
-                                                </h6>
-                                                <h5>Select a package:</h5>
-                                                <select class="form-select" name="selectedPackage">
-                                                    <c:forEach begin="0" end="${map.get(p.getSubjectId()).size()-1}" var="atP">
-                                                        <option
-                                                            value="${map.get(p.getSubjectId()).get(atP).getPackageId()}">
-                                                            ${map.get(p.getSubjectId()).get(atP).getPackageName()} - 
-                                                            <c:if test="${atP!=0}">
-                                                                save ${map.get(p.getSubjectId()).get(atP).getWorth()}% for only
-                                                            </c:if>
-                                                            ${Integer.valueOf(map.get(p.getSubjectId()).get(atP).getSalePrice()*1000)} VND
-                                                        </option>
-                                                    </c:forEach>
-                                                </select>
-                                                <br>
-                                                <input type="hidden" name="service" value="register"/>
-                                                <div class="container text-end">
-                                                    <div class="row">
-                                                        <div class="col">
-                                                        </div>
-                                                        <div class="col">
-                                                            <button type="submit" class="btn btn-primary">Register</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
+                            <!-- It's Subject Register Popup baby - which costs me 13 working hrs -->
+                            <!-- now it is 13.5 working hours because of an anoying bug -->
+                            <!-- which is that the data isn't retrieved correctly  -->
+                            <!-- This bad boy is currently applied for logged in  -->
+                            <c:if test="${sessionScope.userEmail != null}">
+                                <c:import url="SubjectRegisterPopUp.jsp">
+                                    <c:param name="service" value="register"/>
+                                    <c:param name="subjectId" value="${p.getSubjectId()}"/>
+                                    <c:param name="thumbnail" value="${p.getThumbnail()}"/>
+                                    <c:param name="subjectName" value="${p.getSubjectName()}"/>
+                                    <c:param name="tagLine" value="${p.getTagLine()}"/>
+                                </c:import>
+                            </c:if>
+                            <c:if test="${sessionScope.userEmail == null}">
+
                             </c:if>
                         </div>
                     </div>

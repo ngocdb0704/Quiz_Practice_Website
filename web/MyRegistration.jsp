@@ -209,39 +209,39 @@
                                 <div class="card mb-3">
                                     <div class="row g-0">
                                         <div class="col-md-4">
-                                            <img src="public/thumbnails/${p.subjectImg}"
+                                            <img src="public/thumbnails/${p.getSubjectImg()}"
                                                  class="img-thumbnail rounded-start" 
                                                  width="300" height="180">
                                         </div>
                                         <div class="col-md-6">
                                             <div class="card-body">
-                                                <h5 class="card-title">Subject: ${p.subjectName}</h5>
+                                                <h5 class="card-title">Subject: ${p.getSubjectName()}</h5>
                                                 <ul class="list-group list-group-flush">
                                                     <li class="list-group-item">
                                                         <div class="row">
                                                             <div class="col-6">
-                                                                ID: ${p.registrationId}
+                                                                ID: ${p.getRegistrationId()}
                                                             </div>
                                                             <div class="col-6 ml-3">
                                                                 <span>Status: </span> 
                                                                 <span class=" <c:choose>
-                                                                          <c:when test="${p.status=='Active'}">
+                                                                          <c:when test="${p.getStatus()=='Active'}">
                                                                               badge text-bg-success
                                                                           </c:when>
-                                                                          <c:when test="${p.status=='Pending Approval'}">
+                                                                          <c:when test="${p.getStatus()=='Pending Approval'}">
                                                                               badge text-bg-warning
                                                                           </c:when>
-                                                                          <c:when test="${p.status=='Withdrawn'}">
+                                                                          <c:when test="${p.getStatus()=='Withdrawn'}">
                                                                               badge text-bg-secondary
                                                                           </c:when>
-                                                                          <c:when test="${p.status=='Inactive'}">
+                                                                          <c:when test="${p.getStatus()=='Inactive'}">
                                                                               badge text-bg-dark
                                                                           </c:when>
-                                                                          <c:when test="${p.status=='Submitted'}">
+                                                                          <c:when test="${p.getStatus()=='Submitted'}">
                                                                               badge text-bg-primary
                                                                           </c:when>
                                                                       </c:choose>">
-                                                                    ${p.status}
+                                                                    ${p.getStatus()}
                                                                 </span>
                                                             </div>
                                                         </div>        
@@ -249,20 +249,20 @@
                                                     <li class="list-group-item">
                                                         <div class="row">
                                                             <div class="col-6">
-                                                                Package: ${p.packageName}
+                                                                Package: ${p.getPackageName()}
                                                             </div>
                                                             <div class="col-6 ml-3">
-                                                                Registration time: ${p.registrationTime==null? "N/A":p.registrationTime}
+                                                                Registration time: ${p.getRegistrationTime()==null? "N/A":p.getRegistrationTime()}
                                                             </div>
                                                         </div>
                                                     </li>
                                                     <li class="list-group-item">
                                                         <div class="row">
                                                             <div class="col-6">
-                                                                Valid from: ${p.validFrom==null? "N/A":p.validFrom}
+                                                                Valid from: ${p.getValidFrom()==null? "N/A":p.getValidFrom()}
                                                             </div>
                                                             <div class="col-6 ml-3">
-                                                                Valid to: ${p.validTo==null? "N/A":p.validTo}
+                                                                Valid to: ${p.getValidTo()==null? "N/A":p.getValidTo()}
                                                             </div>
                                                         </div>
                                                     </li>
@@ -271,14 +271,14 @@
                                         </div>
                                         <div class="col-md-2 mt-md-3">
                                             <h5>Total Cost:</h5>
-                                            <h5>${Integer.valueOf(p.totalCost*1000)} VND</h5>
+                                            <h5>${Integer.valueOf(p.getTotalCost()*1000)} VND</h5>
                                             <diV class="row">
                                                 <!-- Button buy trigger modal -->
                                                 <div class="col-xl-4">
                                                     <button class="btn btn-success" 
-                                                            ${!matchActive.contains(p.status)?"":"disabled"}
+                                                            ${!matchActive.contains(p.getStatus())?"":"disabled"}
                                                             data-bs-toggle="modal" 
-                                                            data-bs-target=".modalBuy${p.registrationId}"
+                                                            data-bs-target=".modalBuy${p.getRegistrationId()}"
                                                             >
                                                         Buy
                                                     </button>
@@ -286,8 +286,8 @@
                                                 <div class="col-xl-6">
                                                     <button type="button" class="btn btn-danger" 
                                                             data-bs-toggle="modal" 
-                                                            ${!matchActive.contains(p.status)?"":"disabled"}
-                                                            data-bs-target=".modalCancel${p.registrationId}">
+                                                            ${!matchActive.contains(p.getStatus())?"":"disabled"}
+                                                            data-bs-target=".modalCancel${p.getRegistrationId()}">
                                                         Cancel
                                                     </button>
                                                 </div>
@@ -298,8 +298,8 @@
                                                     <!-- currently do nothing -->
                                                     <button type="button" class="btn btn-warning" 
                                                             data-bs-toggle="modal" 
-                                                            ${!matchActive.contains(p.status)?"":"disabled"}
-                                                            data-bs-target=".modalEdit${p.registrationId}">
+                                                            ${!matchActive.contains(p.getStatus())?"":"disabled"}
+                                                            data-bs-target=".modalEdit${p.getRegistrationId()}">
                                                         Edit
                                                     </button>
                                                 </div>
@@ -308,7 +308,7 @@
                                                     <!-- currently do nothing -->
                                                     <button type="button" class="btn btn-primary" 
                                                             data-bs-toggle="modal" 
-                                                            data-bs-target=".modalReport${p.registrationId}">
+                                                            data-bs-target=".modalReport${p.getRegistrationId()}">
                                                         Report
                                                     </button>
                                                 </div>
@@ -337,7 +337,7 @@
         <c:forEach items="${requestScope.data}" var="p">
             <!-- Modal Buy -->
             <!-- Check transaction when the modal is closed -->
-            <div class="modal modalBuy${p.registrationId}"
+            <div class="modal modalBuy${p.getRegistrationId()}"
                  tabindex="-1"
                  role="dialog" 
                  data-bs-backdrop="static"
@@ -365,7 +365,7 @@
                                            = 0 show full account
                                     bg = 69 background code (there're a lot of backgrounds, ngoc chose 69)
                                 -->
-                                <img src="https://vietqr.co/api/generate/${bankCode}/${owner}/VIETQR.CO/${Integer.valueOf(p.totalCost*1000)}/USER${userId}COURSE${p.registrationId}?style=1&logo=1&isMask=1&bg=22" 
+                                <img src="https://vietqr.co/api/generate/${bankCode}/${owner}/VIETQR.CO/${Integer.valueOf(p.getTotalCost()*1000)}/USER${userId}COURSE${p.getRegistrationId()}?style=1&logo=1&isMask=1&bg=22" 
                                      class="img-thumbnail qrimg" 
                                      alt="qrcode">
                             </div>
@@ -385,10 +385,10 @@
                                 <!-- payment call checkPaid, check if the captcha is valid-->
                                 <div class="col-4 payButton">
                                     <button type="button" 
-                                            class="btn btn-primary pay${p.registrationId}" 
-                                            onclick="checkPaid(${Integer.valueOf(p.totalCost*1000)},
-                                                            'USER${userId}COURSE${p.registrationId}',
-                                            ${p.registrationId}, grecaptcha.getResponse())">
+                                            class="btn btn-primary pay${p.getRegistrationId()}" 
+                                            onclick="checkPaid(${Integer.valueOf(p.getTotalCost()*1000)},
+                                                            'USER${userId}COURSE${p.getRegistrationId()}',
+                                            ${p.getRegistrationId()}, grecaptcha.getResponse())">
                                         Check Payment
                                     </button>
                                 </div>
@@ -398,7 +398,7 @@
                 </div>
             </div>
             <!--Cancel Modal-->
-            <div class="modal modalCancel${p.registrationId} "
+            <div class="modal modalCancel${p.getRegistrationId()} "
                  tabindex="-1"
                  role="dialog"
                  data-bs-backdrop="static"
@@ -413,20 +413,20 @@
                             <form action="user/MyRegistrations">
                                 <div class="mb-3 container row">
                                     <div class="card">
-                                        <img src="public/thumbnails/${p.subjectImg}" class="card-img-top" height="200" width="100">
+                                        <img src="public/thumbnails/${p.getSubjectImg()}" class="card-img-top" height="200" width="100">
                                         <div class="card-body">
-                                            <h5 class="card-title">${p.subjectName}</h5>
+                                            <h5 class="card-title">${p.getSubjectName()}</h5>
                                             <p class="card-text">
                                                 <span>
-                                                    Registration's Id: ${p.registrationId}
+                                                    Registration's Id: ${p.getRegistrationId()}
                                                 </span><br>
                                                 <span>
-                                                    Package: ${p.packageName}
+                                                    Package: ${p.getPackageName()}
                                                 </span><br>
                                                 <span>
-                                                    Total Cost: ${Integer.valueOf(p.totalCost*1000)} VND
+                                                    Total Cost: ${Integer.valueOf(p.getTotalCost()*1000)} VND
                                                 </span><br>
-                                                <input type="hidden" name="cancelId" value="${p.registrationId}">
+                                                <input type="hidden" name="cancelId" value="${p.getRegistrationId()}">
                                                 <input type="hidden" name="service" value="cancel">
                                             </p>
                                         </div>
@@ -454,7 +454,7 @@
                 </div>
             </div>
             <!-- Modal Edit -->
-            <div class="modal modalEdit${p.registrationId} "
+            <div class="modal modalEdit${p.getRegistrationId()} "
                  tabindex="-1"
                  role="dialog" >
                 <div class="modal-dialog modal-dialog-centered" 
@@ -469,47 +469,21 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <div class="container">
-                                <form action="user/MyRegistrations" method="post">
-                                    <div class="card">
-                                        <img src="public/thumbnails/${p.getSubjectImg()}" class="card-img-top" alt="...">
-                                        <div class="card-body">
-                                            <h5 class="card-title">${p.getSubjectName()}</h5>
-                                            <h5>Select a package:</h5>
-                                            <select class="form-select" name="selectedPackage">
-                                                <c:forEach begin="0" end="${map.get(p.getSubjectId()).size()-1}" var="atP">
-                                                    <option ${map.get(p.getSubjectId()).get(atP).getPackageName().equals(p.packageName)? "selected":""}
-                                                        value="${map.get(p.getSubjectId()).get(atP).getPackageId()}">
-                                                        ${map.get(p.getSubjectId()).get(atP).getPackageName()} - 
-                                                        <c:if test="${atP!=0}">
-                                                            save ${map.get(p.getSubjectId()).get(atP).getWorth()}% for only
-                                                        </c:if>
-                                                        ${Integer.valueOf(map.get(p.getSubjectId()).get(atP).getSalePrice()*1000)} VND
-                                                    </option>
-                                                </c:forEach>
-                                            </select>
-                                            <br>
-                                            <input type="hidden" name="registId" value="${p.registrationId}"/>
-                                            <input type="hidden" name="service" value="editRegist"/>
-                                            <div class="container text-end">
-                                                <div class="row">
-                                                    <div class="col">
-                                                    </div>
-                                                    <div class="col">
-                                                        <button type="submit" class="btn btn-primary">Submit change</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
+                            <!-- It's Subject Register Popup - for edit registration -->
+                            <c:import url="SubjectRegisterPopUp.jsp">
+                                <c:param name="service" value="editRegist"/>
+                                <c:param name="subjectId" value="${p.getSubjectId()}"/>
+                                <c:param name="thumbnail" value="${p.getSubjectImg()}"/>
+                                <c:param name="subjectName" value="${p.getSubjectName()}"/>
+                                <c:param name="registId" value="${p.getRegistrationId()}"/>
+                                <c:param name="registPack" value="${p.getPackageName()}"/>
+                            </c:import>
                         </div>
                     </div>
                 </div>
             </div>
             <!-- Modal Report -->
-            <div class="modal modalReport${p.registrationId} "
+            <div class="modal modalReport${p.getRegistrationId()} "
                  tabindex="-1"
                  role="dialog" >
                 <div class="modal-dialog modal-dialog-centered" 
