@@ -180,7 +180,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
     /* Position the tooltip text */
     position: absolute;
     z-index: 5;
-    top: -210px;
+    top: -235px;
     left: 31rem;
     margin-left: -150px;
 
@@ -193,7 +193,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
 .w3tooltip .w3tooltiptext::after {
     content: " ";
     position: absolute;
-    top: 50%;
+    top: 255px;
     right: 287px; /* To the left of the tooltip */
     margin-top: -5px;
     border-width: 5px;
@@ -205,4 +205,11 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
 .w3tooltip:hover .w3tooltiptext {
     visibility: visible;
     opacity: 1;
+}
+.carousel {
+  background-image: url(https://thumbs.dreamstime.com/z/beautiful-delicate-background-blossoming-light-pink-sakura-flowers-place-text-delicate-floral-design-realistic-145967566.jpg);
+}
+
+.carousel-cell {
+  counter-increment: carousel-cell;
 }

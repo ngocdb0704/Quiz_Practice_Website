@@ -83,8 +83,8 @@
             <div class="d-flex flex-row flex-nowrap overflow-auto">
                 <c:forEach var="subject" items="${featuredSubjects}">
                 <div class="card">
-                    <img class="card-img-top" src="${subject.getThumbnail()}" alt="Card image cap">
-                    <div class="card-body position-relative">
+                    <img class="card-img-top" src="public/thumbnails/${subject.getThumbnail()}" alt="Card image cap">
+                    <div class="card-body">
                         <h5 class="card-title">${subject.getSubjectName()}</h5>
                         <p class="card-text">${subject.getTagLine()}</p>
                         <div class="featured-subject-btn-filler"></div>

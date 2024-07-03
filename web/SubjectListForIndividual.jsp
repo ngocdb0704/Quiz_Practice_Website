@@ -15,6 +15,10 @@
         <link rel="stylesheet" href="common/ExtendBody.css"/>
         <link rel="stylesheet" href="css/SubjectsList.css"/>
         <script src="public/js/SubjectsList.js"></script>
+        <!-- CSS -->
+        <link rel="stylesheet" href="https://unpkg.com/flickity@2/dist/flickity.min.css">
+        <!-- JavaScript -->
+        <script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js"></script>
     </head>
     <body onload="scrollAtLoad()">
         <%@include file="/common/header.jsp" %>
@@ -55,6 +59,7 @@
             <c:set var="checkSaleSubject" value="${requestScope.listOfIdSale}"/>
             <c:set var="checkFeatSubject" value="${requestScope.listOfIdFeat}"/>
             <c:set var="cat" value="${requestScope.list}"/>
+            <c:set var="map" value="${requestScope.map}"/>
             <c:set var="check" value="${requestScope.check}"/>
             <c:set var="levels" value="${requestScope.levels}"/>
             <c:set var="checkLevel" value="${requestScope.checkLevel}"/>
@@ -78,187 +83,122 @@
                         <h3>There isn't any new subject at this time!</h3>
                     </div>
                 </c:if>
-                <c:if test="${numOfCarouselNew != 0}">
-                    <div id="carouselNewSubject" 
-                         class="carousel carousel-dark slide row" 
-                         data-bs-ride="carousel"
-                         style="border: solid 1px;
-                         background-image: url(https://thumbs.dreamstime.com/z/beautiful-delicate-background-blossoming-light-pink-sakura-flowers-place-text-delicate-floral-design-realistic-145967566.jpg);">
-                        <div class="col-2">
-                            <button class="carousel-control-prev" 
-                                    type="button" 
-                                    data-bs-target="#carouselNewSubject" 
-                                    data-bs-slide="prev">
-                                <span class="carousel-control-prev-icon"
-                                      aria-hidden="false"></span>
-                                <span class="visually-hidden">Previous</span>
-                            </button>
-                        </div>
-                        <div class="col-10 ml-5">
-                            <div class="carousel-inner">
-                                <c:forEach begin="0" end="${numOfCarouselNew-1}" var="indexCarNew">
-                                    <div class="carousel-item ${indexCarNew==0?"active":""}">
-                                        <div class="row">
-                                            <c:set var="start" value="${indexCarNew*numPerCarousel}"/>
-                                            <c:set var="fin" value="${indexCarNew*numPerCarousel + numPerCarousel -1}"/>
-                                            <c:forEach begin="${start}" 
-                                                       end="${fin}"
-                                                       var="indexCarNewItem">
-                                                <div class="card col-3">
-                                                    <img src="${listNewSubject.get(indexCarNewItem).getThumbnail()}" 
-                                                         class="card-img-top img-thumbnail" 
-                                                         alt="..."
-                                                         style="width: 18rem; height: 10rem">
-                                                    <div class="card-body">
-                                                        <h5 class="card-title">
-                                                            <a id="subjectLink" href="SubjectDetails?subjectId=${listNewSubject.get(indexCarNewItem).getSubjectId()}">
-                                                                ${listNewSubject.get(indexCarNewItem).getSubjectName()}
-                                                            </a>
-                                                        </h5>
-                                                        <c:if test="${listNewSubject.get(indexCarNewItem).getSubjectName().length()<=22}">
-                                                            <br>
-                                                        </c:if>
-                                                        <p>
-                                                            ${listNewSubject.get(indexCarNewItem).getTagLine()}
-                                                        <p>
-                                                        <p>
-                                                            <c:if test="${checkNewSubject.contains(listNewSubject.get(indexCarNewItem).getSubjectName())}">
-                                                                <button type="button" 
-                                                                        onclick="scrollToNew()"
-                                                                        class="badge text-bg-success">
-                                                                    New
-                                                                </button>
-                                                            </c:if>
-                                                            <c:if test="${checkSaleSubject.contains(listNewSubject.get(indexCarNewItem).getSubjectName())}">
-                                                                <button type="button" 
-                                                                        onclick="scrollToBigSale()"
-                                                                        class="badge text-bg-warning">
-                                                                    Big Sale
-                                                                </button>
-                                                            </c:if>
-                                                            <c:if test="${checkFeatSubject.contains(listNewSubject.get(indexCarNewItem).getSubjectName())}">
-                                                                <button type="button" 
-                                                                        onclick="scrollToFeatured()"
-                                                                        class="badge text-bg-primary">
-                                                                    Featured
-                                                                </button>
-                                                            </c:if>
-                                                        </p>
-                                                        <p>
-                                                            <c:choose>
-                                                                <c:when test="${listRegistered.contains(listNewSubject.get(indexCarNewItem).getSubjectName())}">
-                                                                    <a class="badge text-bg-dark" 
-                                                                       href="user/MyRegistrations?key=${listNewSubject.get(indexCarNewItem).getSubjectName()}"
-                                                                       style="text-decoration: none;">
-                                                                        In My Registrations
-                                                                    </a>
-                                                                </c:when>
-                                                                <c:otherwise>
-                                                                    <br>
-                                                                </c:otherwise>
-                                                            </c:choose>
-                                                        </p>
-                                                        <p>
-                                                            Package: ${listNewSubject.get(indexCarNewItem).getLowestPackageName()}
-                                                        <p>
-                                                        <p> 
-                                                            <span>
-                                                                Sale price:
-                                                            </span>
-                                                            <span class="badge rounded-pill text-bg-light">
-                                                                ${Integer.valueOf(listNewSubject.get(indexCarNewItem).getPackageSalePrice()*1000)} vnd
-                                                            </span>
-                                                            <span class="fw-light badge rounded-pill text-bg-light" 
-                                                                  style=" text-decoration-line: line-through;"> 
-                                                                ${Integer.valueOf(listNewSubject.get(indexCarNewItem).getPackageListPrice()*1000)} vnd
-                                                            </span>
-                                                            <span class="badge rounded-pill text-bg-danger">
-                                                                - ${Integer.valueOf(
-                                                                    (1-(listNewSubject.get(indexCarNewItem).getPackageSalePrice()/listNewSubject.get(indexCarNewItem).getPackageListPrice()))*100)}
-                                                                %
-                                                            </span>
-                                                        </p>
-                                                        <p>
-                                                            <button type="button" class="btn btn-info" 
-                                                                    data-bs-toggle="modal" 
-                                                                    data-bs-target=".modalRegister${listNewSubject.get(indexCarNewItem).getSubjectId()}"
-                                                                    ${listRegistered.contains(listNewSubject.get(indexCarNewItem).getSubjectName())?"disabled":""}
-                                                                    >
-                                                                Register
-                                                            </button>
-                                                            <c:if test="${sessionScope.userEmail != null}">
-                                                                <a class="btn text-bg-success disabled ${listRegistered == null ? "disabled":""}" 
-                                                                   href="GiftCenter.jsp"
-                                                                   style="text-decoration: none;"
-                                                                   >
-                                                                    Gift
-                                                                </a>
-                                                            </c:if>
-                                                            <br>
-                                                            <span>
-                                                                <c:choose>
-                                                                    <c:when test="${sponsor.containsKey(listNewSubject.get(indexCarNewItem).getSubjectId())}">
-                                                                        @${sponsor.get(listNewSubject.get(indexCarNewItem).getSubjectId())} sponsored
-                                                                    </c:when>
-                                                                    <c:otherwise>
-                                                                        <br>
-                                                                    </c:otherwise>
-                                                                </c:choose>
-                                                            </span>
-                                                        </p>
-                                                        <!-- Modal Register -->
-                                                        <div class="modal fade modalRegister${listNewSubject.get(indexCarNewItem).getSubjectId()} "
-                                                             tabindex="-1"
-                                                             role="dialog" >
-                                                            <div class="modal-dialog modal-dialog-centered" 
-                                                                 role="document">
-                                                                <div class="modal-content">
-                                                                    <div class="modal-header text-bg-primary">
-                                                                        <h4>Subject Register</h4>
-                                                                        <button type="button" 
-                                                                                class="btn-close" 
-                                                                                data-bs-dismiss="modal" 
-                                                                                aria-label="Close">
-                                                                        </button>
-                                                                    </div>
-                                                                    <div class="modal-body">
-                                                                        <jsp:include page="/SubjectRegisterPopUp.jsp">
-                                                                            <jsp:param name="registId" value="${listNewSubject.get(indexCarNewItem).getSubjectId()}"/>
-                                                                        </jsp:include>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </c:forEach>
-                                        </div>
-                                    </div>
-                                </c:forEach>
+                <c:if test="${numOfCarouselNew > 0}">
+                    <div class="carousel" data-flickity='{ "groupCells": true }'>
+                        <c:forEach begin="0" end="${numOfCarouselNew}" var="indexCarNewItem">
+                            <div class="carousel-cell card">
+                                <img src="public/thumbnails/${listNewSubject.get(indexCarNewItem).getThumbnail()}" 
+                                     class="card-img-top img-thumbnail" 
+                                     alt="..."
+                                     style="width: 24rem; height: 14rem">
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        <a id="subjectLink" href="SubjectDetails?subjectId=${listNewSubject.get(indexCarNewItem).getSubjectId()}">
+                                            ${listNewSubject.get(indexCarNewItem).getSubjectName()}
+                                        </a>
+                                    </h5>
+                                    <c:if test="${listNewSubject.get(indexCarNewItem).getSubjectName().length()<=38}">
+                                        <br>
+                                    </c:if>
+                                    <p>
+                                        ${listNewSubject.get(indexCarNewItem).getTagLine()}
+                                    <p>
+                                    <p>
+                                        <c:if test="${checkNewSubject.contains(listNewSubject.get(indexCarNewItem).getSubjectName())}">
+                                            <button type="button" 
+                                                    onclick="scrollToNew()"
+                                                    class="badge text-bg-success">
+                                                New
+                                            </button>
+                                        </c:if>
+                                        <c:if test="${checkSaleSubject.contains(listNewSubject.get(indexCarNewItem).getSubjectName())}">
+                                            <button type="button" 
+                                                    onclick="scrollToBigSale()"
+                                                    class="badge text-bg-warning">
+                                                Big Sale
+                                            </button>
+                                        </c:if>
+                                        <c:if test="${checkFeatSubject.contains(listNewSubject.get(indexCarNewItem).getSubjectName())}">
+                                            <button type="button" 
+                                                    onclick="scrollToFeatured()"
+                                                    class="badge text-bg-primary">
+                                                Featured
+                                            </button>
+                                        </c:if>
+                                    </p>
+                                    <p>
+                                        <c:choose>
+                                            <c:when test="${listRegistered.contains(listNewSubject.get(indexCarNewItem).getSubjectName())}">
+                                                <a class="badge text-bg-dark" 
+                                                   href="user/MyRegistrations?key=${listNewSubject.get(indexCarNewItem).getSubjectName()}"
+                                                   style="text-decoration: none;">
+                                                    In My Registrations
+                                                </a>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <br>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </p>
+                                    <p>
+                                        Package: ${listNewSubject.get(indexCarNewItem).getLowestPackageName()}
+                                    <p>
+                                    <p> 
+                                        <span>
+                                            Sale price:
+                                        </span>
+                                        <span class="badge rounded-pill text-bg-light">
+                                            ${Integer.valueOf(listNewSubject.get(indexCarNewItem).getPackageSalePrice()*1000)} vnd
+                                        </span>
+                                        <span class="fw-light badge rounded-pill text-bg-light" 
+                                              style=" text-decoration-line: line-through;"> 
+                                            ${Integer.valueOf(listNewSubject.get(indexCarNewItem).getPackageListPrice()*1000)} vnd
+                                        </span>
+                                        <span class="badge rounded-pill text-bg-danger">
+                                            - ${Integer.valueOf(
+                                                (1-(listNewSubject.get(indexCarNewItem).getPackageSalePrice()/listNewSubject.get(indexCarNewItem).getPackageListPrice()))*100)}
+                                            %
+                                        </span>
+                                    </p>
+                                    <p>
+                                        <c:choose>
+                                            <c:when test="${sponsor.containsKey(listNewSubject.get(indexCarNewItem).getSubjectId())}">
+                                                <button type="button" class="btn btn-dark">
+                                                    Enrol Me
+                                                </button>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <button type="button" class="btn btn-info" 
+                                                        data-bs-toggle="modal" 
+                                                        data-bs-target=".modalRegisterNew${listNewSubject.get(indexCarNewItem).getSubjectId()}"
+                                                        ${listRegistered.contains(listNewSubject.get(indexCarNewItem).getSubjectName())?"disabled":""}>
+                                                    Register
+                                                </button>
+                                            </c:otherwise>
+                                        </c:choose>
+                                        <c:if test="${sessionScope.userEmail != null}">
+                                            <a class="btn text-bg-success disabled ${listRegistered == null ? "disabled":""}" 
+                                               href="GiftCenter.jsp"
+                                               style="text-decoration: none;"
+                                               >
+                                                Gift
+                                            </a>
+                                        </c:if>
+                                        <br>
+                                        <span>
+                                            <c:choose>
+                                                <c:when test="${sponsor.containsKey(listNewSubject.get(indexCarNewItem).getSubjectId())}">
+                                                    @${sponsor.get(listNewSubject.get(indexCarNewItem).getSubjectId())} sponsored
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <br>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </span>
+                                    </p>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-1">
-                            <button class="carousel-control-next"
-                                    type="button" 
-                                    data-bs-target="#carouselNewSubject" 
-                                    data-bs-slide="next">
-                                <span class="carousel-control-next-icon" 
-                                      aria-hidden="false"></span>
-                                <span class="visually-hidden">Next</span>
-                            </button>
-                        </div>
-                        <div class="mt-5">
-                            <div class="carousel-indicators">
-                                <c:forEach begin="0" end="${numOfCarouselNew-1}" var="indexCarNew">
-                                    <button type="button" 
-                                            data-bs-target="#carouselNewSubject" 
-                                            data-bs-slide-to="${indexCarNew}" 
-                                            class="${indexCarNew==0?"active":""}"
-                                            aria-current="true" 
-                                            aria-label="Slide ${indexCarNew+1}"></button>
-                                </c:forEach>
-                            </div>
-                        </div>            
+                        </c:forEach>
                     </div>
                 </c:if>
             </section>
@@ -270,186 +210,122 @@
                         <h3>There isn't any sale off subject at this time!</h3>
                     </div>
                 </c:if>
-                <c:if test="${numOfCarouselSale != 0}">
-                    <div id="carouselSaleSubject" 
-                         class="carousel carousel-dark slide row" 
-                         data-bs-ride="carousel"
-                         style="border: solid 1px;
-                         background-image: url(https://thumbs.dreamstime.com/z/northern-lights-aurora-borealis-shining-green-night-starry-sky-star-tracks-winter-lofoten-islands-norway-northern-116904948.jpg);">
-                        <div class="col-2">
-                            <button class="carousel-control-prev" 
-                                    type="button" 
-                                    data-bs-target="#carouselSaleSubject" 
-                                    data-bs-slide="prev">
-                                <span class="carousel-control-prev-icon"
-                                      aria-hidden="false"></span>
-                                <span class="visually-hidden">Previous</span>
-                            </button>
-                        </div>
-                        <div class="col-10 ml-5">
-                            <div class="carousel-inner">
-                                <c:forEach begin="0" end="${numOfCarouselSale-1}" var="indexCarSale">
-                                    <div class="carousel-item ${indexCarSale==0?"active":""}">
-                                        <div class="row">
-                                            <c:set var="start" value="${indexCarSale*numPerCarousel}"/>
-                                            <c:set var="fin" value="${indexCarSale*numPerCarousel + numPerCarousel -1}"/>
-                                            <c:forEach begin="${start}" 
-                                                       end="${fin}"
-                                                       var="indexCarSaleItem">
-                                                <div class="card col-3">
-                                                    <img src="${listSaleSubject.get(indexCarSaleItem).getThumbnail()}" 
-                                                         class="card-img-top img-thumbnail" 
-                                                         alt="..."
-                                                         style="width: 18rem; height: 10rem">
-                                                    <div class="card-body">
-                                                        <h5 class="card-title">
-                                                            <a id="subjectLink" href="SubjectDetails?subjectId=${listSaleSubject.get(indexCarSaleItem).getSubjectId()}">
-                                                                ${listSaleSubject.get(indexCarSaleItem).getSubjectName()}
-                                                            </a>
-                                                        </h5>
-                                                        <c:if test="${listSaleSubject.get(indexCarSaleItem).getSubjectName().length()<=22}">
-                                                            <br>
-                                                        </c:if>
-                                                        <p>
-                                                            ${listSaleSubject.get(indexCarSaleItem).getTagLine()}
-                                                        <p>
-                                                        <p>
-                                                            <c:if test="${checkNewSubject.contains(listSaleSubject.get(indexCarSaleItem).getSubjectName())}">
-                                                                <button type="button" 
-                                                                        onclick="scrollToNew()"
-                                                                        class="badge text-bg-success">
-                                                                    New
-                                                                </button>
-                                                            </c:if>
-                                                            <c:if test="${checkSaleSubject.contains(listSaleSubject.get(indexCarSaleItem).getSubjectName())}">
-                                                                <button type="button" 
-                                                                        onclick="scrollToBigSale()"
-                                                                        class="badge text-bg-warning">
-                                                                    Big Sale
-                                                                </button>
-                                                            </c:if>
-                                                            <c:if test="${checkFeatSubject.contains(listSaleSubject.get(indexCarSaleItem).getSubjectName())}">
-                                                                <button type="button" 
-                                                                        onclick="scrollToFeatured()"
-                                                                        class="badge text-bg-primary">
-                                                                    Featured
-                                                                </button>
-                                                            </c:if>
-                                                        </p>
-                                                        <p>
-                                                            <c:choose>
-                                                                <c:when test="${listRegistered.contains(listSaleSubject.get(indexCarSaleItem).getSubjectName())}">
-                                                                    <a class="badge text-bg-dark" 
-                                                                       href="user/MyRegistrations?key=${listSaleSubject.get(indexCarSaleItem).getSubjectName()}"
-                                                                       style="text-decoration: none;">
-                                                                        In My Registrations
-                                                                    </a>
-                                                                </c:when>
-                                                                <c:otherwise>
-                                                                    <br>
-                                                                </c:otherwise>
-                                                            </c:choose>
-                                                        </p>
-                                                        <p>
-                                                            Package: ${listSaleSubject.get(indexCarSaleItem).getLowestPackageName()}
-                                                        <p>
-                                                        <p> 
-                                                            <span>
-                                                                Sale price:
-                                                            </span>
-                                                            <span class="badge rounded-pill text-bg-light">
-                                                                ${Integer.valueOf(listSaleSubject.get(indexCarSaleItem).getPackageSalePrice()*1000)} vnd
-                                                            </span>
-                                                            <span class="fw-light badge rounded-pill text-bg-light" 
-                                                                  style=" text-decoration-line: line-through;"> 
-                                                                ${Integer.valueOf(listSaleSubject.get(indexCarSaleItem).getPackageListPrice()*1000)} vnd
-                                                            </span>
-                                                            <span class="badge rounded-pill text-bg-danger">
-                                                                - ${Integer.valueOf(
-                                                                    (1-(listSaleSubject.get(indexCarSaleItem).getPackageSalePrice()/listSaleSubject.get(indexCarSaleItem).getPackageListPrice()))*100)}
-                                                                %
-                                                            </span>
-                                                        </p>
-                                                        <p>
-                                                            <button type="button" class="btn btn-info" 
-                                                                    data-bs-toggle="modal" 
-                                                                    data-bs-target=".modalRegisterSale${listSaleSubject.get(indexCarSaleItem).getSubjectId()}"
-                                                                    ${listRegistered.contains(listSaleSubject.get(indexCarSaleItem).getSubjectName())?"disabled":""}>
-                                                                Register
-                                                            </button>
-                                                            <c:if test="${sessionScope.userEmail != null}">
-                                                                <a class="btn text-bg-success disabled ${listRegistered == null ? "disabled":""}" 
-                                                                   href="GiftCenter.jsp"
-                                                                   style="text-decoration: none;"
-                                                                   >
-                                                                    Gift
-                                                                </a>
-                                                            </c:if>
-                                                            <br>
-                                                            <span>
-                                                                <c:choose>
-                                                                    <c:when test="${sponsor.containsKey(listSaleSubject.get(indexCarSaleItem).getSubjectId())}">
-                                                                        @${sponsor.get(listSaleSubject.get(indexCarSaleItem).getSubjectId())} sponsored
-                                                                    </c:when>
-                                                                    <c:otherwise>
-                                                                        <br>
-                                                                    </c:otherwise>
-                                                                </c:choose>
-                                                            </span>
-                                                        </p>
-                                                        <!-- Modal Register -->
-                                                        <div class="modal fade modalRegisterSale${listSaleSubject.get(indexCarSaleItem).getSubjectId()}"
-                                                             tabindex="-1"
-                                                             role="dialog" >
-                                                            <div class="modal-dialog modal-dialog-centered" 
-                                                                 role="document">
-                                                                <div class="modal-content">
-                                                                    <div class="modal-header text-bg-primary">
-                                                                        <h4>Subject Register</h4>
-                                                                        <button type="button" 
-                                                                                class="btn-close" 
-                                                                                data-bs-dismiss="modal" 
-                                                                                aria-label="Close">
-                                                                        </button>
-                                                                    </div>
-                                                                    <div class="modal-body">
-                                                                        <jsp:include page="/SubjectRegisterPopUp.jsp">
-                                                                            <jsp:param name="registId" value="${listSaleSubject.get(indexCarSaleItem).getSubjectId()}"/>
-                                                                        </jsp:include>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </c:forEach>
-                                        </div>
-                                    </div>
-                                </c:forEach>
+                <c:if test="${numOfCarouselSale > 0}">
+                    <div class="carousel" data-flickity='{ "groupCells": true }'>
+                        <c:forEach begin="0" end="${numOfCarouselSale}" var="indexCarSaleItem">
+                            <div class="card">
+                                <img src="public/thumbnails/${listSaleSubject.get(indexCarSaleItem).getThumbnail()}" 
+                                     class="card-img-top img-thumbnail" 
+                                     alt="..."
+                                     style="width: 24rem; height: 14rem">
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        <a id="subjectLink" href="SubjectDetails?subjectId=${listSaleSubject.get(indexCarSaleItem).getSubjectId()}">
+                                            ${listSaleSubject.get(indexCarSaleItem).getSubjectName()}
+                                        </a>
+                                    </h5>
+                                    <c:if test="${listSaleSubject.get(indexCarSaleItem).getSubjectName().length()<=38}">
+                                        <br>
+                                    </c:if>
+                                    <p>
+                                        ${listSaleSubject.get(indexCarSaleItem).getTagLine()}
+                                    <p>
+                                    <p>
+                                        <c:if test="${checkNewSubject.contains(listSaleSubject.get(indexCarSaleItem).getSubjectName())}">
+                                            <button type="button" 
+                                                    onclick="scrollToNew()"
+                                                    class="badge text-bg-success">
+                                                New
+                                            </button>
+                                        </c:if>
+                                        <c:if test="${checkSaleSubject.contains(listSaleSubject.get(indexCarSaleItem).getSubjectName())}">
+                                            <button type="button" 
+                                                    onclick="scrollToBigSale()"
+                                                    class="badge text-bg-warning">
+                                                Big Sale
+                                            </button>
+                                        </c:if>
+                                        <c:if test="${checkFeatSubject.contains(listSaleSubject.get(indexCarSaleItem).getSubjectName())}">
+                                            <button type="button" 
+                                                    onclick="scrollToFeatured()"
+                                                    class="badge text-bg-primary">
+                                                Featured
+                                            </button>
+                                        </c:if>
+                                    </p>
+                                    <p>
+                                        <c:choose>
+                                            <c:when test="${listRegistered.contains(listSaleSubject.get(indexCarSaleItem).getSubjectName())}">
+                                                <a class="badge text-bg-dark" 
+                                                   href="user/MyRegistrations?key=${listSaleSubject.get(indexCarSaleItem).getSubjectName()}"
+                                                   style="text-decoration: none;">
+                                                    In My Registrations
+                                                </a>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <br>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </p>
+                                    <p>
+                                        Package: ${listSaleSubject.get(indexCarSaleItem).getLowestPackageName()}
+                                    <p>
+                                    <p> 
+                                        <span>
+                                            Sale price:
+                                        </span>
+                                        <span class="badge rounded-pill text-bg-light">
+                                            ${Integer.valueOf(listSaleSubject.get(indexCarSaleItem).getPackageSalePrice()*1000)} vnd
+                                        </span>
+                                        <span class="fw-light badge rounded-pill text-bg-light" 
+                                              style=" text-decoration-line: line-through;"> 
+                                            ${Integer.valueOf(listSaleSubject.get(indexCarSaleItem).getPackageListPrice()*1000)} vnd
+                                        </span>
+                                        <span class="badge rounded-pill text-bg-danger">
+                                            - ${Integer.valueOf(
+                                                (1-(listSaleSubject.get(indexCarSaleItem).getPackageSalePrice()/listSaleSubject.get(indexCarSaleItem).getPackageListPrice()))*100)}
+                                            %
+                                        </span>
+                                    </p>
+                                    <p>
+                                        <c:choose>
+                                            <c:when test="${sponsor.containsKey(listSaleSubject.get(indexCarSaleItem).getSubjectId())}">
+                                                <button type="button" class="btn btn-dark">
+                                                    Enrol Me
+                                                </button>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <button type="button" class="btn btn-info" 
+                                                        data-bs-toggle="modal" 
+                                                        data-bs-target=".modalRegisterSale${listSaleSubject.get(indexCarSaleItem).getSubjectId()}"
+                                                        ${listRegistered.contains(listSaleSubject.get(indexCarSaleItem).getSubjectName())?"disabled":""}>
+                                                    Register
+                                                </button>
+                                            </c:otherwise>
+                                        </c:choose>
+                                        <c:if test="${sessionScope.userEmail != null}">
+                                            <a class="btn text-bg-success disabled ${listRegistered == null ? "disabled":""}" 
+                                               href="GiftCenter.jsp"
+                                               style="text-decoration: none;"
+                                               >
+                                                Gift
+                                            </a>
+                                        </c:if>
+                                        <br>
+                                        <span>
+                                            <c:choose>
+                                                <c:when test="${sponsor.containsKey(listSaleSubject.get(indexCarSaleItem).getSubjectId())}">
+                                                    @${sponsor.get(listSaleSubject.get(indexCarSaleItem).getSubjectId())} sponsored
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <br>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </span>
+                                    </p>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-1">
-                            <button class="carousel-control-next"
-                                    type="button" 
-                                    data-bs-target="#carouselSaleSubject" 
-                                    data-bs-slide="next">
-                                <span class="carousel-control-next-icon" 
-                                      aria-hidden="false"></span>
-                                <span class="visually-hidden">Next</span>
-                            </button>
-                        </div>
-                        <div class="mt-5">
-                            <div class="carousel-indicators">
-                                <c:forEach begin="0" end="${numOfCarouselSale-1}" var="indexCarSale">
-                                    <button type="button" 
-                                            data-bs-target="#carouselSaleSubject" 
-                                            data-bs-slide-to="${indexCarSale}" 
-                                            class="${indexCarSale==0?"active":""}"
-                                            aria-current="true" 
-                                            aria-label="Slide ${indexCarSale+1}"></button>
-                                </c:forEach>
-                            </div>
-                        </div>            
+                        </c:forEach>
                     </div>
                 </c:if>
             </section>
@@ -461,192 +337,127 @@
                         <h3>There isn't any featured subject at this time!</h3>
                     </div>
                 </c:if>
-                <c:if test="${numOfCarouselFeatured != 0}">
-                    <div id="carouselFeaturedSubject" 
-                         class="carousel carousel-dark slide row" 
-                         data-bs-ride="carousel"
-                         style="border: solid 1px;
-                         background-image: url(https://thumbs.dreamstime.com/z/crystal-lakes-chamonix-alps-mont-blanc-france-autumn-picturesque-fantastically-beautiful-first-frost-against-130410035.jpg);">
-                        <div class="col-2">
-                            <button class="carousel-control-prev" 
-                                    type="button" 
-                                    data-bs-target="#carouselFeaturedSubject" 
-                                    data-bs-slide="prev">
-                                <span class="carousel-control-prev-icon"
-                                      aria-hidden="false"></span>
-                                <span class="visually-hidden">Previous</span>
-                            </button>
-                        </div>
-                        <div class="col-10 ml-5">
-                            <div class="carousel-inner">
-                                <c:forEach begin="0" end="${numOfCarouselFeatured-1}" var="indexCarFeat">
-                                    <div class="carousel-item ${indexCarFeat==0?"active":""}">
-                                        <div class="row">
-                                            <c:set var="start" value="${indexCarFeat*numPerCarousel}"/>
-                                            <c:set var="fin" value="${indexCarFeat*numPerCarousel + numPerCarousel -1}"/>
-                                            <c:forEach begin="${start}" 
-                                                       end="${fin}"
-                                                       var="indexCarFeatItem">
-                                                <div class="card col-3">
-                                                    <img src="${listFeaturedSubject.get(indexCarFeatItem).getThumbnail()}" 
-                                                         class="card-img-top img-thumbnail" 
-                                                         alt="..."
-                                                         style="width: 18rem; height: 10rem">
-                                                    <div class="card-body">
-                                                        <h5 class="card-title">
-                                                            <a id="subjectLink" href="SubjectDetails?subjectId=${listFeaturedSubject.get(indexCarFeatItem).getSubjectId()}">
-                                                                ${listFeaturedSubject.get(indexCarFeatItem).getSubjectName()}
-                                                            </a>
-                                                        </h5>
-                                                        <c:if test="${listFeaturedSubject.get(indexCarFeatItem).getSubjectName().length()<=22}">
-                                                            <br>
-                                                        </c:if>
-                                                        <p>
-                                                            ${listFeaturedSubject.get(indexCarFeatItem).getTagLine()}
-                                                        <p>
-                                                        <p>
-                                                            <c:if test="${checkNewSubject.contains(listFeaturedSubject.get(indexCarFeatItem).getSubjectName())}">
-                                                                <button type="button" 
-                                                                        onclick="scrollToNew()"
-                                                                        class="badge text-bg-success">
-                                                                    New
-                                                                </button>
-                                                            </c:if>
-                                                            <c:if test="${checkSaleSubject.contains(listFeaturedSubject.get(indexCarFeatItem).getSubjectName())}">
-                                                                <button type="button" 
-                                                                        onclick="scrollToBigSale()"
-                                                                        class="badge text-bg-warning">
-                                                                    Big Sale
-                                                                </button>
-                                                            </c:if>
-                                                            <c:if test="${checkFeatSubject.contains(listFeaturedSubject.get(indexCarFeatItem).getSubjectName())}">
-                                                                <button type="button" 
-                                                                        onclick="scrollToFeatured()"
-                                                                        class="badge text-bg-primary">
-                                                                    Featured
-                                                                </button>
-                                                            </c:if>
-                                                        </p>
-                                                        <p>
-                                                            <c:choose>
-                                                                <c:when test="${listRegistered.contains(listFeaturedSubject.get(indexCarFeatItem).getSubjectName())}">
-                                                                    <a class="badge text-bg-dark" 
-                                                                       href="user/MyRegistrations?key=${listFeaturedSubject.get(indexCarFeatItem).getSubjectName()}"
-                                                                       style="text-decoration: none;">
-                                                                        In My Registrations
-                                                                    </a>
-                                                                </c:when>
-                                                                <c:otherwise>
-                                                                    <br>
-                                                                </c:otherwise>
-                                                            </c:choose>
-                                                        </p>
-                                                        <p>
-                                                            Package: ${listFeaturedSubject.get(indexCarFeatItem).getLowestPackageName()}
-                                                        <p>
-                                                        <p> 
-                                                            <span>
-                                                                Sale price:
-                                                            </span>
-                                                            <span class="badge rounded-pill text-bg-light">
-                                                                ${Integer.valueOf(listFeaturedSubject.get(indexCarFeatItem).getPackageSalePrice()*1000)} vnd
-                                                            </span>
-                                                            <span class="fw-light badge rounded-pill text-bg-light" 
-                                                                  style=" text-decoration-line: line-through;"> 
-                                                                ${Integer.valueOf(listFeaturedSubject.get(indexCarFeatItem).getPackageListPrice()*1000)} vnd
-                                                            </span>
-                                                            <span class="badge rounded-pill text-bg-danger">
-                                                                - ${Integer.valueOf(
-                                                                    (1-(listFeaturedSubject.get(indexCarFeatItem).getPackageSalePrice()/listFeaturedSubject.get(indexCarFeatItem).getPackageListPrice()))*100)}
-                                                                %
-                                                            </span>
-                                                        </p>
-                                                        <p>
-                                                            <button type="button" class="btn btn-info" 
-                                                                    data-bs-toggle="modal" 
-                                                                    data-bs-target=".modalRegisterCarou${listFeaturedSubject.get(indexCarFeatItem).getSubjectId()}"
-                                                                    ${listRegistered.contains(listFeaturedSubject.get(indexCarFeatItem).getSubjectName())?"disabled":""}>
-                                                                Register
-                                                            </button>
-                                                            <c:if test="${sessionScope.userEmail != null}">
-                                                                <a class="btn text-bg-success disabled ${listRegistered == null ? "disabled":""}" 
-                                                                   href="GiftCenter.jsp"
-                                                                   style="text-decoration: none;"
-                                                                   >
-                                                                    Gift
-                                                                </a>
-                                                            </c:if>
-                                                            <br>
-                                                            <span>
-                                                                <c:choose>
-                                                                    <c:when test="${sponsor.containsKey(listFeaturedSubject.get(indexCarFeatItem).getSubjectId())}">
-                                                                        @${sponsor.get(listFeaturedSubject.get(indexCarFeatItem).getSubjectId())} sponsored
-                                                                    </c:when>
-                                                                    <c:otherwise>
-                                                                        <br>
-                                                                    </c:otherwise>
-                                                                </c:choose>
-                                                            </span>
-                                                        </p>
-                                                    </div>
-                                                    <!-- Modal Register -->
-                                                    <div class="modal fade modalRegisterCarou${listFeaturedSubject.get(indexCarFeatItem).getSubjectId()} "
-                                                         tabindex="-1"
-                                                         role="dialog" >
-                                                        <div class="modal-dialog modal-dialog-centered" 
-                                                             role="document">
-                                                            <div class="modal-content">
-                                                                <div class="modal-header text-bg-primary">
-                                                                    <h4>Subject Register</h4>
-                                                                    <button type="button" 
-                                                                            class="btn-close" 
-                                                                            data-bs-dismiss="modal" 
-                                                                            aria-label="Close">
-                                                                    </button>
-                                                                </div>
-                                                                <div class="modal-body">
-                                                                    <jsp:include page="/SubjectRegisterPopUp.jsp">
-                                                                        <jsp:param name="registId" value="${listFeaturedSubject.get(indexCarFeatItem).getSubjectId()}"/>
-                                                                    </jsp:include>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </c:forEach>
-                                        </div>
-                                    </div>
-                                </c:forEach>
+                <c:if test="${numOfCarouselFeatured > 0}">
+                    <div class="carousel" data-flickity='{ "groupCells": true }'>
+                        <c:forEach begin="0" end="${numOfCarouselFeatured}" var="indexCarFeatItem">
+                            <div class="card">
+                                <img src="public/thumbnails/${listFeaturedSubject.get(indexCarFeatItem).getThumbnail()}" 
+                                     class="card-img-top img-thumbnail" 
+                                     alt="..."
+                                     style="width: 24rem; height: 14rem">
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        <a id="subjectLink" href="SubjectDetails?subjectId=${listFeaturedSubject.get(indexCarFeatItem).getSubjectId()}">
+                                            ${listFeaturedSubject.get(indexCarFeatItem).getSubjectName()}
+                                        </a>
+                                    </h5>
+                                    <c:if test="${listFeaturedSubject.get(indexCarFeatItem).getSubjectName().length()<=38}">
+                                        <br>
+                                    </c:if>
+                                    <p>
+                                        ${listFeaturedSubject.get(indexCarFeatItem).getTagLine()}
+                                    <p>
+                                    <p>
+                                        <c:if test="${checkNewSubject.contains(listFeaturedSubject.get(indexCarFeatItem).getSubjectName())}">
+                                            <button type="button" 
+                                                    onclick="scrollToNew()"
+                                                    class="badge text-bg-success">
+                                                New
+                                            </button>
+                                        </c:if>
+                                        <c:if test="${checkSaleSubject.contains(listFeaturedSubject.get(indexCarFeatItem).getSubjectName())}">
+                                            <button type="button" 
+                                                    onclick="scrollToBigSale()"
+                                                    class="badge text-bg-warning">
+                                                Big Sale
+                                            </button>
+                                        </c:if>
+                                        <c:if test="${checkFeatSubject.contains(listFeaturedSubject.get(indexCarFeatItem).getSubjectName())}">
+                                            <button type="button" 
+                                                    onclick="scrollToFeatured()"
+                                                    class="badge text-bg-primary">
+                                                Featured
+                                            </button>
+                                        </c:if>
+                                    </p>
+                                    <p>
+                                        <c:choose>
+                                            <c:when test="${listRegistered.contains(listFeaturedSubject.get(indexCarFeatItem).getSubjectName())}">
+                                                <a class="badge text-bg-dark" 
+                                                   href="user/MyRegistrations?key=${listFeaturedSubject.get(indexCarFeatItem).getSubjectName()}"
+                                                   style="text-decoration: none;">
+                                                    In My Registrations
+                                                </a>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <br>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </p>
+                                    <p>
+                                        Package: ${listFeaturedSubject.get(indexCarFeatItem).getLowestPackageName()}
+                                    <p>
+                                    <p> 
+                                        <span>
+                                            Sale price:
+                                        </span>
+                                        <span class="badge rounded-pill text-bg-light">
+                                            ${Integer.valueOf(listFeaturedSubject.get(indexCarFeatItem).getPackageSalePrice()*1000)} vnd
+                                        </span>
+                                        <span class="fw-light badge rounded-pill text-bg-light" 
+                                              style=" text-decoration-line: line-through;"> 
+                                            ${Integer.valueOf(listFeaturedSubject.get(indexCarFeatItem).getPackageListPrice()*1000)} vnd
+                                        </span>
+                                        <span class="badge rounded-pill text-bg-danger">
+                                            - ${Integer.valueOf(
+                                                (1-(listFeaturedSubject.get(indexCarFeatItem).getPackageSalePrice()/listFeaturedSubject.get(indexCarFeatItem).getPackageListPrice()))*100)}
+                                            %
+                                        </span>
+                                    </p>
+                                    <p>
+                                        <c:choose>
+                                            <c:when test="${sponsor.containsKey(listFeaturedSubject.get(indexCarFeatItem).getSubjectId())}">
+                                                <button type="button" class="btn btn-dark">
+                                                    Enrol Me
+                                                </button>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <button type="button" class="btn btn-info" 
+                                                        data-bs-toggle="modal" 
+                                                        data-bs-target=".modalRegisterCarou${listFeaturedSubject.get(indexCarFeatItem).getSubjectId()}"
+                                                        ${listRegistered.contains(listFeaturedSubject.get(indexCarFeatItem).getSubjectName())?"disabled":""}>
+                                                    Register
+                                                </button>
+                                            </c:otherwise>
+                                        </c:choose>
+                                        <c:if test="${sessionScope.userEmail != null}">
+                                            <a class="btn text-bg-success disabled ${listRegistered == null ? "disabled":""}" 
+                                               href="GiftCenter.jsp"
+                                               style="text-decoration: none;"
+                                               >
+                                                Gift
+                                            </a>
+                                        </c:if>
+                                        <br>
+                                        <span>
+                                            <c:choose>
+                                                <c:when test="${sponsor.containsKey(listFeaturedSubject.get(indexCarFeatItem).getSubjectId())}">
+                                                    @${sponsor.get(listFeaturedSubject.get(indexCarFeatItem).getSubjectId())} sponsored
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <br>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </span>
+                                    </p>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-1">
-                            <button class="carousel-control-next"
-                                    type="button" 
-                                    data-bs-target="#carouselFeaturedSubject" 
-                                    data-bs-slide="next">
-                                <span class="carousel-control-next-icon" 
-                                      aria-hidden="false"></span>
-                                <span class="visually-hidden">Next</span>
-                            </button>
-                        </div>
-                        <div class="mt-5">
-                            <div class="carousel-indicators">
-                                <c:forEach begin="0" end="${numOfCarouselFeatured-1}" var="indexCarFeat">
-                                    <button type="button" 
-                                            data-bs-target="#carouselFeaturedSubject" 
-                                            data-bs-slide-to="${indexCarFeat}" 
-                                            class="${indexCarFeat==0?"active":""}"
-                                            aria-current="true" 
-                                            aria-label="Slide ${indexCarFeat+1}"></button>
-                                </c:forEach>
-                            </div>
-                        </div>            
-                    </div>
-                </c:if>
+                        </c:forEach>
+                    </c:if>
             </section>
             <br>
             <section>
-                <c:set var="posToGo" value="${2140}"/>
+                <c:set var="posToGo" value="${2130}"/>
                 <h1>
                     Subjects List
                 </h1>
@@ -823,8 +634,9 @@
                                                                 <div>
                                                                     <span class="atLink">${listFeaturedSubject.get(iFeat).getSubjectName()}</span> 
                                                                     <div class="w3tooltiptext card" style="width: 18rem;">
-                                                                        <img src="${listFeaturedSubject.get(iFeat).getThumbnail()}" 
-                                                                             class="card-img-top img-thumbnail" alt="...">
+                                                                        <img src="public/thumbnails/${listFeaturedSubject.get(iFeat).getThumbnail()}" 
+                                                                             class="card-img-top img-thumbnail" alt="..."
+                                                                             style="height: 10rem;">
                                                                         <div class="card-body">
                                                                             <h5 class="card-title">
                                                                                 <a class="btn btn-link"
@@ -888,12 +700,21 @@
                                                                                 </span>
                                                                             </p>
                                                                             <p>
-                                                                                <button type="button" class="btn btn-info" 
-                                                                                        data-bs-toggle="modal" 
-                                                                                        data-bs-target=".modalRegisterFeat${listFeaturedSubject.get(iFeat).getSubjectId()}"
-                                                                                        ${listRegistered.contains(listFeaturedSubject.get(iFeat).getSubjectName())?"disabled":""}>
-                                                                                    Register
-                                                                                </button>
+                                                                                <c:choose>
+                                                                                    <c:when test="${sponsor.containsKey(listFeaturedSubject.get(iFeat).getSubjectId())}">
+                                                                                        <button type="button" class="btn btn-dark">
+                                                                                            Enrol Me
+                                                                                        </button>
+                                                                                    </c:when>
+                                                                                    <c:otherwise>
+                                                                                        <button type="button" class="btn btn-info" 
+                                                                                                data-bs-toggle="modal" 
+                                                                                                data-bs-target=".modalRegisterFeat${listFeaturedSubject.get(iFeat).getSubjectId()}"
+                                                                                                ${listRegistered.contains(listFeaturedSubject.get(iFeat).getSubjectName())?"disabled":""}>
+                                                                                            Register
+                                                                                        </button>
+                                                                                    </c:otherwise>
+                                                                                </c:choose>
                                                                                 <c:if test="${sessionScope.userEmail != null}">
                                                                                     <a class="btn text-bg-success disabled ${listRegistered == null ? "disabled":""}" 
                                                                                        href="GiftCenter.jsp"
@@ -917,29 +738,6 @@
                                                                         </div>
                                                                     </div>
                                                                 </div>  
-                                                            </div>
-                                                            <!-- Modal Register -->
-                                                            <div class="modal fade modalRegisterFeat${listFeaturedSubject.get(iFeat).getSubjectId()} "
-                                                                 tabindex="-1"
-                                                                 role="dialog" >
-                                                                <div class="modal-dialog modal-dialog-centered" 
-                                                                     role="document">
-                                                                    <div class="modal-content">
-                                                                        <div class="modal-header text-bg-primary">
-                                                                            <h4>Subject Register</h4>
-                                                                            <button type="button" 
-                                                                                    class="btn-close" 
-                                                                                    data-bs-dismiss="modal" 
-                                                                                    aria-label="Close">
-                                                                            </button>
-                                                                        </div>
-                                                                        <div class="modal-body">
-                                                                            <jsp:include page="/SubjectRegisterPopUp.jsp">
-                                                                                <jsp:param name="registId" value="${listFeaturedSubject.get(indexCarFeatItem).getSubjectId()}"/>
-                                                                            </jsp:include>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
                                                             </div>
                                                         </li>
                                                     </c:forEach>
@@ -1049,16 +847,16 @@
                             </div>
                         </c:if>
                         <ul class="list-group">
-                            <!-- get all registrations that meet previous conditions: input key, filter -->
+                            <!-- get all subjects that meet previous conditions: input key, filter -->
                             <c:forEach items="${allSubjectsList}" var="p">
                                 <!-- Change cards' appearance -->
                                 <li class="list-group-item list-group-item-info">
                                     <div class="card mb-3">
                                         <div class="row g-0">
                                             <div class="col-md-4">
-                                                <img src="${p.getThumbnail()}"
-                                                     class="img-fluid rounded-start" 
-                                                     width="300" height="180">
+                                                <img src="public/thumbnails/${p.getThumbnail()}"
+                                                     class="img-thumbnail rounded-start" 
+                                                     style="width: 18rem; height: 14rem;">
                                             </div>
                                             <div class="col-md-5">
                                                 <div class="card-body">
@@ -1134,16 +932,25 @@
                                                     ${Integer.valueOf(p.getPackageSalePrice()*1000)} VND
                                                 </h5>
                                                 <diV class="row">
-                                                    <div class="col-xl-7">
+                                                    <div class="col-xl-9">
                                                         <!-- Button buy trigger modal -->
-                                                        <button type="button" class="btn btn-primary" 
-                                                                data-bs-toggle="modal" 
-                                                                data-bs-target=".modalRegisterList${p.getSubjectId()}"
-                                                                ${listRegistered.contains(p.getSubjectName())?"disabled":""}>
-                                                            Register
-                                                        </button>
+                                                        <c:choose>
+                                                            <c:when test="${sponsor.containsKey(p.getSubjectId())}">
+                                                                <button type="button" class="btn btn-dark">
+                                                                    Enrol Me
+                                                                </button>
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                <button type="button" class="btn btn-info" 
+                                                                        data-bs-toggle="modal" 
+                                                                        data-bs-target=".modalRegisterList${p.getSubjectId()}"
+                                                                        ${listRegistered.contains(p.getSubjectName())?"disabled":""}>
+                                                                    Register
+                                                                </button>
+                                                            </c:otherwise>
+                                                        </c:choose>
                                                     </div>
-                                                    <div class="col-xl-4">
+                                                    <div class="col-xl-3">
                                                         <c:if test="${sessionScope.userEmail != null}">
                                                             <a class="btn text-bg-success disabled ${listRegistered == null ? "disabled":""}" 
                                                                href="GiftCenter.jsp"
@@ -1163,29 +970,6 @@
                                                             <br>
                                                         </c:otherwise>
                                                     </c:choose>
-                                                </div>
-                                            </div>
-                                            <!-- Modal Register -->
-                                            <div class="modal fade modalRegisterList${p.getSubjectId()} "
-                                                 tabindex="-1"
-                                                 role="dialog" >
-                                                <div class="modal-dialog modal-dialog-centered" 
-                                                     role="document">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header text-bg-primary">
-                                                            <h4>Subject Register</h4>
-                                                            <button type="button" 
-                                                                    class="btn-close" 
-                                                                    data-bs-dismiss="modal" 
-                                                                    aria-label="Close">
-                                                            </button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <jsp:include page="/SubjectRegisterPopUp.jsp">
-                                                                <jsp:param name="registId" value="${p.getSubjectId()}"/>
-                                                            </jsp:include>
-                                                        </div>
-                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -1247,5 +1031,195 @@
             </section>
         </main>
         <%@include file="/common/footer.jsp" %>
+        <c:forEach begin="0" end="${numOfCarouselNew}" var="indexCarNewItem">
+            <!-- Modal Register New Subjects -->
+            <div class="modal modalRegisterNew${listNewSubject.get(indexCarNewItem).getSubjectId()}"
+                 tabindex="-1"
+                 role="dialog" >
+                <div class="modal-dialog modal-dialog-centered" 
+                     role="document">
+                    <div class="modal-content">
+                        <div class="modal-header text-bg-primary">
+                            <h4>Subject Register</h4>
+                            <button type="button" 
+                                    class="btn-close" 
+                                    data-bs-dismiss="modal" 
+                                    aria-label="Close">
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <!-- It's Subject Register Popup baby - which costs me 13 working hrs -->
+                            <!-- now it is 13.5 working hours because of an anoying bug -->
+                            <!-- which is that the data isn't retrieved correctly  -->
+                            <!-- This bad boy is currently applied for logged in  -->
+                            <c:if test="${sessionScope.userEmail != null}">
+                                <c:import url="SubjectRegisterPopUp.jsp">
+                                    <c:param name="service" value="register"/>
+                                    <c:param name="subjectId" value="${listNewSubject.get(indexCarNewItem).getSubjectId()}"/>
+                                    <c:param name="thumbnail" value="${listNewSubject.get(indexCarNewItem).getThumbnail()}"/>
+                                    <c:param name="subjectName" value="${listNewSubject.get(indexCarNewItem).getSubjectName()}"/>
+                                    <c:param name="tagLine" value="${listNewSubject.get(indexCarNewItem).getTagLine()}"/>
+                                </c:import>
+                            </c:if>
+                            <c:if test="${sessionScope.userEmail == null}">
+
+                            </c:if>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </c:forEach>
+        <c:forEach begin="0" end="${numOfCarouselSale}" var="indexCarSaleItem">
+            <!-- Modal Register Big Sale Subjects -->
+            <div class="modal modalRegisterSale${listSaleSubject.get(indexCarSaleItem).getSubjectId()}"
+                 tabindex="-1"
+                 role="dialog" >
+                <div class="modal-dialog modal-dialog-centered" 
+                     role="document">
+                    <div class="modal-content">
+                        <div class="modal-header text-bg-primary">
+                            <h4>Subject Register</h4>
+                            <button type="button" 
+                                    class="btn-close" 
+                                    data-bs-dismiss="modal" 
+                                    aria-label="Close">
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <!-- It's Subject Register Popup baby - which costs me 13 working hrs -->
+                            <!-- now it is 13.5 working hours because of an anoying bug -->
+                            <!-- which is that the data isn't retrieved correctly  -->
+                            <!-- This bad boy is currently applied for logged in  -->
+                            <c:if test="${sessionScope.userEmail != null}">
+                                <c:import url="SubjectRegisterPopUp.jsp">
+                                    <c:param name="service" value="register"/>
+                                    <c:param name="subjectId" value="${listSaleSubject.get(indexCarSaleItem).getSubjectId()}"/>
+                                    <c:param name="thumbnail" value="${listSaleSubject.get(indexCarSaleItem).getThumbnail()}"/>
+                                    <c:param name="subjectName" value="${listSaleSubject.get(indexCarSaleItem).getSubjectName()}"/>
+                                    <c:param name="tagLine" value="${listSaleSubject.get(indexCarSaleItem).getTagLine()}"/>
+                                </c:import>
+                            </c:if>
+                            <c:if test="${sessionScope.userEmail == null}">
+
+                            </c:if>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </c:forEach>
+        <c:forEach begin="0" end="${numOfCarouselFeatured}" var="indexCarFeatItem">
+            <!-- Modal Featured Register -->
+            <div class="modal modalRegisterCarou${listFeaturedSubject.get(indexCarFeatItem).getSubjectId()} "
+                 tabindex="-1"
+                 role="dialog" >
+                <div class="modal-dialog modal-dialog-centered" 
+                     role="document">
+                    <div class="modal-content">
+                        <div class="modal-header text-bg-primary">
+                            <h4>Subject Register</h4>
+                            <button type="button" 
+                                    class="btn-close" 
+                                    data-bs-dismiss="modal" 
+                                    aria-label="Close">
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <!-- It's Subject Register Popup baby - which costs me 13 working hrs -->
+                            <!-- now it is 13.5 working hours because of an anoying bug -->
+                            <!-- which is that the data isn't retrieved correctly  -->
+                            <!-- This bad boy is currently applied for logged in  -->
+                            <c:if test="${sessionScope.userEmail != null}">
+                                <c:import url="SubjectRegisterPopUp.jsp">
+                                    <c:param name="service" value="register"/>
+                                    <c:param name="subjectId" value="${listFeaturedSubject.get(indexCarFeatItem).getSubjectId()}"/>
+                                    <c:param name="thumbnail" value="${listFeaturedSubject.get(indexCarFeatItem).getThumbnail()}"/>
+                                    <c:param name="subjectName" value="${listFeaturedSubject.get(indexCarFeatItem).getSubjectName()}"/>
+                                    <c:param name="tagLine" value="${listFeaturedSubject.get(indexCarFeatItem).getTagLine()}"/>
+                                </c:import>
+                            </c:if>
+                            <c:if test="${sessionScope.userEmail == null}">
+
+                            </c:if>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </c:forEach>
+        <c:forEach begin="0" end="${listFeaturedSubject.size()-1}" var="iFeat">
+            <!-- Modal Register Sider's Featured Subjects -->
+            <div class="modal modalRegisterFeat${listFeaturedSubject.get(iFeat).getSubjectId()} "
+                 tabindex="-1"
+                 role="dialog" >
+                <div class="modal-dialog modal-dialog-centered" 
+                     role="document">
+                    <div class="modal-content">
+                        <div class="modal-header text-bg-primary">
+                            <h4>Subject Register</h4>
+                            <button type="button" 
+                                    class="btn-close" 
+                                    data-bs-dismiss="modal" 
+                                    aria-label="Close">
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <!-- It's Subject Register Popup baby - which costs me 13 working hrs -->
+                            <!-- now it is 13.5 working hours because of an anoying bug -->
+                            <!-- which is that the data isn't retrieved correctly  -->
+                            <!-- This bad boy is currently applied for logged in  -->
+                            <c:if test="${sessionScope.userEmail != null}">
+                                <c:import url="SubjectRegisterPopUp.jsp">
+                                    <c:param name="service" value="register"/>
+                                    <c:param name="subjectId" value="${listFeaturedSubject.get(iFeat).getSubjectId()}"/>
+                                    <c:param name="thumbnail" value="${listFeaturedSubject.get(iFeat).getThumbnail()}"/>
+                                    <c:param name="subjectName" value="${listFeaturedSubject.get(iFeat).getSubjectName()}"/>
+                                    <c:param name="tagLine" value="${listFeaturedSubject.get(iFeat).getTagLine()}"/>
+                                </c:import>
+                            </c:if>
+                            <c:if test="${sessionScope.userEmail == null}">
+
+                            </c:if>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </c:forEach>
+        <c:forEach items="${allSubjectsList}" var="p">
+            <!-- Modal Register Subjects in Subjects List -->
+            <div class="modal modalRegisterList${p.getSubjectId()} "
+                 tabindex="-1"
+                 role="dialog" >
+                <div class="modal-dialog modal-dialog-centered" 
+                     role="document">
+                    <div class="modal-content">
+                        <div class="modal-header text-bg-primary">
+                            <h4>Subject Register</h4>
+                            <button type="button" 
+                                    class="btn-close" 
+                                    data-bs-dismiss="modal" 
+                                    aria-label="Close">
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <!-- It's Subject Register Popup baby - which costs me 13 working hrs -->
+                            <!-- now it is 13.5 working hours because of an anoying bug -->
+                            <!-- which is that the data isn't retrieved correctly  -->
+                            <!-- This bad boy is currently applied for logged in  -->
+                            <c:if test="${sessionScope.userEmail != null}">
+                                <c:import url="SubjectRegisterPopUp.jsp">
+                                    <c:param name="service" value="register"/>
+                                    <c:param name="subjectId" value="${p.getSubjectId()}"/>
+                                    <c:param name="thumbnail" value="${p.getThumbnail()}"/>
+                                    <c:param name="subjectName" value="${p.getSubjectName()}"/>
+                                    <c:param name="tagLine" value="${p.getTagLine()}"/>
+                                </c:import>
+                            </c:if>
+                            <c:if test="${sessionScope.userEmail == null}">
+
+                            </c:if>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </c:forEach>
     </body>
 </html>
