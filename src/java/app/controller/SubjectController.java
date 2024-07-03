@@ -246,7 +246,7 @@ public class SubjectController extends HttpServlet {
         //run, show
         dispth.forward(request, response);
     }
-
+    
     public String listOfAnyThing(Vector<Subject> input) {
         String output = "";
         for (int i = 0; i < input.size(); i++) {
@@ -254,7 +254,7 @@ public class SubjectController extends HttpServlet {
         }
         return output;
     }
-
+    
     private boolean isCheck(int d, int[] parent) {
         //if parent's checkboxes aren't checked then false
         if (parent == null) {
@@ -269,7 +269,7 @@ public class SubjectController extends HttpServlet {
             return false;
         }
     }
-
+    
     private String sendFilter(int[] parentTier1, int[] parentTier2,
             int[] parentTier3, int[] level, int[] org) {
         String url = "";
