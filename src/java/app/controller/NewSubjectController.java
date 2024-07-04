@@ -9,14 +9,21 @@ import app.dal.DAOUser;
 import app.entity.User;
 import app.entity.Subject;
 import app.entity.SubjectCategory;
+import app.utils.Config;
+import jakarta.servlet.ServletContext;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.Part;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -25,6 +32,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author quatn
  */
 @WebServlet(name = "NewSubjectController")
+@MultipartConfig //This enables a native API that can read "multipart/form-data" file upload. Source: https://stackoverflow.com/questions/2422468/how-can-i-upload-files-to-a-server-using-jsp-servlet
 public class NewSubjectController extends HttpServlet {
 
     /**
@@ -41,6 +49,7 @@ public class NewSubjectController extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
 
         HttpSession session = request.getSession();
+        ServletContext ctx = request.getServletContext();
 
         String service = request.getParameter("service");
 
@@ -72,15 +81,40 @@ public class NewSubjectController extends HttpServlet {
             int subjectStatus = Integer.parseInt(request.getParameter("subjectStatus"));
             String expertEmail = request.getParameter("expertEmail");
             User owner = daoUser.getUserByEmail(expertEmail);
-            String thumbnailUrl = request.getParameter("thumbnailUrl");
             String subjectTagline = request.getParameter("subjectTagline");
             String subjectBrief = request.getParameter("subjectBrief");
             String subjectDescription = request.getParameter("subjectDescription");
+            String uploadName = request.getParameter("uploadName");
+            
+            String thumbnailUrl = "";
+            
+            Part filePart = request.getPart("uploadData");
+            if (filePart.getSize() > 0 && uploadName != null && (uploadName.endsWith(".png") || uploadName.endsWith(".jpg") || uploadName.endsWith(".jpeg") || uploadName.endsWith(".webm"))) {
+                Config cfg = new Config(ctx);
+                String thumbnailDir = cfg.getStringOrDefault("subjectThumbnail.dir", "/");
+                thumbnailDir = thumbnailDir.replaceAll("\\s+", File.separator);
+                String path = ctx.getRealPath(thumbnailDir);
+                int subjectId = daoSubject.getLatestSubjectId();
+                subjectId = (subjectId < 0)? 1 : subjectId; //If the table is empty then getLatestSubjectId() will return -1, in that case set subjectId to 1 (as the first element of the table
+                
+                String newFileName = path + File.separator + subjectId + "_" + uploadName;
+                System.out.println("Save file as:" + newFileName);
+                
+                File file = new File(newFileName);
+                InputStream ins = filePart.getInputStream();
+                byte[] uploaded = new byte[ins.available()];
+                ins.read(uploaded);
+                try (FileOutputStream outputStream = new FileOutputStream(file)) {
+                    outputStream.write(uploaded);
+                    thumbnailUrl = subjectId + "_" + uploadName;
+                }
+            }
 
             if (owner != null && owner.getRoleId() == 4) {
-                if (daoSubject.addSubject(new Subject(0, subjectTitle, subjectTagline, subjectBrief, subjectDescription, thumbnailUrl, subjectCategory), owner.getUserId(), subjectStatus, featured) == 1)
-                    //session.setAttribute("notification", "<p>Subject created succefully!</p>");
+                if (daoSubject.addSubject(new Subject(0, subjectTitle, subjectTagline, subjectBrief, subjectDescription, thumbnailUrl, subjectCategory), owner.getUserId(), subjectStatus, featured) == 1) //session.setAttribute("notification", "<p>Subject created succefully!</p>");
+                {
                     session.setAttribute("notification", "Subject created succefully!");
+                }
             } else {
                 //out.print("User was not an Expert");
                 //session.setAttribute("notification", "<p style='color: red'>Error: The user email submitted was not of an Expert</p>");
@@ -88,7 +122,7 @@ public class NewSubjectController extends HttpServlet {
                 System.out.println("User was not an Expert");
             }
         }
-        
+
         request.getRequestDispatcher("NewSubject.jsp").forward(request, response);
     }
 

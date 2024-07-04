@@ -893,6 +893,20 @@ public class DAOSubject extends DBContext {
         }
         return map;
     }
+    
+    public int getLatestSubjectId() {
+        String sql = "SELECT TOP 1 SubjectId FROM Subject ORDER BY SubjectId DESC";
+        try {
+            Statement state = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = state.executeQuery(sql);
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return -1;
+    }
 
     public static void main(String[] args) {
         DAOSubject dao = new DAOSubject();
