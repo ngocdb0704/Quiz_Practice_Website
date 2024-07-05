@@ -156,7 +156,27 @@ public class DAOPackage extends DBContext{
 
         return false;
     }
-
+    
+    public int getPackageDurationByPackageId(int packageId){
+        int out = 0;
+        String sql = """
+                    select p.PackageDuration from [Package] p
+                    where p.PackageId = ?
+                    """;
+        try {
+            PreparedStatement pre = connection.prepareStatement(sql);
+            pre.setInt(1, packageId);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                out = rs.getInt(1);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DAOPackage.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return out;
+    }
+    
     public Package getPricePackageByPackageId(int packageId) {
         String sql = """
                     select p.PackageId, p.PackageName, p.PackageDuration, p.ListPrice, p.SalePrice, p.Status, pd.[Desc] from Package p
@@ -259,9 +279,6 @@ public class DAOPackage extends DBContext{
     }
     public static void main(String[] args) {
         DAOPackage dao = new DAOPackage();
-        Vector<Package> vec = dao.getSubjectPackage("Geometry Basics to Advanced");
-        for(int i=0; i<vec.size(); i++){
-            System.out.println(vec.get(i).getPackageName());
-        }
+        System.out.println(dao.getPackageDurationByPackageId(41));
     }
 }

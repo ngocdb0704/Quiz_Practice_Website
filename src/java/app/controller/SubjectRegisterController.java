@@ -4,11 +4,17 @@
  */
 package app.controller;
 
+import app.dal.DAOPackage;
+import app.dal.DAORegistration;
 import app.dal.DAOSubject;
+import app.dal.DAOUser;
+import app.entity.Registration;
 import app.entity.Subject;
+import app.entity.User;
 import app.utils.Config;
 import app.utils.GmailService;
 import app.utils.RSAEncryption;
+import app.utils.RandomSecurePasswordGenerator;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -41,24 +47,229 @@ public class SubjectRegisterController extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         Config cfg = new Config(getServletContext());
         DAOSubject daoSubject = new DAOSubject();
+        DAOUser daoUser = new DAOUser();
+        DAOPackage daoPack = new DAOPackage();
+        DAORegistration daoRegist = new DAORegistration();
+        GmailService gmailService = new GmailService(getServletContext());
         String service = request.getParameter("service");
         int packageId = Integer.valueOf(request.getParameter("selectedPackage"));
         String email = request.getParameter("email");
         String mobile = request.getParameter("mobile");
         String fullName = request.getParameter("fullName");
         String gender = request.getParameter("gender");
+
+        if (service.equals("paid")) {
+            String paidAccout = request.getParameter("payAcc");
+            String paidContent = request.getParameter("payCon");
+            User u = new User();
+            u.setEmail(email);
+            u.setMobile(mobile);
+            u.setRoleId(1);
+            u.setFullName(fullName);
+            RandomSecurePasswordGenerator rSPG;
+            rSPG = new RandomSecurePasswordGenerator.PasswordGeneratorBuilder()
+                    .useDigits(true)
+                    .useLower(true)
+                    .useUpper(true)
+                    .build();
+            String password = rSPG.generateSecureRandomPassword(8);
+            u.setPassword(password);
+            switch (gender) {
+                case "Male":
+                    u.setGenderId(1);
+                    break;
+                case "Female":
+                    u.setGenderId(2);
+                    break;
+                default:
+                    u.setGenderId(3);
+                    break;
+            }
+            daoUser.addUser(u);
+            int packageDuration = daoPack.getPackageDurationByPackageId(packageId);
+            int userId = daoUser.getUserByEmail(email).getUserId();
+            int n = daoRegist.addPaidRegistration(packageId, userId, packageDuration, paidAccout, paidContent);
+            Subject registeredSubject = daoSubject.getSubjectByPackageId(packageId);
+            Registration r = daoRegist.getSingleRegistrationByUserPackageId(packageId, userId);
+            request.setAttribute("thumbnail", registeredSubject.getThumbnail());
+            request.setAttribute("registId", r.getRegistrationId());
+            request.setAttribute("packageName", registeredSubject.getLowestPackageName());
+            request.setAttribute("registTime", r.getRegistrationTime());
+            request.setAttribute("validFrom", r.getValidFrom());
+            request.setAttribute("validTo", r.getValidTo());
+            request.setAttribute("price", registeredSubject.getPackageSalePrice());
+            String emailContent = ""
+                    + "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n"
+                    + "<html dir=\"ltr\" xmlns=\"http://www.w3.org/1999/xhtml\" xmlns:o=\"urn:schemas-microsoft-com:office:office\" lang=\"en\">\n"
+                    + " <head>\n"
+                    + "  <meta charset=\"UTF-8\">\n"
+                    + "  <meta content=\"width=device-width, initial-scale=1\" name=\"viewport\">\n"
+                    + "  <meta name=\"x-apple-disable-message-reformatting\">\n"
+                    + "  <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n"
+                    + "  <meta content=\"telephone=no\" name=\"format-detection\">\n"
+                    + "  <title>New email template 2024-07-06</title><!--[if (mso 16)]>\n"
+                    + "    <style type=\"text/css\">\n"
+                    + "    a {text-decoration: none;}\n"
+                    + "    </style>\n"
+                    + "    <![endif]--><!--[if gte mso 9]><style>sup { font-size: 100% !important; }</style><![endif]--><!--[if gte mso 9]>\n"
+                    + "<xml>\n"
+                    + "    <o:OfficeDocumentSettings>\n"
+                    + "    <o:AllowPNG></o:AllowPNG>\n"
+                    + "    <o:PixelsPerInch>96</o:PixelsPerInch>\n"
+                    + "    </o:OfficeDocumentSettings>\n"
+                    + "</xml>\n"
+                    + "<![endif]--><!--[if !mso]><!-- -->\n"
+                    + "  <link href=\"https://fonts.googleapis.com/css2?family=Orbitron&display=swap\" rel=\"stylesheet\"><!--<![endif]-->\n"
+                    + "  <style type=\"text/css\">\n"
+                    + "#outlook a {\n"
+                    + "	padding:0;\n"
+                    + "}\n"
+                    + ".es-button {\n"
+                    + "	mso-style-priority:100!important;\n"
+                    + "	text-decoration:none!important;\n"
+                    + "}\n"
+                    + "a[x-apple-data-detectors] {\n"
+                    + "	color:inherit!important;\n"
+                    + "	text-decoration:none!important;\n"
+                    + "	font-size:inherit!important;\n"
+                    + "	font-family:inherit!important;\n"
+                    + "	font-weight:inherit!important;\n"
+                    + "	line-height:inherit!important;\n"
+                    + "}\n"
+                    + ".es-desk-hidden {\n"
+                    + "	display:none;\n"
+                    + "	float:left;\n"
+                    + "	overflow:hidden;\n"
+                    + "	width:0;\n"
+                    + "	max-height:0;\n"
+                    + "	line-height:0;\n"
+                    + "	mso-hide:all;\n"
+                    + "}\n"
+                    + ".es-button-border:hover a.es-button, .es-button-border:hover button.es-button {\n"
+                    + "	background:#58dfec!important;\n"
+                    + "}\n"
+                    + ".es-button-border:hover {\n"
+                    + "	border-color:#26C6DA #26C6DA #26C6DA #26C6DA!important;\n"
+                    + "	background:#58dfec!important;\n"
+                    + "	border-style:solid solid solid solid!important;\n"
+                    + "}\n"
+                    + "@media only screen and (max-width:600px) {p, ul li, ol li, a { line-height:150%!important } h1, h2, h3, h1 a, h2 a, h3 a { line-height:120% } h1 { font-size:30px!important; text-align:center } h2 { font-size:24px!important; text-align:left } h3 { font-size:20px!important; text-align:left } .es-header-body h1 a, .es-content-body h1 a, .es-footer-body h1 a { font-size:30px!important; text-align:center } .es-header-body h2 a, .es-content-body h2 a, .es-footer-body h2 a { font-size:24px!important; text-align:left } .es-header-body h3 a, .es-content-body h3 a, .es-footer-body h3 a { font-size:20px!important; text-align:left } .es-menu td a { font-size:14px!important } .es-header-body p, .es-header-body ul li, .es-header-body ol li, .es-header-body a { font-size:14px!important } .es-content-body p, .es-content-body ul li, .es-content-body ol li, .es-content-body a { font-size:14px!important } .es-footer-body p, .es-footer-body ul li, .es-footer-body ol li, .es-footer-body a { font-size:14px!important } .es-infoblock p, .es-infoblock ul li, .es-infoblock ol li, .es-infoblock a { font-size:12px!important } *[class=\"gmail-fix\"] { display:none!important } .es-m-txt-c, .es-m-txt-c h1, .es-m-txt-c h2, .es-m-txt-c h3 { text-align:center!important } .es-m-txt-r, .es-m-txt-r h1, .es-m-txt-r h2, .es-m-txt-r h3 { text-align:right!important } .es-m-txt-l, .es-m-txt-l h1, .es-m-txt-l h2, .es-m-txt-l h3 { text-align:left!important } .es-m-txt-r img, .es-m-txt-c img, .es-m-txt-l img { display:inline!important } .es-button-border { display:inline-block!important } a.es-button, button.es-button { font-size:18px!important; display:inline-block!important } .es-adaptive table, .es-left, .es-right { width:100%!important } .es-content table, .es-header table, .es-footer table, .es-content, .es-footer, .es-header { width:100%!important; max-width:600px!important } .es-adapt-td { display:block!important; width:100%!important } .adapt-img { width:100%!important; height:auto!important } .es-m-p0 { padding:0px!important } .es-m-p0r { padding-right:0px!important } .es-m-p0l { padding-left:0px!important } .es-m-p0t { padding-top:0px!important } .es-m-p0b { padding-bottom:0!important } .es-m-p20b { padding-bottom:20px!important } .es-mobile-hidden, .es-hidden { display:none!important } tr.es-desk-hidden, td.es-desk-hidden, table.es-desk-hidden { width:auto!important; overflow:visible!important; float:none!important; max-height:inherit!important; line-height:inherit!important } tr.es-desk-hidden { display:table-row!important } table.es-desk-hidden { display:table!important } td.es-desk-menu-hidden { display:table-cell!important } .es-menu td { width:1%!important } table.es-table-not-adapt, .esd-block-html table { width:auto!important } table.es-social { display:inline-block!important } table.es-social td { display:inline-block!important } .es-desk-hidden { display:table-row!important; width:auto!important; overflow:visible!important; max-height:inherit!important } }\n"
+                    + "@media screen and (max-width:384px) {.mail-message-content { width:414px!important } }\n"
+                    + "</style>\n"
+                    + " </head>\n"
+                    + " <body style=\"width:100%;font-family:arial, 'helvetica neue', helvetica, sans-serif;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;padding:0;Margin:0\">\n"
+                    + "  <div dir=\"ltr\" class=\"es-wrapper-color\" lang=\"en\" style=\"background-color:#07023C\"><!--[if gte mso 9]>\n"
+                    + "			<v:background xmlns:v=\"urn:schemas-microsoft-com:vml\" fill=\"t\">\n"
+                    + "				<v:fill type=\"tile\" color=\"#07023c\"></v:fill>\n"
+                    + "			</v:background>\n"
+                    + "		<![endif]-->\n"
+                    + "   <table class=\"es-wrapper\" width=\"100%\" cellspacing=\"0\" cellpadding=\"0\" role=\"none\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;width:100%;height:100%;background-repeat:repeat;background-position:center top;background-color:#07023C\">\n"
+                    + "     <tr>\n"
+                    + "      <td valign=\"top\" style=\"padding:0;Margin:0\">\n"
+                    + "       <table class=\"es-content\" cellspacing=\"0\" cellpadding=\"0\" align=\"center\" role=\"none\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;table-layout:fixed !important;width:100%\">\n"
+                    + "         <tr>\n"
+                    + "          <td align=\"center\" style=\"padding:0;Margin:0\">\n"
+                    + "           <table class=\"es-content-body\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:#ffffff;background-repeat:no-repeat;width:600px;background-image:url(https://fixsugv.stripocdn.email/content/guids/CABINET_0e8fbb6adcc56c06fbd3358455fdeb41/images/vector_0Ia.png);background-position:center center\" cellspacing=\"0\" cellpadding=\"0\" bgcolor=\"#ffffff\" align=\"center\" background=\"https://fixsugv.stripocdn.email/content/guids/CABINET_0e8fbb6adcc56c06fbd3358455fdeb41/images/vector_0Ia.png\" role=\"none\">\n"
+                    + "             <tr>\n"
+                    + "              <td align=\"left\" style=\"Margin:0;padding-left:20px;padding-right:20px;padding-top:30px;padding-bottom:30px\">\n"
+                    + "               <table width=\"100%\" cellspacing=\"0\" cellpadding=\"0\" role=\"none\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px\">\n"
+                    + "                 <tr>\n"
+                    + "                  <td class=\"es-m-p0r es-m-p20b\" valign=\"top\" align=\"center\" style=\"padding:0;Margin:0;width:560px\">\n"
+                    + "                   <table width=\"100%\" cellspacing=\"0\" cellpadding=\"0\" role=\"presentation\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px\">\n"
+                    + "                     <tr>\n"
+                    + "                      <td align=\"center\" style=\"padding:0;Margin:0\"><h1 style=\"Margin:0;line-height:53px;mso-line-height-rule:exactly;font-family:Orbitron, sans-serif;font-size:44px;font-style:normal;font-weight:bold;color:#10054D\">&nbsp;Welcome to Quiz_Practice</h1></td>\n"
+                    + "                     </tr>\n"
+                    + "                     <tr>\n"
+                    + "                      <td align=\"center\" style=\"padding:0;Margin:0;padding-bottom:10px;padding-top:15px;font-size:0px\"><a target=\"_blank\" href=\"https://viewstripo.email\" style=\"-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;text-decoration:underline;color:#26C6DA;font-size:14px\"><img class=\"adapt-img\" src=\"https://fixsugv.stripocdn.email/content/guids/CABINET_dee64413d6f071746857ca8c0f13d696/images/852converted_1x3.png\" alt style=\"display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic\" height=\"300\"></a></td>\n"
+                    + "                     </tr>\n"
+                    + "                     <tr>\n"
+                    + "                      <td align=\"center\" style=\"padding:0;Margin:0;padding-top:10px;padding-bottom:10px\"><p style=\"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;font-size:14px\">Your account is now ACTIVE! Please use your email and the password below to join us!<br></p><p style=\"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;font-size:14px\">Password: " + password + "</p></td>\n"
+                    + "                     </tr>\n"
+                    + "                     <tr>\n"
+                    + "                      <td align=\"center\" style=\"padding:0;Margin:0;padding-top:15px;padding-bottom:15px\"><span class=\"es-button-border\" style=\"border-style:solid;border-color:#26C6DA;background:#26C6DA;border-width:4px;display:inline-block;border-radius:10px;width:auto\"><a href=\"http://localhost:6969/QuizPractice/home\" class=\"es-button\" target=\"_blank\" style=\"mso-style-priority:100 !important;text-decoration:none;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;color:#FFFFFF;font-size:20px;padding:10px 25px 10px 30px;display:inline-block;background:#26C6DA;border-radius:10px;font-family:arial, 'helvetica neue', helvetica, sans-serif;font-weight:normal;font-style:normal;line-height:24px;width:auto;text-align:center;mso-padding-alt:0;mso-border-alt:10px solid #26C6DA\">To Quiz_Practice</a></span></td>\n"
+                    + "                     </tr>\n"
+                    + "                     <tr>\n"
+                    + "                      <td align=\"center\" style=\"padding:0;Margin:0;padding-top:10px;padding-bottom:10px\"><p style=\"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;font-size:14px\">You can change your password later! Don't worry about it.</p></td>\n"
+                    + "                     </tr>\n"
+                    + "                   </table></td>\n"
+                    + "                 </tr>\n"
+                    + "               </table></td>\n"
+                    + "             </tr>\n"
+                    + "           </table></td>\n"
+                    + "         </tr>\n"
+                    + "       </table>\n"
+                    + "       <table cellpadding=\"0\" cellspacing=\"0\" class=\"es-content\" align=\"center\" role=\"none\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;table-layout:fixed !important;width:100%\">\n"
+                    + "         <tr>\n"
+                    + "          <td align=\"center\" style=\"padding:0;Margin:0\">\n"
+                    + "           <table bgcolor=\"#10054D\" class=\"es-content-body\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:#10054d;width:600px\" role=\"none\">\n"
+                    + "             <tr>\n"
+                    + "              <td align=\"left\" background=\"https://fixsugv.stripocdn.email/content/guids/CABINET_0e8fbb6adcc56c06fbd3358455fdeb41/images/vector_sSY.png\" style=\"Margin:0;padding-left:20px;padding-right:20px;padding-top:35px;padding-bottom:35px;background-image:url(https://fixsugv.stripocdn.email/content/guids/CABINET_0e8fbb6adcc56c06fbd3358455fdeb41/images/vector_sSY.png);background-repeat:no-repeat;background-position:left center\"><!--[if mso]><table style=\"width:560px\" cellpadding=\"0\" cellspacing=\"0\"><tr><td style=\"width:69px\" valign=\"top\"><![endif]-->\n"
+                    + "               <table cellpadding=\"0\" cellspacing=\"0\" class=\"es-left\" align=\"left\" role=\"none\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;float:left\">\n"
+                    + "                 <tr>\n"
+                    + "                  <td class=\"es-m-p20b\" align=\"left\" style=\"padding:0;Margin:0;width:69px\">\n"
+                    + "                   <table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" role=\"presentation\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px\">\n"
+                    + "                     <tr>\n"
+                    + "                      <td align=\"center\" class=\"es-m-txt-l\" style=\"padding:0;Margin:0;font-size:0px\"><a target=\"_blank\" href=\"https://viewstripo.email\" style=\"-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;text-decoration:underline;color:#26C6DA;font-size:14px\"><img src=\"https://fixsugv.stripocdn.email/content/guids/CABINET_dee64413d6f071746857ca8c0f13d696/images/group_118_lFL.png\" alt style=\"display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic\" width=\"69\"></a></td>\n"
+                    + "                     </tr>\n"
+                    + "                   </table></td>\n"
+                    + "                 </tr>\n"
+                    + "               </table><!--[if mso]></td><td style=\"width:20px\"></td><td style=\"width:471px\" valign=\"top\"><![endif]-->\n"
+                    + "               <table cellpadding=\"0\" cellspacing=\"0\" class=\"es-right\" align=\"right\" role=\"none\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;float:right\">\n"
+                    + "                 <tr>\n"
+                    + "                  <td align=\"left\" style=\"padding:0;Margin:0;width:471px\">\n"
+                    + "                   <table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" role=\"presentation\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px\">\n"
+                    + "                     <tr>\n"
+                    + "                      <td align=\"left\" style=\"padding:0;Margin:0\"><h3 style=\"Margin:0;line-height:34px;mso-line-height-rule:exactly;font-family:Orbitron, sans-serif;font-size:28px;font-style:normal;font-weight:bold;color:#ffffff\"><b>Real people. Here to help.</b></h3></td>\n"
+                    + "                     </tr>\n"
+                    + "                     <tr>\n"
+                    + "                      <td align=\"left\" style=\"padding:0;Margin:0;padding-bottom:5px;padding-top:10px\"><p style=\"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#ffffff;font-size:14px\">Have a question? Give us a call at&nbsp;<strong><a href=\"tel:(000)1234567899\" target=\"_blank\" style=\"-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;text-decoration:underline;color:#26C6DA;font-size:14px\">(000) 1234 5678 99</a></strong>&nbsp;to chat with a Customer Success representative.</p></td>\n"
+                    + "                     </tr>\n"
+                    + "                   </table></td>\n"
+                    + "                 </tr>\n"
+                    + "               </table><!--[if mso]></td></tr></table><![endif]--></td>\n"
+                    + "             </tr>\n"
+                    + "           </table></td>\n"
+                    + "         </tr>\n"
+                    + "       </table></td>\n"
+                    + "     </tr>\n"
+                    + "   </table>\n"
+                    + "  </div>\n"
+                    + " </body>\n"
+                    + "</html>";
+            try {
+                gmailService.sendMailWithContent("Subject Registered Successfully", emailContent, new String[]{email});
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            String redirectTo = "/SubjectRegisterPaid.jsp";
+            dispath(request, response, redirectTo);
+        }
+
         if (service.equals("payRegister")) {
             String secure = request.getParameter("secure");
-            String redirectTo = "/ContactUs.jsp";
+            String redirectTo = "/RegisterErrorNotFound.jsp";
             if (authenData(email, mobile, fullName, gender, packageId, secure)) {
-                redirectTo = "/index.jsp";
+                String bankCode = cfg.getStringOrDefault("bankcode", null);
+                String ownerBankAccount = cfg.getStringOrDefault("owner.bankaccount", null);
+                Subject registeredSubject = daoSubject.getSubjectByPackageId(packageId);
+                request.setAttribute("title", registeredSubject.getSubjectName());
+                request.setAttribute("packageName", registeredSubject.getLowestPackageName());
+                request.setAttribute("packageId", packageId);
+                request.setAttribute("price", (int) registeredSubject.getPackageSalePrice() * 1000);
+                request.setAttribute("email", email);
+                request.setAttribute("mobile", mobile);
+                request.setAttribute("fullName", fullName);
+                request.setAttribute("gender", gender);
+                request.setAttribute("bankCode", bankCode);
+                request.setAttribute("owner", ownerBankAccount);
+                redirectTo = "/SubjectRegisterPayment.jsp";
             }
             dispath(request, response, redirectTo);
         }
+
         if (service.equals("freshRegister")) {
             String reachURL = buildRegisterUrl(email, mobile, fullName, gender, packageId);
             Subject registeredSubject = daoSubject.getSubjectByPackageId(packageId);
-            GmailService gmailService = new GmailService(getServletContext());
             //note issue: cannot use subject's thumbnail in email YET, thumbnails should be go online
             String emailBody = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n"
                     + "<html dir=\"ltr\" xmlns=\"http://www.w3.org/1999/xhtml\" "
