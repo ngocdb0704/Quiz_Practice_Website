@@ -63,7 +63,7 @@
 
                                 <div class="row">
                                     <div class="form-check col-6 pt-5 ps-5">
-                                        <input class="form-check-input" type="checkbox" value="true" id="featured-flag" name="featured">
+                                        <input class="form-check-input" type="checkbox" value="true" id="featured-flag" name="featured" <c:if test="${featured}">checked</c:if>>
                                         <label class="form-check-label" for="featured-flag">
                                             Featured
                                         </label>
@@ -76,8 +76,9 @@
                                         </div>
                                         <div class="col-md-9 p-0">
                                             <select class="form-control" id="subject-status" name="subjectStatus">
-                                                <option value="0">Unpublished</option>
-                                                <option value="1">Published</option>
+                                                <!--Temporary-->
+                                                <option value="0" <c:if test="${subjectStatus eq 0}">selected</c:if>>Unpublished</option>
+                                                <option value="1" <c:if test="${subjectStatus eq 1}">selected</c:if>>Published</option>
                                             </select>
                                         </div>
                                     </div>
@@ -93,7 +94,11 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-8"></div>
+                            <div class="col-8">       
+                                <i class="bi bi-person-circle float-lg-start h-100"></i>
+                                <p class="result-display mb-1">${ownerName}</p>
+                                <small>${ownerEmail}</small>
+                            </div>
                             <div class="col-4">
                                 <label for="image-upload" class="form-label" id="upload-label"></label>
                                 <input class="form-control" type="file" id="image-upload" name="uploadData">

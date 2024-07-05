@@ -23,13 +23,18 @@ public class Subject {
     private String level;
     private String provider;
     private String sponsorer;
+    private boolean isFeatured;
+    private int statusId;
+    private int ownerId;
 
     public Subject() {
     }
-    public Subject(int subjectId, String subjectName){
+
+    public Subject(int subjectId, String subjectName) {
         this.subjectId = subjectId;
         this.subjectName = subjectName;
     }
+
     public Subject(int subjectId, String subjectName, String tagLine, String briefInfo, String subjectDescription, String thumbnail, int categoryId) {
         this.subjectId = subjectId;
         this.subjectName = subjectName;
@@ -39,6 +44,20 @@ public class Subject {
         this.thumbnail = thumbnail;
         this.categoryId = categoryId;
     }
+
+    public Subject(int subjectId, String subjectName, String tagLine, String briefInfo, String subjectDescription, String thumbnail, int categoryId
+            , boolean isFeatured, int statusId, int ownerId) {
+        this.subjectId = subjectId;
+        this.subjectName = subjectName;
+        this.tagLine = tagLine;
+        this.briefInfo = briefInfo;
+        this.subjectDescription = subjectDescription;
+        this.thumbnail = thumbnail;
+        this.isFeatured = isFeatured;
+        this.statusId = statusId;
+        this.ownerId = ownerId;
+    }
+
     public Subject(int subjectId, String subjectName, String tagLine, String briefInfo, String subjectDescription, String thumbnail, String lowestPackageName, int categoryId, float packageListPrice, float packageSalePrice, String level, String provider, String sponsorer) {
         this.subjectId = subjectId;
         this.subjectName = subjectName;
@@ -152,8 +171,32 @@ public class Subject {
         this.sponsorer = sponsorer;
     }
 
+    public boolean getIsFeatured() {
+        return isFeatured;
+    }
+
+    public void setIsFeatured(boolean isFeatured) {
+        this.isFeatured = isFeatured;
+    }
+
+    public int getStatusId() {
+        return statusId;
+    }
+
+    public void setStatusId(int statusId) {
+        this.statusId = statusId;
+    }
+
+    public int getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(int ownerId) {
+        this.ownerId = ownerId;
+    }
+
     @Override
     public String toString() {
-        return "Subject{" + "subjectId=" + subjectId + ", subjectName=" + subjectName + ", tagLine=" + tagLine + ", briefInfo=" + briefInfo + ", subjectDescription=" + subjectDescription + ", thumbnail=" + thumbnail + ", lowestPackageName=" + lowestPackageName + ", categoryId=" + categoryId + ", packageListPrice=" + packageListPrice + ", packageSalePrice=" + packageSalePrice + ", level=" + level + ", provider=" + provider + ", sponsorer=" + sponsorer + '}';
+        return "Subject{" + "subjectId=" + subjectId + ", subjectName=" + subjectName + ", tagLine=" + tagLine + ", briefInfo=" + briefInfo + ", subjectDescription=" + subjectDescription + ", thumbnail=" + thumbnail + ", lowestPackageName=" + lowestPackageName + ", categoryId=" + categoryId + ", packageListPrice=" + packageListPrice + ", packageSalePrice=" + packageSalePrice + ", level=" + level + ", provider=" + provider + ", sponsorer=" + sponsorer + ", isFeatured=" + isFeatured + ", statusId=" + statusId + ", ownerId=" + ownerId + '}';
     }
 }

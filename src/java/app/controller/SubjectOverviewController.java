@@ -41,10 +41,12 @@ public class SubjectOverviewController extends HttpServlet {
 
         request.setAttribute("subjectTitle", displaySubject.getSubjectName());
         request.setAttribute("subjectCategory", displaySubject.getCategoryId());
-        request.setAttribute("featured", 1);//displaySubject.get);
-        request.setAttribute("subjectStatus", 1);//displaySubject.getS);
-        request.setAttribute("expertEmail", "");//displaySubject.get);
-        //User owner = daoUser.getUserByEmail(expertEmail);
+        request.setAttribute("featured", displaySubject.getIsFeatured());
+        request.setAttribute("subjectStatus", displaySubject.getStatusId());
+        User owner = daoUser.getUserById(displaySubject.getOwnerId());
+        request.setAttribute("ownerName", owner.getFullName());
+        request.setAttribute("ownerEmail", owner.getEmail());
+        
         request.setAttribute("subjectTagline", displaySubject.getTagLine());
         request.setAttribute("subjectBrief", displaySubject.getBriefInfo());
         request.setAttribute("subjectDescription", displaySubject.getSubjectDescription());
