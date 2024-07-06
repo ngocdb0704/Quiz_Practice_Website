@@ -1036,7 +1036,7 @@
             <div class="modal modalRegisterNew${listNewSubject.get(indexCarNewItem).getSubjectId()}"
                  tabindex="-1"
                  role="dialog" >
-                <div class="modal-dialog modal-dialog-centered" 
+                <div class="modal-dialog modal-dialog-centered ${sessionScope.userEmail == null ? "modal-lg": ""}" 
                      role="document">
                     <div class="modal-content">
                         <div class="modal-header text-bg-primary">
@@ -1053,7 +1053,7 @@
                             <!-- which is that the data isn't retrieved correctly  -->
                             <!-- This bad boy is currently applied for logged in  -->
                             <c:if test="${sessionScope.userEmail != null}">
-                                <c:import url="SubjectRegisterPopUp.jsp">
+                                <c:import url="SubjectRegisterUser.jsp">
                                     <c:param name="service" value="register"/>
                                     <c:param name="subjectId" value="${listNewSubject.get(indexCarNewItem).getSubjectId()}"/>
                                     <c:param name="thumbnail" value="${listNewSubject.get(indexCarNewItem).getThumbnail()}"/>
@@ -1062,7 +1062,13 @@
                                 </c:import>
                             </c:if>
                             <c:if test="${sessionScope.userEmail == null}">
-
+                                <c:import url="SubjectRegisterGuest.jsp">
+                                    <c:param name="service" value="freshRegister"/>
+                                    <c:param name="subjectId" value="${listNewSubject.get(indexCarNewItem).getSubjectId()}"/>
+                                    <c:param name="thumbnail" value="${listNewSubject.get(indexCarNewItem).getThumbnail()}"/>
+                                    <c:param name="subjectName" value="${listNewSubject.get(indexCarNewItem).getSubjectName()}"/>
+                                    <c:param name="tagLine" value="${listNewSubject.get(indexCarNewItem).getTagLine()}"/>
+                                </c:import>
                             </c:if>
                         </div>
                     </div>
@@ -1091,7 +1097,7 @@
                             <!-- which is that the data isn't retrieved correctly  -->
                             <!-- This bad boy is currently applied for logged in  -->
                             <c:if test="${sessionScope.userEmail != null}">
-                                <c:import url="SubjectRegisterPopUp.jsp">
+                                <c:import url="SubjectRegisterUser.jsp">
                                     <c:param name="service" value="register"/>
                                     <c:param name="subjectId" value="${listSaleSubject.get(indexCarSaleItem).getSubjectId()}"/>
                                     <c:param name="thumbnail" value="${listSaleSubject.get(indexCarSaleItem).getThumbnail()}"/>
@@ -1129,7 +1135,7 @@
                             <!-- which is that the data isn't retrieved correctly  -->
                             <!-- This bad boy is currently applied for logged in  -->
                             <c:if test="${sessionScope.userEmail != null}">
-                                <c:import url="SubjectRegisterPopUp.jsp">
+                                <c:import url="SubjectRegisterUser.jsp">
                                     <c:param name="service" value="register"/>
                                     <c:param name="subjectId" value="${listFeaturedSubject.get(indexCarFeatItem).getSubjectId()}"/>
                                     <c:param name="thumbnail" value="${listFeaturedSubject.get(indexCarFeatItem).getThumbnail()}"/>
@@ -1167,7 +1173,7 @@
                             <!-- which is that the data isn't retrieved correctly  -->
                             <!-- This bad boy is currently applied for logged in  -->
                             <c:if test="${sessionScope.userEmail != null}">
-                                <c:import url="SubjectRegisterPopUp.jsp">
+                                <c:import url="SubjectRegisterUser.jsp">
                                     <c:param name="service" value="register"/>
                                     <c:param name="subjectId" value="${listFeaturedSubject.get(iFeat).getSubjectId()}"/>
                                     <c:param name="thumbnail" value="${listFeaturedSubject.get(iFeat).getThumbnail()}"/>
@@ -1205,7 +1211,7 @@
                             <!-- which is that the data isn't retrieved correctly  -->
                             <!-- This bad boy is currently applied for logged in  -->
                             <c:if test="${sessionScope.userEmail != null}">
-                                <c:import url="SubjectRegisterPopUp.jsp">
+                                <c:import url="SubjectRegisterUser.jsp">
                                     <c:param name="service" value="register"/>
                                     <c:param name="subjectId" value="${p.getSubjectId()}"/>
                                     <c:param name="thumbnail" value="${p.getThumbnail()}"/>

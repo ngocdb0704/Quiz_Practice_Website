@@ -908,10 +908,35 @@ public class DAOSubject extends DBContext {
         }
         return -1;
     }
+    
+    public Subject getSubjectByPackageId (int packageId){
+        Subject sub = new Subject();
+        String sql = """
+                     select s.SubjectTitle, s.SubjectThumbnail, s.SubjectTagLine, 
+                     p.PackageName, p.SalePrice from [Package] p
+                     join [Subject] s on s.SubjectId = p.SubjectId
+                     where p.PackageId = ?""";
+        try {
+            PreparedStatement pre = connection.prepareStatement(sql);
+            //change query due to database script's change
+            pre.setInt(1, packageId);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                sub.setSubjectName(rs.getString(1));
+                sub.setThumbnail(rs.getString(2));
+                sub.setTagLine(rs.getString(3));
+                sub.setLowestPackageName(rs.getString(4));
+                sub.setPackageSalePrice(rs.getFloat(5));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DAOSubject.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return sub;
+    }
 
     public static void main(String[] args) {
         DAOSubject dao = new DAOSubject();
-        HashMap<Integer, ArrayList<Package>> map = dao.getSubjectPackagesMap();
+        System.out.println(dao.getSubjectByPackageId(4).getTagLine());
 
     }
 }
