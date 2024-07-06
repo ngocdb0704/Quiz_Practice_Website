@@ -4,12 +4,50 @@
  */
 
 let previewImg = document.getElementById("subject-thumbnail");
+
+let uploadName = document.getElementById("image-name");
+let fileInput = document.getElementById('image-upload');
+let uploadLabel = document.getElementById('upload-label');
+
+if (fileInput) fileInput.addEventListener('change', event => {
+    if (event.target.files.length > 0) {
+        previewImg.style.display = "block";
+        let file = event.target.files[0];
+        if (file.size > 0) {
+            console.log(file.size);
+
+            if (!(file.name.endsWith(".jpg") || file.name.endsWith(".jpeg") || file.name.endsWith(".webp") || file.name.endsWith(".png"))) {
+                uploadLabel.innerHTML = "<strong style=\"color: red;\">Selected file was not in one of the supported image formats</strong>";
+                previewImg.style.display = "none";
+                uploadName.value = "";
+                fileInput.value = null;
+                return;
+            }
+            if (file.size > 200000000) {
+                uploadLabel.innerHTML = "<strong style=\"color: red;\">The image you just uploaded was too large! Please upload images under 200MB only.</strong>";
+                previewImg.style.display = "none";
+                uploadName.value = "";
+                fileInput.value = null;
+                return;
+            }
+
+            uploadName.value = file.name.slice(file.name.lastIndexOf("\\") + 1);
+            uploadLabel.innerHTML = "Selected file: " + file.name.slice(file.name.lastIndexOf("\\") + 1);
+            changeSaveButtonStatus();
+
+            previewImg.src = URL.createObjectURL(
+                    event.target.files[0],
+                    );
+        }
+    }
+});
+
+/* Image URL submission and preview, will not be used for now
 let urlSubmission = document.getElementById("thumbnail-url");
 let imgSetterText = document.getElementById("imgsetter-text");
 let setterId = 0;
 let delayInterval = 700;
 let loadingGif = new URL("public/images/Ellipsis@1x-2.2s-200px-200px.gif", document.baseURI).href;
-
 //<a href="https://www.flaticon.com/free-icons/broken" title="broken icons">Broken icons created by Rahul Kaklotar - Flaticon</a> Yea anyways
 function imgError() {
     imgSetterText.innerHTML = 'This link does not lead to an image!';
@@ -36,6 +74,7 @@ function changeSetter() {
     clearTimeout(setterId); //clearing the previous timer using the id
     setterId = setTimeout(setPreviewImg, delayInterval);
 }
+*/
 
 let submitButton = document.getElementById("submitButton");
 
