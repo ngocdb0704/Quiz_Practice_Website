@@ -581,7 +581,9 @@
                             <c:forEach items="${allSubjectsList}" var="p">
                                 <!-- Change cards' appearance -->
                                 <div class="card col-4">
-                                    <img src="${p.getThumbnail()}" class="card-img-top" alt="...">
+                                    <img src="public/thumbnails/${p.getThumbnail()}" 
+                                         class="card-img-top" alt="..."
+                                         style="height: 12rem;">
                                     <div class="card-body">
                                         <h5 class="card-title">${p.getSubjectName()}</h5>
                                         <p class="card-text">

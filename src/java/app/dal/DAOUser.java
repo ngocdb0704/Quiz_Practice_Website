@@ -79,6 +79,22 @@ public class DAOUser extends DBContext {
         }
         return isRegistered;
     }
+    
+    public boolean isMobileRegistered(String mobile) {
+        boolean isRegistered = false;
+        String sql = "SELECT COUNT(*) FROM [dbo].[User] WHERE Mobile = ?";
+        try {
+            PreparedStatement pre = connection.prepareStatement(sql);
+            pre.setString(1, mobile);
+            ResultSet resultSet = pre.executeQuery();
+            if (resultSet.next()) {
+                isRegistered = resultSet.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return isRegistered;
+    }
 
     private Vector<User> getFull(String sql) {
         Vector<User> Out = new Vector<User>();

@@ -15,6 +15,8 @@
         <link rel="stylesheet" href="common/ExtendBody.css"/>
         <link rel="stylesheet" href="css/SubjectsList.css"/>
         <script src="public/js/SubjectsList.js"></script>
+        <!-- jquery -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <!-- CSS -->
         <link rel="stylesheet" href="https://unpkg.com/flickity@2/dist/flickity.min.css">
         <!-- JavaScript -->
@@ -856,7 +858,7 @@
                                             <div class="col-md-4">
                                                 <img src="public/thumbnails/${p.getThumbnail()}"
                                                      class="img-thumbnail rounded-start" 
-                                                     style="width: 18rem; height: 14rem;">
+                                                     style="height: 14rem;">
                                             </div>
                                             <div class="col-md-5">
                                                 <div class="card-body">
@@ -1034,8 +1036,7 @@
         <c:forEach begin="0" end="${numOfCarouselNew}" var="indexCarNewItem">
             <!-- Modal Register New Subjects -->
             <div class="modal modalRegisterNew${listNewSubject.get(indexCarNewItem).getSubjectId()}"
-                 tabindex="-1"
-                 role="dialog" >
+                 tabindex="-1">
                 <div class="modal-dialog modal-dialog-centered ${sessionScope.userEmail == null ? "modal-lg": ""}" 
                      role="document">
                     <div class="modal-content">
@@ -1044,8 +1045,7 @@
                             <button type="button" 
                                     class="btn-close" 
                                     data-bs-dismiss="modal" 
-                                    aria-label="Close">
-                            </button>
+                                    aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             <!-- It's Subject Register Popup baby - which costs me 13 working hrs -->
@@ -1078,9 +1078,8 @@
         <c:forEach begin="0" end="${numOfCarouselSale}" var="indexCarSaleItem">
             <!-- Modal Register Big Sale Subjects -->
             <div class="modal modalRegisterSale${listSaleSubject.get(indexCarSaleItem).getSubjectId()}"
-                 tabindex="-1"
-                 role="dialog" >
-                <div class="modal-dialog modal-dialog-centered" 
+                 tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered ${sessionScope.userEmail == null ? "modal-lg": ""}" 
                      role="document">
                     <div class="modal-content">
                         <div class="modal-header text-bg-primary">
@@ -1106,7 +1105,13 @@
                                 </c:import>
                             </c:if>
                             <c:if test="${sessionScope.userEmail == null}">
-
+                                <c:import url="SubjectRegisterGuest.jsp">
+                                    <c:param name="service" value="freshRegister"/>
+                                    <c:param name="subjectId" value="${listSaleSubject.get(indexCarSaleItem).getSubjectId()}"/>
+                                    <c:param name="thumbnail" value="${listSaleSubject.get(indexCarSaleItem).getThumbnail()}"/>
+                                    <c:param name="subjectName" value="${listSaleSubject.get(indexCarSaleItem).getSubjectName()}"/>
+                                    <c:param name="tagLine" value="${listSaleSubject.get(indexCarSaleItem).getTagLine()}"/>
+                                </c:import>
                             </c:if>
                         </div>
                     </div>
@@ -1116,9 +1121,8 @@
         <c:forEach begin="0" end="${numOfCarouselFeatured}" var="indexCarFeatItem">
             <!-- Modal Featured Register -->
             <div class="modal modalRegisterCarou${listFeaturedSubject.get(indexCarFeatItem).getSubjectId()} "
-                 tabindex="-1"
-                 role="dialog" >
-                <div class="modal-dialog modal-dialog-centered" 
+                 tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered ${sessionScope.userEmail == null ? "modal-lg": ""}" 
                      role="document">
                     <div class="modal-content">
                         <div class="modal-header text-bg-primary">
@@ -1144,7 +1148,13 @@
                                 </c:import>
                             </c:if>
                             <c:if test="${sessionScope.userEmail == null}">
-
+                                <c:import url="SubjectRegisterGuest.jsp">
+                                    <c:param name="service" value="freshRegister"/>
+                                    <c:param name="subjectId" value="${listFeaturedSubject.get(indexCarFeatItem).getSubjectId()}"/>
+                                    <c:param name="thumbnail" value="${listFeaturedSubject.get(indexCarFeatItem).getThumbnail()}"/>
+                                    <c:param name="subjectName" value="${listFeaturedSubject.get(indexCarFeatItem).getSubjectName()}"/>
+                                    <c:param name="tagLine" value="${listFeaturedSubject.get(indexCarFeatItem).getTagLine()}"/>
+                                </c:import>
                             </c:if>
                         </div>
                     </div>
@@ -1154,9 +1164,8 @@
         <c:forEach begin="0" end="${listFeaturedSubject.size()-1}" var="iFeat">
             <!-- Modal Register Sider's Featured Subjects -->
             <div class="modal modalRegisterFeat${listFeaturedSubject.get(iFeat).getSubjectId()} "
-                 tabindex="-1"
-                 role="dialog" >
-                <div class="modal-dialog modal-dialog-centered" 
+                 tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered ${sessionScope.userEmail == null ? "modal-lg": ""}" 
                      role="document">
                     <div class="modal-content">
                         <div class="modal-header text-bg-primary">
@@ -1182,7 +1191,13 @@
                                 </c:import>
                             </c:if>
                             <c:if test="${sessionScope.userEmail == null}">
-
+                                <c:import url="SubjectRegisterGuest.jsp">
+                                    <c:param name="service" value="freshRegister"/>
+                                    <c:param name="subjectId" value="${listFeaturedSubject.get(iFeat).getSubjectId()}"/>
+                                    <c:param name="thumbnail" value="${listFeaturedSubject.get(iFeat).getThumbnail()}"/>
+                                    <c:param name="subjectName" value="${listFeaturedSubject.get(iFeat).getSubjectName()}"/>
+                                    <c:param name="tagLine" value="${listFeaturedSubject.get(iFeat).getTagLine()}"/>
+                                </c:import>
                             </c:if>
                         </div>
                     </div>
@@ -1192,9 +1207,8 @@
         <c:forEach items="${allSubjectsList}" var="p">
             <!-- Modal Register Subjects in Subjects List -->
             <div class="modal modalRegisterList${p.getSubjectId()} "
-                 tabindex="-1"
-                 role="dialog" >
-                <div class="modal-dialog modal-dialog-centered" 
+                 tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered ${sessionScope.userEmail == null ? "modal-lg": ""}" 
                      role="document">
                     <div class="modal-content">
                         <div class="modal-header text-bg-primary">
@@ -1220,7 +1234,13 @@
                                 </c:import>
                             </c:if>
                             <c:if test="${sessionScope.userEmail == null}">
-
+                                <c:import url="SubjectRegisterGuest.jsp">
+                                    <c:param name="service" value="freshRegister"/>
+                                    <c:param name="subjectId" value="${p.getSubjectId()}"/>
+                                    <c:param name="thumbnail" value="${p.getThumbnail()}"/>
+                                    <c:param name="subjectName" value="${p.getSubjectName()}"/>
+                                    <c:param name="tagLine" value="${p.getTagLine()}"/>
+                                </c:import>
                             </c:if>
                         </div>
                     </div>

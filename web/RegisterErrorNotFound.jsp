@@ -31,6 +31,18 @@
                             <div>
                                 <h5 class="text-danger text-center">Registration Request Not Found</h5>
                                 <p class="text-center">There must be something wrong with your request!</p>
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col">
+
+                                        </div>
+                                        <div class="col">
+                                            <a href="public/SubjectsList">
+                                                <button type="button" class="btn btn-primary">Back to Subjects List</button>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
