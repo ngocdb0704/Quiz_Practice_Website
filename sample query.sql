@@ -664,11 +664,6 @@ INSERT INTO [Dimension] VALUES(50, 'Group', 'Initiating', 'This is initiating');
 INSERT INTO [Dimension] VALUES(50, 'Group', 'Planning', 'This is planning');
 INSERT INTO [Dimension] VALUES(50, 'Group', 'Executing', 'This is executing');
 
-insert into [Gender] values ('Male');
-INSERT INTO [Gender] values ('Female');
-INSERT INTO [Gender] values ('Prefer not to say');
-
-
 INSERT INTO [Role] values ('Customer');
 INSERT INTO [Role] values ('Admin');
 INSERT INTO [Role] values ('Marketing');
