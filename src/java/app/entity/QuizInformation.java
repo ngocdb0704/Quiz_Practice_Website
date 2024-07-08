@@ -20,6 +20,7 @@ public class QuizInformation {
     private boolean published;
     private Timestamp updatedTime;
     private int numberOfAttempts;
+    private String Description;
 
     public QuizInformation(ResultSet rs) throws SQLException {
         this.quizId = rs.getInt("QuizId");
@@ -34,6 +35,7 @@ public class QuizInformation {
         this.updatedTime = rs.getTimestamp("UpdatedTime");
         this.questionCount = rs.getInt("QuestionCount");
         this.numberOfAttempts = this.questionCount > 0 ? (this.quizId + 8) % 22 : 0;
+        this.Description = rs.getString("Description");
     }
 
     public int getQuizId() {
@@ -87,9 +89,18 @@ public class QuizInformation {
     public boolean isValid() {
         return questionCount > 0;
     }
-    
+
+    public String getDescription() {
+        return Description;
+    }
+
+    public void setDescription(String Description) {
+        this.Description = Description;
+    }
+
     @Override
     public String toString() {
-        return "QuizInformation{" + "quizId=" + quizId + ", subjectId=" + subjectId + ", subjectName=" + subjectName + ", quizName=" + quizName + ", level=" + level + ", durationInMinutes=" + durationInMinutes + ", passRate=" + passRate + ", type=" + type + ", published=" + published + ", updatedTime=" + updatedTime + '}';
+        return "QuizInformation{" + "quizId=" + quizId + ", subjectId=" + subjectId + ", subjectName=" + subjectName + ", quizName=" + quizName + ", level=" + level + ", questionCount=" + questionCount + ", durationInMinutes=" + durationInMinutes + ", passRate=" + passRate + ", type=" + type + ", published=" + published + ", updatedTime=" + updatedTime + ", numberOfAttempts=" + numberOfAttempts + ", Description=" + Description + '}';
     }
+    
 }
