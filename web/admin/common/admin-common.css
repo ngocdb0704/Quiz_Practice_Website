@@ -150,33 +150,3 @@ th {
 .filters {
     margin-bottom: 20px;
 }
-
-.admin-table .checkbox-big {
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
-}
-
-.admin-table th {
-    white-space: nowrap;
-}
-
-.admin-table td {
-    white-space: nowrap;
-}
-
-.admin-table th::after {
-    float: none !important;
-    margin: 0 !important;
-    vertical-align: middle !important;
-    position: relative;
-    left: 4px;
-}
-
-.admin-table th[data-sorted-direction="ascending"]::after {
-    top: -3px;
-}
-
-.admin-table th[data-sorted-direction="descending"]::after {
-    top: 3px;
-}

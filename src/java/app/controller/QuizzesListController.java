@@ -44,12 +44,10 @@ public class QuizzesListController extends HttpServlet {
         
         int type = Parsers.parseIntOrDefault(quizTypes, -1);
         int subjectId = Parsers.parseIntOrDefault(subject, -1);
-        boolean isPublished = Parsers.parseIntOrDefault(published, 1) == 1 ? true : false;
         QuizType quizType = QuizType.fromInt(type);
 
         QueryResult result = daoQuiz.search(
                 quizName,
-                isPublished,
                 subjectId,
                 quizType,
                 page, pageSize
@@ -71,64 +69,6 @@ public class QuizzesListController extends HttpServlet {
 
         request.getRequestDispatcher(PAGE_NAME).forward(request, response);
     } 
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-        String[] values = request.getParameterValues("ids[]");
-        String action = request.getParameter("action");
-        Integer[] ids = Parsers.parseInts(values);
-        DAOQuiz daoQuiz = new DAOQuiz();
-        
-        
-        if (ids.length > 0) {
-            HttpSession session = request.getSession(true);
-            
-            switch (action) {
-                case "markDraft" -> {
-                    int n = daoQuiz.markDraft(ids);
-                    
-                    if (n == ids.length) {
-                        session.setAttribute("notyfSuccessMessage", "Archived " + n + " items");
-                    } else {
-                        session.setAttribute("notyfErrorMessage", "Some of your items cannot be archived");
-                    }
-                }
-                case "publish" -> {
-                    int n = daoQuiz.publish(ids);
-                    
-                    if (n == ids.length) {
-                        session.setAttribute("notyfSuccessMessage", "Published " + n + " items");
-                    } else {
-                        session.setAttribute("notyfErrorMessage", "Some of your items cannot be published");
-                    }
-                }
-                case "delete" -> {
-                    int n = daoQuiz.delete(ids);
-
-                    if (n == ids.length) {
-                        session.setAttribute("notyfSuccessMessage", "Deleted " + n + " items");
-                    } else {
-                        session.setAttribute("notyfErrorMessage", "Some of your items cannot be deleted");
-                    }
-                }
-                default -> System.out.println(action);
-            }
-            
-        }
-
-        String redirectUrl = String.format(
-                "quizzeslist?published=%s",
-                request.getParameter("published")
-        );
-
-        String page = request.getParameter("page");
-        if (page != null) {
-            redirectUrl += "&page=" + page;
-        }
-
-        response.sendRedirect(redirectUrl);
-    }
 
     @Override
     public String getServletInfo() {
