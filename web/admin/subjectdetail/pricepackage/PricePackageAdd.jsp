@@ -50,7 +50,7 @@
 
                             <i class="bi bi-percent"></i>
                             <label for="salePercentage" class="col-form-label">Sale Percentage</label>
-                            <input type="number" class="form-control" id="salePercentage" x-model="percentage" name="percentage" placeholder="Enter sale price" value="0" step="1" min="0" max="100" required>
+                            <input type="number" class="form-control" id="salePercentage" x-model="percentage" name="percentage" placeholder="Enter sale percentage" value="0" step="1" min="0" max="100" required>
 
                             <i class="bi bi-tags"></i>
                             <label for="salePrice" class="col-form-label">Sale Price</label>
