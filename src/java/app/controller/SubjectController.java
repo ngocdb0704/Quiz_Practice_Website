@@ -228,6 +228,15 @@ public class SubjectController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
+        String email = request.getParameter("email");
+        if (email != null && !email.isEmpty()) {
+            // Check if the email already exists in the database
+            if (isEmailRegistered(email)) {
+                response.setStatus(HttpServletResponse.SC_CONFLICT); // 409 Conflict
+            } else {
+                response.setStatus(HttpServletResponse.SC_OK);
+            }
+        }
     }
 
     /**
@@ -313,5 +322,10 @@ public class SubjectController extends HttpServlet {
             }
         }
         return parent;
+    }
+    
+    private boolean isEmailRegistered(String email) {
+        DAOUser daoUser = new DAOUser();
+        return daoUser.isEmailRegistered(email);
     }
 }
