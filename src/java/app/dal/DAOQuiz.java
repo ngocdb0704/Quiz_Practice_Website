@@ -14,13 +14,7 @@ import java.util.List;
 public class DAOQuiz extends DBContext {
     private static final String LISTING_QUERY =
             """
-            with cte as (
-              select q.QuizId, count(QuestionId) as QuestionCount from [Quiz] q
-              left join [QuizQuestion] qq on q.QuizId = qq.QuizId
-              group by q.QuizId
-            )
-            select q.*, s.SubjectTitle, QuestionCount from cte
-            inner join [Quiz] q on q.QuizId = cte.QuizId
+            select q.*, s.SubjectTitle from [Quiz] q
             inner join [Subject] s on q.SubjectId = s.SubjectId""";
 
     private static final String COUNT_LISTING_QUERY =
@@ -30,19 +24,13 @@ public class DAOQuiz extends DBContext {
     private static final String SIMULATION_QUERY =
              """
              with
-             qCountCte as (
-                 select q.QuizId, count(QuestionId) as QuestionCount from [Quiz] q
-                 left join [QuizQuestion] qq on q.QuizId = qq.QuizId
-                 group by q.QuizId
-             ),
              activeSubjectsCte as (
                 select SubjectId, Email from [Registration] r
                 inner join [Package] p on r.PackageId = p.PackageId
                 inner join [User] u on u.UserId = r.UserId
                 where r.RegistrationStatusId = 3
              )
-             select q.*, s.SubjectTitle, QuestionCount, activeSubjectsCte.Email from qCountCte
-             inner join [Quiz] q on q.QuizId = qCountCte.QuizId
+             select q.*, s.SubjectTitle, activeSubjectsCte.Email from [Quiz] q
              inner join [Subject] s on q.SubjectId = s.SubjectId
              inner join activeSubjectsCte on activeSubjectsCte.SubjectId = q.SubjectId
              """;
@@ -169,7 +157,6 @@ public class DAOQuiz extends DBContext {
         try {
             QueryBuilder query = new QueryBuilder(LISTING_QUERY)
                     .setLoggingEnabled(true)
-                    .orderBy("QuestionCount", OrderDirection.DESC)
                     .orderBy("q.UpdatedTime", OrderDirection.DESC)
                     .orderBy("q.SubjectId", OrderDirection.ASC);
 

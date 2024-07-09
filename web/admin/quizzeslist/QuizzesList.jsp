@@ -64,10 +64,7 @@
             </main>
         </div>
 
-        <script src="admin/quizzeslist/QuizzesList.js"></script>
         <script src="public/js/sortable/sortable.min.js"></script>
-        <script src="public/js/alpine/core.min.js"></script>
-        <%@include file="/admin/common/notyf.jsp" %>
     </body>
 </html>
 

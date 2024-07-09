@@ -123,7 +123,7 @@ public class RegistrationController extends HttpServlet {
             end = Math.min(page * numPerPage, size);
             Vector<Registration> responseVector = daoRegistration.getVectorByPage(registrationVector, start, end);
             Vector<Transaction> history = daoRegistration.getTransactionHistory(userEmail);
-            String sendFilter = sendFilter(parentTier1, parentTier2, parentTier3);
+            String sendFilter = sendFilter(parentTier1, parentTier2, parentTier3, inputKey);
             String noti = (String) session.getAttribute("noti");
             if (noti != null) {
                 request.setAttribute("noti", noti);
@@ -220,7 +220,7 @@ public class RegistrationController extends HttpServlet {
         }
     }
 
-    private String sendFilter(int[] parentTier1, int[] parentTier2, int[] parentTier3) {
+    private String sendFilter(int[] parentTier1, int[] parentTier2, int[] parentTier3, String key) {
         String url = "";
         int i;
         if (parentTier1 != null) {
@@ -237,6 +237,9 @@ public class RegistrationController extends HttpServlet {
             for (i = 0; i < parentTier3.length; i++) {
                 url += "idTier3=" + parentTier3[i] + "&";
             }
+        }
+        if(key != null){
+            url += "key=" + key + "&";
         }
         return url;
     }

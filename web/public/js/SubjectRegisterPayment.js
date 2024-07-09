@@ -29,7 +29,6 @@ async function checkPaidRegister(price, content, responseCaptcha) {
             //check flag
             //change this to 1 after testing
             if (isPaid === 1) {
-                alert("Subject's Successfully Registered!");
                 let accountField = document.getElementById("payAcc");
                 accountField.value = acc;
                 let contentField = document.getElementById("payCon");

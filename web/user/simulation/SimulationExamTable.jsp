@@ -37,7 +37,7 @@
                         </span>
                     </td>
                     <td>
-                        ${quiz.getQuestionCount()}
+                        ${quiz.getTotalQuestion()}
                     </td>
                     <td>${quiz.getDurationInMinutes()}</td>
                     <td>${quiz.getPassRate()}%</td>

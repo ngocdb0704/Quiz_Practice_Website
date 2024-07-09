@@ -23,10 +23,7 @@
                 <td>${quiz.getSubjectName()}</td>
                 <td>${quiz.getQuizName()}</td>
                 <td>
-                    ${quiz.getQuestionCount()}
-                    <c:if test="${quiz.getQuestionCount() == 0}">
-                        <i class="bi bi-exclamation-triangle"></i>
-                    </c:if>
+                    ${quiz.getTotalQuestion()}
                 </td>
                 <td>
                     ${quiz.getNumberOfAttempts()}
@@ -50,11 +47,6 @@
                 <td>${quiz.getDurationInMinutes()}</td>
                 <td>${quiz.getPassRate()}%</td>
                 <td>${quiz.getType().toString()}</td>
-                <td>
-                    <span class="badge w-100 text-bg-${quiz.isPublished() ? 'primary' : 'secondary'}">
-                        ${quiz.isPublished() ? 'Published' : 'Archived'}
-                    </span>
-                </td>
                 <td>
                     <a href="admin/quizzeslist/details?quizid=${quiz.quizId}">
                         ${quiz.getNumberOfAttempts() > 0 ? 'View' : 'Edit'}

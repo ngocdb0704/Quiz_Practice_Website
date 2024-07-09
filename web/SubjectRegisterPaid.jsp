@@ -19,13 +19,19 @@
         <main class="container">
             <div class="container">
                 <h1>Subject Registered Successfully</h1>
-                <h4 class="text-center">
-                    Thank you for your registration
-                    <br> Please check your email
-                </h4>
                 <div class="row">
                     <div class="col">
-
+                        <div class="card">
+                            <img src="public/images/thankImage.png" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <h5 class="card-title text text-success"> Thank you for your registration!</h5>
+                                <p class="card-text">
+                                    We have sent you an email about your new password!.
+                                    <br><span class="text text-danger">Do not share this email with anyone!</span>
+                                    <br>Your can log in Quiz_Practice using email address <span class="text text-primary">${requestScope.email}</span>
+                                    <br>and the password in this email.
+                            </div>
+                        </div>
                     </div>
                     <div class="col">
                         <div class="card">
@@ -42,9 +48,6 @@
                                 </p>
                             </div>
                         </div>
-                    </div>
-                    <div class="col">
-
                     </div>
                 </div>
             </div>
