@@ -507,8 +507,72 @@ public class DAORegistration extends DBContext {
         return n;
     }
 
+    public int addPaidRegistration(int packId, int userId, int duration, String account, String content) {
+        int n = 0;
+        DAOPackage daoPack = new DAOPackage();
+        long epoch = System.currentTimeMillis() / 1000;
+        String registrationTime = new java.text.SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date(epoch * 1000));
+        String validFrom = registrationTime;
+        long epochTo = epoch + duration * 30 * 24 * 60 * 60;
+        String validTo = new java.text.SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date(epochTo * 1000));
+        int status = 3;
+        String sql = """
+                     INSERT INTO [dbo].[Registration]
+                                ([UserId]
+                                ,[RegistrationTime]
+                                ,[PackageId]
+                                ,[RegistrationStatusId]
+                                ,[ValidFrom]
+                                ,[ValidTo]
+                                ,[TransactionContent]
+                                ,[TransactionCode]
+                                ,[TransactionAccount])
+                          VALUES
+                                (?,?,?,?,?,?
+                                ,?,?,?) """;
+        try {
+            PreparedStatement pre = connection.prepareStatement(sql);
+            pre.setInt(1, userId);
+            pre.setString(2, registrationTime);
+            pre.setInt(3, packId);
+            pre.setInt(4, status);
+            pre.setString(5, validFrom);
+            pre.setString(6, validTo);
+            pre.setString(7, content);
+            pre.setString(8, null);
+            pre.setString(9, account);
+            n = pre.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAORegistration.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return n;
+    }
+
+    public Registration getSingleRegistrationByUserPackageId(int packageId, int userId) {
+        Registration r = new Registration();
+        String sql = """
+                    select r.RegistrationId, r.RegistrationTime, r.ValidFrom, r.ValidTo from Registration r
+                    where r.UserId = ? and r.PackageId = ?""";
+        try {
+            PreparedStatement pre = connection.prepareStatement(sql);
+            pre.setInt(1, userId);
+            pre.setInt(2, packageId);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                r.setRegistrationId(rs.getInt(1));
+                r.setRegistrationTime(rs.getDate(2));
+                r.setValidFrom(rs.getDate(3));
+                r.setValidTo(rs.getDate(4));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DAORegistration.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return r;
+    }
+
     public static void main(String[] args) {
         DAORegistration dao = new DAORegistration();
+        System.out.println(dao.getSingleRegistrationByUserPackageId(37, 1).getValidFrom());
 
     }
 }
