@@ -22,7 +22,7 @@
         <%@include file="/common/header.jsp" %>
 
 
-        <main class="row">
+        <main class="row mw-100">
             <div class="col-lg-2 col-md-3 col-sm-12 mx-lg-3 mx-md-0 bg-light border rounded-3">
                 <h4 class="pt-3">Search for subject:</h4>
 
@@ -54,7 +54,7 @@
                         <h4 class="">Tags</h4>
                     </div>
                     <ul class="pt-1 pb-3 list-group list-group-flush">
-                        <ul><!--ul is here to force all tags into a single line-->
+                        <ul class="ps-2"><!--ul is here to force all tags into a single line-->
                             <c:if test="${SubjectTagNew}">
                                 <span><a class="badge text-bg-success" href="./public/SubjectsList#carouselNewSubject">New</a></span>
                             </c:if>

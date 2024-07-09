@@ -35,7 +35,7 @@ if (fileInput) fileInput.addEventListener('change', event => {
                 return;
             }
 
-            uploadName.innerHTML = "Selected file: " + name.slice(name.lastIndexOf("\\") + 1);
+            uploadName.innerHTML = "Selected file: " + file.name.slice(file.name.lastIndexOf("\\") + 1);
             uploadName.innerHTML += "<br><p style=\"color: blue;\">(Save profile to save new profile picture)</p>";
             changeSaveButtonStatus();
 

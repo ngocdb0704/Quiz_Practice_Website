@@ -632,7 +632,7 @@ public class DAOSubject extends DBContext {
 
     public Subject getSubjectById(int id) {
         Subject Out = null;
-        String sql = "SELECT TOP 1 SubjectId, SubjectTitle, SubjectTagLine, SubjectBriefInfo, SubjectDescription, SubjectThumbnail, SubjectCategoryId FROM Subject WHERE SubjectId = ?";
+        String sql = "SELECT TOP 1 SubjectId, SubjectTitle, SubjectTagLine, SubjectBriefInfo, SubjectDescription, SubjectThumbnail, SubjectCategoryId, IsFeaturedSubject, SubjectStatus, SubjectOwnerId FROM Subject WHERE SubjectId = ?";
 
         PreparedStatement pre;
         try {
@@ -640,7 +640,8 @@ public class DAOSubject extends DBContext {
             pre.setInt(1, id);
             ResultSet rs = pre.executeQuery();
             if (rs.next()) {
-                Out = new Subject(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getInt(7));
+                Out = new Subject(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getInt(7)
+                        , rs.getBoolean(8), rs.getInt(9), rs.getInt(10));
             }
         } catch (SQLException ex) {
             Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
@@ -893,10 +894,49 @@ public class DAOSubject extends DBContext {
         }
         return map;
     }
+    
+    public int getLatestSubjectId() {
+        String sql = "SELECT TOP 1 SubjectId FROM Subject ORDER BY SubjectId DESC";
+        try {
+            Statement state = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = state.executeQuery(sql);
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return -1;
+    }
+    
+    public Subject getSubjectByPackageId (int packageId){
+        Subject sub = new Subject();
+        String sql = """
+                     select s.SubjectTitle, s.SubjectThumbnail, s.SubjectTagLine, 
+                     p.PackageName, p.SalePrice from [Package] p
+                     join [Subject] s on s.SubjectId = p.SubjectId
+                     where p.PackageId = ?""";
+        try {
+            PreparedStatement pre = connection.prepareStatement(sql);
+            //change query due to database script's change
+            pre.setInt(1, packageId);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                sub.setSubjectName(rs.getString(1));
+                sub.setThumbnail(rs.getString(2));
+                sub.setTagLine(rs.getString(3));
+                sub.setLowestPackageName(rs.getString(4));
+                sub.setPackageSalePrice(rs.getFloat(5));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DAOSubject.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return sub;
+    }
 
     public static void main(String[] args) {
         DAOSubject dao = new DAOSubject();
-        HashMap<Integer, ArrayList<Package>> map = dao.getSubjectPackagesMap();
+        System.out.println(dao.getSubjectByPackageId(4).getTagLine());
 
     }
 }

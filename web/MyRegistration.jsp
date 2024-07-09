@@ -470,7 +470,7 @@
                         </div>
                         <div class="modal-body">
                             <!-- It's Subject Register Popup - for edit registration -->
-                            <c:import url="SubjectRegisterPopUp.jsp">
+                            <c:import url="SubjectRegisterUser.jsp">
                                 <c:param name="service" value="editRegist"/>
                                 <c:param name="subjectId" value="${p.getSubjectId()}"/>
                                 <c:param name="thumbnail" value="${p.getSubjectImg()}"/>

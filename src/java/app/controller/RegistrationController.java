@@ -189,7 +189,7 @@ public class RegistrationController extends HttpServlet {
             response.sendRedirect(controller);
         }
         //register new subject 
-        if (service.equals("register")){
+        if (service.equals("register")) {
             int userId = Integer.parseInt(session.getAttribute("userId").toString());
             int packageId = Integer.parseInt(request.getParameter("selectedPackage"));
             int n = daoRegistration.addRegistration(packageId, userId);

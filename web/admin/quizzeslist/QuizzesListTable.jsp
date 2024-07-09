@@ -4,7 +4,6 @@
 <table class="admin-table table table-striped table-bordered table-hover sortable-theme-bootstrap" data-sortable>
     <thead class="thead-dark">
         <tr>
-            <th></th>
             <th>ID</th>
             <th>Subject</th>
             <th>Quiz Name</th>
@@ -14,26 +13,12 @@
             <th>Duration (minutes)</th>
             <th>Pass Rate</th>
             <th>Type</th>
-            <th>Status</th>
             <th></th>
         </tr>
     </thead>
     <tbody x-ref="tableBody">
         <c:forEach var="quiz" items="${result.getResults()}">
             <tr>
-                <td style="text-align: center; vertical-align: middle">
-                    <input
-                        class="checkbox-big"
-                        type="checkbox"
-                        name="ids"
-                        @change="toggle('${quiz.getQuizId()}', '${quiz.getQuizName()}', ${quiz.isValid()}, ${quiz.getNumberOfAttempts()})"
-                        :checked="map['${quiz.getQuizId()}']"
-                        data-id="${quiz.getQuizId()}"
-                        data-title="${quiz.getQuizName()}"
-                        data-valid="${quiz.isValid()}"
-                        data-attempts="${quiz.getNumberOfAttempts()}"
-                    >
-                </td>
                 <td>${quiz.getQuizId()}</td>
                 <td>${quiz.getSubjectName()}</td>
                 <td>${quiz.getQuizName()}</td>

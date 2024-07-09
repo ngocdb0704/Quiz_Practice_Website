@@ -26,6 +26,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="user/MyRegistrations">My Registration</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="user/simulation">Simulation Exams</a>
+                    </li>
                 </c:if>
             </ul>
             <div class="d-flex gap-2">

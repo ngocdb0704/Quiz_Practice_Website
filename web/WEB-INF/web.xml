@@ -24,6 +24,10 @@
         <servlet-name>SubjectDetailsController</servlet-name>
         <servlet-class>app.controller.SubjectDetailsController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>SubjectRegisterController</servlet-name>
+        <servlet-class>app.controller.SubjectRegisterController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Homepage</servlet-name>
         <url-pattern>/Homepage</url-pattern>
@@ -124,7 +128,6 @@
         <servlet-name>SubjectDetails</servlet-name>
         <url-pattern>/SubjectDetails</url-pattern>
     </servlet-mapping>
-    
     <servlet>
         <servlet-name>NewSubject</servlet-name>
         <servlet-class>app.controller.NewSubjectController</servlet-class>
@@ -132,5 +135,9 @@
     <servlet-mapping>
         <servlet-name>NewSubject</servlet-name>
         <url-pattern>/admin/newsubject</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SubjectRegisterController</servlet-name>
+        <url-pattern>/public/registerSubjectGuest</url-pattern>
     </servlet-mapping>
 </web-app>
