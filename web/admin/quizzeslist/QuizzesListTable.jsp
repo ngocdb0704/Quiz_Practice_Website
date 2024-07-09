@@ -23,10 +23,7 @@
                 <td>${quiz.getSubjectName()}</td>
                 <td>${quiz.getQuizName()}</td>
                 <td>
-                    ${quiz.getQuestionCount()}
-                    <c:if test="${quiz.getQuestionCount() == 0}">
-                        <i class="bi bi-exclamation-triangle"></i>
-                    </c:if>
+                    ${quiz.getTotalQuestion()}
                 </td>
                 <td>
                     ${quiz.getNumberOfAttempts()}

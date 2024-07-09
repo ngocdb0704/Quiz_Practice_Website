@@ -6,14 +6,11 @@ import java.sql.Timestamp;
 import java.util.Random;
 
 public class QuizInformation {
-
-
     private int quizId;
     private int subjectId;
     private String subjectName;
     private String quizName;
     private QuizLevel level;
-    private int questionCount;
     private int durationInMinutes;
     private int passRate;
     private QuizType type;
@@ -34,8 +31,7 @@ public class QuizInformation {
         this.type = QuizType.fromInt(rs.getInt("QuizType"));
         this.published = rs.getBoolean("IsPublished");
         this.updatedTime = rs.getTimestamp("UpdatedTime");
-        this.questionCount = rs.getInt("QuestionCount");
-        this.numberOfAttempts = this.questionCount > 0 ? (this.quizId + 8) % 22 : 0;
+        this.numberOfAttempts = this.totalQuestion > 0 ? (this.quizId + 8) % 22 : 0;
         this.description = rs.getString("Description");
         this.totalQuestion = rs.getInt("TotalQuestion");
     }
@@ -80,16 +76,8 @@ public class QuizInformation {
         return updatedTime;
     }
 
-    public int getQuestionCount() {
-        return questionCount;
-    }
-    
     public int getNumberOfAttempts() {
         return numberOfAttempts;
-    }
-    
-    public boolean isValid() {
-        return questionCount > 0;
     }
 
     public String getDescription() {
@@ -110,7 +98,6 @@ public class QuizInformation {
 
     @Override
     public String toString() {
-        return "QuizInformation{" + "quizId=" + quizId + ", subjectId=" + subjectId + ", subjectName=" + subjectName + ", quizName=" + quizName + ", level=" + level + ", questionCount=" + questionCount + ", durationInMinutes=" + durationInMinutes + ", passRate=" + passRate + ", type=" + type + ", published=" + published + ", updatedTime=" + updatedTime + ", numberOfAttempts=" + numberOfAttempts + ", description=" + description + ", totalQuestion=" + totalQuestion + '}';
+        return "QuizInformation{" + "quizId=" + quizId + ", subjectId=" + subjectId + ", subjectName=" + subjectName + ", quizName=" + quizName + ", level=" + level + ", durationInMinutes=" + durationInMinutes + ", passRate=" + passRate + ", type=" + type + ", published=" + published + ", updatedTime=" + updatedTime + ", numberOfAttempts=" + numberOfAttempts + ", description=" + description + ", totalQuestion=" + totalQuestion + '}';
     }
-
 }

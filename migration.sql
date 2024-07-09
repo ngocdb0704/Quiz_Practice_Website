@@ -346,7 +346,9 @@ CREATE TABLE [dbo].[Quiz] (
 	[PassRate] int check(0 <= [PassRate] and [PassRate] <= 100) default(50),
 	[QuizType] char(10) check([QuizType] in (0, 1)) default(0), --simulation, lesson-quiz
 	[IsPublished] bit,
-	[UpdatedTime] [datetime] default(CURRENT_TIMESTAMP)
+	[UpdatedTime] [datetime] default(CURRENT_TIMESTAMP),
+	[Description] [nvarchar](max),
+	[TotalQuestion] int
 )
 GO
 
