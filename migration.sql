@@ -380,5 +380,6 @@ CREATE TABLE [dbo].[AttemptQuestionAnswer] (
 	[AttemptId] int foreign key references [dbo].[Attempt]([AttemptId]) on delete cascade,
 	[QuestionId] int not null,
 	[AnswerId] int,
+	[Marked] bit default(0),
 	FOREIGN KEY ([QuestionId], [AnswerId]) REFERENCES [dbo].[Answer]([QuestionID], [AnswerID])
 );

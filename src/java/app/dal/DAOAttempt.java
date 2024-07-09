@@ -1,6 +1,9 @@
 package app.dal;
 
+import app.entity.Answer;
 import app.entity.Attempt;
+import app.entity.AttemptQuestion;
+import app.entity.Question;
 import app.entity.QuizInformation;
 import java.sql.Timestamp;
 import java.sql.Statement;
@@ -9,6 +12,8 @@ import java.sql.SQLException;
 import java.sql.PreparedStatement;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DAOAttempt extends DBContext {
     public Attempt createAttempt(int quizId, int userId) {
@@ -157,9 +162,85 @@ public class DAOAttempt extends DBContext {
         return false;
     }
 
+    public QueryResult paginateAttemptQuestions(int attemptId, int pageNo) {
+        List<AttemptQuestion> ret = new ArrayList<>();
+        QuestionDAO qdao = new QuestionDAO();
+        int count = 0;
+
+        try {
+            QueryBuilder query = new QueryBuilder("select * from [AttemptQuestionAnswer]");
+            ResultSet rs = query
+                .whereAnd("AttemptId", QueryBuilder.Operator.EQUALS, attemptId)
+                .orderBy("QuestionId", QueryBuilder.OrderDirection.ASC)
+                .page(pageNo, 1)
+                .toPreparedStatement(connection)
+                .executeQuery();
+
+            while (rs.next()) {
+                AttemptQuestion attemptQuestion = new AttemptQuestion(rs);
+
+                Question question = qdao.getQuestion(attemptQuestion.getQuestion().getQuestionID());
+                attemptQuestion.setQuestion(question);
+
+                ret.add(attemptQuestion);
+            }
+
+            QueryBuilder countQuery = new QueryBuilder("select count(*) from [AttemptQuestionAnswer]", query);
+            rs = countQuery.toPreparedStatement(connection).executeQuery();
+
+            if (rs.next()) {
+                count = rs.getInt(1);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            qdao.close();
+        }
+
+        return new QueryResult(count, 1, ret);
+    }
+
+    public boolean toggleMarkQuestion(int attemptId, int questionId) {
+        try {
+            Attempt attempt = getAttemptById(attemptId);
+
+            if (attempt == null) {
+                throw new Exception("Cannot mark on non-existent attempt " + attemptId);
+            }
+
+            if (attempt.isFinished()) {
+                throw new Exception("Attempt is past its due-date, cannot mark this attempt id " + attemptId);
+            }
+
+            PreparedStatement stmt = connection.prepareStatement("update [AttemptQuestionAnswer] set [Marked] = [Marked] ^ 1 where [AttemptId] = ? and [QuestionId] = ?");
+
+            stmt.setInt(1, attemptId);
+            stmt.setInt(2, questionId);
+
+            int n = stmt.executeUpdate();
+
+            return n == 1;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return false;
+    }
+
     public static void main(String[] args) {
         DAOAttempt da = new DAOAttempt();
         Attempt attempt = da.createAttempt(1, 1);
         da.answerQuestion(attempt.getAttemptId(), 1, 2);
+        da.toggleMarkQuestion(attempt.getAttemptId(), 1);
+
+        QueryResult<AttemptQuestion> result = da.paginateAttemptQuestions(attempt.getAttemptId(), 1);
+        System.out.println(result.getTotalPages());
+        AttemptQuestion q = result.getResults().get(0);
+
+        System.out.println(q.getQuestion().getQuestionName());
+        for (Answer ans : q.getQuestion().getAnswers()) {
+            System.out.print(ans.getAnswerName());
+            System.out.println(ans.getAnswerID() == q.getSelectedAnswer() ? " (selected)" : "");
+        }
     }
 }
