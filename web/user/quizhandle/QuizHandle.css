@@ -1,0 +1,8 @@
+body {
+    height: 100vh;
+}
+
+.action-buttons a, .action-buttons button {
+    display: inline-block;
+    width: 120px;
+}

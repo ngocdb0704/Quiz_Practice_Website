@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 
 public class Attempt {
     private int attemptId;
@@ -34,6 +35,10 @@ public class Attempt {
 
     public int getCorrectCount() {
         return correctCount;
+    }
+
+    public long getEndEpoch() {
+        return this.dueDate.getTime();
     }
 
     public boolean isFinished() {
