@@ -357,3 +357,28 @@ CREATE TABLE [dbo].[QuizQuestion] (
 	[QuestionId] [int] foreign key references [dbo].[Question]([QuestionId])
 	PRIMARY KEY([QuizId], [QuestionId])
 )
+
+CREATE TABLE [dbo].[QuizLessonQuestionCount] (
+    QuizId INT,
+    LessonId INT,
+    QuestionCount INT,
+    PRIMARY KEY (QuizId, LessonId),
+    FOREIGN KEY (QuizId) REFERENCES Quiz(QuizId)
+);
+
+CREATE TABLE [dbo].[Attempt] (
+	[AttemptId] int primary key identity(1, 1),
+	[QuizId] int not null foreign key references [dbo].[Quiz]([QuizId]),
+	[UserId] int not null foreign key references [dbo].[User]([UserId]),
+	[CorrectCount] int check([CorrectCount] >= 0) default(0),
+	[DueDate] datetime not null
+);
+
+CREATE UNIQUE INDEX ans_uniq on [dbo].[Answer]([QuestionID], [AnswerID])
+
+CREATE TABLE [dbo].[AttemptQuestionAnswer] (
+	[AttemptId] int foreign key references [dbo].[Attempt]([AttemptId]),
+	[QuestionId] int,
+	[AnswerId] int,
+	FOREIGN KEY ([QuestionId], [AnswerId]) REFERENCES [dbo].[Answer]([QuestionID], [AnswerID])
+);
