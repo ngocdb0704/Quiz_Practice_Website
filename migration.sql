@@ -377,8 +377,8 @@ CREATE TABLE [dbo].[Attempt] (
 CREATE UNIQUE INDEX ans_uniq on [dbo].[Answer]([QuestionID], [AnswerID])
 
 CREATE TABLE [dbo].[AttemptQuestionAnswer] (
-	[AttemptId] int foreign key references [dbo].[Attempt]([AttemptId]),
-	[QuestionId] int,
+	[AttemptId] int foreign key references [dbo].[Attempt]([AttemptId]) on delete cascade,
+	[QuestionId] int not null,
 	[AnswerId] int,
 	FOREIGN KEY ([QuestionId], [AnswerId]) REFERENCES [dbo].[Answer]([QuestionID], [AnswerID])
 );

@@ -21,6 +21,8 @@ public class DAOAttempt extends DBContext {
                 throw new Exception("Could not create attempt for an unknown quiz");
             }
 
+            quiz.close();
+
             QueryBuilder builder = new QueryBuilder();
             builder.setReturnKeys(true);
             builder.insertInto("[Attempt]", "QuizId", "UserId", "DueDate");
@@ -45,12 +47,34 @@ public class DAOAttempt extends DBContext {
 
             int id = rs.getInt(1);
 
-            return getAttemptById(id);
+            Attempt attempt = getAttemptById(id);
+
+            if (attempt == null) return null;
+
+            prepareAnswerSheet(attempt);
+
+            return attempt;
         } catch (Exception ex) {
             ex.printStackTrace();
         }
 
         return null;
+    }
+
+    private void prepareAnswerSheet(Attempt attempt) throws Exception {
+        ResultSet rs = new QueryBuilder("select QuestionId from [QuizQuestion]")
+                            .whereAnd("QuizId", QueryBuilder.Operator.EQUALS, attempt.getQuizId())
+                            .toPreparedStatement(connection)
+                            .executeQuery();
+
+        QueryBuilder insert = new QueryBuilder();
+        insert.insertInto("[AttemptQuestionAnswer]", "AttemptId", "QuestionId");
+
+        while (rs.next()) {
+            insert.values(attempt.getAttemptId(), rs.getInt(1));
+        }
+
+        insert.toPreparedStatement(connection).executeUpdate();
     }
 
     private boolean saveAttempt(Attempt attempt) {
@@ -105,14 +129,37 @@ public class DAOAttempt extends DBContext {
         return false;
     }
 
+    public boolean answerQuestion(int attemptId, int questionId, int answerId) {
+        try {
+            Attempt attempt = getAttemptById(attemptId);
+
+            if (attempt == null) {
+                throw new Exception("Cannot answer on non-existent attempt " + attemptId);
+            }
+
+            if (attempt.isFinished()) {
+                throw new Exception("Attempt is past its due-date, cannot answer this attempt id " + attemptId);
+            }
+
+            PreparedStatement stmt = connection.prepareStatement("update [AttemptQuestionAnswer] set [AnswerId] = ? where [AttemptId] = ? and [QuestionId] = ?");
+
+            stmt.setInt(1, answerId);
+            stmt.setInt(2, attemptId);
+            stmt.setInt(3, questionId);
+
+            int n = stmt.executeUpdate();
+
+            return n == 1;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return false;
+    }
+
     public static void main(String[] args) {
         DAOAttempt da = new DAOAttempt();
-        Attempt before = da.createAttempt(1, 1);
-        System.out.println(before.getDueDate());
-        System.out.println(before.isFinished());
-        da.finishAttempt(before.getAttemptId());
-        before = da.getAttemptById(before.getAttemptId());
-        System.out.println(before.getDueDate());
-        System.out.println(before.isFinished());
+        Attempt attempt = da.createAttempt(1, 1);
+        da.answerQuestion(attempt.getAttemptId(), 1, 2);
     }
 }
