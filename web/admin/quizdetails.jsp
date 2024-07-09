@@ -96,16 +96,7 @@
                                
                                 <div class="mb-3">
                                     <label class="form-label">Choose the number of questions in groups by lesson</label>
-                                    <c:forEach var="group" items="${quiz.questionGroups}">
-                                        <div class="input-group mb-2">
-                                            <select class="form-select" name="questionGroups">
-                                                <option>${group.name}</option>
-                                                <!-- Add more options as needed -->
-                                            </select>
-                                            <input type="number" class="form-control" value="${group.number}">
-                                            <button class="btn btn-danger" type="button">Delete</button>
-                                        </div>
-                                    </c:forEach>
+                                    
                                     <button class="btn btn-primary" type="button">Add</button>
                                 </div>
                                 <button type="submit" class="btn btn-primary">Save</button>
