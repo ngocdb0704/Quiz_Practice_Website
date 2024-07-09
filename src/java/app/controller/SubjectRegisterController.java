@@ -102,6 +102,7 @@ public class SubjectRegisterController extends HttpServlet {
                 int n = daoRegist.addPaidRegistration(packageId, userId, packageDuration, paidAccout, paidContent);
                 Subject registeredSubject = daoSubject.getSubjectByPackageId(packageId);
                 Registration r = daoRegist.getSingleRegistrationByUserPackageId(packageId, userId);
+                request.setAttribute("email", email);
                 request.setAttribute("thumbnail", registeredSubject.getThumbnail());
                 request.setAttribute("registId", r.getRegistrationId());
                 request.setAttribute("packageName", registeredSubject.getLowestPackageName());

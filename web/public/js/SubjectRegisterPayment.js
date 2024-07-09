@@ -19,7 +19,7 @@ async function checkPaidRegister(price, content, responseCaptcha) {
             for (let payment of sheet.data) {
                 //if price and content match, leave the loop
                 //remove ! after testing
-                if (!(payment["Giá trị"] === price && payment["Mô tả"].includes(content))) {
+                if (payment["Giá trị"] === price && payment["Mô tả"].includes(content)) {
                     code = payment["Mô tả"];
                     acc = payment["Số tài khoản"];
                     isPaid = 1;
