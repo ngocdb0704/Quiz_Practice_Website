@@ -76,8 +76,7 @@
                         <div class="col-4">
                             <label class="form-label">Gender</label>
                             <select class="form-select" name="gender" required>
-                                <option selected disabled>Choose your gender</option>
-                                <option value="Male">Male</option>
+                                <option value="Male" selected>Male</option>
                                 <option value="Female">Female</option>
                                 <option value="Prefer not to say">Prefer not to say</option>
                             </select>
