@@ -357,3 +357,11 @@ CREATE TABLE [dbo].[QuizQuestion] (
 	[QuestionId] [int] foreign key references [dbo].[Question]([QuestionId])
 	PRIMARY KEY([QuizId], [QuestionId])
 )
+
+CREATE TABLE QuizLessonQuestionCount (
+    QuizId INT,
+    LessonId INT,
+    QuestionCount INT,
+    PRIMARY KEY (QuizId, LessonId),
+    FOREIGN KEY (QuizId) REFERENCES Quiz(QuizId)
+);
