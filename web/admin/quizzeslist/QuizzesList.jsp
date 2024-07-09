@@ -61,8 +61,6 @@
                         />
                     </c:if>
                 </div>
-
-                <%@include file="/admin/quizzeslist/QuizModals.jsp" %>
             </main>
         </div>
 
