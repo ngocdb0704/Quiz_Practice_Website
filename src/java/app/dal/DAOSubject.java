@@ -936,7 +936,7 @@ public class DAOSubject extends DBContext {
 
     public static void main(String[] args) {
         DAOSubject dao = new DAOSubject();
-        System.out.println(dao.getSubjectByPackageId(4).getTagLine());
+        System.out.println(dao.getSubjectById(1));
 
     }
 }

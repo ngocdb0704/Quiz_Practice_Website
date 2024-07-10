@@ -45,8 +45,8 @@ public class Subject {
         this.categoryId = categoryId;
     }
 
-    public Subject(int subjectId, String subjectName, String tagLine, String briefInfo, String subjectDescription, String thumbnail, int categoryId
-            , boolean isFeatured, int statusId, int ownerId) {
+    public Subject(int subjectId, String subjectName, String tagLine, String briefInfo, String subjectDescription, String thumbnail, int categoryId,
+             boolean isFeatured, int statusId, int ownerId) {
         this.subjectId = subjectId;
         this.subjectName = subjectName;
         this.tagLine = tagLine;
@@ -56,6 +56,7 @@ public class Subject {
         this.isFeatured = isFeatured;
         this.statusId = statusId;
         this.ownerId = ownerId;
+        this.categoryId = categoryId;
     }
 
     public Subject(int subjectId, String subjectName, String tagLine, String briefInfo, String subjectDescription, String thumbnail, String lowestPackageName, int categoryId, float packageListPrice, float packageSalePrice, String level, String provider, String sponsorer) {
@@ -65,6 +66,13 @@ public class Subject {
         this.briefInfo = briefInfo;
         this.subjectDescription = subjectDescription;
         this.thumbnail = thumbnail;
+        this.lowestPackageName = lowestPackageName;
+        this.categoryId = categoryId;
+        this.packageListPrice = packageListPrice;
+        this.packageSalePrice = packageSalePrice;
+        this.level = level;
+        this.provider = provider;
+        this.sponsorer = sponsorer;
     }
 
     public int getSubjectId() {
