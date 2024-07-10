@@ -4,6 +4,7 @@ import static app.dal.QueryBuilder.Operator;
 import static app.dal.QueryBuilder.OrderDirection;
 import app.entity.BlogInformation;
 import app.entity.QuizInformation;
+import app.entity.QuizLesson;
 import app.entity.QuizType;
 import app.entity.Subject;
 import java.sql.*;
@@ -288,4 +289,26 @@ public class DAOQuiz extends DBContext {
             qq.randomizeForQuiz(id, 50);
         }
     }
+    
+    
+    public List<QuizLesson> getGroupQuestionByLesson(int quizId) {
+        List<QuizLesson> list = new ArrayList<>();
+        String sql = "select *\n"
+                + "from QuizLessonQuestionCount\n"
+                + "where QuizId = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, quizId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                list.add(new QuizLesson(rs.getInt("QuizId"),
+                        rs.getInt("LessonId"),
+                        rs.getInt("QuestionCount")));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
 }

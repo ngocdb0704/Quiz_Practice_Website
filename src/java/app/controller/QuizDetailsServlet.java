@@ -6,7 +6,9 @@ package app.controller;
 
 import app.dal.DAOQuiz;
 import app.dal.DAOSubject;
+import app.dal.QuestionDAO;
 import app.entity.QuizInformation;
+import app.entity.QuizLesson;
 import app.entity.Subject;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -15,6 +17,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,6 +56,16 @@ public class QuizDetailsServlet extends HttpServlet {
         for (Subject subject : listSubjects) {
             subjectMap.put(subject.getSubjectId(), subject.getSubjectName());
         }
+        
+        List<Integer> lessonList = new ArrayList<>();
+        for (int i = 1; i <= 5; i++) {
+            lessonList.add(i);
+        }
+        
+        List<QuizLesson> listGroupQuestion = quizDao.getGroupQuestionByLesson(quizId);
+        
+        request.setAttribute("listGroupQuestion", listGroupQuestion);
+        request.setAttribute("lessonList", lessonList);
         request.setAttribute("subjectMap", subjectMap);
         request.getRequestDispatcher("../quizdetails.jsp").forward(request, response);
     }

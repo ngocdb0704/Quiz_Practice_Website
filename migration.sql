@@ -352,7 +352,7 @@ CREATE TABLE [dbo].[Quiz] (
 )
 GO
 
-CREATE TABLE [dbo].[QuizQuestion] (
+CREATE TABLE [dbo].[QuestionQuiz] (
 	[QuizId] [int] foreign key references [dbo].[Quiz]([QuizId]) on delete cascade,
 	[QuestionId] [int] foreign key references [dbo].[Question]([QuestionId])
 	PRIMARY KEY([QuizId], [QuestionId])
