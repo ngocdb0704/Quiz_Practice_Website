@@ -162,6 +162,26 @@ public class DAOAttempt extends DBContext {
         return false;
     }
 
+    public List<AttemptQuestion> getAllAttemptsWithoutQuestion(int attemptId) {
+        List<AttemptQuestion> questions = new ArrayList<>();
+
+        try {
+            QueryBuilder query = new QueryBuilder("select * from [AttemptQuestionAnswer]")
+                .whereAnd("AttemptId", QueryBuilder.Operator.EQUALS, attemptId)
+                .orderBy("QuestionId", QueryBuilder.OrderDirection.ASC);
+
+            ResultSet rs = query.toPreparedStatement(connection).executeQuery();
+
+            while (rs.next()) {
+                questions.add(new AttemptQuestion(rs));
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return questions;
+    }
+
     public QueryResult paginateAttemptQuestions(int attemptId, int pageNo) {
         List<AttemptQuestion> ret = new ArrayList<>();
         QuestionDAO qdao = new QuestionDAO();

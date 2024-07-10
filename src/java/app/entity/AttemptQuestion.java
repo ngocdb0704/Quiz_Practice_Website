@@ -28,6 +28,9 @@ public class AttemptQuestion {
         this.question = question;
     }
 
+    public boolean isAnswered() {
+        return selectedAnswer != 0;
+    }
 
     public int getSelectedAnswer() {
         return selectedAnswer;

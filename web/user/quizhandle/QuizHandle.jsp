@@ -25,30 +25,7 @@
         <c:set var="attemptQuestion" value="${result.getResults()[0]}" />
 
         <header
-            x-data="{ 
-                endTimestamp: ${attempt.getEndEpoch()},
-                timeLeft: '...',
-                calculateTimeLeft() {
-                    return Math.floor((this.endTimestamp - Date.now()) / 1000);
-                },
-                formatSeconds(seconds) {
-                  const hours = Math.floor(seconds / 3600);
-                  const minutes = Math.floor((seconds % 3600) / 60);
-                  const remainingSeconds = seconds % 60;
-
-                  const paddedHours = String(hours).padStart(2, '0');
-                  const paddedMinutes = String(minutes).padStart(2, '0');
-                  const paddedSeconds = String(remainingSeconds).padStart(2, '0');
-
-                  return `\${paddedHours}:\${paddedMinutes}:\${paddedSeconds}`;
-                },
-                init() {
-                    this.timeLeft = this.formatSeconds(this.calculateTimeLeft());
-                    setInterval(() => {
-                        this.timeLeft = this.formatSeconds(this.calculateTimeLeft());
-                    }, 100);
-                }
-            }"
+            x-data="getHeaderState()"
             class="container-fluid border-bottom py-3 d-flex align-items-center justify-content-end"
         >
             <h2 class="m-0"><i class="bi bi-geo-alt"></i> ${q} / ${total}</h2>
@@ -100,7 +77,7 @@
             </form>
         </div>
         <footer class="container-fluid d-flex justify-content-between py-3 bg-success">
-            <button class="btn btn-outline-light">Review Progress</button>
+            <button class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#reviewModal">Review Progress</button>
             
             <div class="action-buttons">
                 <c:if test="${q > 1}">
@@ -120,6 +97,37 @@
                 </c:if>
             </div>
         </footer>
+
+        <%@include file="/user/quizhandle/QuizReviewModal.jsp" %>
+        
+        <script>
+            function getHeaderState() {
+                return { 
+                    endTimestamp: ${attempt.getEndEpoch()},
+                    timeLeft: '...',
+                    calculateTimeLeft() {
+                        return Math.floor((this.endTimestamp - Date.now()) / 1000);
+                    },
+                    formatSeconds(seconds) {
+                      const hours = Math.floor(seconds / 3600);
+                      const minutes = Math.floor((seconds % 3600) / 60);
+                      const remainingSeconds = seconds % 60;
+
+                      const paddedHours = String(hours).padStart(2, '0');
+                      const paddedMinutes = String(minutes).padStart(2, '0');
+                      const paddedSeconds = String(remainingSeconds).padStart(2, '0');
+
+                      return `\${paddedHours}:\${paddedMinutes}:\${paddedSeconds}`;
+                    },
+                    init() {
+                        this.timeLeft = this.formatSeconds(this.calculateTimeLeft());
+                        setInterval(() => {
+                            this.timeLeft = this.formatSeconds(this.calculateTimeLeft());
+                        }, 100);
+                    }
+                };
+            }
+        </script>
 
         <script src="public/js/alpine/core.min.js"></script>
     </body>

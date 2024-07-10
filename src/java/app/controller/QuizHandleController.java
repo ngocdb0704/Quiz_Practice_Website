@@ -77,6 +77,7 @@ public class QuizHandleController extends HttpServlet {
 
         request.setAttribute("attempt", attempt);
         request.setAttribute("result", result);
+        request.setAttribute("all", dat.getAllAttemptsWithoutQuestion(attemptId));
 
         request.getRequestDispatcher(PAGE_NAME).forward(request, response);
     } 
