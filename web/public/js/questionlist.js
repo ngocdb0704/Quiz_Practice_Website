@@ -21,18 +21,23 @@ function deleteOption(answerID, questionID) {
             url: 'admin/optionanswer',
             type: 'POST',
             data: {action: 'delete', answerID: answerID, questionID: questionID},
+            dataType: 'json', 
             success: function (response) {
-                alert(response.message);
                 if (response.success) {
-                    location.reload();
+                    alert(response.message); 
+                    location.reload(); 
+                } else {
+                    alert(response.message); 
                 }
             },
             error: function (error) {
-                alert("An error occurred while deleting the option: " + error);
+                alert("An error occurred while deleting the option: " + error); 
             }
         });
     }
 }
+
+
 
 function addOption(questionID) {
     var answerName = document.getElementById("answerName").value;
@@ -66,6 +71,7 @@ function saveChanges(event) {
             url: 'admin/savechange',
             type: 'POST',
             data: $('#questionForm').serialize(),
+            dataType: 'json',
             success: function (response) {
                 if (response.status === 'success') {
                     alert('Save successful!');

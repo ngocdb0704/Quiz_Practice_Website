@@ -66,6 +66,18 @@ public class QuestionDAO extends DBContext {
 
     }
 
+    public boolean deleteOption(int answerID) {
+        String sql = "DELETE FROM Answer WHERE AnswerID = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, answerID);
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    
     public List<Question> questionPerPage(int record, int page) {
         String sql = "WITH PaginatedQuestions AS (\n"
                 + "    SELECT *\n"

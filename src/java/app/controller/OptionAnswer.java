@@ -64,6 +64,12 @@ public class OptionAnswer extends HttpServlet {
         int answerID = Integer.parseInt(request.getParameter("answerID"));
         
         int questionID = Integer.parseInt(request.getParameter("questionID"));
+        if (quesDAO.isQuestionInQuiz(questionID)) {
+            response.getWriter().print("{\"status\":\"error\", \"message\":\"This question is already in the quiz, so it cannot delete option.\"}");
+            response.getWriter().flush();
+            return;
+        }
+        
         //number option answer of question
         int numberOfOptions = quesDAO.getNumberOfOptions(questionID);
         //number option true of question
@@ -78,7 +84,7 @@ public class OptionAnswer extends HttpServlet {
             }else if (numberOfCorrectOptions <= 1 && quesDAO.isOptionCorrect(answerID)) {
                 out.print("{\"message\": \"Cannot delete the only correct option!\", \"success\": false}"); 
             }else {
-                boolean isDelete = quesDAO.deleteAnswer(answerID);
+                boolean isDelete = quesDAO.deleteOption(answerID);
                 if (isDelete) {
                     out.print("{\"message\": \"Option deleted successfully!\", \"success\": true}");
                 } else {
