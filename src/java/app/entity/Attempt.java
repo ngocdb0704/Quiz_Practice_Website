@@ -53,6 +53,7 @@ public class Attempt {
         this.correctCount = correctCount;
     }
 
+
     public void setDueDate(Timestamp dueDate) {
         this.dueDate = dueDate;
     }

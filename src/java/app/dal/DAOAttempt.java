@@ -117,6 +117,28 @@ public class DAOAttempt extends DBContext {
         return null;
     }
 
+    public int getScore(int attemptId) {
+        String sql = """
+                     select count(*) from [AttemptQuestionAnswer] aqa
+                     inner join [Answer] a on aqa.AnswerId = a.AnswerID
+                     where AttemptId = ? and IsCorrect = 1""";
+
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, attemptId);
+
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt(1);
+            } 
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return -1;
+    }
+
     public boolean finishAttempt(int attemptId) {
         try {
             Attempt attempt = getAttemptById(attemptId);
@@ -154,7 +176,18 @@ public class DAOAttempt extends DBContext {
 
             int n = stmt.executeUpdate();
 
-            return n == 1;
+            if(n != 1) {
+                throw new Exception("Could not answer question, update count return not 1");
+            }
+
+            int score = getScore(attemptId);
+
+            if (score == -1) {
+                throw new Exception("Could not get score, returns -1");
+            }
+
+            attempt.setCorrectCount(score);
+            saveAttempt(attempt);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
