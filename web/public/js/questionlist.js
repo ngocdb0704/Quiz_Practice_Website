@@ -91,3 +91,28 @@ function resetFilter() {
 
     document.getElementById('filterForm').submit();
 }
+
+function deleteQuestion(questionId) {
+    if (confirm("Are you sure you want to delete this question?")) {
+        $.ajax({
+            url: 'admin/deletequestion',
+            type: 'POST',
+            data: {
+                questionID: questionId
+            },
+            success: function (response) {
+                if (response.status === 'success') {
+                    alert('Question deleted successfully.');
+                    window.location.href = 'admin/questionlist'; // Redirect to the question list page
+                } else if (response.status === 'error') {
+                    alert(response.message);
+                } else {
+                    alert('Delete failed. Please try again.');
+                }
+            },
+            error: function (error) {
+                alert('An unexpected error occurred. Please try again.');
+            }
+        });
+    }
+}

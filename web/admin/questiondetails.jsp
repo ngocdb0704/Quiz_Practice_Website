@@ -116,7 +116,8 @@
                 <div>
                     <a href="${pageContext.request.contextPath}/admin/questionlist" class="btn btn-secondary me-2">Back to List</a>
                     <input type="button" value="Save change" class="btn btn-info" onclick="saveChanges(event)">
-                    <button type="button" class="btn btn-warning ms-2" onclick="resetForm()">Reset</button>                
+                    <button type="button" class="btn btn-warning ms-2" onclick="resetForm()">Reset</button> 
+                    <button type="button" class="btn btn-danger ms-2" onclick="deleteQuestion(${question.questionID})">Delete Question</button>
                 </div>
                                 
                 <!-- Add Answer Option Button as Icon -->
