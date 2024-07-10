@@ -32,7 +32,7 @@
                 </label>
             </div>
             <div>
-                <button class="btn btn-outline-danger">Score Exam Now</button>
+                <button class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#scoreModal">Score Exam Now</button>
             </div>
         </div>
         <div class="mt-3">

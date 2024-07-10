@@ -282,7 +282,7 @@ public class DAOAttempt extends DBContext {
 
     public static void main(String[] args) {
         DAOAttempt da = new DAOAttempt();
-        Attempt attempt = da.createAttempt(1, 1);
+        Attempt attempt = da.createAttempt(13, 1);
         da.answerQuestion(attempt.getAttemptId(), 1, 2);
         da.toggleMarkQuestion(attempt.getAttemptId(), 1);
 

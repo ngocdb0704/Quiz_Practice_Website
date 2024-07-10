@@ -1,8 +1,12 @@
 
 package app.controller;
 
+import app.dal.DAOAttempt;
 import app.dal.DAOQuiz;
+import app.dal.DAOUser;
 import app.dal.QueryResult;
+import app.entity.Attempt;
+import app.entity.User;
 import app.utils.Config;
 import app.utils.Parsers;
 import java.io.IOException;
@@ -13,6 +17,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.time.LocalDate;
 
 @WebServlet(name="SimulationExamController", urlPatterns={"/user/simulation"})
 public class SimulationExamController extends HttpServlet {
@@ -71,7 +76,34 @@ public class SimulationExamController extends HttpServlet {
             return;
         }
 
-        request.getRequestDispatcher(SIMULATION_LIST).forward(request, response);
+        String action = request.getParameter("action");
+        String quizRaw = request.getParameter("quiz");
+        int quiz = Parsers.parseIntOrDefault(quizRaw, -1);
+        DAOUser dUser = new DAOUser();
+        DAOAttempt dat = new DAOAttempt();
+
+        switch (action) {
+            case "take" -> {
+                if (quiz != -1) {
+                    User user = dUser.getUserByEmail(userEmail);
+
+                    if (user == null) {
+                        break;
+                    }
+
+                    Attempt attempt = dat.createAttempt(quiz, user.getUserId());
+
+                    if (attempt == null) {
+                        break;
+                    }
+
+                    response.sendRedirect("quizhandle?attemptId=" + attempt.getAttemptId() + "&q=1");
+                }
+            }
+            default -> {
+                request.getRequestDispatcher(SIMULATION_LIST).forward(request, response);
+            }
+        }
     }
 
     @Override

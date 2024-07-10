@@ -93,7 +93,7 @@
                 </c:if>
 
                 <c:if test="${q eq total}">
-                    <button class="btn btn-danger">Score Exam</button>
+                    <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#scoreModal">Score Exam</button>
                 </c:if>
             </div>
         </footer>
@@ -120,14 +120,23 @@
                       return `\${paddedHours}:\${paddedMinutes}:\${paddedSeconds}`;
                     },
                     init() {
-                        this.timeLeft = this.formatSeconds(this.calculateTimeLeft());
+                        let time = this.calculateTimeLeft();
+                        this.timeLeft = this.formatSeconds(time);
+
                         setInterval(() => {
-                            this.timeLeft = this.formatSeconds(this.calculateTimeLeft());
-                        }, 100);
+                            time = this.calculateTimeLeft();
+                            if (time >= 0) {
+                                this.timeLeft = this.formatSeconds(time);
+                            } else {
+                                window.location.replace('user/quizresult?attemptId=${attempt.getAttemptId()}');
+                            }
+                        }, 300);
                     }
                 };
             }
         </script>
+
+        <%@include file="/user/quizhandle/QuizConfirmModal.jsp" %>
 
         <script src="public/js/alpine/core.min.js"></script>
     </body>

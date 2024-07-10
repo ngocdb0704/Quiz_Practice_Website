@@ -42,7 +42,11 @@
                     <td>${quiz.getDurationInMinutes()}</td>
                     <td>${quiz.getPassRate()}%</td>
                     <td style="width: 1px; white-space: nowrap;">
-                        <button class="btn btn-primary">Take Exam</button>
+                        <form method="POST">
+                            <input type="hidden" value="take" name="action" />
+                            <input type="hidden" value="${quiz.getQuizId()}" name="quiz" />
+                            <button class="btn btn-primary">Take Exam</button>
+                        </form>
                     </td>
                 </tr>
             </c:forEach>

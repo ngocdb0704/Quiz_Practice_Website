@@ -5,6 +5,7 @@ import app.dal.DAOAttempt;
 import app.dal.DAOUser;
 import app.dal.QueryResult;
 import app.entity.Attempt;
+import app.entity.AttemptQuestion;
 import app.entity.User;
 import app.utils.Parsers;
 import java.io.IOException;
@@ -15,6 +16,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.util.List;
 
 @WebServlet(name="QuizHandleController", urlPatterns={"/user/quizhandle"})
 public class QuizHandleController extends HttpServlet {
@@ -69,15 +71,23 @@ public class QuizHandleController extends HttpServlet {
         Attempt attempt = dat.getAttemptById(attemptId);
 
         if (attempt.isFinished()) {
-            request.getRequestDispatcher("/user/quizhandle/QuizExpired.jsp").forward(request, response);
+            response.sendRedirect("quizresult?attemptId=" + attempt.getAttemptId());
             return;
         }
         
         QueryResult result = dat.paginateAttemptQuestions(attemptId, q);
+        List<AttemptQuestion> all = dat.getAllAttemptsWithoutQuestion(attemptId);
+
+        int answeredCount = 0;
+
+        for (AttemptQuestion ques : all) {
+            if (ques.isAnswered()) answeredCount++;
+        }
 
         request.setAttribute("attempt", attempt);
         request.setAttribute("result", result);
-        request.setAttribute("all", dat.getAllAttemptsWithoutQuestion(attemptId));
+        request.setAttribute("all", all);
+        request.setAttribute("answeredCount", answeredCount);
 
         request.getRequestDispatcher(PAGE_NAME).forward(request, response);
     } 
@@ -93,13 +103,30 @@ public class QuizHandleController extends HttpServlet {
             switch (action) {
                 case "answer" -> handleAnswer(attemptId, request, response);
                 case "mark" -> markForReview(attemptId, request, response);
+                case "delete" -> deleteExam(attemptId, request, response);
+                case "score" -> scoreExam(attemptId, request, response);
             }
+        } else {
+            response.sendRedirect(String.format("quizhandle?attemptId=%d&q=%s", attemptId, request.getParameter("q")));
         }
-
-        response.sendRedirect(String.format("quizhandle?attemptId=%d&q=%s", attemptId, request.getParameter("q")));
     }
 
-    private void handleAnswer(int attemptId, HttpServletRequest request, HttpServletResponse response) {
+    private void scoreExam(int attemptId, HttpServletRequest request, HttpServletResponse response)
+    throws ServletException, IOException {
+        DAOAttempt dat = new DAOAttempt();
+        dat.finishAttempt(attemptId);
+        response.sendRedirect("quizresult?attemptId=" + attemptId);
+    }
+
+    private void deleteExam(int attemptId, HttpServletRequest request, HttpServletResponse response)
+    throws ServletException, IOException {
+        DAOAttempt dat = new DAOAttempt();
+        dat.finishAttempt(attemptId);
+        response.sendRedirect("simulation");
+    }
+
+    private void handleAnswer(int attemptId, HttpServletRequest request, HttpServletResponse response)
+    throws ServletException, IOException {
         int question = Parsers.parseIntOrDefault(request.getParameter("question"), -1);
         int choice = Parsers.parseIntOrDefault(request.getParameter("choice"), -1);
 
@@ -107,15 +134,18 @@ public class QuizHandleController extends HttpServlet {
 
         DAOAttempt dat = new DAOAttempt();
         dat.answerQuestion(attemptId, question, choice);
+        response.sendRedirect(String.format("quizhandle?attemptId=%d&q=%s", attemptId, request.getParameter("q")));
     }
 
-    private void markForReview(int attemptId, HttpServletRequest request, HttpServletResponse response) {
+    private void markForReview(int attemptId, HttpServletRequest request, HttpServletResponse response)
+    throws ServletException, IOException {
         int question = Parsers.parseIntOrDefault(request.getParameter("question"), -1);
 
         if (question == -1) return;
 
         DAOAttempt dat = new DAOAttempt();
         dat.toggleMarkQuestion(attemptId, question);
+        response.sendRedirect(String.format("quizhandle?attemptId=%d&q=%s", attemptId, request.getParameter("q")));
     }
 
     @Override
