@@ -19,7 +19,10 @@ public class QuizInformation {
     private int numberOfAttempts;
     private String description;
     private int totalQuestion;
-        
+
+    public QuizInformation() {
+    }
+    
     public QuizInformation(ResultSet rs) throws SQLException {
         this.quizId = rs.getInt("QuizId");
         this.subjectId = rs.getInt("SubjectId");
@@ -96,6 +99,51 @@ public class QuizInformation {
         this.totalQuestion = totalQuestion;
     }
 
+    public void setQuizId(int quizId) {
+        this.quizId = quizId;
+    }
+
+    public void setSubjectId(int subjectId) {
+        this.subjectId = subjectId;
+    }
+
+    public void setSubjectName(String subjectName) {
+        this.subjectName = subjectName;
+    }
+
+    public void setQuizName(String quizName) {
+        this.quizName = quizName;
+    }
+
+    public void setLevel(QuizLevel level) {
+        this.level = level;
+    }
+
+    public void setDurationInMinutes(int durationInMinutes) {
+        this.durationInMinutes = durationInMinutes;
+    }
+
+    public void setPassRate(int passRate) {
+        this.passRate = passRate;
+    }
+
+    public void setType(QuizType type) {
+        this.type = type;
+    }
+
+    public void setPublished(boolean published) {
+        this.published = published;
+    }
+
+    public void setUpdatedTime(Timestamp updatedTime) {
+        this.updatedTime = updatedTime;
+    }
+
+    public void setNumberOfAttempts(int numberOfAttempts) {
+        this.numberOfAttempts = numberOfAttempts;
+    }
+
+    
     @Override
     public String toString() {
         return "QuizInformation{" + "quizId=" + quizId + ", subjectId=" + subjectId + ", subjectName=" + subjectName + ", quizName=" + quizName + ", level=" + level + ", durationInMinutes=" + durationInMinutes + ", passRate=" + passRate + ", type=" + type + ", published=" + published + ", updatedTime=" + updatedTime + ", numberOfAttempts=" + numberOfAttempts + ", description=" + description + ", totalQuestion=" + totalQuestion + '}';
