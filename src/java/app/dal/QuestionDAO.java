@@ -77,7 +77,7 @@ public class QuestionDAO extends DBContext {
         }
         return false;
     }
-    
+
     public List<Question> questionPerPage(int record, int page) {
         String sql = "WITH PaginatedQuestions AS (\n"
                 + "    SELECT *\n"
@@ -384,8 +384,8 @@ public class QuestionDAO extends DBContext {
     }
 
     public boolean deleteAnswer(int questionID) {
-        String sql = "delete from Answer\n" +
-                    "where QuestionID = ?";
+        String sql = "delete from Answer\n"
+                + "where QuestionID = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, questionID);
             int rowsAffected = ps.executeUpdate();

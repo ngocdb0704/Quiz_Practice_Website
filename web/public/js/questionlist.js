@@ -50,19 +50,22 @@ function addOption(questionID) {
                 action: 'add',
                 questionID: questionID,
                 answerName: answerName,
-                isCorrect: isCorrect},
-            success: function (response) {
-                alert(response.message);
-                if (response.success) {
+                isCorrect: isCorrect
+            },
+            success: function(response) {
+                var jsonResponse = typeof response === "string" ? JSON.parse(response) : response;
+                alert(jsonResponse.message);
+                if (jsonResponse.success) {
                     location.reload();
                 }
             },
-            error: function (error) {
+            error: function(error) {
                 alert("An error occurred while adding the option: " + error);
             }
         });
     }
 }
+
 
 function saveChanges(event) {
     event.preventDefault();
