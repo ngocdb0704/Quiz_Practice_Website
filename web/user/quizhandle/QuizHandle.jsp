@@ -67,33 +67,37 @@
             <div class="container">
                 <p class="card p-3 shadow text-justify card-text my-4">${attemptQuestion.getQuestion().getQuestionName()}</p>
                 
-                <form class="d-flex flex-column gap-3">
+                <form method="POST" class="d-flex flex-column gap-3">
+                    <input type="hidden" name="action" value="answer" />
+                    <input type="hidden" name="question" value="${attemptQuestion.getQuestion().getQuestionID()}" />
                 <c:forEach var="ans" varStatus="loop" items="${attemptQuestion.getQuestion().getAnswers()}">
-                    <div>
-                        <input class="btn-check" id="option${ans.getAnswerID()}" type="radio" name="option" value="${ans.getAnswerID()}">
-                        <label for="option${ans.getAnswerID()}" class="btn btn-outline-secondary w-100 text-start">
-                            <span class="fw-bold">${String.valueOf(Character.toChars(65 + loop.index))}. </span>
-                            <span>${ans.getAnswerName()}</span>
-                        </label>
-                    </div>
+                    <c:set var="className" value="${ans.getAnswerID() == attemptQuestion.getSelectedAnswer() ? 'btn-secondary' : 'btn-outline-secondary'}" />
+                    <button class="text-start btn ${className}" type="submit" name="choice" value="${ans.getAnswerID()}" ${ans.getAnswerID() == attemptQuestion.getSelectedAnswer() ? 'checked' : ''}>
+                        <span class="fw-bold">${String.valueOf(Character.toChars(65 + loop.index))}. </span>
+                        <span>${ans.getAnswerName()}</span>
+                    </button>
                 </c:forEach>
                 </form>
 
             </div>
         </main>
         <div class="container-fluid mb-2 d-flex justify-content-end">
-            <c:if test="${not attemptQuestion.isMarked()}">
-                <button class="btn btn-outline-success">
-                    <i class="bi bi-bookmark-fill"></i>
-                    Mark for Review
-                </button>
-            </c:if>
-            <c:if test="${attemptQuestion.isMarked()}">
-                <button class="btn btn-success">
-                    <i class="bi bi-bookmark-fill"></i>
-                    Unmark
-                </button>
-            </c:if>
+            <form method="POST">
+                <input type="hidden" name="action" value="mark">
+                <input type="hidden" name="question" value="${attemptQuestion.getQuestion().getQuestionID()}" />
+                <c:if test="${not attemptQuestion.isMarked()}">
+                    <button class="btn btn-outline-success" type="submit">
+                        <i class="bi bi-bookmark-fill"></i>
+                        Mark for Review
+                    </button>
+                </c:if>
+                <c:if test="${attemptQuestion.isMarked()}">
+                    <button class="btn btn-success" type="submit">
+                        <i class="bi bi-bookmark-fill"></i>
+                        Unmark
+                    </button>
+                </c:if>
+            </form>
         </div>
         <footer class="container-fluid d-flex justify-content-between py-3 bg-success">
             <button class="btn btn-outline-light">Review Progress</button>

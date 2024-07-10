@@ -84,7 +84,37 @@ public class QuizHandleController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        request.getRequestDispatcher(PAGE_NAME).forward(request, response);
+        String action  = request.getParameter("action");
+        String attemptIdRaw = request.getParameter("attemptId");
+        int attemptId = Parsers.parseIntOrDefault(attemptIdRaw, -1);
+
+        if (attemptId != -1) {
+            switch (action) {
+                case "answer" -> handleAnswer(attemptId, request, response);
+                case "mark" -> markForReview(attemptId, request, response);
+            }
+        }
+
+        response.sendRedirect(String.format("quizhandle?attemptId=%d&q=%s", attemptId, request.getParameter("q")));
+    }
+
+    private void handleAnswer(int attemptId, HttpServletRequest request, HttpServletResponse response) {
+        int question = Parsers.parseIntOrDefault(request.getParameter("question"), -1);
+        int choice = Parsers.parseIntOrDefault(request.getParameter("choice"), -1);
+
+        if (question == -1 || choice == -1) return;
+
+        DAOAttempt dat = new DAOAttempt();
+        dat.answerQuestion(attemptId, question, choice);
+    }
+
+    private void markForReview(int attemptId, HttpServletRequest request, HttpServletResponse response) {
+        int question = Parsers.parseIntOrDefault(request.getParameter("question"), -1);
+
+        if (question == -1) return;
+
+        DAOAttempt dat = new DAOAttempt();
+        dat.toggleMarkQuestion(attemptId, question);
     }
 
     @Override
