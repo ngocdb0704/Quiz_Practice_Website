@@ -157,28 +157,14 @@ public class SubjectOverviewController extends HttpServlet {
                     thumbnailUrl = subjectId + "_" + uploadName;
                 }
             }
-
-            if (owner == null) {
-                System.out.println("WHY ARE YOU HERE");
-                if (daoSubject.updateSubjectOverview(new Subject(subjectId
-                        , subjectTitle
-                        , subjectTagline
-                        , subjectBrief
-                        , subjectDescription
-                        , thumbnailUrl
-                        , subjectCategory
-                        , featured
-                        , subjectStatus
-                        , -1)) == 1) {
+            System.out.println("Ye" + new Subject(0, subjectTitle, subjectTagline, subjectBrief, subjectDescription, thumbnailUrl, subjectCategory) + expertEmail);
+            if (owner == null || owner.getRoleId() == 4) {
+                if (daoSubject.updateSubjectOverview(new Subject(subjectId, subjectTitle, subjectTagline, subjectBrief, subjectDescription, thumbnailUrl, subjectCategory, featured, subjectStatus, (owner == null)? -1: owner.getUserId())) == 1) {
                     session.setAttribute("notification", "<p>Subject created succefully!</p>");
                     session.setAttribute("notification", "Subject updated succefully!");
-                }
-            }
-            else if (owner.getRoleId() == 4 && daoSubject.updateSubjectOverview(new Subject(subjectId, subjectTitle, subjectTagline, subjectBrief, subjectDescription, thumbnailUrl, subjectCategory, featured, subjectStatus, owner.getUserId()), owner.getUserId()) == 1) {
-                //System.out.println("Ye" + new Subject(0, subjectTitle, subjectTagline, subjectBrief, subjectDescription, thumbnailUrl, subjectCategory));
-                if (daoSubject.updateSubjectOverview(new Subject(subjectId, subjectTitle, subjectTagline, subjectBrief, subjectDescription, thumbnailUrl, subjectCategory, featured, subjectStatus, owner.getUserId())) == 1) {
-                    session.setAttribute("notification", "<p>Subject created succefully!</p>");
-                    session.setAttribute("notification", "Subject updated succefully!");
+                    System.out.println("Updated succsessfully");
+                } else {
+                    System.out.println("Updated unsuccessfully");
                 }
             } else {
                 //out.print("User was not an Expert");

@@ -758,42 +758,24 @@ public class DAOSubject extends DBContext {
     
      public int updateSubjectOverview(Subject sub) {
          System.out.println("Changing" + sub);
-        String sql = "UPDATE Subject SET SubjectTitle = ?, SubjectCategoryId = ?, SubjectStatus = ?, IsFeaturedSubject = ?, SubjectTagLine = ?, SubjectBriefInfo = ?, SubjectDescription = ?, SubjectThumbnail = ? WHERE SubjectId = ?";
+        String sql = "UPDATE Subject SET SubjectTitle = ?, SubjectCategoryId = ?, SubjectStatus = ?, IsFeaturedSubject = ?, SubjectTagLine = ?, SubjectBriefInfo = ?, SubjectDescription = ?"
+                + ((sub.getThumbnail().length() > 0)? ", SubjectThumbnail = ? " : " ")
+                + ((sub.getOwnerId() > 0)? ", SubjectOwnerId = ? " :  " ")
+                + "WHERE SubjectId = ?";
         PreparedStatement pre;
         try {
             pre = connection.prepareStatement(sql);
-            pre.setString(1, sub.getSubjectName());
-            pre.setInt(2, sub.getCategoryId());
-            pre.setInt(3, sub.getStatusId());
-            pre.setBoolean(4, sub.getIsFeatured());
-            pre.setString(5, sub.getTagLine());
-            pre.setString(6, sub.getBriefInfo());
-            pre.setString(7, sub.getSubjectDescription());
-            pre.setString(8, sub.getThumbnail());
-            pre.setInt(9, sub.getSubjectId());
-
-            return pre.executeUpdate();
-        } catch (SQLException ex) {
-            Logger.getLogger(DAOSubject.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return 0;
-    }
-     
-        public int updateSubjectOverview(Subject sub, int ownerId) {
-        String sql = "UPDATE Subject SET SubjectTitle = ?, SubjectCategoryId = ?, SubjectStatus = ?, IsFeaturedSubject = ?, SubjectTagLine = ?, SubjectBriefInfo = ?, SubjectDescription = ?, SubjectThumbnail = ?, SubjectOwnerId = ?,  WHERE SubjectId = ?";
-        PreparedStatement pre;
-        try {
-            pre = connection.prepareStatement(sql);
-            pre.setString(1, sub.getSubjectName());
-            pre.setInt(2, sub.getCategoryId());
-            pre.setInt(3, sub.getStatusId());
-            pre.setBoolean(4, sub.getIsFeatured());
-            pre.setString(5, sub.getTagLine());
-            pre.setString(6, sub.getBriefInfo());
-            pre.setString(7, sub.getSubjectDescription());
-            pre.setString(8, sub.getThumbnail());
-            pre.setInt(9, ownerId);
-            pre.setInt(10, sub.getSubjectId());
+            int seq = 1;
+            pre.setString(seq++, sub.getSubjectName());
+            pre.setInt(seq++, sub.getCategoryId());
+            pre.setInt(seq++, sub.getStatusId());
+            pre.setBoolean(seq++, sub.getIsFeatured());
+            pre.setString(seq++, sub.getTagLine());
+            pre.setString(seq++, sub.getBriefInfo());
+            pre.setString(seq++, sub.getSubjectDescription());
+            if ((sub.getThumbnail().length() > 0)) pre.setString(seq++, sub.getThumbnail());
+            if (sub.getOwnerId() > 0) pre.setInt(seq++, sub.getOwnerId());
+            pre.setInt(seq++, sub.getSubjectId());
 
             return pre.executeUpdate();
         } catch (SQLException ex) {

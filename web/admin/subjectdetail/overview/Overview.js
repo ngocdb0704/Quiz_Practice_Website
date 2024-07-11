@@ -1,8 +1,13 @@
+const currentImg = document.currentScript.getAttribute("currentImg");
 let previewImg = document.getElementById("subject-thumbnail");
 
 let uploadName = document.getElementById("image-name");
 let fileInput = document.getElementById('image-upload');
 let uploadLabel = document.getElementById('upload-label');
+
+function handleThumbnailErr() {
+	previewImg.style.display = "none";
+}
 
 if (fileInput) fileInput.addEventListener('change', event => {
     if (event.target.files.length > 0) {
@@ -13,14 +18,14 @@ if (fileInput) fileInput.addEventListener('change', event => {
 
             if (!(file.name.endsWith(".jpg") || file.name.endsWith(".jpeg") || file.name.endsWith(".webp") || file.name.endsWith(".png"))) {
                 uploadLabel.innerHTML = "<strong style=\"color: red;\">Selected file was not in one of the supported image formats</strong>";
-                previewImg.style.display = "none";
+				previewImg.src = currentImg;
                 uploadName.value = "";
                 fileInput.value = null;
                 return;
             }
             if (file.size > 200000000) {
                 uploadLabel.innerHTML = "<strong style=\"color: red;\">The image you just uploaded was too large! Please upload images under 200MB only.</strong>";
-                previewImg.style.display = "none";
+				previewImg.src = currentImg;
                 uploadName.value = "";
                 fileInput.value = null;
                 return;

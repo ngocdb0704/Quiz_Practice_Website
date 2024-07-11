@@ -87,7 +87,7 @@
 
                                 <div class="col-4">
                                     <div id="img-div">
-                                        <img id="subject-thumbnail" src="${thumbnailUrl}" alt="Subject Thumbnail"/>
+                                        <img id="subject-thumbnail" src="${thumbnailUrl}" alt="Subject Thumbnail" onerror="handleThumbnailErr()"/>
                                 </div>
                             </div>
 
@@ -105,8 +105,8 @@
                                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target=".changeOnwerModal">Change owner</button>
                                 </c:if>
                             </div>
-                            
-      
+
+
 
                             <div class="col-4">
                                 <label for="image-upload" class="form-label" id="upload-label"></label>
@@ -118,11 +118,11 @@
                                     
                                 </div-->
                             </div>
-                            
+
                             <div id='chosen-expert' class="col-4"></div>
                         </div>
-                                
-                        
+
+
 
                         <div class="form-group pb-3">
                             <label for="subject-tagline">Tagline</label><br>
@@ -150,7 +150,7 @@
                         </div>
                     </div>
 
-
+                    <input id='hiddenEmail' type="hidden" name="expertEmail">
                     <input type="hidden" name="subjectId" value="${subjectId}">
                     <input type="hidden" name="service" value="edit">
                 </form>
@@ -178,7 +178,6 @@
 
                     <div id="subject-search" class="input-group">
                         <input id='query' type="email" class="form-control" placeholder="Enter an expert's email or name" oninput="filterExpert()" onfocus="focusSearch()" onblur="unFocusSearch()">
-                        <input id='hiddenEmail' type="hidden" name="expertEmail">
                         <span class="input-group-text" >
                             <i class="bi bi-search"></i>
                         </span>
@@ -192,7 +191,7 @@
 
                     </div>
                 </div>
-                <script src="admin/subjectdetail/overview/Overview.js" expertList='${expertList}'></script>
+                <script src="admin/subjectdetail/overview/Overview.js" expertList='${expertList}' currentImg='${thumbnailUrl}'></script>
             </div>
         </div>
     </div>
