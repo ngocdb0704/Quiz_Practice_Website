@@ -14,51 +14,45 @@ import java.util.List;
 public class DAOQuiz extends DBContext {
     private static final String LISTING_QUERY =
             """
-            with cte as (
-              select q.QuizId, count(QuestionId) as QuestionCount from [Quiz] q
-              left join [QuizQuestion] qq on q.QuizId = qq.QuizId
-              group by q.QuizId
-            )
-            select q.*, s.SubjectTitle, QuestionCount from cte
-            inner join [Quiz] q on q.QuizId = cte.QuizId
+            select q.*, s.SubjectTitle from [Quiz] q
             inner join [Subject] s on q.SubjectId = s.SubjectId""";
 
     private static final String COUNT_LISTING_QUERY =
             "select count(*) from [Quiz] q\n"
             + "inner join [Subject] s on q.SubjectId = s.SubjectId";
 
-    public int markDraft(Integer[] ids) {
-        try {
-            return new QueryBuilder("update [Quiz] set IsPublished = 0, "
-                    + "UpdatedTime = CURRENT_TIMESTAMP")
-                .whereAnd("QuizId", Operator.IN, ids)
-                .toPreparedStatement(connection)
-                .executeUpdate();
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-        
-        return 0;
-    }
+    private static final String SIMULATION_QUERY =
+             """
+             with
+             activeSubjectsCte as (
+                select SubjectId, Email from [Registration] r
+                inner join [Package] p on r.PackageId = p.PackageId
+                inner join [User] u on u.UserId = r.UserId
+                where r.RegistrationStatusId = 3
+             )
+             select q.*, s.SubjectTitle, activeSubjectsCte.Email from [Quiz] q
+             inner join [Subject] s on q.SubjectId = s.SubjectId
+             inner join activeSubjectsCte on activeSubjectsCte.SubjectId = q.SubjectId
+             """;
 
-    public int publish(Integer[] ids) {
-        try {
-            return new QueryBuilder("update [Quiz] set IsPublished = 1, "
-                    + "UpdatedTime = CURRENT_TIMESTAMP")
-                .whereAnd("QuizId", Operator.IN, ids)
-                .toPreparedStatement(connection)
-                .executeUpdate();
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-        
-        return 0;
-    }
+    private static final String COUNT_SIMULATION_QUERY =
+            """
+            with
+            activeSubjectsCte as (
+                select SubjectId, Email from [Registration] r
+                inner join [Package] p on r.PackageId = p.PackageId
+                inner join [User] u on u.UserId = r.UserId
+                where r.RegistrationStatusId = 3
+            )
+            select count(*) from [Quiz] q
+            inner join [Subject] s on q.SubjectId = s.SubjectId
+            inner join activeSubjectsCte on activeSubjectsCte.SubjectId = q.SubjectId
+            """;
 
-    public int delete(Integer[] ids) {
+    public int delete(int id) {
         try {
             return new QueryBuilder("delete from [Quiz]")
-                .whereAnd("QuizId", Operator.IN, ids)
+                .whereAnd("QuizId", Operator.EQUALS, id)
                 .toPreparedStatement(connection)
                 .executeUpdate();
         } catch (SQLException ex) {
@@ -130,7 +124,6 @@ public class DAOQuiz extends DBContext {
             }
 
             if (questionIds.isEmpty()) {
-                markDraft(new Integer[] { id });
                 return;
             }
 
@@ -154,7 +147,6 @@ public class DAOQuiz extends DBContext {
 
     public QueryResult search(
             String quizName,
-            boolean published,
             int subjectId,
             QuizType type,
             int page, int pageSize
@@ -165,7 +157,6 @@ public class DAOQuiz extends DBContext {
         try {
             QueryBuilder query = new QueryBuilder(LISTING_QUERY)
                     .setLoggingEnabled(true)
-                    .whereAnd("IsPublished", Operator.EQUALS, published)
                     .orderBy("q.UpdatedTime", OrderDirection.DESC)
                     .orderBy("q.SubjectId", OrderDirection.ASC);
 
@@ -196,6 +187,87 @@ public class DAOQuiz extends DBContext {
 
             while (rs.next()) {
                 ret.add(new QuizInformation(rs));
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return new QueryResult(count, pageSize, ret);
+    }
+
+    public List<Subject> getSubjectsWithSimulationExams(String email) {
+        List<Subject> ret = new ArrayList<>();
+
+        try {
+            ResultSet rs = new QueryBuilder("""
+                with
+                activeSubjectsCte as (
+                	select SubjectId, Email from [Registration] r
+                	inner join [Package] p on r.PackageId = p.PackageId
+                	inner join [User] u on u.UserId = r.UserId
+                	where r.RegistrationStatusId = 3
+                )
+                select distinct q.SubjectId, SubjectTitle from [Quiz] q
+                inner join [Subject] s on q.SubjectId = s.SubjectId
+                inner join activeSubjectsCte on activeSubjectsCte.SubjectId = q.SubjectId
+            """
+            )
+            .whereAnd("Email", Operator.EQUALS, email)
+            .toPreparedStatement(connection).executeQuery();
+
+            while (rs.next()) {
+                Subject s = new Subject();
+                s.setSubjectId(rs.getInt("SubjectId"));
+                s.setSubjectName(rs.getString("SubjectTitle"));
+                ret.add(s);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return ret;
+    }
+
+    public QueryResult getSimulationExams(
+            int subjectId,
+            String examName,
+            String email,
+            int page, int pageSize
+    ) {
+        List<QuizInformation> ret = new ArrayList<>();
+        int count = 0;
+
+        try {
+
+            QueryBuilder query = new QueryBuilder(SIMULATION_QUERY);
+            
+            if (subjectId != -1) {
+                query.whereAnd("q.SubjectId", Operator.EQUALS, subjectId);
+            }
+
+            if (examName != null && !examName.isBlank()) {
+                query.whereAnd("QuizName", Operator.LIKE, "%" + examName.trim() + "%");
+            }
+
+            query.whereAnd("QuizType", Operator.EQUALS, QuizType.SIMULATION.toInt());
+            query.whereAnd("Email", Operator.EQUALS, email);
+
+            ResultSet rs = query
+                    .orderBy("SubjectTitle", OrderDirection.ASC)
+                    .page(page, pageSize)
+                    .toPreparedStatement(connection)
+                    .executeQuery();
+
+            while (rs.next()) {
+                ret.add(new QuizInformation(rs));
+            }
+
+            rs = new QueryBuilder(COUNT_SIMULATION_QUERY, query)
+                    .toPreparedStatement(connection)
+                    .executeQuery();
+
+            if (rs.next()) {
+                count = rs.getInt(1);
             }
         } catch (Exception ex) {
             ex.printStackTrace();

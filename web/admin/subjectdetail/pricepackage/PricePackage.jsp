@@ -15,7 +15,7 @@
             <%@include file="/admin/common/admin-header.jsp" %>
             <%@include file="/admin/common/subject-sidebar.jsp" %>
             <main class="admin-main">
-                <div class="container"x-data="crudState">
+                <div class="container">
                     <h2 class="my-4">
                         <i class="bi bi-clipboard-check-fill"></i>
                         Subject Details

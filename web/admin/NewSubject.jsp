@@ -21,7 +21,7 @@
             <%@include file="/admin/common/admin-header.jsp" %>
             <%@include file="/admin/common/admin-sidebar.jsp" %>
             <main class="admin-main">
-                <form class="container" id='new-subject-form' action="admin/newsubject?service=add" onreset="formReset()">
+                <form class="container" method="POST" id='new-subject-form' action="admin/newsubject?service=add" onkeydown="return event.key != 'Enter';" enctype="multipart/form-data" onreset="formReset()">
                     <div class="row bg-light border border-1 p-3">
                         <h1>Add a new subject</h1>
                         <div class="row">
@@ -66,7 +66,7 @@
 
                             <div class="col-4">
                                 <div id="img-div">
-                                    <img id="subject-thumbnail" src="public/images/image-break.png" onerror="imgError()" alt="Subject Thumbnail"/>
+                                    <img id="subject-thumbnail" src="public/images/image-break.png" alt="Subject Thumbnail"/>
                                 </div>
                             </div>
 
@@ -75,13 +75,14 @@
                         <div class="row">
                             <div class="col-8"></div>
                             <div class="col-4">
-                                <!--label for="image-upload" class="form-label">Upload image</label>
-                                <input class="form-control" type="file" id="image-upload"-->
-                                <p  id="imgsetter-text" class="mb-0 mt-2">Link to thumbnail image:</p>
+                                <label for="image-upload" class="form-label" id="upload-label"></label>
+                                <input class="form-control" type="file" id="image-upload" name="uploadData">
+                                <input type="hidden" id="image-name" name="uploadName">
+                                <!--p  id="imgsetter-text" class="mb-0 mt-2">Link to thumbnail image:</p>
                                 <div class="input-group mb-3">
                                     <input type="text" id="thumbnail-url" name="thumbnailUrl" class="form-control" placeholder="" aria-label="Subject thumbnail" aria-describedby="thumbnail-preview-btn" oninput="changeSetter()">
-                                    <!--button class="btn btn-outline-secondary" type="button" id="thumbnail-preview-btn" onclick="setPreviewImg()">Preview</button-->
-                                </div>
+                                    
+                                </div-->
                             </div>
                         </div>
 

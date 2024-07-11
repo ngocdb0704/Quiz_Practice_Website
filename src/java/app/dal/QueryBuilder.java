@@ -3,6 +3,7 @@ package app.dal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +18,7 @@ public class QueryBuilder {
     private int pageNumber = -1;
     private int pageSize = -1;
     private boolean isLoggingEnabled = false;
+    private boolean returnKeys = false;
 
     private boolean isInsert = false;
     private String[] insertColumns;
@@ -178,6 +180,11 @@ public class QueryBuilder {
         return this;
     }
 
+    public QueryBuilder setReturnKeys(boolean enabled) {
+        this.returnKeys = enabled;
+        return this;
+    }
+
     public QueryBuilder insertInto(String table, String... columns) {
         this.baseSql = "INSERT INTO " + table;
         this.isInsert = true;
@@ -238,7 +245,13 @@ public class QueryBuilder {
             System.out.println(finalSql.toString());
         }
 
-        PreparedStatement ps = connection.prepareStatement(finalSql.toString());
+        PreparedStatement ps;
+
+        if (returnKeys) {
+            ps = connection.prepareStatement(finalSql.toString(), Statement.RETURN_GENERATED_KEYS);
+        } else {
+            ps = connection.prepareStatement(finalSql.toString());
+        }
 
         int paramIndex = existingParamCount + 1;
         if (isInsert) {

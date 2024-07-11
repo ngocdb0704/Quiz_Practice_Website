@@ -41,8 +41,8 @@
 
                                             </div>
                                             <div class="col">
-                                                <a href="public/SubjectsList">
-                                                    <button type="button" class="btn btn-primary">Back to Subjects List</button>
+                                                <a href="home">
+                                                    <button type="button" class="btn btn-primary">Back to Home Page</button>
                                                 </a>
                                             </div>
                                         </div>
@@ -76,8 +76,8 @@
 
                                                 </div>
                                                 <div class="col">
-                                                    <a href="public/SubjectsList">
-                                                        <button type="button" class="btn btn-primary">Back to Subjects List</button>
+                                                    <a href="home">
+                                                        <button type="button" class="btn btn-primary">Back to Home page</button>
                                                     </a>
                                                 </div>
                                             </div>
@@ -106,7 +106,7 @@
                                         <p class="text-center">${requestScope.message}</p>
                                         <div class="container">
                                             <div class="row">
-                                                <form id="sendEmail" action="public/registerSubjectGuest" method="post">
+                                                <form id="sendMail" action="public/registerSubjectGuest" method="post">
                                                     <input type="hidden" name="service" value="freshRegister"/>
                                                     <input type="hidden" name="selectedPackage" value="${requestScope.packageId}"/>
                                                     <input type="hidden" name="email" value="${requestScope.email}"/>
@@ -121,7 +121,19 @@
                                                     </div>
                                                 </div>
                                                 <div class="col">
-                                                    <button type="button" onclick="checkCaptcha(grecaptcha.getResponse())" class="btn btn-primary">Register</button>
+                                                    <button id="submitbutton" type="button" onclick="checkCaptcha(grecaptcha.getResponse())" class="btn btn-primary">Register</button>
+                                                </div>
+                                                <div id="dummyDiv" class="alert alert-danger"
+                                                     style="visibility: hidden;">
+                                                    Please check the captcha!
+                                                </div>
+                                                <div id="loading" class="alert alert-primary" style="display: none;">
+                                                    <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                                                    <span role="status">Loading...Please wait</span>
+                                                </div>
+                                                <div id="capAlert" class="alert alert-danger"
+                                                     style="display: none;" role="alert">
+                                                    Please check the captcha!
                                                 </div>
                                             </div>
                                         </div>

@@ -3,10 +3,21 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/JavaScript.js to edit this template
  */
 
-function checkCaptcha (captcha){
-    if(captcha){
-        let cap = document.getElementById("cap");
+function checkCaptcha(captcha) {
+    let alertCap = document.getElementById("capAlert");
+    let cap = document.getElementById("cap");
+    let alertbox = document.getElementById("loading");
+    let submitbutton = document.getElementById("submitbutton");
+    let dummy = document.getElementById("dummyDiv");
+    if (captcha) {
+        submitbutton.disabled = true;
+        alertbox.style.display = 'block';
+        alertCap.style.display = 'none';
+        dummy.style.display = 'none';
         cap.value = 'approve';
-        document.getElementById('sendEmail').submit();
-    }else alert('Please check the captcha');
+        document.getElementById('sendMail').submit();
+    } else {
+        dummy.style.display = 'none';
+        alertCap.style.display = 'block';
+    }
 }

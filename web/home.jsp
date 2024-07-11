@@ -87,7 +87,8 @@
                     <div class="card-body">
                         <h5 class="card-title">${subject.getSubjectName()}</h5>
                         <p class="card-text">${subject.getTagLine()}</p>
-                        <a href="SubjectDetails?subjectId=${subject.getSubjectId()}" class="btn btn-primary">Explore</a>
+                        <div class="featured-subject-btn-filler"></div>
+                        <a href="SubjectDetails?subjectId=${subject.getSubjectId()}" class="btn btn-primary position-absolute" style="bottom: 16px">Explore</a>
                     </div>
                 </div>
                 </c:forEach>
