@@ -66,6 +66,18 @@ public class QuestionDAO extends DBContext {
 
     }
 
+    public boolean deleteOption(int answerID) {
+        String sql = "DELETE FROM Answer WHERE AnswerID = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, answerID);
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     public List<Question> questionPerPage(int record, int page) {
         String sql = "WITH PaginatedQuestions AS (\n"
                 + "    SELECT *\n"
@@ -246,12 +258,6 @@ public class QuestionDAO extends DBContext {
         return question;
     }
 
-    public static void main(String[] args) {
-        QuestionDAO q = new QuestionDAO();
-        boolean rs = q.deleteAnswer(5);
-        System.out.println(rs);
-    }
-
     public boolean isExistOptionAns(int questionId, String content) {
         String sql = "SELECT * \n"
                 + "FROM Answer\n"
@@ -273,18 +279,6 @@ public class QuestionDAO extends DBContext {
         return false;
     }
 
-    public boolean deleteAnswer(int answerID) {
-        String sql = "DELETE FROM Answer WHERE AnswerID = ?";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, answerID);
-            int rowsAffected = ps.executeUpdate();
-            return rowsAffected > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
     public void updateQuestion(Question question) {
         String sql = "UPDATE Question SET QuestionText = ?, SubjectID = ?, LessonID = ?, Level = ?, Explanation = ?, Status = ? WHERE QuestionID = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -300,7 +294,7 @@ public class QuestionDAO extends DBContext {
             e.printStackTrace();
         }
     }
-    
+
     public void updateAnswer(Answer answer) {
         String sql = "UPDATE Answer SET AnswerName = ?, IsCorrect = ? WHERE AnswerID = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -328,7 +322,7 @@ public class QuestionDAO extends DBContext {
         }
         return count;
     }
-    
+
     public int getNumberOfCorrectOptions(int questionID) {
         int count = 0;
         String query = "SELECT COUNT(*) FROM Answer WHERE questionID = ? AND isCorrect = 1";
@@ -360,5 +354,49 @@ public class QuestionDAO extends DBContext {
         }
         return isCorrect;
     }
-    
+
+    public boolean isQuestionInQuiz(int questionId) {
+        String sql = "select * from QuestionQuiz \n"
+                + "where QuestionId = ?";
+        boolean isHas = false;
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, questionId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    isHas = true;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return isHas;
+    }
+
+    public void deleteQuestion(int questionId) {
+        String sql = "DELETE FROM [dbo].[Question]\n"
+                + "      WHERE QuestionID = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, questionId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public boolean deleteAnswer(int questionID) {
+        String sql = "delete from Answer\n"
+                + "where QuestionID = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, questionID);
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public static void main(String[] args) {
+        QuestionDAO q = new QuestionDAO();
+    }
 }

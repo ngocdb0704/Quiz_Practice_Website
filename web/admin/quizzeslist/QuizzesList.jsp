@@ -21,7 +21,6 @@
                         <i class="bi bi-clipboard-check-fill"></i>
                         ${isSearching ? 'Searching Quizzes List' : 'Quizzes List' }
                     </h2>
-                    
                     <%@include file="/admin/quizzeslist/QuizzesListForm.jsp" %>
 
                     <div class="my-4 card">
@@ -30,12 +29,14 @@
                                 <i class="bi bi-wrench"></i>
                                 Actions
                             </h5>
-                            <div class="d-flex justify-content-end mt-3 gap-2">
-                                <button class="btn btn-primary">
-                                    <i class="bi bi-plus-circle"></i>
-                                    Add New Quiz
-                                </button>
-                            </div>
+                            <form action="admin/addquiz" method="get">
+                                <div class="d-flex justify-content-end mt-3 gap-2">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="bi bi-plus-circle"></i>
+                                        Add New Quiz
+                                    </button>
+                                </div>
+                            </form>
                         </div>
                     </div>
 

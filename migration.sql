@@ -347,24 +347,33 @@ CREATE TABLE [dbo].[Quiz] (
 	[QuizType] char(10) check([QuizType] in (0, 1)) default(0), --simulation, lesson-quiz
 	[IsPublished] bit,
 	[UpdatedTime] [datetime] default(CURRENT_TIMESTAMP),
+	[NumberOfAttempts] [int] NULL,
 	[Description] [nvarchar](max),
 	[TotalQuestion] int
 )
 GO
+
+CREATE TABLE QuestionQuiz (
+    QuizId INT NOT NULL,
+    QuestionId INT NOT NULL,
+    PRIMARY KEY (QuizId, QuestionId),
+    FOREIGN KEY (QuizId) REFERENCES Quiz(QuizId),
+    FOREIGN KEY (QuestionId) REFERENCES Question(QuestionId)
+);
+
+CREATE TABLE QuizLessonQuestionCount (
+    QuizId INT NOT NULL,
+    LessonId INT NOT NULL,
+    QuestionCount INT NOT NULL,
+    PRIMARY KEY (QuizId, LessonId),
+    FOREIGN KEY (QuizId) REFERENCES Quiz(QuizId)
+);
 
 CREATE TABLE [dbo].[QuizQuestion] (
 	[QuizId] [int] foreign key references [dbo].[Quiz]([QuizId]) on delete cascade,
 	[QuestionId] [int] foreign key references [dbo].[Question]([QuestionId])
 	PRIMARY KEY([QuizId], [QuestionId])
 )
-
-CREATE TABLE [dbo].[QuizLessonQuestionCount] (
-    QuizId INT,
-    LessonId INT,
-    QuestionCount INT,
-    PRIMARY KEY (QuizId, LessonId),
-    FOREIGN KEY (QuizId) REFERENCES Quiz(QuizId)
-);
 
 CREATE TABLE [dbo].[Attempt] (
 	[AttemptId] int primary key identity(1, 1),

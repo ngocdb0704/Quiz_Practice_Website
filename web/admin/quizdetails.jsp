@@ -1,9 +1,3 @@
-<%-- 
-    Document   : quizdetails
-    Created on : Jul 7, 2024, 11:11:15 AM
-    Author     : hoapmhe173343
---%>
-
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -16,6 +10,55 @@
         <script src="${pageContext.request.contextPath}/admin/common/admin-common.js"></script>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="${pageContext.request.contextPath}/public/js/questionlist.js"></script>
+        <script>
+            $(document).ready(function () {
+                // Function to add a new row
+                $("#addRowBtn").click(function () {
+                    var lessonOptions = '';
+            <c:forEach items="${lessonList}" var="c">
+                    lessonOptions += '<option value="${c}">Lesson ${c}</option>';
+            </c:forEach>
+
+                    var newRow = `<tr>
+                                    <td>
+                                        <select name="lessonId" style="width: 100%">
+            ${lessonOptions}
+                                        </select>
+                                    </td>
+                                    <td><input type="number" name="numberQuestion" style="width: 100%"></td>
+                                    <td><button type="button" class="btn btn-danger deleteRowBtn">Delete</button></td>
+                                  </tr>`;
+                    $("#questionsTable tbody").append(newRow);
+                });
+
+                // Function to delete a row
+                $(document).on('click', '.deleteRowBtn', function () {
+                    $(this).closest('tr').remove();
+                });
+            });
+            
+            function deleteQuiz() {
+            var quizId = ${quiz.quizId}; // Ensure quiz ID is available in the JSP
+            if (confirm("Are you sure you want to delete this quiz?")) {
+                $.ajax({
+                    url: "${pageContext.request.contextPath}/admin/deletequiz",
+                    type: "POST",
+                    data: { quizId: quizId },
+                    success: function(response) {
+                        if (response.status === 'success') {
+                            alert("Quiz deleted successfully.");
+                            window.location.href = "${pageContext.request.contextPath}/admin/quizzeslist";
+                        } else {
+                            alert("Error deleting quiz: " + response.message);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        alert("An error occurred: " + error);
+                    }
+                });
+            }
+        }
+        </script>
     </head>
     <body>
         <div class="admin-layout">
@@ -58,8 +101,7 @@
                                             <option value="0" <c:if test="${quiz.level.toInt() == 0}">selected</c:if>>Easy</option>
                                             <option value="1" <c:if test="${quiz.level.toInt() == 1}">selected</c:if>>Medium</option>
                                             <option value="2" <c:if test="${quiz.level.toInt() == 2}">selected</c:if>>Hard</option>
-                                        </select>
-
+                                            </select>
                                         </div>
                                         <div class="col">
                                             <label for="duration" class="form-label">Duration (minutes)</label>
@@ -76,15 +118,16 @@
                                         <select class="form-select" id="quizType" name="quizType">
                                             <option value="0" <c:if test="${quiz.type.toInt() == 0}">selected</c:if>>SIMULATION</option>
                                             <option value="1" <c:if test="${quiz.type.toInt() == 1}">selected</c:if>>LESSON_QUIZ</option>
-                                        </select>
+                                            </select>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="description" class="form-label">Description</label>
-                                    <textarea class="form-control" id="description" name="description" rows="3">${quiz.description}</textarea>
+                                    <div class="mb-3">
+                                        <label for="description" class="form-label">Description</label>
+                                        <textarea class="form-control" id="description" name="description" rows="3">${quiz.description}</textarea>
                                 </div>
                                 <button type="submit" class="btn btn-primary">Submit</button>
-                                <button type="button" class="btn btn-secondary" onclick="history.back()">Back</button>
+                                <a href="${pageContext.request.contextPath}/admin/quizzeslist" class="btn btn-secondary">Back</a>
+                                <button type="button" class="btn btn-danger" onclick="deleteQuiz()">Delete Quiz</button>
                             </form>
                         </div>
                         <div class="tab-pane fade" id="setting" role="tabpanel" aria-labelledby="setting-tab">
@@ -93,20 +136,44 @@
                                     <label for="totalQuestions" class="form-label">Number of question</label>
                                     <input type="number" class="form-control" id="totalQuestions" name="totalQuestions" value="${quiz.totalQuestion}">
                                 </div>
-                               
                                 <div class="mb-3">
                                     <label class="form-label">Choose the number of questions in groups by lesson</label>
-                                    
-                                    <button class="btn btn-primary" type="button">Add</button>
+                                    <table id="questionsTable">
+                                        <thead>
+                                            <tr>
+                                                <th>Name of lesson</th>
+                                                <th>Number question</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <c:forEach items="${listGroupQuestion}" var="l">
+                                                <tr>
+                                                    <td>
+                                                        <select name="lessonId" style="width: 100%">
+                                                            <c:forEach items="${lessonList}" var="c">
+                                                                <option value="${c}" <c:if test="${c == l.lessonId}">selected</c:if>>Lesson ${c}</option>
+                                                            </c:forEach>
+                                                        </select>
+                                                    </td>
+                                                    <td><input type="number" name="numberQuestion" value="${l.questionCount}" style="width: 100%"></td>
+                                                    <td><button type="button" class="btn btn-danger deleteRowBtn">Delete</button></td>
+                                                </tr>
+                                            </c:forEach>
+                                        </tbody>
+                                    </table>
                                 </div>
-                                <button type="submit" class="btn btn-primary">Save</button>
-                                <button type="button" class="btn btn-secondary" onclick="history.back()">Back</button>
+                                <button id="addRowBtn" class="btn btn-primary" type="button">Add</button>
+                                <div class="mt-2">
+                                    <button type="submit" class="btn btn-primary">Save</button>
+                                    <a href="${pageContext.request.contextPath}/admin/quizzeslist" class="btn btn-secondary">Back</a>
+                                    <button type="button" class="btn btn-danger" onclick="deleteQuiz()">Delete Quiz</button>
+                                </div>
                             </form>
                         </div>
                     </div>
                 </div>
             </main>
         </div>
-
     </body>
 </html>
