@@ -696,7 +696,7 @@ public class DAOSubject extends DBContext {
 
         PreparedStatement pre;
         try {
-            System.out.println("Adding" + sub.toString() + "oId=" + ownerId + "published=" + published + "featured=" + featured);
+            //System.out.println("Adding" + sub.toString() + "oId=" + ownerId + "published=" + published + "featured=" + featured);
             pre = connection.prepareStatement(sql);
             pre.setString(1, sub.getSubjectName());
             pre.setInt(2, sub.getCategoryId());
@@ -754,6 +754,34 @@ public class DAOSubject extends DBContext {
             Logger.getLogger(DAOSubject.class.getName()).log(Level.SEVERE, null, ex);
         }
         return isUpdated;
+    }
+    
+     public int updateSubjectOverview(Subject sub) {
+         System.out.println("Changing" + sub);
+        String sql = "UPDATE Subject SET SubjectTitle = ?, SubjectCategoryId = ?, SubjectStatus = ?, IsFeaturedSubject = ?, SubjectTagLine = ?, SubjectBriefInfo = ?, SubjectDescription = ?"
+                + ((sub.getThumbnail().length() > 0)? ", SubjectThumbnail = ? " : " ")
+                + ((sub.getOwnerId() > 0)? ", SubjectOwnerId = ? " :  " ")
+                + "WHERE SubjectId = ?";
+        PreparedStatement pre;
+        try {
+            pre = connection.prepareStatement(sql);
+            int seq = 1;
+            pre.setString(seq++, sub.getSubjectName());
+            pre.setInt(seq++, sub.getCategoryId());
+            pre.setInt(seq++, sub.getStatusId());
+            pre.setBoolean(seq++, sub.getIsFeatured());
+            pre.setString(seq++, sub.getTagLine());
+            pre.setString(seq++, sub.getBriefInfo());
+            pre.setString(seq++, sub.getSubjectDescription());
+            if ((sub.getThumbnail().length() > 0)) pre.setString(seq++, sub.getThumbnail());
+            if (sub.getOwnerId() > 0) pre.setInt(seq++, sub.getOwnerId());
+            pre.setInt(seq++, sub.getSubjectId());
+
+            return pre.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAOSubject.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
     }
 
     public SubjectDTO getSubjectByDTOId(int subjectId) {
@@ -936,7 +964,7 @@ public class DAOSubject extends DBContext {
 
     public static void main(String[] args) {
         DAOSubject dao = new DAOSubject();
-        System.out.println(dao.getSubjectByPackageId(4).getTagLine());
-
+        System.out.println(dao.getSubjectById(1));
+    
     }
 }

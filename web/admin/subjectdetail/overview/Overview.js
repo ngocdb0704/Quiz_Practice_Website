@@ -1,8 +1,13 @@
+const currentImg = document.currentScript.getAttribute("currentImg");
 let previewImg = document.getElementById("subject-thumbnail");
 
 let uploadName = document.getElementById("image-name");
 let fileInput = document.getElementById('image-upload');
 let uploadLabel = document.getElementById('upload-label');
+
+function handleThumbnailErr() {
+	previewImg.style.display = "none";
+}
 
 if (fileInput) fileInput.addEventListener('change', event => {
     if (event.target.files.length > 0) {
@@ -13,14 +18,14 @@ if (fileInput) fileInput.addEventListener('change', event => {
 
             if (!(file.name.endsWith(".jpg") || file.name.endsWith(".jpeg") || file.name.endsWith(".webp") || file.name.endsWith(".png"))) {
                 uploadLabel.innerHTML = "<strong style=\"color: red;\">Selected file was not in one of the supported image formats</strong>";
-                previewImg.style.display = "none";
+				previewImg.src = currentImg;
                 uploadName.value = "";
                 fileInput.value = null;
                 return;
             }
             if (file.size > 200000000) {
                 uploadLabel.innerHTML = "<strong style=\"color: red;\">The image you just uploaded was too large! Please upload images under 200MB only.</strong>";
-                previewImg.style.display = "none";
+				previewImg.src = currentImg;
                 uploadName.value = "";
                 fileInput.value = null;
                 return;
@@ -90,9 +95,9 @@ const briefDefault = "Write a short paragraph (<300 characters) that describes t
 const briefWarningTxt = "Please don't exceed 300 characters for brief info!";
 
 
-let validExpert = false;
+//let validExpert = false;
 function changeSaveButtonStatus() {
-    if (validTitle && validBrief && validTagline && validExpert)
+    if (validTitle && validBrief && validTagline)
         submitButton.classList.remove("disabled");
     else
         submitButton.classList.add("disabled");
@@ -148,6 +153,7 @@ function formReset() {
     validateTitle("");
     validateTagline("");
     validateBrief("");
+	clearEmail()
 }
 
 let desc = document.getElementById("subject-description");
@@ -191,23 +197,36 @@ async function unFocusSearch() {
 
 function setEmail(name, email) {
     hiddenEmail.value = email;
-    chosenExpert.innerHTML = "Chosen:<button style=\"background-color: red;\" class=\"btn btn-close float-end\" onclick=\"clearEmail()\"></button>" + resultElement(name, email);
-    validExpert = true;
-    submitButton.value = "Create";
-    changeSaveButtonStatus();
+    chosenExpert.innerHTML = "Owner will be reasigned as this user:" + resultElement2(name, email);
+    //validExpert = true;
+    //submitButton.value = "Create";
+    //changeSaveButtonStatus();
 }
 
 function clearEmail() {
     hiddenEmail.value = "";
     chosenExpert.innerHTML = "";
-    validExpert = false;
-    submitButton.value = "Please choose an expert ";
-    changeSaveButtonStatus();
+    //validExpert = false;
+    //submitButton.value = "Please choose an expert ";
+    //changeSaveButtonStatus();
 }
 
 let resultElement = (name, email) => {
     return `
-    <div class="experts border border-1 rounded m-1" onclick="setEmail('${name}', '${email}')">
+    <div class="experts border border-1 rounded m-1" onclick="setEmail('${name}', '${email}')" data-bs-toggle="modal" data-bs-target=".changeOnwerModal">
+       <i class="bi bi-person-circle float-lg-start h-100"></i>
+        <p class="result-display mb-1">${name}</p>
+        <small>${email}</small>
+    </div>
+
+    `;
+};
+
+
+let resultElement2 = (name, email) => {
+    return `
+    <div class="experts border border-1 rounded m-1">
+		<button style=\"background-color: red; margin: 3px;\" class=\"btn btn-close float-end\" onclick=\"clearEmail()\"></button>
        <i class="bi bi-person-circle float-lg-start h-100"></i>
         <p class="result-display mb-1">${name}</p>
         <small>${email}</small>

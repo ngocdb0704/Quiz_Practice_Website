@@ -133,24 +133,39 @@
 </html>
 
 <!-- Modal Register -->
-<div class="modal fade modalRegister"
-     tabindex="-1"
-     role="dialog" >
-    <div class="modal-dialog modal-dialog-centered" 
-         role="document">
-        <div class="modal-content">
-            <div class="modal-header text-bg-primary">
-                <h4>Subject Register</h4>
-                <button type="button" 
-                        class="btn-close" 
-                        data-bs-dismiss="modal" 
-                        aria-label="Close">
-                </button>
+            <div class="modal fade modalRegister"
+                 tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered ${sessionScope.userEmail == null ? "modal-lg": ""}" 
+                     role="document">
+                    <div class="modal-content">
+                        <div class="modal-header text-bg-primary">
+                            <h4>Subject Register</h4>
+                            <button type="button" 
+                                    class="btn-close" 
+                                    data-bs-dismiss="modal" 
+                                    aria-label="Close">
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <c:if test="${sessionScope.userEmail != null}">
+                                <c:import url="SubjectRegisterUser.jsp">
+                                    <c:param name="service" value="register"/>
+                                    <c:param name="subjectId" value="${subjectDetails.getSubjectId()}"/>
+                                    <c:param name="thumbnail" value="${subjectDetails.getThumbnail()}"/>
+                                    <c:param name="subjectName" value="${subjectDetails.getSubjectName()}"/>
+                                    <c:param name="tagLine" value="${subjectDetails.getTagLine()}"/>
+                                </c:import>
+                            </c:if>
+                            <c:if test="${sessionScope.userEmail == null}">
+                                <c:import url="SubjectRegisterGuest.jsp">
+                                    <c:param name="service" value="freshRegister"/>
+                                    <c:param name="subjectId" value="${subjectDetails.getSubjectId()}"/>
+                                    <c:param name="thumbnail" value="${subjectDetails.getThumbnail()}"/>
+                                    <c:param name="subjectName" value="${subjectDetails.getSubjectName()}"/>
+                                    <c:param name="tagLine" value="${subjectDetails.getTagLine()}"/>
+                                </c:import>
+                            </c:if>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="modal-body">
-                <jsp:include page="/SubjectRegisterPopUp.jsp">
-                    <jsp:param name="registId" value="${subjectDetails.getSubjectId()}"/>
-                </jsp:include>
-            </div>
-        </div>
-</div>
