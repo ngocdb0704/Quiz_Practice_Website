@@ -261,6 +261,7 @@ public class DAOSubject extends DBContext {
                      tableSubject.SubjectLevelName from 
                      (select s.SubjectId, MIN(p.SalePrice) as 'SalePrice' from Package p
                      join Subject s on s.SubjectId = p.SubjectId
+                     and p.Status = 1
                      GROUP BY s.SubjectId ) tableLowest
                      left join 
                      (select s.SubjectId, s.SubjectTitle, s.SubjectTagLine,s.SubjectThumbnail,
@@ -372,6 +373,7 @@ public class DAOSubject extends DBContext {
                     tableSubject.SubjectLevelName, tableSubject.OrganizationName from 
                     (select s.SubjectId, MIN(p.SalePrice) as 'SalePrice' from Package p
                     join Subject s on s.SubjectId = p.SubjectId
+                    where p.Status = 1                         
                     GROUP BY s.SubjectId ) tableLowest
                     left join 
                     (select s.SubjectId, s.SubjectTitle, s.SubjectTagLine,s.SubjectThumbnail,
@@ -419,13 +421,14 @@ public class DAOSubject extends DBContext {
                     tableSubject.SubjectThumbnail, tablePackage.PackageName, tablePackage.ListPrice, tableLowest.SalePrice
                     from (select s.SubjectId, p.SalePrice, p.ListPrice from Package p
                     join Subject s on s.SubjectId = p.SubjectId
-                    where p.SalePrice <= p.ListPrice/10*5) tableLowest 
+                    where p.SalePrice <= p.ListPrice/10*5 and p.Status = 1) tableLowest 
                     left join
                     (select s.SubjectId, s.SubjectTitle, s.SubjectTagLine, s.SubjectThumbnail, s.SubjectUpdatedDate from Subject s
                     where  s.SubjectStatus = 1) tableSubject on tableLowest.SubjectId = tableSubject.SubjectId
                     left join 
                     (select p.SubjectId, p.PackageName, p.ListPrice, p.SalePrice from Package p
-                    join Subject s on s.SubjectId = p.SubjectId) tablePackage on tablePackage.SubjectId= tableLowest.SubjectId
+                    join Subject s on s.SubjectId = p.SubjectId
+                    where p.Status = 1) tablePackage on tablePackage.SubjectId= tableLowest.SubjectId
                     where tablePackage.ListPrice = tableLowest.ListPrice
                     order by tableSubject.SubjectUpdatedDate desc                          
                     """);
@@ -462,6 +465,7 @@ public class DAOSubject extends DBContext {
                     left join 
                     (select s.SubjectId, MIN(p.SalePrice) as 'SalePrice' from Package p
                     join Subject s on s.SubjectId = p.SubjectId
+                    where p.Status = 1                         
                     GROUP BY s.SubjectId) tableLowest on tableLowest.SubjectId = tableSubject.SubjectId
                     left join 
                     (select p.SubjectId, p.PackageName, p.ListPrice, p.SalePrice from Package p
@@ -875,7 +879,10 @@ public class DAOSubject extends DBContext {
 
     public HashMap<Integer, ArrayList<Package>> getSubjectPackagesMap() {
         HashMap<Integer, ArrayList<Package>> map = new HashMap<>();
-        String sqlGetSubjects = "select s.SubjectId from [Subject] s";
+        String sqlGetSubjects = """
+                                select DISTINCT s.SubjectId from [Subject] s
+                                left join [Package] p on s.SubjectId = p.SubjectId
+                                where p.Status = 1""";
         String sqlGetPackages = "select * from [Package] p where p.Status = 1 and p.SubjectId = ";
         int key;
 
