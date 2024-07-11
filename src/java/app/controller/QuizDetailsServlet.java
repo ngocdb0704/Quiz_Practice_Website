@@ -58,7 +58,7 @@ public class QuizDetailsServlet extends HttpServlet {
         }
         
         List<Integer> lessonList = new ArrayList<>();
-        for (int i = 1; i <= 5; i++) {
+        for (int i = 1; i <= 3; i++) {
             lessonList.add(i);
         }
         

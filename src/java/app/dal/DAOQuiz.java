@@ -410,4 +410,53 @@ public class DAOQuiz extends DBContext {
         return questions;
     }
 
+    public boolean isQuizAttempted(int quizId) throws SQLException {
+        String checkAttemptsSQL = "SELECT numberOfAttempts FROM Quiz WHERE QuizId = ?";
+        try (PreparedStatement checkAttemptsStmt = connection.prepareStatement(checkAttemptsSQL)) {
+            checkAttemptsStmt.setInt(1, quizId);
+            ResultSet rs = checkAttemptsStmt.executeQuery();
+            if (rs.next()) {
+                int numberOfAttempts = rs.getInt("numberOfAttempts");
+                return numberOfAttempts > 0;
+            }
+        }
+        return false;
+    }
+
+    public boolean deleteQuiz(int quizId) throws SQLException {
+        String deleteQuizSQL = "DELETE FROM Quiz WHERE QuizId = ?";
+        String deleteQuestionsSQL = "DELETE FROM QuestionQuiz WHERE QuizId = ?";
+        String deleteLessonQuestionsSQL = "DELETE FROM QuizLessonQuestionCount WHERE QuizId = ?";
+
+        try (PreparedStatement deleteQuizStmt = connection.prepareStatement(deleteQuizSQL);
+             PreparedStatement deleteQuestionsStmt = connection.prepareStatement(deleteQuestionsSQL);
+             PreparedStatement deleteLessonQuestionsStmt = connection.prepareStatement(deleteLessonQuestionsSQL)) {
+
+            // Begin transaction
+            connection.setAutoCommit(false);
+
+            // Delete from QuestionQuiz
+            deleteQuestionsStmt.setInt(1, quizId);
+            deleteQuestionsStmt.executeUpdate();
+
+            // Delete from QuizLessonQuestionCount
+            deleteLessonQuestionsStmt.setInt(1, quizId);
+            deleteLessonQuestionsStmt.executeUpdate();
+
+            // Delete from Quiz
+            deleteQuizStmt.setInt(1, quizId);
+            deleteQuizStmt.executeUpdate();
+
+            // Commit transaction
+            connection.commit();
+            connection.setAutoCommit(true);
+
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            connection.rollback();
+            return false;
+        }
+    }
+
 }
