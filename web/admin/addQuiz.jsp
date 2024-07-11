@@ -70,6 +70,16 @@
                 });
             });
         });
+
+        window.onload = function() {
+            var errorLesson = '<c:out value="${sessionScope.errorLesson}" />';
+            if (errorLesson) {
+                alert(errorLesson);
+                <%
+                    session.removeAttribute("errorLesson");
+                %>
+            }
+        };
     </script>
 </head>
 <body>

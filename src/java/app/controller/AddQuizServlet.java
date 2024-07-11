@@ -14,6 +14,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,6 +34,10 @@ public class AddQuizServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
+        if (request.getParameter("check") != null) {
+            check = false;
+        }
         List<Subject> listSubjects = subDao.getAllSubject();
         Map<Integer, String> subjectMap = new HashMap<>();
         for (Subject subject : listSubjects) {
@@ -43,15 +48,23 @@ public class AddQuizServlet extends HttpServlet {
         for (int i = 1; i <= 3; i++) {
             lessonList.add(i);
         }
-
         request.setAttribute("lessonList", lessonList);
         request.setAttribute("subjectMap", subjectMap);
-        request.getRequestDispatcher("addQuiz.jsp").forward(request, response);
+        if (!check) {
+            request.getRequestDispatcher("addQuiz.jsp").forward(request, response);
+        } else {
+            request.getRequestDispatcher("/admin/quizzeslist").forward(request, response);
+        }
     }
+
+    boolean check = false;
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
+        HttpSession session = request.getSession();
+        check = false;
         String quizName = request.getParameter("name");
         int subjectId = Integer.parseInt(request.getParameter("subject"));
         int levelInt = Integer.parseInt(request.getParameter("examLevel"));
@@ -60,8 +73,12 @@ public class AddQuizServlet extends HttpServlet {
         int quizTypeInt = Integer.parseInt(request.getParameter("quizType"));
         String description = request.getParameter("description");
         String totalQuestionsStr = request.getParameter("totalQuestions");
-
         String[] lessonIds = request.getParameterValues("lessonId");
+        if (lessonIds == null) {
+            session.setAttribute("errorLesson", "Please select the question component in the quiz!");
+            response.sendRedirect("addQuiz.jsp");
+            return;
+        }
         String[] questionCounts = request.getParameterValues("numberQuestion");
 
         // Add these attributes to keep the input data
@@ -84,12 +101,6 @@ public class AddQuizServlet extends HttpServlet {
 
         if (quizName.trim().isEmpty()) {
             request.setAttribute("errorName", "Quiz name cannot be empty!");
-            doGet(request, response);
-            return;
-        }
-
-        if (lessonIds == null) {
-            request.setAttribute("errorLesson", "Please select the question component in the quiz!");
             doGet(request, response);
             return;
         }
@@ -209,8 +220,12 @@ public class AddQuizServlet extends HttpServlet {
 
                 quizDAO.addQuizLessonQuestionCount(quizId, lessonId, questionCount);
                 LOGGER.log(Level.INFO, "Added lesson ID: {0} with question count: {1} to quiz with ID: {2}", new Object[]{lessonId, questionCount, quizId});
+
             }
+            session.setAttribute("message", "Add successfully");
+            check = true;
         } catch (Exception e) {
+
             LOGGER.log(Level.SEVERE, "Error adding questions or lesson question counts to quiz", e);
             request.setAttribute("errorMessage", "Error adding questions or lesson question counts to quiz. Please try again.");
             doGet(request, response);
@@ -218,6 +233,7 @@ public class AddQuizServlet extends HttpServlet {
         }
 
         request.setAttribute("successMessage", "Add quiz successfully.");
+        check = true;
         doGet(request, response);
     }
 

@@ -69,6 +69,12 @@ public class QuizzesListController extends HttpServlet {
 
         request.getRequestDispatcher(PAGE_NAME).forward(request, response);
     } 
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+    throws ServletException, IOException {
+        doGet(request, response);
+    }
+    
 
     @Override
     public String getServletInfo() {
