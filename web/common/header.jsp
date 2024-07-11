@@ -53,7 +53,8 @@
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#loginModal">
                         Login
                     </button>
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#registrationModal">
+
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#registerModal">
                         Register
                     </button>
                 </c:if>
@@ -76,7 +77,7 @@
     </div>
 </div>
 
-<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" >
+<div class="modal" id="loginModal" tabindex="-1" role="dialog" >
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -89,4 +90,5 @@
         </div>
     </div>
 </div>
+
 

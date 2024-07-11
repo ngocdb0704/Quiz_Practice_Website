@@ -86,17 +86,13 @@
                                     <div class="col">
                                     </div>
                                     <div class="col">
-                                        <button type="submit" onclick="showAlert('al${param.subjectId}')"
+                                        <button type="submit"
                                                 class="btn ${param.service.equals("editRegist")? "btn-warning":"btn-primary"}">
                                             ${param.service.equals("editRegist")? "Save change":"Register"}</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="alert alert-primary al${param.subjectId}" style="visibility: hidden;">
-                        <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
-                        <span role="status">Loading...Please wait</span>
                     </div>
                 </div>
             </div>

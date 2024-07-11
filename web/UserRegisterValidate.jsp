@@ -1,6 +1,6 @@
 <%-- 
-    Document   : SubjectRegisterValidate
-    Created on : 7 thg 7, 2024, 23:21:54
+    Document   : UserRegisterValidate
+    Created on : 11 thg 7, 2024, 14:35:50
     Author     : admin
 --%>
 
@@ -9,18 +9,18 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Subject Register</title>
+        <title>User Register</title>
         <%@include file="/common/ImportBootstrap.jsp" %>
         <link rel="stylesheet" href="common/ExtendBody.css"/>
         <!-- Script google reCaptcha -->
         <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-        <script src="public/js/SubjectRegisterValidate.js"></script>
+        <script src="public/js/UserRegister.js"></script>
     </head>
     <body>
         <%@include file="/common/header.jsp" %>
         <main>
             <div class="container">
-                <h1>Subject Register</h1>
+                <h1>User Register</h1>
                 <c:if test="${requestScope.isExist}">
                     <div class="row">
                         <div class="col">
@@ -42,7 +42,7 @@
                                             </div>
                                             <div class="col">
                                                 <a href="home">
-                                                    <button type="button" class="btn btn-primary">Back to Home Page</button>
+                                                    <button type="button" class="btn btn-primary">Back to Home page</button>
                                                 </a>
                                             </div>
                                         </div>
@@ -106,9 +106,8 @@
                                         <p class="text-center">${requestScope.message}</p>
                                         <div class="container">
                                             <div class="row">
-                                                <form id="sendMail" action="public/registerSubjectGuest" method="post">
-                                                    <input type="hidden" name="service" value="freshRegister"/>
-                                                    <input type="hidden" name="selectedPackage" value="${requestScope.packageId}"/>
+                                                <form id="sendUser" action="public/userRegister" method="post">
+                                                    <input type="hidden" name="service" value="userRegister"/>
                                                     <input type="hidden" name="email" value="${requestScope.email}"/>
                                                     <input type="hidden" name="mobile" value="${requestScope.mobile}"/>
                                                     <input type="hidden" name="gender" value="${requestScope.gender}"/>
@@ -121,7 +120,11 @@
                                                     </div>
                                                 </div>
                                                 <div class="col">
-                                                    <button id="submitbutton" type="button" onclick="checkCaptcha(grecaptcha.getResponse())" class="btn btn-primary">Register</button>
+                                                    <button id="submitbutton" type="button" 
+                                                            onclick="checkCaptcha(grecaptcha.getResponse())" 
+                                                            class="btn btn-primary">
+                                                        Register
+                                                    </button>
                                                 </div>
                                                 <div id="dummyDiv" class="alert alert-danger"
                                                      style="visibility: hidden;">

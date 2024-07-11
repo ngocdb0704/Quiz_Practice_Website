@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/JavaScript.js to edit this template
  */
 
+
 function checkCaptcha(captcha) {
     let alertCap = document.getElementById("capAlert");
     let cap = document.getElementById("cap");
@@ -15,7 +16,7 @@ function checkCaptcha(captcha) {
         alertCap.style.display = 'none';
         dummy.style.display = 'none';
         cap.value = 'approve';
-        document.getElementById('sendMail').submit();
+        document.getElementById('sendUser').submit();
     } else {
         dummy.style.display = 'none';
         alertCap.style.display = 'block';

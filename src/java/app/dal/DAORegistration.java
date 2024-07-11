@@ -516,6 +516,7 @@ public class DAORegistration extends DBContext {
         long epochTo = epoch + duration * 30 * 24 * 60 * 60;
         String validTo = new java.text.SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date(epochTo * 1000));
         int status = 3;
+        String[] splitContent = content.split("\\s+");
         String sql = """
                      INSERT INTO [dbo].[Registration]
                                 ([UserId]
@@ -538,8 +539,8 @@ public class DAORegistration extends DBContext {
             pre.setInt(4, status);
             pre.setString(5, validFrom);
             pre.setString(6, validTo);
-            pre.setString(7, content);
-            pre.setString(8, null);
+            pre.setString(7, splitContent[0]);
+            pre.setString(8, splitContent[6]);
             pre.setString(9, account);
             n = pre.executeUpdate();
         } catch (SQLException ex) {

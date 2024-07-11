@@ -207,9 +207,16 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
     opacity: 1;
 }
 .carousel {
-  background-image: url(https://thumbs.dreamstime.com/z/beautiful-delicate-background-blossoming-light-pink-sakura-flowers-place-text-delicate-floral-design-realistic-145967566.jpg);
+    background-image: url(https://thumbs.dreamstime.com/z/beautiful-delicate-background-blossoming-light-pink-sakura-flowers-place-text-delicate-floral-design-realistic-145967566.jpg);
 }
 
 .carousel-cell {
-  counter-increment: carousel-cell;
+    counter-increment: carousel-cell;
+}
+
+.modal-backdrop {
+    background-color: rgba(255,255,255,0.3) !important;
+}
+.modal{
+    background-color: rgba(255,255,255,0.6) !important;
 }
