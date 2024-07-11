@@ -352,16 +352,18 @@ CREATE TABLE [dbo].[Quiz] (
 )
 GO
 
-CREATE TABLE [dbo].[QuestionQuiz] (
-	[QuizId] [int] foreign key references [dbo].[Quiz]([QuizId]) on delete cascade,
-	[QuestionId] [int] foreign key references [dbo].[Question]([QuestionId])
-	PRIMARY KEY([QuizId], [QuestionId])
-)
+CREATE TABLE QuestionQuiz (
+    QuizId INT NOT NULL,
+    QuestionId INT NOT NULL,
+    PRIMARY KEY (QuizId, QuestionId),
+    FOREIGN KEY (QuizId) REFERENCES Quiz(QuizId),
+    FOREIGN KEY (QuestionId) REFERENCES Question(QuestionId)
+);
 
 CREATE TABLE QuizLessonQuestionCount (
-    QuizId INT,
-    LessonId INT,
-    QuestionCount INT,
+    QuizId INT NOT NULL,
+    LessonId INT NOT NULL,
+    QuestionCount INT NOT NULL,
     PRIMARY KEY (QuizId, LessonId),
     FOREIGN KEY (QuizId) REFERENCES Quiz(QuizId)
 );
