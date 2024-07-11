@@ -1,8 +1,15 @@
 <head>
     <jsp:include page="/ChangePassAn.jsp" />
-    <jsp:include page="/UserRegisterThroughMail.jsp" />
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+        .modal-backdrop {
+            background-color: rgba(255,255,255,0.3) !important;
+        }
+        .modal{
+            background-color: rgba(255,255,255,0.6) !important;
+        }
+    </style>
 </head>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <nav class="navbar navbar-expand-lg bg-body-tertiary" style="z-index: 1">
@@ -53,7 +60,8 @@
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#loginModal">
                         Login
                     </button>
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#registrationModal">
+
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#registerModal">
                         Register
                     </button>
                 </c:if>
@@ -76,7 +84,7 @@
     </div>
 </div>
 
-<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" >
+<div class="modal" id="loginModal" tabindex="-1" role="dialog" >
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -90,3 +98,24 @@
     </div>
 </div>
 
+<!-- The Modal -->
+<div class="modal" id="registerModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header text-bg-primary">
+                <h4 class="modal-title">User Register</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                <c:import url="UserRegisterThroughMail.jsp">
+
+                </c:import>
+            </div>
+
+        </div>
+    </div>
+</div>

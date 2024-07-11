@@ -18,7 +18,7 @@
         <script src="https://www.google.com/recaptcha/api.js" async defer></script>
         <script src="public/js/SubjectRegisterPayment.js"></script>
     </head>
-    <body>
+    <body onload="hideAllAlert()">
         <%@include file="/common/header.jsp" %>
         <main class="container">
             <h1>Subject Register</h1>
@@ -70,10 +70,26 @@
                                                 <input type="hidden" id="payCon" name="payCon" value=""/>
                                                 <input type="hidden" name="service" value="paid"/>
                                             </form>
-                                            <button type="button" class="btn btn-primary"
+                                            <button id="submitbutton" type="button" class="btn btn-primary"
                                                     onclick="checkPaidRegister(${requestScope.price},
                                                                     'USER${requestScope.mobile}SUBJECT${requestScope.packageId}',
                                                                     grecaptcha.getResponse())">Check Payment</button>
+                                        </div>
+                                        <div id="dummyDiv" class="alert alert-danger"
+                                             style="visibility: hidden;">
+                                            Please check the captcha!
+                                        </div>
+                                        <div id="loading" class="alert alert-primary" style="display: none;">
+                                            <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                                            <span role="status">Loading...Please wait</span>
+                                        </div>
+                                        <div id="capAlert" class="alert alert-danger"
+                                             style="display: none;" role="alert">
+                                            Please check the captcha!
+                                        </div>
+                                        <div id="notFound" class="alert alert-warning" 
+                                             style="display: none;" role="alert">
+                                            Payment Not Found!
                                         </div>
                                     </div>
                                 </div>
