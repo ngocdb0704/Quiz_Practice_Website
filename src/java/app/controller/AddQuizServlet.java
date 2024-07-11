@@ -6,6 +6,7 @@ import app.entity.QuizInformation;
 import app.entity.QuizLevel;
 import app.entity.QuizType;
 import app.entity.Question;
+import app.entity.QuizLesson;
 import app.entity.Subject;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
@@ -75,6 +76,12 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
     request.setAttribute("lessonIds", lessonIds);
     request.setAttribute("questionCounts", questionCounts);
 
+    List<QuizLesson> lessonQuestions = new ArrayList<>();
+    for (int i = 0; i < lessonIds.length; i++) {
+        lessonQuestions.add(new QuizLesson(-1 ,Integer.parseInt(lessonIds[i]), Integer.parseInt(questionCounts[i])));
+    }
+    request.setAttribute("lessonQuestions", lessonQuestions);
+    
     if(quizName.trim().isEmpty()){
         request.setAttribute("errorName", "Quiz name cannot empty!");
         doGet(request, response);

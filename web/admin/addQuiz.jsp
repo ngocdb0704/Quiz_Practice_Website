@@ -148,16 +148,16 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <c:forEach items="${listGroupQuestion}" var="l">
+                            <c:forEach items="${lessonQuestions}" var="lessonQuestion">
                                 <tr>
                                     <td>
                                         <select name="lessonId" style="width: 100%">
                                             <c:forEach items="${lessonList}" var="c">
-                                                <option value="${c}" <c:if test="${c == l.lessonId}">selected</c:if>>Lesson ${c}</option>
+                                                <option value="${c}" <c:if test="${c == lessonQuestion.lessonId}">selected</c:if>>Lesson ${c}</option>
                                             </c:forEach>
                                         </select>
                                     </td>
-                                    <td><input type="number" name="numberQuestion" value="${l.questionCount}" style="width: 100%"></td>
+                                    <td><input type="number" name="numberQuestion" value="${lessonQuestion.questionCount}" style="width: 100%"></td>
                                     <td><button type="button" class="btn btn-danger deleteRowBtn">Delete</button></td>
                                 </tr>
                             </c:forEach>
