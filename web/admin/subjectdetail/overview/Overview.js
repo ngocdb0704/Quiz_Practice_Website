@@ -1,9 +1,27 @@
 const currentImg = document.currentScript.getAttribute("currentImg");
+const fieldDefaultBorder = "var(--bs-border-width) solid #dee2e6";
+const thumbnailDefaultBorder = "1px solid black";
+const changeBorder = "2px solid #fcf762";
 let previewImg = document.getElementById("subject-thumbnail");
 
 let uploadName = document.getElementById("image-name");
 let fileInput = document.getElementById('image-upload');
 let uploadLabel = document.getElementById('upload-label');
+let cateSelect = document.getElementById('subject-category');
+let featuredCheck = document.getElementById('featured-flag');
+let statusSelect = document.getElementById('subject-status');
+let imgDiv = document.getElementById('img-div');
+
+let trackChangeTitle = false;
+let trackChangeCate = false;
+let trackChangeFeatured = false;
+let trackChangeStatus = false;
+let trackChangeOwner = false;
+let trackChangeThumbnail = false;
+let trackChangeTagline = false;
+let trackChangeBrief = false;
+let trackChangeDescription = false;
+let changeIndicator = document.getElementById("change-indicator");
 
 function handleThumbnailErr() {
 	previewImg.style.display = "none";
@@ -21,6 +39,8 @@ if (fileInput) fileInput.addEventListener('change', event => {
 				previewImg.src = currentImg;
                 uploadName.value = "";
                 fileInput.value = null;
+				trackChangeThumbnail = false;
+				changeSaveButtonStatus();
                 return;
             }
             if (file.size > 200000000) {
@@ -28,11 +48,14 @@ if (fileInput) fileInput.addEventListener('change', event => {
 				previewImg.src = currentImg;
                 uploadName.value = "";
                 fileInput.value = null;
+				trackChangeThumbnail = false;
+				changeSaveButtonStatus();
                 return;
             }
 
             uploadName.value = file.name.slice(file.name.lastIndexOf("\\") + 1);
             uploadLabel.innerHTML = "Selected file: " + file.name.slice(file.name.lastIndexOf("\\") + 1);
+			trackChangeThumbnail = true;
             changeSaveButtonStatus();
 
             previewImg.src = URL.createObjectURL(
@@ -91,19 +114,37 @@ const taglineWarningTxt = "Please don't exceed 50 characters for tagline!";
 let brief = document.getElementById("subject-brief");
 let briefWarning = document.getElementById("brief-warning");
 let validBrief = true;
-const briefDefault = "Write a short paragraph (<300 characters) that describes this subject.";
+const briefDefault = "A short paragraph (<300 characters) that describes this subject.";
 const briefWarningTxt = "Please don't exceed 300 characters for brief info!";
 
 
 //let validExpert = false;
 function changeSaveButtonStatus() {
-    if (validTitle && validBrief && validTagline)
+	let changed =  trackChangeTitle || trackChangeCate || trackChangeFeatured || trackChangeStatus || trackChangeThumbnail || trackChangeOwner || trackChangeTagline || trackChangeBrief || trackChangeDescription;
+
+	if (trackChangeTitle) title.style.border = changeBorder;
+	else title.style.border = fieldDefaultBorder;
+
+	title.style.border = (trackChangeTitle )? changeBorder: fieldDefaultBorder;
+	cateSelect.style.border = (trackChangeCate )? changeBorder: fieldDefaultBorder;
+	featuredCheck.style.border = (trackChangeFeatured )? changeBorder: fieldDefaultBorder;
+	statusSelect.style.border = (trackChangeStatus )? changeBorder: fieldDefaultBorder;
+	imgDiv.style.border = (trackChangeThumbnail )? changeBorder: thumbnailDefaultBorder;
+	tagline.style.border = (trackChangeTagline )? changeBorder: fieldDefaultBorder;
+	brief.style.border = (trackChangeBrief )? changeBorder: fieldDefaultBorder;
+	desc.style.border = (trackChangeDescription )? changeBorder: fieldDefaultBorder;
+
+	if (changed) changeIndicator.style.display = "inline-block";
+	else changeIndicator.style.display = "none";
+    if (validTitle && validBrief && validTagline 
+		&& changed )
         submitButton.classList.remove("disabled");
     else
         submitButton.classList.add("disabled");
 }
 
 function validateTitle(val) {
+	trackChangeTitle = true;
     if (val.length > 49) {
         validTitle = false;
         title.classList.add("is-invalid");
@@ -118,6 +159,7 @@ function validateTitle(val) {
 }
 
 function validateTagline(val) {
+	trackChangeTagline = true;
     if (val.length > 49) {
         validTagline = false;
         tagline.classList.add("is-invalid");
@@ -134,6 +176,7 @@ function validateTagline(val) {
 }
 
 function validateBrief(val) {
+	trackChangeBrief = true;
     if (val.length > 299) {
         validBrief = false;
         brief.classList.add("is-invalid");
@@ -149,11 +192,43 @@ function validateBrief(val) {
     changeSaveButtonStatus();
 }
 
+function handleFeaturedChange() {
+	trackChangeFeatured = true;
+	changeSaveButtonStatus();
+}
+
+function handleStatusChange() {
+	trackChangeStatus = true;
+	changeSaveButtonStatus();
+}
+
+function handleDescChange() {
+	trackChangeDescription = true;
+	changeSaveButtonStatus();
+}
+
+function handleCateChange() {
+	trackChangeCate = true;
+	changeSaveButtonStatus();
+}
+
 function formReset() {
     validateTitle("");
     validateTagline("");
     validateBrief("");
 	clearEmail()
+
+	trackChangeTitle = false;
+	trackChangeCate = false;
+	trackChangeFeatured = false;
+	trackChangeStatus = false;
+	trackChangeOwner = false;
+	trackChangeThumbnail = false;
+	trackChangeTagline = false;
+	trackChangeBrief = false;
+	trackChangeDescription = false;
+
+	changeSaveButtonStatus();
 }
 
 let desc = document.getElementById("subject-description");
@@ -179,36 +254,30 @@ function setTemplate(templateNum) {
 }
 
 const expertList = JSON.parse(document.currentScript.getAttribute("expertList"));
+const currentOwner = document.currentScript.getAttribute("currentOwner");
+
+
 let query = document.getElementById("query");
 let result = document.getElementById("search-result");
 let hiddenEmail = document.getElementById("hiddenEmail");
 let chosenExpert = document.getElementById("chosen-expert");
 
-function focusSearch() {
-    result.style.display = 'block';
-}
-
-async function unFocusSearch() {
-    setTimeout(() => {
-            result.style.display = 'none';
-            console.log(result.style.display);
-        }, 300);
-}
-
 function setEmail(name, email) {
     hiddenEmail.value = email;
     chosenExpert.innerHTML = "Owner will be reasigned as this user:" + resultElement2(name, email);
+	trackChangeOwner = true;
     //validExpert = true;
     //submitButton.value = "Create";
-    //changeSaveButtonStatus();
+    changeSaveButtonStatus();
 }
 
 function clearEmail() {
     hiddenEmail.value = "";
     chosenExpert.innerHTML = "";
+	trackChangeOwner = true;
     //validExpert = false;
     //submitButton.value = "Please choose an expert ";
-    //changeSaveButtonStatus();
+    changeSaveButtonStatus();
 }
 
 let resultElement = (name, email) => {
@@ -237,10 +306,14 @@ let resultElement2 = (name, email) => {
 
 function filterExpert() {  
     let queryTxt = query.value;
+	if (queryTxt.length < 1) {
+		result.innerHTML = "";
+		return;
+	}
     let filter = expertList.slice()
-            .filter(obj => obj.name.includes(queryTxt) | obj.email.includes(queryTxt))
-            .map((obj, ind) => resultElement(obj.name, obj.email));
+            .filter(obj => (obj.email != currentOwner) && (obj.name.includes(queryTxt) | obj.email.includes(queryTxt)))
+            .map((obj, ) => resultElement(obj.name, obj.email));
     if (filter.length > 0) result.innerHTML = filter.reduce((acc, obj) => acc + obj);
-    else result.innerHTML = "";      
+    else result.innerHTML = "";
 }
 filterExpert();

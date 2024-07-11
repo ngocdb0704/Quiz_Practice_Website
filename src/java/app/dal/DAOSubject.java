@@ -692,7 +692,7 @@ public class DAOSubject extends DBContext {
     }
 
     public int addSubject(Subject sub, int ownerId, int published, int featured) {
-        String sql = "INSERT INTO [Subject] VALUES(?, 1, ?, ?, 1, ?, CAST(GETDATE() as DATE), CAST(GETDATE() as DATE), ?, ?, ?, ?, ?);";
+        String sql = "INSERT INTO [Subject] VALUES(?, 1, ?, ?, 1, ?, CAST(GETDATE() as DATE), CAST(GETDATE() as DATE), ?, ?, ?, ?, ?, 0);";
 
         PreparedStatement pre;
         try {
@@ -758,7 +758,7 @@ public class DAOSubject extends DBContext {
     
      public int updateSubjectOverview(Subject sub) {
          System.out.println("Changing" + sub);
-        String sql = "UPDATE Subject SET SubjectTitle = ?, SubjectCategoryId = ?, SubjectStatus = ?, IsFeaturedSubject = ?, SubjectTagLine = ?, SubjectBriefInfo = ?, SubjectDescription = ?"
+        String sql = "UPDATE Subject SET SubjectTitle = ?, SubjectCategoryId = ?, SubjectStatus = ?, IsFeaturedSubject = ?, SubjectTagLine = ?, SubjectBriefInfo = ?, SubjectDescription = ?, SubjectUpdatedDate = CAST(GETDATE() as DATE)"
                 + ((sub.getThumbnail().length() > 0)? ", SubjectThumbnail = ? " : " ")
                 + ((sub.getOwnerId() > 0)? ", SubjectOwnerId = ? " :  " ")
                 + "WHERE SubjectId = ?";
