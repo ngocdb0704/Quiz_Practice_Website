@@ -117,10 +117,15 @@ let validBrief = true;
 const briefDefault = "A short paragraph (<300 characters) that describes this subject.";
 const briefWarningTxt = "Please don't exceed 300 characters for brief info!";
 
-
-//let validExpert = false;
+let changed = false;
+window.addEventListener('beforeunload', function (e) {
+    if (changed) {
+        e.preventDefault();
+        e.returnValue = '';
+    }
+});
 function changeSaveButtonStatus() {
-	let changed =  trackChangeTitle || trackChangeCate || trackChangeFeatured || trackChangeStatus || trackChangeThumbnail || trackChangeOwner || trackChangeTagline || trackChangeBrief || trackChangeDescription;
+	changed =  trackChangeTitle || trackChangeCate || trackChangeFeatured || trackChangeStatus || trackChangeThumbnail || trackChangeOwner || trackChangeTagline || trackChangeBrief || trackChangeDescription;
 
 	if (trackChangeTitle) title.style.border = changeBorder;
 	else title.style.border = fieldDefaultBorder;
