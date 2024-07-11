@@ -41,8 +41,8 @@
 
                                             </div>
                                             <div class="col">
-                                                <a href="public/SubjectsList">
-                                                    <button type="button" class="btn btn-primary">Back to Subjects List</button>
+                                                <a href="home">
+                                                    <button type="button" class="btn btn-primary">Back to Home page</button>
                                                 </a>
                                             </div>
                                         </div>
@@ -77,7 +77,7 @@
                                                 </div>
                                                 <div class="col">
                                                     <a href="home">
-                                                        <button type="button" class="btn btn-primary">Back to Home</button>
+                                                        <button type="button" class="btn btn-primary">Back to Home page</button>
                                                     </a>
                                                 </div>
                                             </div>

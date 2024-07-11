@@ -41,8 +41,8 @@
 
                                             </div>
                                             <div class="col">
-                                                <a href="public/SubjectsList">
-                                                    <button type="button" class="btn btn-primary">Back to Subjects List</button>
+                                                <a href="home">
+                                                    <button type="button" class="btn btn-primary">Back to Home Page</button>
                                                 </a>
                                             </div>
                                         </div>
@@ -76,8 +76,8 @@
 
                                                 </div>
                                                 <div class="col">
-                                                    <a href="public/SubjectsList">
-                                                        <button type="button" class="btn btn-primary">Back to Subjects List</button>
+                                                    <a href="home">
+                                                        <button type="button" class="btn btn-primary">Back to Home page</button>
                                                     </a>
                                                 </div>
                                             </div>
@@ -106,7 +106,7 @@
                                         <p class="text-center">${requestScope.message}</p>
                                         <div class="container">
                                             <div class="row">
-                                                <form id="sendEmail" action="public/registerSubjectGuest" method="post">
+                                                <form id="sendMail" action="public/registerSubjectGuest" method="post">
                                                     <input type="hidden" name="service" value="freshRegister"/>
                                                     <input type="hidden" name="selectedPackage" value="${requestScope.packageId}"/>
                                                     <input type="hidden" name="email" value="${requestScope.email}"/>

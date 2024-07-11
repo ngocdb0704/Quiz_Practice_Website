@@ -178,14 +178,6 @@
                                                 </button>
                                             </c:otherwise>
                                         </c:choose>
-                                        <c:if test="${sessionScope.userEmail != null}">
-                                            <a class="btn text-bg-success disabled ${listRegistered == null ? "disabled":""}" 
-                                               href="GiftCenter.jsp"
-                                               style="text-decoration: none;"
-                                               >
-                                                Gift
-                                            </a>
-                                        </c:if>
                                         <br>
                                         <span>
                                             <c:choose>
@@ -305,14 +297,6 @@
                                                 </button>
                                             </c:otherwise>
                                         </c:choose>
-                                        <c:if test="${sessionScope.userEmail != null}">
-                                            <a class="btn text-bg-success disabled ${listRegistered == null ? "disabled":""}" 
-                                               href="GiftCenter.jsp"
-                                               style="text-decoration: none;"
-                                               >
-                                                Gift
-                                            </a>
-                                        </c:if>
                                         <br>
                                         <span>
                                             <c:choose>
@@ -432,14 +416,6 @@
                                                 </button>
                                             </c:otherwise>
                                         </c:choose>
-                                        <c:if test="${sessionScope.userEmail != null}">
-                                            <a class="btn text-bg-success disabled ${listRegistered == null ? "disabled":""}" 
-                                               href="GiftCenter.jsp"
-                                               style="text-decoration: none;"
-                                               >
-                                                Gift
-                                            </a>
-                                        </c:if>
                                         <br>
                                         <span>
                                             <c:choose>
@@ -717,14 +693,6 @@
                                                                                         </button>
                                                                                     </c:otherwise>
                                                                                 </c:choose>
-                                                                                <c:if test="${sessionScope.userEmail != null}">
-                                                                                    <a class="btn text-bg-success disabled ${listRegistered == null ? "disabled":""}" 
-                                                                                       href="GiftCenter.jsp"
-                                                                                       style="text-decoration: none;"
-                                                                                       >
-                                                                                        Gift
-                                                                                    </a>
-                                                                                </c:if>
                                                                                 <br>
                                                                                 <span>
                                                                                     <c:choose>
@@ -951,16 +919,6 @@
                                                                 </button>
                                                             </c:otherwise>
                                                         </c:choose>
-                                                    </div>
-                                                    <div class="col-xl-3">
-                                                        <c:if test="${sessionScope.userEmail != null}">
-                                                            <a class="btn text-bg-success disabled ${listRegistered == null ? "disabled":""}" 
-                                                               href="GiftCenter.jsp"
-                                                               style="text-decoration: none;"
-                                                               >
-                                                                Gift
-                                                            </a>
-                                                        </c:if>
                                                     </div>
                                                 </diV>
                                                 <div class="row">

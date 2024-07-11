@@ -15,7 +15,7 @@ function checkCaptcha(captcha) {
         alertCap.style.display = 'none';
         dummy.style.display = 'none';
         cap.value = 'approve';
-        document.getElementById('sendEmail').submit();
+        document.getElementById('sendMail').submit();
     } else {
         dummy.style.display = 'none';
         alertCap.style.display = 'block';

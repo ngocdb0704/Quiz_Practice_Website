@@ -72,7 +72,7 @@
                                             </form>
                                             <button id="submitbutton" type="button" class="btn btn-primary"
                                                     onclick="checkPaidRegister(${requestScope.price},
-                                                                    'USER${requestScope.mobile}SUBJECT${requestScope.packageId}',
+                                                                    'USER${requestScope.mobile}COURSE${requestScope.packageId}',
                                                                     grecaptcha.getResponse())">Check Payment</button>
                                         </div>
                                         <div id="dummyDiv" class="alert alert-danger"
