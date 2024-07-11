@@ -387,4 +387,27 @@ public class DAOQuiz extends DBContext {
         }
     }
 
+    public List<Question> getQuestionsByLessonId(int lessonId) {
+        List<Question> questions = new ArrayList<>();
+        String query = "SELECT * FROM Question WHERE LessonID = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setInt(1, lessonId);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Question question = new Question();
+                question.setQuestionID(rs.getInt("QuestionID"));
+                question.setQuestionName(rs.getString("QuestionText"));
+                question.setExplanation(rs.getString("Explanation"));
+                question.setLevel(rs.getInt("Level"));
+                question.setSubjectID(rs.getInt("SubjectID"));
+                question.setLessonID(rs.getInt("LessonID"));
+                question.setStatus(rs.getInt("Status"));
+                questions.add(question);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return questions;
+    }
+
 }

@@ -22,6 +22,12 @@
                         ${isSearching ? 'Searching Quizzes List' : 'Quizzes List' }
                     </h2>
                     
+                    <c:if test="${not empty successMessage}">
+                        <div class="alert alert-success" role="alert">
+                            ${successMessage}
+                        </div>
+                    </c:if>
+                    
                     <%@include file="/admin/quizzeslist/QuizzesListForm.jsp" %>
 
                     <div class="my-4 card">
