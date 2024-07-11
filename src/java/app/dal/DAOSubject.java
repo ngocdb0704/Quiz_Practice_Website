@@ -696,7 +696,7 @@ public class DAOSubject extends DBContext {
 
         PreparedStatement pre;
         try {
-            System.out.println("Adding" + sub.toString() + "oId=" + ownerId + "published=" + published + "featured=" + featured);
+            //System.out.println("Adding" + sub.toString() + "oId=" + ownerId + "published=" + published + "featured=" + featured);
             pre = connection.prepareStatement(sql);
             pre.setString(1, sub.getSubjectName());
             pre.setInt(2, sub.getCategoryId());
@@ -754,6 +754,52 @@ public class DAOSubject extends DBContext {
             Logger.getLogger(DAOSubject.class.getName()).log(Level.SEVERE, null, ex);
         }
         return isUpdated;
+    }
+    
+     public int updateSubjectOverview(Subject sub) {
+         System.out.println("Changing" + sub);
+        String sql = "UPDATE Subject SET SubjectTitle = ?, SubjectCategoryId = ?, SubjectStatus = ?, IsFeaturedSubject = ?, SubjectTagLine = ?, SubjectBriefInfo = ?, SubjectDescription = ?, SubjectThumbnail = ? WHERE SubjectId = ?";
+        PreparedStatement pre;
+        try {
+            pre = connection.prepareStatement(sql);
+            pre.setString(1, sub.getSubjectName());
+            pre.setInt(2, sub.getCategoryId());
+            pre.setInt(3, sub.getStatusId());
+            pre.setBoolean(4, sub.getIsFeatured());
+            pre.setString(5, sub.getTagLine());
+            pre.setString(6, sub.getBriefInfo());
+            pre.setString(7, sub.getSubjectDescription());
+            pre.setString(8, sub.getThumbnail());
+            pre.setInt(9, sub.getSubjectId());
+
+            return pre.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAOSubject.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
+    }
+     
+        public int updateSubjectOverview(Subject sub, int ownerId) {
+        String sql = "UPDATE Subject SET SubjectTitle = ?, SubjectCategoryId = ?, SubjectStatus = ?, IsFeaturedSubject = ?, SubjectTagLine = ?, SubjectBriefInfo = ?, SubjectDescription = ?, SubjectThumbnail = ?, SubjectOwnerId = ?,  WHERE SubjectId = ?";
+        PreparedStatement pre;
+        try {
+            pre = connection.prepareStatement(sql);
+            pre.setString(1, sub.getSubjectName());
+            pre.setInt(2, sub.getCategoryId());
+            pre.setInt(3, sub.getStatusId());
+            pre.setBoolean(4, sub.getIsFeatured());
+            pre.setString(5, sub.getTagLine());
+            pre.setString(6, sub.getBriefInfo());
+            pre.setString(7, sub.getSubjectDescription());
+            pre.setString(8, sub.getThumbnail());
+            pre.setInt(9, ownerId);
+            pre.setInt(10, sub.getSubjectId());
+
+            return pre.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAOSubject.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
     }
 
     public SubjectDTO getSubjectByDTOId(int subjectId) {
@@ -937,6 +983,6 @@ public class DAOSubject extends DBContext {
     public static void main(String[] args) {
         DAOSubject dao = new DAOSubject();
         System.out.println(dao.getSubjectById(1));
-
+    
     }
 }

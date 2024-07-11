@@ -90,9 +90,9 @@ const briefDefault = "Write a short paragraph (<300 characters) that describes t
 const briefWarningTxt = "Please don't exceed 300 characters for brief info!";
 
 
-let validExpert = false;
+//let validExpert = false;
 function changeSaveButtonStatus() {
-    if (validTitle && validBrief && validTagline && validExpert)
+    if (validTitle && validBrief && validTagline)
         submitButton.classList.remove("disabled");
     else
         submitButton.classList.add("disabled");
@@ -148,6 +148,7 @@ function formReset() {
     validateTitle("");
     validateTagline("");
     validateBrief("");
+	clearEmail()
 }
 
 let desc = document.getElementById("subject-description");
@@ -191,23 +192,36 @@ async function unFocusSearch() {
 
 function setEmail(name, email) {
     hiddenEmail.value = email;
-    chosenExpert.innerHTML = "Chosen:<button style=\"background-color: red;\" class=\"btn btn-close float-end\" onclick=\"clearEmail()\"></button>" + resultElement(name, email);
-    validExpert = true;
-    submitButton.value = "Create";
-    changeSaveButtonStatus();
+    chosenExpert.innerHTML = "Owner will be reasigned as this user:" + resultElement2(name, email);
+    //validExpert = true;
+    //submitButton.value = "Create";
+    //changeSaveButtonStatus();
 }
 
 function clearEmail() {
     hiddenEmail.value = "";
     chosenExpert.innerHTML = "";
-    validExpert = false;
-    submitButton.value = "Please choose an expert ";
-    changeSaveButtonStatus();
+    //validExpert = false;
+    //submitButton.value = "Please choose an expert ";
+    //changeSaveButtonStatus();
 }
 
 let resultElement = (name, email) => {
     return `
-    <div class="experts border border-1 rounded m-1" onclick="setEmail('${name}', '${email}')">
+    <div class="experts border border-1 rounded m-1" onclick="setEmail('${name}', '${email}')" data-bs-toggle="modal" data-bs-target=".changeOnwerModal">
+       <i class="bi bi-person-circle float-lg-start h-100"></i>
+        <p class="result-display mb-1">${name}</p>
+        <small>${email}</small>
+    </div>
+
+    `;
+};
+
+
+let resultElement2 = (name, email) => {
+    return `
+    <div class="experts border border-1 rounded m-1">
+		<button style=\"background-color: red; margin: 3px;\" class=\"btn btn-close float-end\" onclick=\"clearEmail()\"></button>
        <i class="bi bi-person-circle float-lg-start h-100"></i>
         <p class="result-display mb-1">${name}</p>
         <small>${email}</small>
