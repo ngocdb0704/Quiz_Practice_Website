@@ -21,18 +21,23 @@ function deleteOption(answerID, questionID) {
             url: 'admin/optionanswer',
             type: 'POST',
             data: {action: 'delete', answerID: answerID, questionID: questionID},
+            dataType: 'json', 
             success: function (response) {
-                alert(response.message);
                 if (response.success) {
-                    location.reload();
+                    alert(response.message); 
+                    location.reload(); 
+                } else {
+                    alert(response.message); 
                 }
             },
             error: function (error) {
-                alert("An error occurred while deleting the option: " + error);
+                alert("An error occurred while deleting the option: " + error); 
             }
         });
     }
 }
+
+
 
 function addOption(questionID) {
     var answerName = document.getElementById("answerName").value;
@@ -45,19 +50,22 @@ function addOption(questionID) {
                 action: 'add',
                 questionID: questionID,
                 answerName: answerName,
-                isCorrect: isCorrect},
-            success: function (response) {
-                alert(response.message);
-                if (response.success) {
+                isCorrect: isCorrect
+            },
+            success: function(response) {
+                var jsonResponse = typeof response === "string" ? JSON.parse(response) : response;
+                alert(jsonResponse.message);
+                if (jsonResponse.success) {
                     location.reload();
                 }
             },
-            error: function (error) {
+            error: function(error) {
                 alert("An error occurred while adding the option: " + error);
             }
         });
     }
 }
+
 
 function saveChanges(event) {
     event.preventDefault();
@@ -66,6 +74,7 @@ function saveChanges(event) {
             url: 'admin/savechange',
             type: 'POST',
             data: $('#questionForm').serialize(),
+            dataType: 'json',
             success: function (response) {
                 if (response.status === 'success') {
                     alert('Save successful!');
@@ -90,4 +99,29 @@ function resetFilter() {
     document.querySelector('input[name="searchContent"]').value = '';
 
     document.getElementById('filterForm').submit();
+}
+
+function deleteQuestion(questionId) {
+    if (confirm("Are you sure you want to delete this question?")) {
+        $.ajax({
+            url: 'admin/deletequestion',
+            type: 'POST',
+            data: {
+                questionID: questionId
+            },
+            success: function (response) {
+                if (response.status === 'success') {
+                    alert('Question deleted successfully.');
+                    window.location.href = 'admin/questionlist'; // Redirect to the question list page
+                } else if (response.status === 'error') {
+                    alert(response.message);
+                } else {
+                    alert('Delete failed. Please try again.');
+                }
+            },
+            error: function (error) {
+                alert('An unexpected error occurred. Please try again.');
+            }
+        });
+    }
 }

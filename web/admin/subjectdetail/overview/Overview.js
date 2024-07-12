@@ -1,8 +1,31 @@
+const currentImg = document.currentScript.getAttribute("currentImg");
+const fieldDefaultBorder = "var(--bs-border-width) solid #dee2e6";
+const thumbnailDefaultBorder = "1px solid black";
+const changeBorder = "2px solid #fcf762";
 let previewImg = document.getElementById("subject-thumbnail");
 
 let uploadName = document.getElementById("image-name");
 let fileInput = document.getElementById('image-upload');
 let uploadLabel = document.getElementById('upload-label');
+let cateSelect = document.getElementById('subject-category');
+let featuredCheck = document.getElementById('featured-flag');
+let statusSelect = document.getElementById('subject-status');
+let imgDiv = document.getElementById('img-div');
+
+let trackChangeTitle = false;
+let trackChangeCate = false;
+let trackChangeFeatured = false;
+let trackChangeStatus = false;
+let trackChangeOwner = false;
+let trackChangeThumbnail = false;
+let trackChangeTagline = false;
+let trackChangeBrief = false;
+let trackChangeDescription = false;
+let changeIndicator = document.getElementById("change-indicator");
+
+function handleThumbnailErr() {
+	previewImg.style.display = "none";
+}
 
 if (fileInput) fileInput.addEventListener('change', event => {
     if (event.target.files.length > 0) {
@@ -13,21 +36,26 @@ if (fileInput) fileInput.addEventListener('change', event => {
 
             if (!(file.name.endsWith(".jpg") || file.name.endsWith(".jpeg") || file.name.endsWith(".webp") || file.name.endsWith(".png"))) {
                 uploadLabel.innerHTML = "<strong style=\"color: red;\">Selected file was not in one of the supported image formats</strong>";
-                previewImg.style.display = "none";
+				previewImg.src = currentImg;
                 uploadName.value = "";
                 fileInput.value = null;
+				trackChangeThumbnail = false;
+				changeSaveButtonStatus();
                 return;
             }
             if (file.size > 200000000) {
                 uploadLabel.innerHTML = "<strong style=\"color: red;\">The image you just uploaded was too large! Please upload images under 200MB only.</strong>";
-                previewImg.style.display = "none";
+				previewImg.src = currentImg;
                 uploadName.value = "";
                 fileInput.value = null;
+				trackChangeThumbnail = false;
+				changeSaveButtonStatus();
                 return;
             }
 
             uploadName.value = file.name.slice(file.name.lastIndexOf("\\") + 1);
             uploadLabel.innerHTML = "Selected file: " + file.name.slice(file.name.lastIndexOf("\\") + 1);
+			trackChangeThumbnail = true;
             changeSaveButtonStatus();
 
             previewImg.src = URL.createObjectURL(
@@ -86,19 +114,42 @@ const taglineWarningTxt = "Please don't exceed 50 characters for tagline!";
 let brief = document.getElementById("subject-brief");
 let briefWarning = document.getElementById("brief-warning");
 let validBrief = true;
-const briefDefault = "Write a short paragraph (<300 characters) that describes this subject.";
+const briefDefault = "A short paragraph (<300 characters) that describes this subject.";
 const briefWarningTxt = "Please don't exceed 300 characters for brief info!";
 
-
-let validExpert = false;
+let changed = false;
+window.addEventListener('beforeunload', function (e) {
+    if (changed) {
+        e.preventDefault();
+        e.returnValue = '';
+    }
+});
 function changeSaveButtonStatus() {
-    if (validTitle && validBrief && validTagline && validExpert)
+	changed =  trackChangeTitle || trackChangeCate || trackChangeFeatured || trackChangeStatus || trackChangeThumbnail || trackChangeOwner || trackChangeTagline || trackChangeBrief || trackChangeDescription;
+
+	if (trackChangeTitle) title.style.border = changeBorder;
+	else title.style.border = fieldDefaultBorder;
+
+	title.style.border = (trackChangeTitle )? changeBorder: fieldDefaultBorder;
+	cateSelect.style.border = (trackChangeCate )? changeBorder: fieldDefaultBorder;
+	featuredCheck.style.border = (trackChangeFeatured )? changeBorder: fieldDefaultBorder;
+	statusSelect.style.border = (trackChangeStatus )? changeBorder: fieldDefaultBorder;
+	imgDiv.style.border = (trackChangeThumbnail )? changeBorder: thumbnailDefaultBorder;
+	tagline.style.border = (trackChangeTagline )? changeBorder: fieldDefaultBorder;
+	brief.style.border = (trackChangeBrief )? changeBorder: fieldDefaultBorder;
+	desc.style.border = (trackChangeDescription )? changeBorder: fieldDefaultBorder;
+
+	if (changed) changeIndicator.style.display = "inline-block";
+	else changeIndicator.style.display = "none";
+    if (validTitle && validBrief && validTagline 
+		&& changed )
         submitButton.classList.remove("disabled");
     else
         submitButton.classList.add("disabled");
 }
 
 function validateTitle(val) {
+	trackChangeTitle = true;
     if (val.length > 49) {
         validTitle = false;
         title.classList.add("is-invalid");
@@ -113,6 +164,7 @@ function validateTitle(val) {
 }
 
 function validateTagline(val) {
+	trackChangeTagline = true;
     if (val.length > 49) {
         validTagline = false;
         tagline.classList.add("is-invalid");
@@ -129,6 +181,7 @@ function validateTagline(val) {
 }
 
 function validateBrief(val) {
+	trackChangeBrief = true;
     if (val.length > 299) {
         validBrief = false;
         brief.classList.add("is-invalid");
@@ -144,10 +197,43 @@ function validateBrief(val) {
     changeSaveButtonStatus();
 }
 
+function handleFeaturedChange() {
+	trackChangeFeatured = true;
+	changeSaveButtonStatus();
+}
+
+function handleStatusChange() {
+	trackChangeStatus = true;
+	changeSaveButtonStatus();
+}
+
+function handleDescChange() {
+	trackChangeDescription = true;
+	changeSaveButtonStatus();
+}
+
+function handleCateChange() {
+	trackChangeCate = true;
+	changeSaveButtonStatus();
+}
+
 function formReset() {
     validateTitle("");
     validateTagline("");
     validateBrief("");
+	clearEmail()
+
+	trackChangeTitle = false;
+	trackChangeCate = false;
+	trackChangeFeatured = false;
+	trackChangeStatus = false;
+	trackChangeOwner = false;
+	trackChangeThumbnail = false;
+	trackChangeTagline = false;
+	trackChangeBrief = false;
+	trackChangeDescription = false;
+
+	changeSaveButtonStatus();
 }
 
 let desc = document.getElementById("subject-description");
@@ -173,41 +259,48 @@ function setTemplate(templateNum) {
 }
 
 const expertList = JSON.parse(document.currentScript.getAttribute("expertList"));
+const currentOwner = document.currentScript.getAttribute("currentOwner");
+
+
 let query = document.getElementById("query");
 let result = document.getElementById("search-result");
 let hiddenEmail = document.getElementById("hiddenEmail");
 let chosenExpert = document.getElementById("chosen-expert");
 
-function focusSearch() {
-    result.style.display = 'block';
-}
-
-async function unFocusSearch() {
-    setTimeout(() => {
-            result.style.display = 'none';
-            console.log(result.style.display);
-        }, 300);
-}
-
 function setEmail(name, email) {
     hiddenEmail.value = email;
-    chosenExpert.innerHTML = "Chosen:<button style=\"background-color: red;\" class=\"btn btn-close float-end\" onclick=\"clearEmail()\"></button>" + resultElement(name, email);
-    validExpert = true;
-    submitButton.value = "Create";
+    chosenExpert.innerHTML = "Owner will be reasigned as this user:" + resultElement2(name, email);
+	trackChangeOwner = true;
+    //validExpert = true;
+    //submitButton.value = "Create";
     changeSaveButtonStatus();
 }
 
 function clearEmail() {
     hiddenEmail.value = "";
     chosenExpert.innerHTML = "";
-    validExpert = false;
-    submitButton.value = "Please choose an expert ";
+	trackChangeOwner = true;
+    //validExpert = false;
+    //submitButton.value = "Please choose an expert ";
     changeSaveButtonStatus();
 }
 
 let resultElement = (name, email) => {
     return `
-    <div class="experts border border-1 rounded m-1" onclick="setEmail('${name}', '${email}')">
+    <div class="experts border border-1 rounded m-1" onclick="setEmail('${name}', '${email}')" data-bs-toggle="modal" data-bs-target=".changeOnwerModal">
+       <i class="bi bi-person-circle float-lg-start h-100"></i>
+        <p class="result-display mb-1">${name}</p>
+        <small>${email}</small>
+    </div>
+
+    `;
+};
+
+
+let resultElement2 = (name, email) => {
+    return `
+    <div class="experts border border-1 rounded m-1">
+		<button style=\"background-color: red; margin: 3px;\" class=\"btn btn-close float-end\" onclick=\"clearEmail()\"></button>
        <i class="bi bi-person-circle float-lg-start h-100"></i>
         <p class="result-display mb-1">${name}</p>
         <small>${email}</small>
@@ -218,10 +311,14 @@ let resultElement = (name, email) => {
 
 function filterExpert() {  
     let queryTxt = query.value;
+	if (queryTxt.length < 1) {
+		result.innerHTML = "";
+		return;
+	}
     let filter = expertList.slice()
-            .filter(obj => obj.name.includes(queryTxt) | obj.email.includes(queryTxt))
-            .map((obj, ind) => resultElement(obj.name, obj.email));
+            .filter(obj => (obj.email != currentOwner) && (obj.name.includes(queryTxt) | obj.email.includes(queryTxt)))
+            .map((obj, ) => resultElement(obj.name, obj.email));
     if (filter.length > 0) result.innerHTML = filter.reduce((acc, obj) => acc + obj);
-    else result.innerHTML = "";      
+    else result.innerHTML = "";
 }
 filterExpert();

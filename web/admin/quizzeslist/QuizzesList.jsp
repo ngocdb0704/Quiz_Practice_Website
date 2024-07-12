@@ -10,6 +10,20 @@
         <link rel="stylesheet" href="admin/common/admin-common.css">
         <link rel="stylesheet" href="public/css/sortable/sortable-theme-bootstrap.css">
         <script src="admin/common/admin-common.js"></script>
+        <script>
+            window.onload = function() {
+                // Lấy giá trị của successMessage từ session
+                var successMessage = '<c:out value="${sessionScope.message}" />';
+                if (successMessage=="Add successfully") {
+                    alert(successMessage);
+                   
+                    // Xóa successMessage từ session sau khi hiển thị
+                    <%
+                    session.removeAttribute("message");
+                    %>
+                }
+            };
+        </script>
     </head>
     <body>
         <div class="admin-layout">
@@ -21,7 +35,6 @@
                         <i class="bi bi-clipboard-check-fill"></i>
                         ${isSearching ? 'Searching Quizzes List' : 'Quizzes List' }
                     </h2>
-                    
                     <%@include file="/admin/quizzeslist/QuizzesListForm.jsp" %>
 
                     <div class="my-4 card">
@@ -30,12 +43,15 @@
                                 <i class="bi bi-wrench"></i>
                                 Actions
                             </h5>
-                            <div class="d-flex justify-content-end mt-3 gap-2">
-                                <button class="btn btn-primary">
-                                    <i class="bi bi-plus-circle"></i>
-                                    Add New Quiz
-                                </button>
-                            </div>
+                            <form action="admin/addquiz" method="get">
+                                <div class="d-flex justify-content-end mt-3 gap-2">
+                                    <input type ="text" name="check" value="false" hidden="">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="bi bi-plus-circle"></i>
+                                        Add New Quiz
+                                    </button>
+                                </div>
+                            </form>
                         </div>
                     </div>
 
@@ -65,6 +81,7 @@
         </div>
 
         <script src="public/js/sortable/sortable.min.js"></script>
+        
     </body>
 </html>
 

@@ -46,7 +46,7 @@ public class UserProfileController extends HttpServlet {
 
         //get userId attribute from session, get and set it if the attribute does't exist. 
         try {
-            uId = Integer.parseInt(request.getParameter("userId"));
+            uId = (int)session.getAttribute("userId");
         } catch (Exception e) {
             if (session.getAttribute("userEmail") != null) {
                 try {
@@ -104,7 +104,7 @@ public class UserProfileController extends HttpServlet {
                     //request.getRequestDispatcher(redirectTo).forward(request, response);
                 } catch (Exception e) {
                     //TODO: Redirect to an error page
-                    System.out.println("ProfileUpdate2:  " + e);
+                    System.out.println(e);
                 }
 
             }

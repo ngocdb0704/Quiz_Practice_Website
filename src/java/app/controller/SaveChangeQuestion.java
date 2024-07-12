@@ -12,25 +12,40 @@ import app.entity.Question;
 import app.entity.Answer;
 import java.util.ArrayList;
 import java.util.List;
+
 /**
  *
  * @author Admin
  */
-@WebServlet(name="SaveChangeQuestion", urlPatterns={"/admin/savechange"})
+@WebServlet(name = "SaveChangeQuestion", urlPatterns = {"/admin/savechange"})
 public class SaveChangeQuestion extends HttpServlet {
+
     QuestionDAO quesDAO = new QuestionDAO();
-    
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-        
-    } 
+            throws ServletException, IOException {
+
+    }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         int questionID = Integer.parseInt(request.getParameter("questionID"));
+
+        if (quesDAO.isQuestionInQuiz(questionID)) {
+            response.getWriter().print("{\"status\":\"error\", \"message\":\"This question is already in the quiz, so it cannot be edit.\"}");
+            response.getWriter().flush();
+            return;
+        }
+
         String questionName = request.getParameter("questionName");
+        
+        if(questionName.trim().isEmpty()){
+            response.getWriter().print("{\"status\":\"error\", \"message\":\"Question content cannot empty.\"}");
+            response.getWriter().flush();
+            return;
+        }
         int subjectID = Integer.parseInt(request.getParameter("subjectId"));
         int lessonID = Integer.parseInt(request.getParameter("lessonID"));
         int level = Integer.parseInt(request.getParameter("level"));
@@ -56,7 +71,7 @@ public class SaveChangeQuestion extends HttpServlet {
 
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        
+
         if (!hasCorrectAnswer) {
             response.getWriter().print("{\"status\":\"error\", \"message\":\"At least one answer must be correct.\"}");
             response.getWriter().flush();

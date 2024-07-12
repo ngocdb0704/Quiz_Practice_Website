@@ -202,7 +202,8 @@ CREATE TABLE [dbo].[Subject](
 	[SubjectBriefInfo] [varchar](300),
 	[SubjectDescription] [ntext],
 	[SubjectThumbnail] [varchar](255),
-	[SubjectOwnerId] [int] foreign key references [dbo].[User](UserId))
+	[SubjectOwnerId] [int] foreign key references [dbo].[User](UserId),
+	[MarkedForPublication] [bit])
 GO
 
 
@@ -357,14 +358,6 @@ CREATE TABLE [dbo].[QuizQuestion] (
 	[QuestionId] [int] foreign key references [dbo].[Question]([QuestionId])
 	PRIMARY KEY([QuizId], [QuestionId])
 )
-
-CREATE TABLE [dbo].[QuizLessonQuestionCount] (
-    QuizId INT,
-    LessonId INT,
-    QuestionCount INT,
-    PRIMARY KEY (QuizId, LessonId),
-    FOREIGN KEY (QuizId) REFERENCES Quiz(QuizId)
-);
 
 CREATE TABLE [dbo].[Attempt] (
 	[AttemptId] int primary key identity(1, 1),

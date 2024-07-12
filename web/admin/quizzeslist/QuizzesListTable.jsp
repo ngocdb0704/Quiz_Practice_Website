@@ -48,7 +48,7 @@
                 <td>${quiz.getPassRate()}%</td>
                 <td>${quiz.getType().toString()}</td>
                 <td>
-                    <a href="admin/quizdetails">
+                    <a href="admin/quizzeslist/details?quizid=${quiz.quizId}">
                         ${quiz.getNumberOfAttempts() > 0 ? 'View' : 'Edit'}
                     </a>
                 </td>
