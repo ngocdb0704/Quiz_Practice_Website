@@ -133,7 +133,7 @@
 
                         <div class="form-group">
                             <label for="subject-brief">Brief Info</label><br>
-                            <small id='brief-warning'">Write a short paragraph (<300 characters) that describes this subject.</small>
+                            <small id='brief-warning'>Write a short paragraph (<300 characters) that describes this subject.</small>
                             <textarea class="form-control" id="subject-brief" rows="3" name="subjectBrief" oninput="validateBrief(this.value)">${subjectBrief}</textarea>
                         </div>
 
@@ -162,7 +162,7 @@
 
 <div class="modal fade changeOnwerModal"
      tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered modal-lg
+    <div class="modal-dialog modal-dialog-centered modal-lg"
          role="document">
         <div class="modal-content">
             <div class="modal-header text-bg-primary">
