@@ -10,6 +10,20 @@
         <link rel="stylesheet" href="admin/common/admin-common.css">
         <link rel="stylesheet" href="public/css/sortable/sortable-theme-bootstrap.css">
         <script src="admin/common/admin-common.js"></script>
+        <script>
+            window.onload = function() {
+                // Lấy giá trị của successMessage từ session
+                var successMessage = '<c:out value="${sessionScope.message}" />';
+                if (successMessage=="Add successfully") {
+                    alert(successMessage);
+                   
+                    // Xóa successMessage từ session sau khi hiển thị
+                    <%
+                    session.removeAttribute("message");
+                    %>
+                }
+            };
+        </script>
     </head>
     <body>
         <div class="admin-layout">
@@ -31,6 +45,7 @@
                             </h5>
                             <form action="admin/addquiz" method="get">
                                 <div class="d-flex justify-content-end mt-3 gap-2">
+                                    <input type ="text" name="check" value="false" hidden="">
                                     <button type="submit" class="btn btn-primary">
                                         <i class="bi bi-plus-circle"></i>
                                         Add New Quiz
@@ -66,6 +81,7 @@
         </div>
 
         <script src="public/js/sortable/sortable.min.js"></script>
+        
     </body>
 </html>
 

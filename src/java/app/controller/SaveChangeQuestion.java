@@ -40,6 +40,12 @@ public class SaveChangeQuestion extends HttpServlet {
         }
 
         String questionName = request.getParameter("questionName");
+        
+        if(questionName.trim().isEmpty()){
+            response.getWriter().print("{\"status\":\"error\", \"message\":\"Question content cannot empty.\"}");
+            response.getWriter().flush();
+            return;
+        }
         int subjectID = Integer.parseInt(request.getParameter("subjectId"));
         int lessonID = Integer.parseInt(request.getParameter("lessonID"));
         int level = Integer.parseInt(request.getParameter("level"));
