@@ -95,70 +95,70 @@ INSERT INTO [Subject] VALUES('College Algebra with the Math Sorcerer',2, 7, 1, 1
 	##Outcome <h3>Advance your subject-matter expertise <ul> <li>learn in-demand skills from university and industry experts</li> <li>master a subject or tool with hands-on projects</li> <li>develop a deep understanding of key concepts</li> <li>earn a career certificate from imperial college london</li> </ul> <h3>Shareable certificate</h3>
 	##Lessons <h3>There are 3 modules in this course</h3> <h4>Module 1</h4> <ul> <li>L1</li> <li>L2</li> <li>L3</li> </ul> <h4>Module 2</h4> <ul> <li>L1</li> <li>L2</li> <li>L3</li> </ul> <h4>Module 3</h4> <ul> <li>L1</li> <li>L2</li> <li>L3</li> </ul>
 	##Duration <h3>27 hours to complete</h3> <h4>3 weeks at 9 hours a week</h4>
-	##End', 'sub2.jpg', 20);
+	##End', 'sub2.jpg', 20, 0);
 
 INSERT INTO [Subject] VALUES('Become an Algebra Master',3, 7, 1, 1, 1, '2004-05-01','2004-05-01','Lorem ipsum dolor sit amet', 'Quisque convallis interdum tristique. Aenean arcu eros, varius nec augue a, ultrices congue ex. Donec eu elementum lectus, sit amet posuere lorem.', '##Coursera style description
 	##About <h3>What you''ll learn:</h3> <ul> <li>Ut luctus lacus id sollicitudin semper.</li> <li>Quisque eget lorem a arcu posuere venenatis.</li> <li>Fusce posuere ultricies suscipit.</li> <li>Donec eget cursus diam.</li> </ul> <h3>Details to know</h3> <span>Assessments: 16 Assessments</span>
 	##Outcome <h3>Advance your subject-matter expertise <ul> <li>learn in-demand skills from university and industry experts</li> <li>master a subject or tool with hands-on projects</li> <li>develop a deep understanding of key concepts</li> <li>earn a career certificate from imperial college london</li> </ul> <h3>Shareable certificate</h3>
 	##Lessons <h3>There are 3 modules in this course</h3> <h4>Module 1</h4> <ul> <li>L1</li> <li>L2</li> <li>L3</li> </ul> <h4>Module 2</h4> <ul> <li>L1</li> <li>L2</li> <li>L3</li> </ul> <h4>Module 3</h4> <ul> <li>L1</li> <li>L2</li> <li>L3</li> </ul> 
 	##Duration <h3>27 hours to complete</h3> <h4>3 weeks at 9 hours a week</h4>
-	##End','sub3.jpg', 20);
+	##End','sub3.jpg', 20, 0);
 
-INSERT INTO [Subject] VALUES('US / United States History',6, 33, 1, 1, 0, '2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','sub4.jpg', 20);
+INSERT INTO [Subject] VALUES('US / United States History',6, 33, 1, 1, 0, '2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','sub4.jpg', 20, 0);
 
 INSERT INTO [Subject] VALUES('C Fundamental', 2, 29, 1, 1, 1, '2004-05-01','2004-05-01','Maecenas ex nulla, tempor vel', 'Vestibulum volutpat lacus id mauris hendrerit, et sagittis ligula ultricies. Donec eu elementum lectus, sit amet posuere lorem.', '##Coursera style description
 	##About <h3>What you''ll learn:</h3> <ul> <li>Sed cursus ac felis a pharetra. Integer vulputate sagittis venenatis.</li> <li> In blandit hendrerit augue, at placerat nisi.</li> <li>Fusce at ante vel eros lobortis rhoncus quis quis neque.</li> <li>Pellentesque interdum dolor justo, sodales pharetra tortor tristique a.</li> </ul> <h3>Details to know</h3> <span>Assessments: 16 Assessments</span>
 	##Outcome <h3>Advance your subject-matter expertise <ul> <li>learn in-demand skills from university and industry experts</li> <li>master a subject or tool with hands-on projects</li> <li>develop a deep understanding of key concepts</li> <li>earn a career certificate from imperial college london</li> </ul> <h3>Shareable certificate</h3> ##Lessons <h3>There are 3 modules in this course</h3> <h4>Module 1</h4> <ul> <li>L1</li> <li>L2</li> <li>L3</li> </ul> <h4>Module 2</h4> <ul> <li>L1</li> <li>L2</li> <li>L3</li> </ul> <h4>Module 3</h4> <ul> <li>L1</li> <li>L2</li> <li>L3</li> </ul>
 	##Duration <h3>27 hours to complete</h3> <h4>3 weeks at 9 hours a week</h4>
-	##End','sub5.jpg', 20);
+	##End','sub5.jpg', 20, 0);
 
-INSERT INTO [Subject] VALUES('The Geography of Globalization',6, 34, 1, 1, 1,'2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','sub6.jpg', 20);
-INSERT INTO [Subject] VALUES('Pointers & Advanced C Language',7,29,1, 3,1,'2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','sub7.jpg', 20);
-INSERT INTO [Subject] VALUES('Geometry Basics to Advanced',8,8,1, 3, 1,'2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','sub8.jpg', 20);
-INSERT INTO [Subject] VALUES('Probability and Statistics',9,9,1, 1, 1,'2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','sub9.jpg', 20);
-INSERT INTO [Subject] VALUES('Linear Algebra',9,10,1,1,1,'2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','sub10.jpg', 20);
-INSERT INTO [Subject] VALUES('React 18 Course 2024 - Learn React JS',8,23,1,1,1,'2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','sub11.jpg', 20);
-INSERT INTO [Subject] VALUES('Spring Boot 3, Spring 6 & Hibernate',7,24,1,1,0,'2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','sub12.jpg', 20);
-INSERT INTO [Subject] VALUES('Learn JAVA Programming',6,27,1,1,0,'2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','sub13.jpg', 20);
-INSERT INTO [Subject] VALUES('The Complete Python Bootcamp',5,28,1,2,0,'2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','sub14.jpg', 20);
-INSERT INTO [Subject] VALUES('New Subject',4,28,1,2,0,'2024-06-7','2024-06-7','This is nice', 'Mock brief info', 'Mock description','sub1.png', 20);
-INSERT INTO [Subject] VALUES('Somehow',3,29,1,3,0,'2024-06-6','2024-06-7','This is awsome', 'Mock brief info', 'Mock description','sub15.jpg', 20);
-INSERT INTO [Subject] VALUES('Night Call',2,30,1,3,0,'2024-06-5','2024-06-7','This is incredible', 'Mock brief info', 'Mock description','sub16.jpg', 20);
-INSERT INTO [Subject] VALUES('Inspiration',2,9,1,2,0,'2024-06-4','2024-06-7','This is amazing', 'Mock brief info', 'Mock description','sub17.png', 20);
-INSERT INTO [Subject] VALUES('iWork',3, 24, 1,2, 0, '2023-08-21', '2024-04-24', 'target plug-and-play e-tailers', 'Mock brief info', 'Mock description', 'sub18.jpg', 20);
-INSERT INTO [Subject] VALUES('Customer Relationships',4, 24, 1,2, 0, '2024-06-07', '2024-06-07', 'visualize robust niches', 'Mock brief info', 'Mock description', 'sub19.jpg', 20);
-INSERT INTO [Subject] VALUES('iSCSI',5, 23, 1,2, 0, '2023-07-10', '2024-05-29', 'redefine e-markets', 'Mock brief info', 'Mock description', 'sub20.jpg', 20);
-INSERT INTO [Subject] VALUES('EOI',6, 24, 1,3, 0, '2023-09-03', '2024-04-02', 'utilize killer web services', 'Mock brief info', 'Mock description', 'sub21.png', 20);
-INSERT INTO [Subject] VALUES('Sports Marketing',7, 25, 1,1, 0, '2023-06-26', '2023-06-23', 'redefine sticky vortals', 'Mock brief info', 'Mock description', 'sub22.jpg', 20);
-INSERT INTO [Subject] VALUES('SAP EWM',8, 28, 1,3, 0, '2023-06-18', '2023-07-06', 'aggregate communities', 'Mock brief info', 'Mock description', 'sub23.jpg', 20);
-INSERT INTO [Subject] VALUES('FPGA prototyping',9, 33, 1,2, 0, '2024-02-15', '2023-11-08', 'matrix action-items', 'Mock brief info', 'Mock description', 'sub24.jpg', 20);
+INSERT INTO [Subject] VALUES('The Geography of Globalization',6, 34, 1, 1, 1,'2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','sub6.jpg', 20, 0);
+INSERT INTO [Subject] VALUES('Pointers & Advanced C Language',7,29,1, 3,1,'2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','sub7.jpg', 20, 0);
+INSERT INTO [Subject] VALUES('Geometry Basics to Advanced',8,8,1, 3, 1,'2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','sub8.jpg', 20, 0);
+INSERT INTO [Subject] VALUES('Probability and Statistics',9,9,1, 1, 1,'2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','sub9.jpg', 20, 0);
+INSERT INTO [Subject] VALUES('Linear Algebra',9,10,1,1,1,'2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','sub10.jpg', 20, 0);
+INSERT INTO [Subject] VALUES('React 18 Course 2024 - Learn React JS',8,23,1,1,1,'2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','sub11.jpg', 20, 0);
+INSERT INTO [Subject] VALUES('Spring Boot 3, Spring 6 & Hibernate',7,24,1,1,0,'2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','sub12.jpg', 20, 0);
+INSERT INTO [Subject] VALUES('Learn JAVA Programming',6,27,1,1,0,'2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','sub13.jpg', 20, 0);
+INSERT INTO [Subject] VALUES('The Complete Python Bootcamp',5,28,1,2,0,'2004-05-01','2004-05-01','nice', 'Mock brief info', 'Mock description','sub14.jpg', 20, 0);
+INSERT INTO [Subject] VALUES('New Subject',4,28,1,2,0,'2024-06-7','2024-06-7','This is nice', 'Mock brief info', 'Mock description','sub1.png', 20, 0);
+INSERT INTO [Subject] VALUES('Somehow',3,29,1,3,0,'2024-06-6','2024-06-7','This is awsome', 'Mock brief info', 'Mock description','sub15.jpg', 20, 0);
+INSERT INTO [Subject] VALUES('Night Call',2,30,1,3,0,'2024-06-5','2024-06-7','This is incredible', 'Mock brief info', 'Mock description','sub16.jpg', 20, 0);
+INSERT INTO [Subject] VALUES('Inspiration',2,9,1,2,0,'2024-06-4','2024-06-7','This is amazing', 'Mock brief info', 'Mock description','sub17.png', 20, 0);
+INSERT INTO [Subject] VALUES('iWork',3, 24, 1,2, 0, '2023-08-21', '2024-04-24', 'target plug-and-play e-tailers', 'Mock brief info', 'Mock description', 'sub18.jpg', 20, 0);
+INSERT INTO [Subject] VALUES('Customer Relationships',4, 24, 1,2, 0, '2024-06-07', '2024-06-07', 'visualize robust niches', 'Mock brief info', 'Mock description', 'sub19.jpg', 20, 0);
+INSERT INTO [Subject] VALUES('iSCSI',5, 23, 1,2, 0, '2023-07-10', '2024-05-29', 'redefine e-markets', 'Mock brief info', 'Mock description', 'sub20.jpg', 20, 0);
+INSERT INTO [Subject] VALUES('EOI',6, 24, 1,3, 0, '2023-09-03', '2024-04-02', 'utilize killer web services', 'Mock brief info', 'Mock description', 'sub21.png', 20, 0);
+INSERT INTO [Subject] VALUES('Sports Marketing',7, 25, 1,1, 0, '2023-06-26', '2023-06-23', 'redefine sticky vortals', 'Mock brief info', 'Mock description', 'sub22.jpg', 20, 0);
+INSERT INTO [Subject] VALUES('SAP EWM',8, 28, 1,3, 0, '2023-06-18', '2023-07-06', 'aggregate communities', 'Mock brief info', 'Mock description', 'sub23.jpg', 20, 0);
+INSERT INTO [Subject] VALUES('FPGA prototyping',9, 33, 1,2, 0, '2024-02-15', '2023-11-08', 'matrix action-items', 'Mock brief info', 'Mock description', 'sub24.jpg', 20, 0);
 
-INSERT INTO [Subject] VALUES('DNS Administration',8, 8, 1,2, 0, '2023-08-30', '2023-08-20', 'incubate wireless markets', 'Mock brief info', 'Mock description', 'sub25.jpeg', 20);
-INSERT INTO [Subject] VALUES('BMI',7, 9, 1,3, 0, '2024-04-27', '2024-04-07', 'empower e-services', 'Mock brief info', 'Mock description', 'sub26.jpg', 20);
-INSERT INTO [Subject] VALUES('DDI Certified',6, 30, 1,3, 0, '2023-06-24', '2023-12-23', 'envisioneer 24/7 niches', 'Mock brief info', 'Mock description', 'sub27.jpeg', 20);
-INSERT INTO [Subject] VALUES('GIS Modeling',5, 27, 1,3, 1, '2024-05-03', '2024-05-31', 'incubate granular solutions', 'Mock brief info', 'Mock description', 'sub28.jpg', 20);
-INSERT INTO [Subject] VALUES('XSS',4, 28, 1,1, 0, '2024-04-09', '2023-09-21', 'target experiences', 'Mock brief info', 'Mock description', 'sub29.jpg', 20);
-INSERT INTO [Subject] VALUES('VAT',3, 27, 1,1, 0, '2023-09-20', '2024-05-15', 'grow infomediaries', 'Mock brief info', 'Mock description', 'sub30.jpg', 20);
-INSERT INTO [Subject] VALUES('QNXT',2, 28, 1,1, 0, '2023-09-30', '2023-09-15', 'productize action-items', 'Mock brief info', 'Mock description', 'sub31.jpeg', 20);
-INSERT INTO [Subject] VALUES('EEOC',3, 23, 1,1, 0, '2023-08-01', '2024-04-22', 'reinvent e-tailers', 'Mock brief info', 'Mock description', 'sub32.jpg', 20);
-INSERT INTO [Subject] VALUES('Packaging',4, 30, 1,1, 0, '2024-03-12', '2024-04-20', 'monetize interfaces', 'Mock brief info', 'Mock description', 'sub33.jpg', 20);
-INSERT INTO [Subject] VALUES('Medical Equipment',5, 33, 1,3, 1, '2023-06-21', '2024-04-05', 'embrace infrastructures', 'Mock brief info', 'Mock description', 'sub34.jpg', 20);
-INSERT INTO [Subject] VALUES('CTIOS',6, 29, 1,2, 1, '2023-09-03', '2024-05-26', 'optimize metrics', 'Mock brief info', 'Mock description', 'sub35.jpeg', 20);
-INSERT INTO [Subject] VALUES('Therapists',7, 26, 1,2, 0, '2023-09-05', '2024-01-12', 'whiteboard architectures', 'Mock brief info', 'Mock description', 'sub36.jpg', 20);
-INSERT INTO [Subject] VALUES('PVM',8, 24, 1,2, 0, '2024-05-10', '2023-06-21', 'innovatevconvergence', 'Mock brief info', 'Mock description', 'sub37.jpg', 20);
-INSERT INTO [Subject] VALUES('ECDL Certification',9, 23, 1,2, 0, '2024-01-09', '2023-11-19', 'integrate viral e-markets', 'Mock brief info', 'Mock description', 'sub38.png', 20);
-INSERT INTO [Subject] VALUES('Evidence',8, 25, 1,2, 0, '2023-11-08', '2024-04-18', 'grow infomediaries', 'Mock brief info', 'Mock description', 'sub39.jpg', 20);
-INSERT INTO [Subject] VALUES('HBase',7, 23, 1,2, 0, '2023-08-29', '2023-10-08', 'matrix ynergies', 'Mock brief info', 'Mock description', 'sub40.png', 20);
-INSERT INTO [Subject] VALUES('Subversion',6, 24, 1,2, 0, '2024-01-15', '2023-07-02', 'repurpose eyeballs', 'Mock brief info', 'Mock description', 'sub41.jpg', 20);
-INSERT INTO [Subject] VALUES('FCE',5, 25, 1,2, 1, '2024-03-05', '2024-05-21', 'cultivate supply-chains', 'Mock brief info', 'Mock description', 'sub42.png', 20);
-INSERT INTO [Subject] VALUES('Design Patterns',4, 26, 1,1, 0, '2024-01-19', '2024-04-20', 'innovate scalable content', 'Mock brief info', 'Mock description', 'sub43.png', 20);
-INSERT INTO [Subject] VALUES('AutoCAD Civil 3D',3, 27, 1,1, 0, '2023-11-22', '2024-06-05', 'morph world-class systems', 'Mock brief info', 'Mock description', 'sub44.jpg', 20);
-INSERT INTO [Subject] VALUES('Front-end',2, 28, 1,2, 1, '2023-06-17', '2023-12-19', 'synthesize models', 'Mock brief info', 'Mock description', 'sub45.png', 20);
-INSERT INTO [Subject] VALUES('HP Blade',3, 29, 1,3, 1, '2023-11-24', '2024-04-04', 'reintermediate web-readiness', 'Mock brief info', 'Mock description', 'sub46.jpg', 20);
-INSERT INTO [Subject] VALUES('NCover',2, 30, 1,2, 1, '2024-05-24', '2024-05-17', 'utilize robust convergence', 'Mock brief info', 'Mock description', 'sub47.jpeg', 20);
-INSERT INTO [Subject] VALUES('FMA',4, 29, 1,1, 0, '2024-02-21', '2023-12-20', 'utilize user-centric e-markets', 'Mock brief info', 'Mock description', 'sub48.jpg', 20);
-INSERT INTO [Subject] VALUES('CQ5',6, 30, 1,1, 0, '2024-04-21', '2024-03-25', 'repurpose e-markets', 'Mock brief info', 'Mock description', 'sub49.jpeg', 20);
-INSERT INTO [Subject] VALUES('Euphonium',7, 33, 1,2, 0, '2024-2-10', '2024-02-10', 'transform interactive deliverables', 'Mock brief info', 'Mock description', 'sub50.jpg', 20);
+INSERT INTO [Subject] VALUES('DNS Administration',8, 8, 1,2, 0, '2023-08-30', '2023-08-20', 'incubate wireless markets', 'Mock brief info', 'Mock description', 'sub25.jpeg', 20, 0);
+INSERT INTO [Subject] VALUES('BMI',7, 9, 1,3, 0, '2024-04-27', '2024-04-07', 'empower e-services', 'Mock brief info', 'Mock description', 'sub26.jpg', 20, 0);
+INSERT INTO [Subject] VALUES('DDI Certified',6, 30, 1,3, 0, '2023-06-24', '2023-12-23', 'envisioneer 24/7 niches', 'Mock brief info', 'Mock description', 'sub27.jpeg', 20, 0);
+INSERT INTO [Subject] VALUES('GIS Modeling',5, 27, 1,3, 1, '2024-05-03', '2024-05-31', 'incubate granular solutions', 'Mock brief info', 'Mock description', 'sub28.jpg', 20, 0);
+INSERT INTO [Subject] VALUES('XSS',4, 28, 1,1, 0, '2024-04-09', '2023-09-21', 'target experiences', 'Mock brief info', 'Mock description', 'sub29.jpg', 20, 0);
+INSERT INTO [Subject] VALUES('VAT',3, 27, 1,1, 0, '2023-09-20', '2024-05-15', 'grow infomediaries', 'Mock brief info', 'Mock description', 'sub30.jpg', 20, 0);
+INSERT INTO [Subject] VALUES('QNXT',2, 28, 1,1, 0, '2023-09-30', '2023-09-15', 'productize action-items', 'Mock brief info', 'Mock description', 'sub31.jpeg', 20, 0);
+INSERT INTO [Subject] VALUES('EEOC',3, 23, 1,1, 0, '2023-08-01', '2024-04-22', 'reinvent e-tailers', 'Mock brief info', 'Mock description', 'sub32.jpg', 20, 0);
+INSERT INTO [Subject] VALUES('Packaging',4, 30, 1,1, 0, '2024-03-12', '2024-04-20', 'monetize interfaces', 'Mock brief info', 'Mock description', 'sub33.jpg', 20, 0);
+INSERT INTO [Subject] VALUES('Medical Equipment',5, 33, 1,3, 1, '2023-06-21', '2024-04-05', 'embrace infrastructures', 'Mock brief info', 'Mock description', 'sub34.jpg', 20, 0);
+INSERT INTO [Subject] VALUES('CTIOS',6, 29, 1,2, 1, '2023-09-03', '2024-05-26', 'optimize metrics', 'Mock brief info', 'Mock description', 'sub35.jpeg', 20, 0);
+INSERT INTO [Subject] VALUES('Therapists',7, 26, 1,2, 0, '2023-09-05', '2024-01-12', 'whiteboard architectures', 'Mock brief info', 'Mock description', 'sub36.jpg', 20, 0);
+INSERT INTO [Subject] VALUES('PVM',8, 24, 1,2, 0, '2024-05-10', '2023-06-21', 'innovatevconvergence', 'Mock brief info', 'Mock description', 'sub37.jpg', 20, 0);
+INSERT INTO [Subject] VALUES('ECDL Certification',9, 23, 1,2, 0, '2024-01-09', '2023-11-19', 'integrate viral e-markets', 'Mock brief info', 'Mock description', 'sub38.png', 20, 0);
+INSERT INTO [Subject] VALUES('Evidence',8, 25, 1,2, 0, '2023-11-08', '2024-04-18', 'grow infomediaries', 'Mock brief info', 'Mock description', 'sub39.jpg', 20, 0);
+INSERT INTO [Subject] VALUES('HBase',7, 23, 1,2, 0, '2023-08-29', '2023-10-08', 'matrix ynergies', 'Mock brief info', 'Mock description', 'sub40.png', 20, 0);
+INSERT INTO [Subject] VALUES('Subversion',6, 24, 1,2, 0, '2024-01-15', '2023-07-02', 'repurpose eyeballs', 'Mock brief info', 'Mock description', 'sub41.jpg', 20, 0);
+INSERT INTO [Subject] VALUES('FCE',5, 25, 1,2, 1, '2024-03-05', '2024-05-21', 'cultivate supply-chains', 'Mock brief info', 'Mock description', 'sub42.png', 20, 0);
+INSERT INTO [Subject] VALUES('Design Patterns',4, 26, 1,1, 0, '2024-01-19', '2024-04-20', 'innovate scalable content', 'Mock brief info', 'Mock description', 'sub43.png', 20, 0);
+INSERT INTO [Subject] VALUES('AutoCAD Civil 3D',3, 27, 1,1, 0, '2023-11-22', '2024-06-05', 'morph world-class systems', 'Mock brief info', 'Mock description', 'sub44.jpg', 20, 0);
+INSERT INTO [Subject] VALUES('Front-end',2, 28, 1,2, 1, '2023-06-17', '2023-12-19', 'synthesize models', 'Mock brief info', 'Mock description', 'sub45.png', 20, 0);
+INSERT INTO [Subject] VALUES('HP Blade',3, 29, 1,3, 1, '2023-11-24', '2024-04-04', 'reintermediate web-readiness', 'Mock brief info', 'Mock description', 'sub46.jpg', 20, 0);
+INSERT INTO [Subject] VALUES('NCover',2, 30, 1,2, 1, '2024-05-24', '2024-05-17', 'utilize robust convergence', 'Mock brief info', 'Mock description', 'sub47.jpeg', 20, 0);
+INSERT INTO [Subject] VALUES('FMA',4, 29, 1,1, 0, '2024-02-21', '2023-12-20', 'utilize user-centric e-markets', 'Mock brief info', 'Mock description', 'sub48.jpg', 20, 0);
+INSERT INTO [Subject] VALUES('CQ5',6, 30, 1,1, 0, '2024-04-21', '2024-03-25', 'repurpose e-markets', 'Mock brief info', 'Mock description', 'sub49.jpeg', 20, 0);
+INSERT INTO [Subject] VALUES('Euphonium',7, 33, 1,2, 0, '2024-2-10', '2024-02-10', 'transform interactive deliverables', 'Mock brief info', 'Mock description', 'sub50.jpg', 20, 0);
 
 
 

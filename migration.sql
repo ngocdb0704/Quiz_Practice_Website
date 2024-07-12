@@ -202,7 +202,8 @@ CREATE TABLE [dbo].[Subject](
 	[SubjectBriefInfo] [varchar](300),
 	[SubjectDescription] [ntext],
 	[SubjectThumbnail] [varchar](255),
-	[SubjectOwnerId] [int] foreign key references [dbo].[User](UserId))
+	[SubjectOwnerId] [int] foreign key references [dbo].[User](UserId),
+	[MarkedForPublication] [bit])
 GO
 
 

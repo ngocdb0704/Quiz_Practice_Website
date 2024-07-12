@@ -135,12 +135,12 @@ public class SubjectOverviewController extends HttpServlet {
             String uploadName = request.getParameter("uploadName");
 
             String thumbnailUrl = "";
-            int subjectId = daoSubject.getLatestSubjectId();
+            int subjectId = Integer.parseInt(request.getParameter("subjectId"));
             Part filePart = request.getPart("uploadData");
             if (filePart.getSize() > 0 && uploadName != null && (uploadName.endsWith(".png") || uploadName.endsWith(".jpg") || uploadName.endsWith(".jpeg") || uploadName.endsWith(".webm"))) {
                 Config cfg = new Config(ctx);
                 String thumbnailDir = cfg.getStringOrDefault("subjectThumbnail.dir", "/");
-                thumbnailDir = thumbnailDir.replaceAll(" ", "\\" + File.separator);
+                thumbnailDir = thumbnailDir.replaceAll("\\s+", "\\" + File.separator);
                 String path = ctx.getRealPath(thumbnailDir);
 
                 subjectId = (subjectId < 0) ? 1 : subjectId; //If the table is empty then getLatestSubjectId() will return -1, in that case set subjectId to 1 (as the first element of the table

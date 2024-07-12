@@ -21,11 +21,12 @@
                         Subject Details
                     </h2>
                     <ul class="nav nav-tabs">
-                        <li class="nav-item">
+                        <li class="nav-item" style="position: relative">
                             <a
                                 class="nav-link active"
                                 href="admin/subjectdetail/overview?subjectId=${param.subjectId}"
                                 >Overview</a>
+                                <i id="change-indicator" class="bi bi-diamond-fill"></i>
                         </li>
                         <li class="nav-item">
                             <a
@@ -54,7 +55,7 @@
 
                                 <div class="form-group">
                                     <label for="subject-category">Category</label>
-                                    <select class="form-control" id="subject-category" name="subjectCategory">
+                                    <select class="form-control" id="subject-category" name="subjectCategory" onchange="handleCateChange()">
                                         <c:forEach var="category" items="${subjectCategoryList}">
                                             <option value="${category.getCateId()}" <c:if test="${subjectCategory eq category.getCateId()}">selected</c:if>>${category.getCateName()}</option>
                                         </c:forEach>
@@ -63,7 +64,7 @@
 
                                 <div class="row">
                                     <div class="form-check col-6 pt-5 ps-5">
-                                        <input class="form-check-input" type="checkbox" value="true" id="featured-flag" name="featured" <c:if test="${featured}">checked</c:if>>
+                                        <input class="form-check-input" type="checkbox" value="true" id="featured-flag" name="featured" onclick="handleFeaturedChange()" <c:if test="${featured}">checked</c:if>>
                                             <label class="form-check-label" for="featured-flag">
                                                 Featured
                                             </label>
@@ -75,7 +76,7 @@
                                             <div class="col-md-1 col-sm-0">
                                             </div>
                                             <div class="col-md-9 p-0">
-                                                <select class="form-control" id="subject-status" name="subjectStatus">
+                                                <select class="form-control" id="subject-status" name="subjectStatus" onchange="handleStatusChange()">
                                                     <!--Temporary-->
                                                     <option value="0" <c:if test="${subjectStatus eq 0}">selected</c:if>>Unpublished</option>
                                                 <option value="1" <c:if test="${subjectStatus eq 1}">selected</c:if>>Published</option>
@@ -139,13 +140,13 @@
                         <div class="form-group mt-5">
                             <label for="subject-description">Description</label>
                             <button type="button" class="btn btn-sm btn-outline-info float-end mb-1" data-bs-toggle="modal" data-bs-target="#useTemplate"><small>Use template</small></button>
-                            <textarea class="form-control" id="subject-description" rows="3" name="subjectDescription">${subjectDescription}</textarea>
+                            <textarea class="form-control" id="subject-description" rows="3" name="subjectDescription" oninput="handleDescChange()">${subjectDescription}</textarea>
                         </div>
                     </div>
 
                     <div class="row mt-3">
                         <div class="col-6">
-                            <input id="submitButton" class="btn btn-primary" type="submit" value="Save">
+                            <input id="submitButton" class="btn btn-primary disabled" type="submit" value="Save">
                             <input id="clearButton" class="btn btn-secondary" type="reset" value="Reset">
                         </div>
                     </div>
@@ -161,7 +162,7 @@
 
 <div class="modal fade changeOnwerModal"
      tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered ${sessionScope.userEmail == null ? "modal-lg": ""}" 
+    <div class="modal-dialog modal-dialog-centered modal-lg
          role="document">
         <div class="modal-content">
             <div class="modal-header text-bg-primary">
@@ -177,7 +178,7 @@
                     <h3>Owner</h3>
 
                     <div id="subject-search" class="input-group">
-                        <input id='query' type="email" class="form-control" placeholder="Enter an expert's email or name" oninput="filterExpert()" onfocus="focusSearch()" onblur="unFocusSearch()">
+                        <input id='query' type="email" class="form-control" placeholder="Enter an expert's email or name" oninput="filterExpert()">
                         <span class="input-group-text" >
                             <i class="bi bi-search"></i>
                         </span>
@@ -187,11 +188,10 @@
                         <div id='search-result' class="bg-light border border-1 rounded-bottom-2">
 
                         </div>
-                        Please choose an expert to create the subject
 
                     </div>
                 </div>
-                <script src="admin/subjectdetail/overview/Overview.js" expertList='${expertList}' currentImg='${thumbnailUrl}'></script>
+                <script src="admin/subjectdetail/overview/Overview.js" expertList='${expertList}' currentImg='${thumbnailUrl}' currentOwner="${ownerEmail}"></script>
             </div>
         </div>
     </div>
