@@ -73,7 +73,7 @@
                         <div class="subject-grid">
                             <c:forEach items="${result.getResults()}" var="subject">
                                 <div class="subject-card">
-                                    <img src="${subject.getThumbnail()}" alt="Subject Image">
+                                    <img src="public/thumbnails/${subject.getThumbnail()}" alt="Subject Image">
                                     <h2 class="mt-2">${subject.getSubjectName()}</h2>
                                     <div class="text-end">
                                         <a href="admin/subjectdetail/pricepackage?subjectId=${subject.getSubjectId()}" class="btn">

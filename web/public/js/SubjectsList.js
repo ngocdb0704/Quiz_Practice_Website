@@ -10,14 +10,15 @@ function scrollAtLoad() {
     }, 1000);
 }
 function scrollToNew() {
-    window.scrollTo(0, 150);
+    window.scrollTo(0, 152);
 }
 function scrollToBigSale() {
-    window.scrollTo(0, 720);
+    window.scrollTo(0, 810);
 }
 function scrollToFeatured() {
-    window.scrollTo(0, 1310);
+    window.scrollTo(0, 1470);
 }
-function scrollToTopCategory(){
-    window.scrollTo(0, 2640);
+function scrollToTopCategory() {
+    window.scrollTo(0, 2130);
 }
+

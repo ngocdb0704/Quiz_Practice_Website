@@ -9,6 +9,7 @@ import app.dal.DAORegistration;
 import app.dal.DAOSubject;
 import app.entity.Customer;
 import app.entity.Registration;
+import app.entity.Package;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
@@ -21,6 +22,8 @@ import app.entity.SubjectCategory;
 import app.entity.Transaction;
 import app.utils.Config;
 import jakarta.servlet.annotation.WebServlet;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  *
@@ -102,6 +105,7 @@ public class RegistrationController extends HttpServlet {
             Vector<Registration> registrationVector = daoRegistration.getById(
                     userEmail, parentTier1, parentTier2, parentTier3,
                     status, inputKey);
+            HashMap<Integer, ArrayList<Package>> map = daoSubject.getSubjectPackagesMap();
             Customer cus = daoCustomer.searchbyEmail(userEmail).get(0);
             int size = registrationVector.size();
             //number of pages for pagination, each page has 6 (or 4 if config failed getting registration pagination size) cards of registration
@@ -119,7 +123,7 @@ public class RegistrationController extends HttpServlet {
             end = Math.min(page * numPerPage, size);
             Vector<Registration> responseVector = daoRegistration.getVectorByPage(registrationVector, start, end);
             Vector<Transaction> history = daoRegistration.getTransactionHistory(userEmail);
-            String sendFilter = sendFilter(parentTier1, parentTier2, parentTier3);
+            String sendFilter = sendFilter(parentTier1, parentTier2, parentTier3, inputKey);
             String noti = (String) session.getAttribute("noti");
             if (noti != null) {
                 request.setAttribute("noti", noti);
@@ -130,6 +134,12 @@ public class RegistrationController extends HttpServlet {
                 request.setAttribute("successNoti", successNoti);
                 session.removeAttribute("successNoti");
             }
+            String warningNoti = (String) session.getAttribute("warningNoti");
+            if (warningNoti != null) {
+                request.setAttribute("warningNoti", warningNoti);
+                session.removeAttribute("warningNoti");
+            }
+            request.setAttribute("map", map);
             request.setAttribute("data", responseVector);
             request.setAttribute("page", page);
             request.setAttribute("num", num);
@@ -169,7 +179,20 @@ public class RegistrationController extends HttpServlet {
             response.sendRedirect(controller);
         }
         // check service's value
-        if (service.equals("update")) {
+        if (service.equals("editRegist")) {
+            int editId = Integer.valueOf(request.getParameter("registId"));
+            int editPack = Integer.valueOf(request.getParameter("selectedPackage"));
+            int n = daoRegistration.updateRegistrationPackage(editId, editPack);
+            String warningNoti = "Update registration (id: " + editId + ") 's package successfully!";
+            session.setAttribute("warningNoti", warningNoti);
+            service = listAll;
+            response.sendRedirect(controller);
+        }
+        //register new subject 
+        if (service.equals("register")) {
+            int userId = Integer.parseInt(session.getAttribute("userId").toString());
+            int packageId = Integer.parseInt(request.getParameter("selectedPackage"));
+            int n = daoRegistration.addRegistration(packageId, userId);
             service = listAll;
             response.sendRedirect(controller);
         }
@@ -197,7 +220,7 @@ public class RegistrationController extends HttpServlet {
         }
     }
 
-    private String sendFilter(int[] parentTier1, int[] parentTier2, int[] parentTier3) {
+    private String sendFilter(int[] parentTier1, int[] parentTier2, int[] parentTier3, String key) {
         String url = "";
         int i;
         if (parentTier1 != null) {
@@ -214,6 +237,9 @@ public class RegistrationController extends HttpServlet {
             for (i = 0; i < parentTier3.length; i++) {
                 url += "idTier3=" + parentTier3[i] + "&";
             }
+        }
+        if(key != null){
+            url += "key=" + key + "&";
         }
         return url;
     }

@@ -26,6 +26,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="user/MyRegistrations">My Registration</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="user/simulation">Simulation Exams</a>
+                    </li>
                 </c:if>
             </ul>
             <div class="d-flex gap-2">
@@ -50,7 +53,8 @@
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#loginModal">
                         Login
                     </button>
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#registrationModal">
+
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#registerModal">
                         Register
                     </button>
                 </c:if>
@@ -73,7 +77,7 @@
     </div>
 </div>
 
-<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" >
+<div class="modal" id="loginModal" tabindex="-1" role="dialog" >
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -86,4 +90,5 @@
         </div>
     </div>
 </div>
+
 

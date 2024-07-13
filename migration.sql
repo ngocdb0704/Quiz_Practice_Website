@@ -202,7 +202,8 @@ CREATE TABLE [dbo].[Subject](
 	[SubjectBriefInfo] [varchar](300),
 	[SubjectDescription] [ntext],
 	[SubjectThumbnail] [varchar](255),
-	[SubjectOwnerId] [int] foreign key references [dbo].[User](UserId))
+	[SubjectOwnerId] [int] foreign key references [dbo].[User](UserId),
+	[MarkedForPublication] [bit])
 GO
 
 
@@ -346,7 +347,9 @@ CREATE TABLE [dbo].[Quiz] (
 	[PassRate] int check(0 <= [PassRate] and [PassRate] <= 100) default(50),
 	[QuizType] char(10) check([QuizType] in (0, 1)) default(0), --simulation, lesson-quiz
 	[IsPublished] bit,
-	[UpdatedTime] [datetime] default(CURRENT_TIMESTAMP)
+	[UpdatedTime] [datetime] default(CURRENT_TIMESTAMP),
+	[Description] [nvarchar](max),
+	[TotalQuestion] int
 )
 GO
 
@@ -355,3 +358,21 @@ CREATE TABLE [dbo].[QuizQuestion] (
 	[QuestionId] [int] foreign key references [dbo].[Question]([QuestionId])
 	PRIMARY KEY([QuizId], [QuestionId])
 )
+
+CREATE TABLE [dbo].[Attempt] (
+	[AttemptId] int primary key identity(1, 1),
+	[QuizId] int not null foreign key references [dbo].[Quiz]([QuizId]),
+	[UserId] int not null foreign key references [dbo].[User]([UserId]),
+	[CorrectCount] int check([CorrectCount] >= 0) default(0),
+	[DueDate] datetime not null
+);
+
+CREATE UNIQUE INDEX ans_uniq on [dbo].[Answer]([QuestionID], [AnswerID])
+
+CREATE TABLE [dbo].[AttemptQuestionAnswer] (
+	[AttemptId] int foreign key references [dbo].[Attempt]([AttemptId]) on delete cascade,
+	[QuestionId] int not null,
+	[AnswerId] int,
+	[Marked] bit default(0),
+	FOREIGN KEY ([QuestionId], [AnswerId]) REFERENCES [dbo].[Answer]([QuestionID], [AnswerID])
+);

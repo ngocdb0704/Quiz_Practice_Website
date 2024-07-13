@@ -16,7 +16,9 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
 
@@ -48,14 +50,18 @@ public class SubjectDetailsController extends HttpServlet {
             int id = Integer.parseInt(request.getParameter("subjectId"));
 
             Subject displaySubject = daoSubject.getSubjectById(id);
-            session.setAttribute("subjectDetails", displaySubject);
+            request.setAttribute("subjectDetails", displaySubject);
+            HashMap<Integer, ArrayList<Package>> map = daoSubject.getSubjectPackagesMap();
+            request.setAttribute("map", map);
+
 
             List<SubjectCategory> categoryLine = daoSubject.getSubjectCategoryLineById(displaySubject.getCategoryId());
-            System.out.println(categoryLine.get(0));
+            System.out.println(displaySubject);
             Collections.reverse(categoryLine);
 
-            session.setAttribute("subjectDetailsCategoryLine", categoryLine);
+            request.setAttribute("subjectDetailsCategoryLine", categoryLine);
 
+            //Still not gonna clean this up cus I've got no time lol
             Vector<Subject> newSubjectList = (Vector<Subject>) request.getAttribute("dataNewSubject");
             if (request.getAttribute("dataNewSubject") == null) {
                 newSubjectList = daoSubject.getNewSubject();
@@ -78,16 +84,7 @@ public class SubjectDetailsController extends HttpServlet {
                 request.setAttribute("SubjectTagBigSale", false);
             }
 
-            Vector<Subject> featuredSubjectList = (Vector<Subject>) request.getAttribute("dataFeaturedSubject");
-            if (request.getAttribute("dataFeaturedSubject") == null) {
-                featuredSubjectList = daoSubject.getFeaturedSubject();
-                request.setAttribute("dataFeaturedSubject", featuredSubjectList);
-            }
-            if (featuredSubjectList.stream().map(prdct -> prdct.getSubjectId()).anyMatch(sId -> sId == id)) {
-                request.setAttribute("SubjectTagFeatured", true);
-            } else {
-                request.setAttribute("SubjectTagFeatured", false);
-            }
+            request.setAttribute("SubjectTagFeatured", displaySubject.getIsFeatured());
 
             DAOPackage daoPackage = new DAOPackage();
             Package lowestPackage = daoPackage.getLowestPackageBySubjectId(id);
